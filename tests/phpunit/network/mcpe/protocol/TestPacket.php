@@ -23,12 +23,20 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\network\mcpe\NetworkSession;
+use pocketmine\network\mcpe\handler\PacketHandler;
 
 class TestPacket extends DataPacket{
 	public const NETWORK_ID = 1023;
 
-	public function handle(NetworkSession $handler) : bool{
+	protected function decodePayload() : void{
+
+	}
+
+	protected function encodePayload() : void{
+
+	}
+
+	public function handle(PacketHandler $handler) : bool{
 		return false;
 	}
 }

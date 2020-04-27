@@ -21,33 +21,38 @@
 
 declare(strict_types=1);
 
-namespace pocketmine\network\mcpe\protocol\types\inventory;
+namespace pocketmine\network\mcpe\protocol\serializer;
 
-use pocketmine\network\mcpe\protocol\InventoryTransactionPacket;
-use pocketmine\network\mcpe\protocol\serializer\NetworkBinaryStream;
+use pocketmine\network\mcpe\protocol\Packet;
+use pocketmine\network\mcpe\protocol\PacketPool;
+use pocketmine\utils\BinaryDataException;
 
-class NormalTransactionData extends TransactionData{
+class PacketBatch extends NetworkBinaryStream{
 
-	public function getTypeId() : int{
-		return InventoryTransactionPacket::TYPE_NORMAL;
-	}
-
-	protected function decodeData(NetworkBinaryStream $stream) : void{
-
-	}
-
-	protected function encodeData(NetworkBinaryStream $stream) : void{
-
+	public function putPacket(Packet $packet) : void{
+		$packet->encode();
+		$this->putString($packet->getBinaryStream()->getBuffer());
 	}
 
 	/**
-	 * @param NetworkInventoryAction[] $actions
-	 *
-	 * @return NormalTransactionData
+	 * @throws BinaryDataException
 	 */
-	public static function new(array $actions) : self{
+	public function getPacket() : Packet{
+		return PacketPool::getInstance()->getPacket($this->getString());
+	}
+
+	/**
+	 * Constructs a packet batch from the given list of packets.
+	 *
+	 * @param Packet ...$packets
+	 *
+	 * @return PacketBatch
+	 */
+	public static function fromPackets(Packet ...$packets) : self{
 		$result = new self();
-		$result->actions = $actions;
+		foreach($packets as $packet){
+			$result->putPacket($packet);
+		}
 		return $result;
 	}
 }

@@ -33,6 +33,7 @@ use function json_decode;
 use function json_encode;
 use function json_last_error_msg;
 use function strlen;
+use const JSON_THROW_ON_ERROR;
 
 class LoginPacket extends DataPacket implements ServerboundPacket{
 	public const NETWORK_ID = ProtocolInfo::LOGIN_PACKET;
@@ -82,10 +83,7 @@ class LoginPacket extends DataPacket implements ServerboundPacket{
 	protected function encodeConnectionRequest() : string{
 		$connRequestWriter = new BinaryStream();
 
-		$chainDataJson = json_encode($this->chainDataJwt);
-		if($chainDataJson === false){
-			throw new \InvalidStateException("Failed to encode chain data JSON: " . json_last_error_msg());
-		}
+		$chainDataJson = json_encode($this->chainDataJwt, JSON_THROW_ON_ERROR);
 		$connRequestWriter->putLInt(strlen($chainDataJson));
 		$connRequestWriter->put($chainDataJson);
 

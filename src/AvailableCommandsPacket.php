@@ -193,11 +193,10 @@ class AvailableCommandsPacket extends DataPacket implements ClientboundPacket{
 		$out->putUnsignedVarInt(count($values));
 		$listSize = count($enumValueMap);
 		foreach($values as $value){
-			$index = $enumValueMap[$value] ?? -1;
-			if($index === -1){
-				throw new \InvalidStateException("Enum value '$value' not found");
+			if(!isset($enumValueMap[$value])){
+				throw new \LogicException("Enum value '$value' doesn't have a value index");
 			}
-			$this->putEnumValueIndex($index, $listSize, $out);
+			$this->putEnumValueIndex($enumValueMap[$value], $listSize, $out);
 		}
 	}
 
@@ -351,11 +350,10 @@ class AvailableCommandsPacket extends DataPacket implements ClientboundPacket{
 				if($parameter->enum !== null){
 					$type = self::ARG_FLAG_ENUM | self::ARG_FLAG_VALID | ($enumIndexes[$parameter->enum->getName()] ?? -1);
 				}elseif($parameter->postfix !== null){
-					$key = $postfixIndexes[$parameter->postfix] ?? -1;
-					if($key === -1){
-						throw new \InvalidStateException("Postfix '$parameter->postfix' not in postfixes array");
+					if(!isset($postfixIndexes[$parameter->postfix])){
+						throw new \LogicException("Postfix '$parameter->postfix' not in postfixes array");
 					}
-					$type = self::ARG_FLAG_POSTFIX | $key;
+					$type = self::ARG_FLAG_POSTFIX | $postfixIndexes[$parameter->postfix];
 				}else{
 					$type = $parameter->paramType;
 				}

@@ -14,11 +14,18 @@
     },
     "require-dev": {
         "phpstan/phpstan": "0.12.91",
-        "phpstan/phpstan-strict-rules": "^0.12.10"
+        "phpstan/phpstan-phpunit": "^0.12.21",
+        "phpstan/phpstan-strict-rules": "^0.12.10",
+        "phpunit/phpunit": "^9.5"
     },
     "autoload": {
         "psr-4": {
             "pocketmine\\network\\mcpe\\protocol\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "pocketmine\\network\\mcpe\\protocol\\": "tests/phpunit/network/mcpe/protocol/"
         }
     },
     "license": "LGPL-3.0",

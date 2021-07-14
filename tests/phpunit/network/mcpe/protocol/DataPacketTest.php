@@ -24,9 +24,10 @@ declare(strict_types=1);
 namespace pocketmine\network\mcpe\protocol;
 
 use PHPUnit\Framework\TestCase;
-use pocketmine\network\mcpe\convert\GlobalItemTypeDictionary;
+use pocketmine\network\mcpe\protocol\serializer\ItemTypeDictionary;
 use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 use pocketmine\network\mcpe\protocol\serializer\PacketSerializerContext;
+use pocketmine\network\mcpe\protocol\types\ItemTypeEntry;
 
 class DataPacketTest extends TestCase{
 
@@ -35,7 +36,7 @@ class DataPacketTest extends TestCase{
 		$pk->senderSubId = 3;
 		$pk->recipientSubId = 2;
 
-		$context = new PacketSerializerContext(GlobalItemTypeDictionary::getInstance()->getDictionary());
+		$context = new PacketSerializerContext(new ItemTypeDictionary([new ItemTypeEntry("minecraft:shield", 0, false)]));
 		$serializer = PacketSerializer::encoder($context);
 		$pk->encode($serializer);
 

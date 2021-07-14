@@ -27,16 +27,18 @@ use PHPUnit\Framework\TestCase;
 use pocketmine\network\mcpe\convert\GlobalItemTypeDictionary;
 use pocketmine\network\mcpe\protocol\PacketDecodeException;
 use pocketmine\network\mcpe\protocol\PacketPool;
+use pocketmine\network\mcpe\protocol\serializer\ItemTypeDictionary;
 use pocketmine\network\mcpe\protocol\serializer\PacketBatch;
 use pocketmine\network\mcpe\protocol\serializer\PacketSerializerContext;
 use pocketmine\network\mcpe\protocol\TestPacket;
+use pocketmine\network\mcpe\protocol\types\ItemTypeEntry;
 use function array_fill;
 
 class PacketBatchTest extends TestCase{
 
 	public function testDecodeTooBig() : void{
 		$limit = 10;
-		$decoderContext = new PacketSerializerContext(GlobalItemTypeDictionary::getInstance()->getDictionary());
+		$decoderContext = new PacketSerializerContext(new ItemTypeDictionary([new ItemTypeEntry("minecraft:shield", 0, false)]));
 		$write = PacketBatch::fromPackets($decoderContext, ...array_fill(0, $limit + 1, new TestPacket()));
 		$read = new PacketBatch($write->getBuffer());
 		$this->expectException(PacketDecodeException::class);
@@ -48,7 +50,7 @@ class PacketBatchTest extends TestCase{
 
 	public function testDecodeAtLimit() : void{
 		$limit = 10;
-		$decoderContext = new PacketSerializerContext(GlobalItemTypeDictionary::getInstance()->getDictionary());
+		$decoderContext = new PacketSerializerContext(new ItemTypeDictionary([new ItemTypeEntry("minecraft:shield", 0, false)]));
 		$write = PacketBatch::fromPackets($decoderContext, ...array_fill(0, $limit, new TestPacket()));
 		$read = new PacketBatch($write->getBuffer());
 		$readCount = 0;

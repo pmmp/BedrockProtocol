@@ -25,14 +25,16 @@ namespace pocketmine\network\mcpe\protocol;
 
 use PHPUnit\Framework\TestCase;
 use pocketmine\network\mcpe\convert\GlobalItemTypeDictionary;
+use pocketmine\network\mcpe\protocol\serializer\ItemTypeDictionary;
 use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 use pocketmine\network\mcpe\protocol\serializer\PacketSerializerContext;
+use pocketmine\network\mcpe\protocol\types\ItemTypeEntry;
 use function strlen;
 
 class LoginPacketTest extends TestCase{
 
 	public function testInvalidChainDataJsonHandling() : void{
-		$context = new PacketSerializerContext(GlobalItemTypeDictionary::getInstance()->getDictionary());
+		$context = new PacketSerializerContext(new ItemTypeDictionary([new ItemTypeEntry("minecraft:shield", 0, false)]));
 		$stream = PacketSerializer::encoder($context);
 		$stream->putUnsignedVarInt(ProtocolInfo::LOGIN_PACKET);
 		$payload = '{"chain":[]'; //intentionally malformed

@@ -100,7 +100,7 @@ class UseItemTransactionData extends TransactionData{
 
 	protected function encodeData(PacketSerializer $stream) : void{
 		$stream->putUnsignedVarInt($this->actionType);
-		$stream->putBlockPosition($this->blockPos->x, $this->blockPos->y, $this->blockPos->z);
+		$stream->putBlockPosition($this->blockPos->getFloorX(), $this->blockPos->getFloorY(), $this->blockPos->getFloorZ());
 		$stream->putVarInt($this->face);
 		$stream->putVarInt($this->hotbarSlot);
 		$this->itemInHand->write($stream);

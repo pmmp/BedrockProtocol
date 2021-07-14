@@ -50,7 +50,7 @@ final class BlockPosMetadataProperty implements MetadataProperty{
 	}
 
 	public function write(PacketSerializer $out) : void{
-		$out->putSignedBlockPosition($this->value->x, $this->value->y, $this->value->z);
+		$out->putSignedBlockPosition($this->value->getFloorX(), $this->value->getFloorY(), $this->value->getFloorZ());
 	}
 
 	public function equals(MetadataProperty $other) : bool{

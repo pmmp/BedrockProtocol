@@ -1,4 +1,5 @@
 includes:
+	- tests/phpstan/configs/architectural-issues.neon
 	- vendor/phpstan/phpstan-strict-rules/rules.neon
 
 parameters:

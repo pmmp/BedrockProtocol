@@ -1,0 +1,33 @@
+name: CI
+
+on: [push, pull_request, workflow_dispatch]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    if: "!contains(github.event.head_commit.message, '[ci skip]')"
+    strategy:
+      matrix:
+        php: ['7.4', '8.0']
+    name: PHP ${{ matrix.php }}
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@2.9.0
+        with:
+          php-version: ${{ matrix.php }}
+          ini-values: xdebug.max_nesting_level=3000
+
+      - name: Load Composer package cache
+        uses: actions/cache@v2
+        with:
+          path: "~/.cache/composer"
+          key: "php-${{ matrix.php }}-composer-${{ hashFiles('**/composer.json') }}"
+          restore-keys: "php-${{ matrix.php }}-composer-"
+
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-interaction
+
+      - name: Run PHPStan
+        run: ./vendor/bin/phpstan analyze --no-progress

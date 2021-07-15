@@ -29,6 +29,7 @@ use pocketmine\color\Color;
 use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 use pocketmine\network\mcpe\protocol\types\DimensionIds;
 use pocketmine\network\mcpe\protocol\types\MapDecoration;
+use pocketmine\network\mcpe\protocol\types\MapImage;
 use pocketmine\network\mcpe\protocol\types\MapTrackedObject;
 use function count;
 #ifndef COMPILE
@@ -68,8 +69,7 @@ class ClientboundMapItemDataPacket extends DataPacket implements ClientboundPack
 	public $xOffset = 0;
 	/** @var int */
 	public $yOffset = 0;
-	/** @var Color[][] */
-	public $colors = [];
+	public ?MapImage $colors = null;
 
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->mapId = $in->getEntityUniqueId();
@@ -124,11 +124,7 @@ class ClientboundMapItemDataPacket extends DataPacket implements ClientboundPack
 				throw new PacketDecodeException("Expected colour count of " . ($this->height * $this->width) . " (height $this->height * width $this->width), got $count");
 			}
 
-			for($y = 0; $y < $this->height; ++$y){
-				for($x = 0; $x < $this->width; ++$x){
-					$this->colors[$y][$x] = Color::fromRGBA(Binary::flipIntEndianness($in->getUnsignedVarInt()));
-				}
-			}
+			$this->colors = MapImage::decode($in, $this->height, $this->width);
 		}
 	}
 
@@ -142,7 +138,7 @@ class ClientboundMapItemDataPacket extends DataPacket implements ClientboundPack
 		if(($decorationCount = count($this->decorations)) > 0){
 			$type |= self::BITFLAG_DECORATION_UPDATE;
 		}
-		if(count($this->colors) > 0){
+		if($this->colors !== null){
 			$type |= self::BITFLAG_TEXTURE_UPDATE;
 		}
 
@@ -185,7 +181,7 @@ class ClientboundMapItemDataPacket extends DataPacket implements ClientboundPack
 			}
 		}
 
-		if(($type & self::BITFLAG_TEXTURE_UPDATE) !== 0){
+		if($this->colors !== null){
 			$out->putVarInt($this->width);
 			$out->putVarInt($this->height);
 			$out->putVarInt($this->xOffset);
@@ -193,12 +189,7 @@ class ClientboundMapItemDataPacket extends DataPacket implements ClientboundPack
 
 			$out->putUnsignedVarInt($this->width * $this->height); //list count, but we handle it as a 2D array... thanks for the confusion mojang
 
-			for($y = 0; $y < $this->height; ++$y){
-				for($x = 0; $x < $this->width; ++$x){
-					//if mojang had any sense this would just be a regular LE int
-					$out->putUnsignedVarInt(Binary::flipIntEndianness($this->colors[$y][$x]->toRGBA()));
-				}
-			}
+			$this->colors->encode($out);
 		}
 	}
 

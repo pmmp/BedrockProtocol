@@ -62,10 +62,6 @@ class ClientboundMapItemDataPacket extends DataPacket implements ClientboundPack
 	public $decorations = [];
 
 	/** @var int */
-	public $width;
-	/** @var int */
-	public $height;
-	/** @var int */
 	public $xOffset = 0;
 	/** @var int */
 	public $yOffset = 0;
@@ -114,17 +110,17 @@ class ClientboundMapItemDataPacket extends DataPacket implements ClientboundPack
 		}
 
 		if(($this->type & self::BITFLAG_TEXTURE_UPDATE) !== 0){
-			$this->width = $in->getVarInt();
-			$this->height = $in->getVarInt();
+			$width = $in->getVarInt();
+			$height = $in->getVarInt();
 			$this->xOffset = $in->getVarInt();
 			$this->yOffset = $in->getVarInt();
 
 			$count = $in->getUnsignedVarInt();
-			if($count !== $this->width * $this->height){
-				throw new PacketDecodeException("Expected colour count of " . ($this->height * $this->width) . " (height $this->height * width $this->width), got $count");
+			if($count !== $width * $height){
+				throw new PacketDecodeException("Expected colour count of " . ($height * $width) . " (height $height * width $width), got $count");
 			}
 
-			$this->colors = MapImage::decode($in, $this->height, $this->width);
+			$this->colors = MapImage::decode($in, $height, $width);
 		}
 	}
 
@@ -182,12 +178,12 @@ class ClientboundMapItemDataPacket extends DataPacket implements ClientboundPack
 		}
 
 		if($this->colors !== null){
-			$out->putVarInt($this->width);
-			$out->putVarInt($this->height);
+			$out->putVarInt($this->colors->getWidth());
+			$out->putVarInt($this->colors->getHeight());
 			$out->putVarInt($this->xOffset);
 			$out->putVarInt($this->yOffset);
 
-			$out->putUnsignedVarInt($this->width * $this->height); //list count, but we handle it as a 2D array... thanks for the confusion mojang
+			$out->putUnsignedVarInt($this->colors->getWidth() * $this->colors->getHeight()); //list count, but we handle it as a 2D array... thanks for the confusion mojang
 
 			$this->colors->encode($out);
 		}

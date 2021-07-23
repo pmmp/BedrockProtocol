@@ -36,7 +36,7 @@ final class EntityMetadataProperties{
 	public const FLAGS = 0;
 	public const HEALTH = 1; //int (minecart/boat)
 	public const VARIANT = 2; //int
-	public const COLOR = 3, COLOUR = 3; //byte
+	public const COLOR = 3; //byte
 	public const NAMETAG = 4; //string
 	public const OWNER_EID = 5; //long
 	public const TARGET_EID = 6; //long

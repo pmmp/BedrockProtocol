@@ -102,6 +102,10 @@ final class ClientData{
 
 	public string $PlatformUserId = ""; //xbox-only, apparently
 
+	public string $Waterdog_XUID = "";
+
+	public string $Waterdog_IP = "";
+
 	/** @required */
 	public string $PlayFabId;
 
@@ -146,8 +150,4 @@ final class ClientData{
 
 	/** @required */
 	public int $UIProfile;
-
-	public string $Waterdog_XUID = "";
-
-	public string $Waterdog_IP = "";
 }

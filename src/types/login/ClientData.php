@@ -146,4 +146,8 @@ final class ClientData{
 
 	/** @required */
 	public int $UIProfile;
+
+	public string $Waterdog_XUID = "";
+
+	public string $Waterdog_IP = "";
 }

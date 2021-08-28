@@ -38,8 +38,4 @@ final class AuthenticationData{
 
 	/** @required */
 	public string $XUID;
-
-	public string $Waterdog_XUID = "";
-
-	public string $Waterdog_IP = "";
 }

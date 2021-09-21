@@ -26,30 +26,30 @@ namespace pocketmine\network\mcpe\protocol;
 #include <rules/DataPacket.h>
 
 use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pocketmine\network\mcpe\protocol\types\EducationUriResource;
 
-class HurtArmorPacket extends DataPacket implements ClientboundPacket{
-	public const NETWORK_ID = ProtocolInfo::HURT_ARMOR_PACKET;
+class EduUriResourcePacket extends DataPacket implements ClientboundPacket{
+	public const NETWORK_ID = ProtocolInfo::EDU_URI_RESOURCE_PACKET;
 
-	/** @var int */
-	public $cause;
-	/** @var int */
-	public $health;
-	/** @var int */
-	public $armorSlotFlags;
+	private EducationUriResource $resource;
+
+	public static function create(EducationUriResource $resource) : self{
+		$result = new self;
+		$result->resource = $resource;
+		return $result;
+	}
+
+	public function getResource() : EducationUriResource{ return $this->resource; }
 
 	protected function decodePayload(PacketSerializer $in) : void{
-		$this->cause = $in->getVarInt();
-		$this->health = $in->getVarInt();
-		$this->armorSlotFlags = $in->getUnsignedVarLong();
+		$this->resource = EducationUriResource::read($in);
 	}
 
 	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putVarInt($this->cause);
-		$out->putVarInt($this->health);
-		$out->putUnsignedVarLong($this->armorSlotFlags);
+		$this->resource->write($out);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{
-		return $handler->handleHurtArmor($this);
+		return $handler->handleEduUriResource($this);
 	}
 }

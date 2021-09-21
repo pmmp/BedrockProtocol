@@ -26,6 +26,8 @@ namespace pocketmine\network\mcpe\protocol;
 #include <rules/DataPacket.h>
 
 use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pocketmine\network\mcpe\protocol\types\EducationSettingsAgentCapabilities;
+use pocketmine\network\mcpe\protocol\types\EducationSettingsExternalLinkSettings;
 
 class EducationSettingsPacket extends DataPacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::EDUCATION_SETTINGS_PACKET;
@@ -36,18 +38,44 @@ class EducationSettingsPacket extends DataPacket implements ClientboundPacket{
 	private $codeBuilderTitle;
 	/** @var bool */
 	private $canResizeCodeBuilder;
+	/** @var bool */
+	private $disableLegacyTitleBar;
+	/** @var string */
+	private $postProcessFilter;
+	/** @var string */
+	private $screenshotBorderResourcePath;
+	/** @var EducationSettingsAgentCapabilities|null */
+	private $agentCapabilities;
 	/** @var string|null */
 	private $codeBuilderOverrideUri;
 	/** @var bool */
 	private $hasQuiz;
+	/** @var EducationSettingsExternalLinkSettings|null */
+	private $linkSettings;
 
-	public static function create(string $codeBuilderDefaultUri, string $codeBuilderTitle, bool $canResizeCodeBuilder, ?string $codeBuilderOverrideUri, bool $hasQuiz) : self{
+	public static function create(
+		string $codeBuilderDefaultUri,
+		string $codeBuilderTitle,
+		bool $canResizeCodeBuilder,
+		bool $disableLegacyTitleBar,
+		string $postProcessFilter,
+		string $screenshotBorderResourcePath,
+		?EducationSettingsAgentCapabilities $agentCapabilities,
+		?string $codeBuilderOverrideUri,
+		bool $hasQuiz,
+		?EducationSettingsExternalLinkSettings $linkSettings
+	) : self{
 		$result = new self;
 		$result->codeBuilderDefaultUri = $codeBuilderDefaultUri;
 		$result->codeBuilderTitle = $codeBuilderTitle;
 		$result->canResizeCodeBuilder = $canResizeCodeBuilder;
+		$result->disableLegacyTitleBar = $disableLegacyTitleBar;
+		$result->postProcessFilter = $postProcessFilter;
+		$result->screenshotBorderResourcePath = $screenshotBorderResourcePath;
+		$result->agentCapabilities = $agentCapabilities;
 		$result->codeBuilderOverrideUri = $codeBuilderOverrideUri;
 		$result->hasQuiz = $hasQuiz;
+		$result->linkSettings = $linkSettings;
 		return $result;
 	}
 
@@ -63,6 +91,14 @@ class EducationSettingsPacket extends DataPacket implements ClientboundPacket{
 		return $this->canResizeCodeBuilder;
 	}
 
+	public function disableLegacyTitleBar() : bool{ return $this->disableLegacyTitleBar; }
+
+	public function getPostProcessFilter() : string{ return $this->postProcessFilter; }
+
+	public function getScreenshotBorderResourcePath() : string{ return $this->screenshotBorderResourcePath; }
+
+	public function getAgentCapabilities() : ?EducationSettingsAgentCapabilities{ return $this->agentCapabilities; }
+
 	public function getCodeBuilderOverrideUri() : ?string{
 		return $this->codeBuilderOverrideUri;
 	}
@@ -71,27 +107,49 @@ class EducationSettingsPacket extends DataPacket implements ClientboundPacket{
 		return $this->hasQuiz;
 	}
 
+	public function getLinkSettings() : ?EducationSettingsExternalLinkSettings{ return $this->linkSettings; }
+
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->codeBuilderDefaultUri = $in->getString();
 		$this->codeBuilderTitle = $in->getString();
 		$this->canResizeCodeBuilder = $in->getBool();
+		$this->disableLegacyTitleBar = $in->getBool();
+		$this->postProcessFilter = $in->getString();
+		$this->screenshotBorderResourcePath = $in->getString();
+		$this->agentCapabilities = $in->getBool() ? EducationSettingsAgentCapabilities::read($in) : null;
 		if($in->getBool()){
 			$this->codeBuilderOverrideUri = $in->getString();
 		}else{
 			$this->codeBuilderOverrideUri = null;
 		}
 		$this->hasQuiz = $in->getBool();
+		$this->linkSettings = $in->getBool() ? EducationSettingsExternalLinkSettings::read($in) : null;
 	}
 
 	protected function encodePayload(PacketSerializer $out) : void{
 		$out->putString($this->codeBuilderDefaultUri);
 		$out->putString($this->codeBuilderTitle);
 		$out->putBool($this->canResizeCodeBuilder);
+		$out->putBool($this->disableLegacyTitleBar);
+		$out->putString($this->postProcessFilter);
+		$out->putString($this->screenshotBorderResourcePath);
+		if($this->agentCapabilities !== null){
+			$out->putBool(true);
+			$this->agentCapabilities->write($out);
+		}else{
+			$out->putBool(false);
+		}
 		$out->putBool($this->codeBuilderOverrideUri !== null);
 		if($this->codeBuilderOverrideUri !== null){
 			$out->putString($this->codeBuilderOverrideUri);
 		}
 		$out->putBool($this->hasQuiz);
+		if($this->linkSettings !== null){
+			$out->putBool(true);
+			$this->linkSettings->write($out);
+		}else{
+			$out->putBool(false);
+		}
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

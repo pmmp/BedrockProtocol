@@ -354,4 +354,12 @@ interface PacketHandlerInterface{
 	public function handleSimulationType(SimulationTypePacket $packet) : bool;
 
 	public function handleNpcDialogue(NpcDialoguePacket $packet) : bool;
+
+	public function handleEduUriResource(EduUriResourcePacket $packet) : bool;
+
+	public function handleCreatePhoto(CreatePhotoPacket $packet) : bool;
+
+	public function handleUpdateSubChunkBlocks(UpdateSubChunkBlocksPacket $packet) : bool;
+
+	public function handlePhotoInfoRequest(PhotoInfoRequestPacket $packet) : bool;
 }

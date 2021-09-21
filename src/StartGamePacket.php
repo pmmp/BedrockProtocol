@@ -31,6 +31,7 @@ use pocketmine\network\mcpe\protocol\serializer\NetworkNbtSerializer;
 use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 use pocketmine\network\mcpe\protocol\types\BlockPaletteEntry;
 use pocketmine\network\mcpe\protocol\types\EducationEditionOffer;
+use pocketmine\network\mcpe\protocol\types\EducationUriResource;
 use pocketmine\network\mcpe\protocol\types\Experiments;
 use pocketmine\network\mcpe\protocol\types\GameRule;
 use pocketmine\network\mcpe\protocol\types\GeneratorType;
@@ -142,6 +143,8 @@ class StartGamePacket extends DataPacket implements ClientboundPacket{
 	public $limitedWorldLength = 0;
 	/** @var bool */
 	public $isNewNether = true;
+	/** @var EducationUriResource|null */
+	public $eduSharedUriResource = null;
 	/** @var bool|null */
 	public $experimentalGameplayOverride = null;
 
@@ -225,6 +228,7 @@ class StartGamePacket extends DataPacket implements ClientboundPacket{
 		$this->limitedWorldWidth = $in->getLInt();
 		$this->limitedWorldLength = $in->getLInt();
 		$this->isNewNether = $in->getBool();
+		$this->eduSharedUriResource = EducationUriResource::read($in);
 		if($in->getBool()){
 			$this->experimentalGameplayOverride = $in->getBool();
 		}else{
@@ -309,6 +313,7 @@ class StartGamePacket extends DataPacket implements ClientboundPacket{
 		$out->putLInt($this->limitedWorldWidth);
 		$out->putLInt($this->limitedWorldLength);
 		$out->putBool($this->isNewNether);
+		($this->eduSharedUriResource ?? new EducationUriResource("", ""))->write($out);
 		$out->putBool($this->experimentalGameplayOverride !== null);
 		if($this->experimentalGameplayOverride !== null){
 			$out->putBool($this->experimentalGameplayOverride);

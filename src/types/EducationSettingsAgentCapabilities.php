@@ -21,35 +21,31 @@
 
 declare(strict_types=1);
 
-namespace pocketmine\network\mcpe\protocol;
-
-#include <rules/DataPacket.h>
+namespace pocketmine\network\mcpe\protocol\types;
 
 use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 
-class HurtArmorPacket extends DataPacket implements ClientboundPacket{
-	public const NETWORK_ID = ProtocolInfo::HURT_ARMOR_PACKET;
+final class EducationSettingsAgentCapabilities{
 
-	/** @var int */
-	public $cause;
-	/** @var int */
-	public $health;
-	/** @var int */
-	public $armorSlotFlags;
+	private ?bool $canModifyBlocks;
 
-	protected function decodePayload(PacketSerializer $in) : void{
-		$this->cause = $in->getVarInt();
-		$this->health = $in->getVarInt();
-		$this->armorSlotFlags = $in->getUnsignedVarLong();
+	public function __construct(?bool $canModifyBlocks){
+		$this->canModifyBlocks = $canModifyBlocks;
 	}
 
-	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putVarInt($this->cause);
-		$out->putVarInt($this->health);
-		$out->putUnsignedVarLong($this->armorSlotFlags);
+	public function getCanModifyBlocks() : ?bool{ return $this->canModifyBlocks; }
+
+	public static function read(PacketSerializer $in) : self{
+		$canModifyBlocks = $in->getBool() ? $in->getBool() : null;
+		return new self($canModifyBlocks);
 	}
 
-	public function handle(PacketHandlerInterface $handler) : bool{
-		return $handler->handleHurtArmor($this);
+	public function write(PacketSerializer $out) : void{
+		if($this->canModifyBlocks !== null){
+			$out->putBool(true);
+			$out->putBool($this->canModifyBlocks);
+		}else{
+			$out->putBool(false);
+		}
 	}
 }

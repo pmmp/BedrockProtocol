@@ -207,6 +207,10 @@ class PacketPool{
 		$this->registerPacket(new RemoveVolumeEntityPacket());
 		$this->registerPacket(new SimulationTypePacket());
 		$this->registerPacket(new NpcDialoguePacket());
+		$this->registerPacket(new EduUriResourcePacket());
+		$this->registerPacket(new CreatePhotoPacket());
+		$this->registerPacket(new UpdateSubChunkBlocksPacket());
+		$this->registerPacket(new PhotoInfoRequestPacket());
 	}
 
 	public function registerPacket(Packet $packet) : void{

@@ -70,10 +70,8 @@ final class ClientDataToSkinDataHelper{
 			$animations,
 			new SkinImage($clientData->CapeImageHeight, $clientData->CapeImageWidth, self::safeB64Decode($clientData->CapeData, "CapeData")),
 			self::safeB64Decode($clientData->SkinGeometryData, "SkinGeometryData"),
+			self::safeB64Decode($clientData->SkinGeometryDataEngineVersion, "SkinGeometryDataEngineVersion"), //yes, they actually base64'd the version!
 			self::safeB64Decode($clientData->SkinAnimationData, "SkinAnimationData"),
-			$clientData->PremiumSkin,
-			$clientData->PersonaSkin,
-			$clientData->CapeOnClassicSkin,
 			$clientData->CapeId,
 			null,
 			$clientData->ArmSize,
@@ -83,7 +81,12 @@ final class ClientDataToSkinDataHelper{
 			}, $clientData->PersonaPieces),
 			array_map(function(ClientDataPersonaPieceTintColor $tint) : PersonaPieceTintColor{
 				return new PersonaPieceTintColor($tint->PieceType, $tint->Colors);
-			}, $clientData->PieceTintColors)
+			}, $clientData->PieceTintColors),
+			true,
+			$clientData->PremiumSkin,
+			$clientData->PersonaSkin,
+			$clientData->CapeOnClassicSkin,
+			true, //assume this is true? there's no field for it ...
 		);
 	}
 }

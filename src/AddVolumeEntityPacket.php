@@ -37,11 +37,14 @@ class AddVolumeEntityPacket extends DataPacket implements ClientboundPacket{
 	private $entityNetId;
 	/** @var CompoundTag */
 	private $data;
+	/** @var string */
+	private $engineVersion;
 
-	public static function create(int $entityNetId, CompoundTag $data) : self{
+	public static function create(int $entityNetId, CompoundTag $data, string $engineVersion) : self{
 		$result = new self;
 		$result->entityNetId = $entityNetId;
 		$result->data = $data;
+		$result->engineVersion = $engineVersion;
 		return $result;
 	}
 
@@ -49,14 +52,18 @@ class AddVolumeEntityPacket extends DataPacket implements ClientboundPacket{
 
 	public function getData() : CompoundTag{ return $this->data; }
 
+	public function getEngineVersion() : string{ return $this->engineVersion; }
+
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->entityNetId = $in->getUnsignedVarInt();
 		$this->data = $in->getNbtCompoundRoot();
+		$this->engineVersion = $in->getString();
 	}
 
 	protected function encodePayload(PacketSerializer $out) : void{
 		$out->putUnsignedVarInt($this->entityNetId);
 		$out->put((new NetworkNbtSerializer())->write(new TreeRoot($this->data)));
+		$out->putString($this->engineVersion);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

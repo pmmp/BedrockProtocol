@@ -34,15 +34,19 @@ class ActorPickRequestPacket extends DataPacket implements ServerboundPacket{
 	public $entityUniqueId;
 	/** @var int */
 	public $hotbarSlot;
+	/** @var bool */
+	public $addUserData;
 
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->entityUniqueId = $in->getLLong();
 		$this->hotbarSlot = $in->getByte();
+		$this->addUserData = $in->getBool();
 	}
 
 	protected function encodePayload(PacketSerializer $out) : void{
 		$out->putLLong($this->entityUniqueId);
 		$out->putByte($this->hotbarSlot);
+		$out->putBool($this->addUserData);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

@@ -27,29 +27,30 @@ namespace pocketmine\network\mcpe\protocol;
 
 use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 
-class HurtArmorPacket extends DataPacket implements ClientboundPacket{
-	public const NETWORK_ID = ProtocolInfo::HURT_ARMOR_PACKET;
+/**
+ * TODO: this one has no handlers, so I have no idea which direction it should be sent
+ * It doesn't appear to be used at all right now... this is just here to keep the scraper happy
+ */
+class PhotoInfoRequestPacket extends DataPacket{
+	public const NETWORK_ID = ProtocolInfo::PHOTO_INFO_REQUEST_PACKET;
 
-	/** @var int */
-	public $cause;
-	/** @var int */
-	public $health;
-	/** @var int */
-	public $armorSlotFlags;
+	private int $photoId;
+
+	public static function create(int $photoId) : self{
+		$result = new self;
+		$result->photoId = $photoId;
+		return $result;
+	}
 
 	protected function decodePayload(PacketSerializer $in) : void{
-		$this->cause = $in->getVarInt();
-		$this->health = $in->getVarInt();
-		$this->armorSlotFlags = $in->getUnsignedVarLong();
+		$this->photoId = $in->getEntityUniqueId();
 	}
 
 	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putVarInt($this->cause);
-		$out->putVarInt($this->health);
-		$out->putUnsignedVarLong($this->armorSlotFlags);
+		$out->putEntityUniqueId($this->photoId);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{
-		return $handler->handleHurtArmor($this);
+		return $handler->handlePhotoInfoRequest($this);
 	}
 }

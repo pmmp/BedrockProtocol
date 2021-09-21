@@ -30,6 +30,12 @@ use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 class UpdateBlockPacket extends DataPacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::UPDATE_BLOCK_PACKET;
 
+	public const FLAG_NONE      = 0b0000;
+	public const FLAG_NEIGHBORS = 0b0001;
+	public const FLAG_NETWORK   = 0b0010;
+	public const FLAG_NOGRAPHIC = 0b0100;
+	public const FLAG_PRIORITY  = 0b1000;
+
 	public const DATA_LAYER_NORMAL = 0;
 	public const DATA_LAYER_LIQUID = 1;
 
@@ -46,7 +52,7 @@ class UpdateBlockPacket extends DataPacket implements ClientboundPacket{
 	 * Flags are used by MCPE internally for block setting, but only flag 2 (network flag) is relevant for network.
 	 * This field is pointless really.
 	 */
-	public $flags = 0x02;
+	public $flags = self::FLAG_NETWORK;
 	/** @var int */
 	public $dataLayerId = self::DATA_LAYER_NORMAL;
 

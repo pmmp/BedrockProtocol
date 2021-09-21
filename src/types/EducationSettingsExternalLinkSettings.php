@@ -21,35 +21,32 @@
 
 declare(strict_types=1);
 
-namespace pocketmine\network\mcpe\protocol;
-
-#include <rules/DataPacket.h>
+namespace pocketmine\network\mcpe\protocol\types;
 
 use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 
-class HurtArmorPacket extends DataPacket implements ClientboundPacket{
-	public const NETWORK_ID = ProtocolInfo::HURT_ARMOR_PACKET;
+final class EducationSettingsExternalLinkSettings{
 
-	/** @var int */
-	public $cause;
-	/** @var int */
-	public $health;
-	/** @var int */
-	public $armorSlotFlags;
+	private string $displayName;
+	private string $url;
 
-	protected function decodePayload(PacketSerializer $in) : void{
-		$this->cause = $in->getVarInt();
-		$this->health = $in->getVarInt();
-		$this->armorSlotFlags = $in->getUnsignedVarLong();
+	public function __construct(string $url, string $displayName){
+		$this->displayName = $displayName;
+		$this->url = $url;
 	}
 
-	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putVarInt($this->cause);
-		$out->putVarInt($this->health);
-		$out->putUnsignedVarLong($this->armorSlotFlags);
+	public function getUrl() : string{ return $this->url; }
+
+	public function getDisplayName() : string{ return $this->displayName; }
+
+	public static function read(PacketSerializer $in) : self{
+		$url = $in->getString();
+		$displayName = $in->getString();
+		return new self($displayName, $url);
 	}
 
-	public function handle(PacketHandlerInterface $handler) : bool{
-		return $handler->handleHurtArmor($this);
+	public function write(PacketSerializer $out) : void{
+		$out->putString($this->url);
+		$out->putString($this->displayName);
 	}
 }

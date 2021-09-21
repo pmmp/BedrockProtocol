@@ -686,4 +686,20 @@ trait PacketHandlerDefaultImplTrait{
 	public function handleNpcDialogue(NpcDialoguePacket $packet) : bool{
 		return false;
 	}
+
+	public function handleEduUriResource(EduUriResourcePacket $packet) : bool{
+		return false;
+	}
+
+	public function handleCreatePhoto(CreatePhotoPacket $packet) : bool{
+		return false;
+	}
+
+	public function handleUpdateSubChunkBlocks(UpdateSubChunkBlocksPacket $packet) : bool{
+		return false;
+	}
+
+	public function handlePhotoInfoRequest(PhotoInfoRequestPacket $packet) : bool{
+		return false;
+	}
 }

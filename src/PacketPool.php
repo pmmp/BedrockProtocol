@@ -61,7 +61,7 @@ class PacketPool{
 		$this->registerPacket(new TakeItemActorPacket());
 		$this->registerPacket(new MoveActorAbsolutePacket());
 		$this->registerPacket(new MovePlayerPacket());
-		$this->registerPacket(new RiderJumpPacket());
+		$this->registerPacket(new PassengerJumpPacket());
 		$this->registerPacket(new UpdateBlockPacket());
 		$this->registerPacket(new AddPaintingPacket());
 		$this->registerPacket(new TickSyncPacket());
@@ -211,6 +211,8 @@ class PacketPool{
 		$this->registerPacket(new CreatePhotoPacket());
 		$this->registerPacket(new UpdateSubChunkBlocksPacket());
 		$this->registerPacket(new PhotoInfoRequestPacket());
+		$this->registerPacket(new SubChunkPacket());
+		$this->registerPacket(new SubChunkRequestPacket());
 	}
 
 	public function registerPacket(Packet $packet) : void{

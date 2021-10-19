@@ -63,7 +63,7 @@ interface PacketHandlerInterface{
 
 	public function handleMovePlayer(MovePlayerPacket $packet) : bool;
 
-	public function handleRiderJump(RiderJumpPacket $packet) : bool;
+	public function handlePassengerJump(PassengerJumpPacket $packet) : bool;
 
 	public function handleUpdateBlock(UpdateBlockPacket $packet) : bool;
 
@@ -362,4 +362,8 @@ interface PacketHandlerInterface{
 	public function handleUpdateSubChunkBlocks(UpdateSubChunkBlocksPacket $packet) : bool;
 
 	public function handlePhotoInfoRequest(PhotoInfoRequestPacket $packet) : bool;
+
+	public function handleSubChunk(SubChunkPacket $packet) : bool;
+
+	public function handleSubChunkRequest(SubChunkRequestPacket $packet) : bool;
 }

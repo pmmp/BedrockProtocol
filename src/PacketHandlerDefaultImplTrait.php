@@ -103,7 +103,7 @@ trait PacketHandlerDefaultImplTrait{
 		return false;
 	}
 
-	public function handleRiderJump(RiderJumpPacket $packet) : bool{
+	public function handlePassengerJump(PassengerJumpPacket $packet) : bool{
 		return false;
 	}
 
@@ -700,6 +700,14 @@ trait PacketHandlerDefaultImplTrait{
 	}
 
 	public function handlePhotoInfoRequest(PhotoInfoRequestPacket $packet) : bool{
+		return false;
+	}
+
+	public function handleSubChunk(SubChunkPacket $packet) : bool{
+		return false;
+	}
+
+	public function handleSubChunkRequest(SubChunkRequestPacket $packet) : bool{
 		return false;
 	}
 }

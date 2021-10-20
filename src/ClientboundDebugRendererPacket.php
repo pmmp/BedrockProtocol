@@ -106,7 +106,7 @@ class ClientboundDebugRendererPacket extends DataPacket implements ClientboundPa
 				$this->durationMillis = $in->getLLong();
 				break;
 			default:
-				throw new \UnexpectedValueException("Unknown type " . $this->type);
+				throw new PacketDecodeException("Unknown type " . $this->type);
 		}
 	}
 

@@ -23,7 +23,9 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol\types\inventory\stackrequest;
 
+use pocketmine\network\mcpe\protocol\PacketDecodeException;
 use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pocketmine\utils\BinaryDataException;
 use function count;
 
 final class ItemStackRequest{
@@ -59,6 +61,11 @@ final class ItemStackRequest{
 	 * @phpstan-return list<string>
 	 */
 	public function getFilterStrings() : array{ return $this->filterStrings; }
+
+	/**
+	 * @throws BinaryDataException
+	 * @throws PacketDecodeException
+	 */
 	private static function readAction(PacketSerializer $in, int $typeId) : ItemStackRequestAction{
 		switch($typeId){
 			case TakeStackRequestAction::getTypeId(): return TakeStackRequestAction::read($in);
@@ -78,7 +85,7 @@ final class ItemStackRequest{
 			case DeprecatedCraftingNonImplementedStackRequestAction::getTypeId(): return DeprecatedCraftingNonImplementedStackRequestAction::read($in);
 			case DeprecatedCraftingResultsStackRequestAction::getTypeId(): return DeprecatedCraftingResultsStackRequestAction::read($in);
 		}
-		throw new \UnexpectedValueException("Unhandled item stack request action type $typeId");
+		throw new PacketDecodeException("Unhandled item stack request action type $typeId");
 	}
 
 	public static function read(PacketSerializer $in) : self{

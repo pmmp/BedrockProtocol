@@ -30,8 +30,7 @@ use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 class OnScreenTextureAnimationPacket extends DataPacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::ON_SCREEN_TEXTURE_ANIMATION_PACKET;
 
-	/** @var int */
-	public $effectId;
+	public int $effectId;
 
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->effectId = $in->getLInt(); //unsigned

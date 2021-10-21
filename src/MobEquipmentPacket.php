@@ -31,16 +31,11 @@ use pocketmine\network\mcpe\protocol\types\inventory\ItemStackWrapper;
 class MobEquipmentPacket extends DataPacket implements ClientboundPacket, ServerboundPacket{
 	public const NETWORK_ID = ProtocolInfo::MOB_EQUIPMENT_PACKET;
 
-	/** @var int */
-	public $entityRuntimeId;
-	/** @var ItemStackWrapper */
-	public $item;
-	/** @var int */
-	public $inventorySlot;
-	/** @var int */
-	public $hotbarSlot;
-	/** @var int */
-	public $windowId = 0;
+	public int $entityRuntimeId;
+	public ItemStackWrapper $item;
+	public int $inventorySlot;
+	public int $hotbarSlot;
+	public int $windowId = 0;
 
 	public static function create(int $entityRuntimeId, ItemStackWrapper $item, int $inventorySlot, int $windowId) : self{
 		$result = new self;

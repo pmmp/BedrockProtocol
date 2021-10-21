@@ -38,7 +38,7 @@ class ItemComponentPacket extends DataPacket implements ClientboundPacket{
 	 * @var ItemComponentPacketEntry[]
 	 * @phpstan-var list<ItemComponentPacketEntry>
 	 */
-	private $entries;
+	private array $entries;
 
 	/**
 	 * @param ItemComponentPacketEntry[] $entries

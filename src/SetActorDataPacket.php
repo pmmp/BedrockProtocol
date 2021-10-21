@@ -31,16 +31,13 @@ use pocketmine\network\mcpe\protocol\types\entity\MetadataProperty;
 class SetActorDataPacket extends DataPacket implements ClientboundPacket, ServerboundPacket{ //TODO: check why this is serverbound
 	public const NETWORK_ID = ProtocolInfo::SET_ACTOR_DATA_PACKET;
 
-	/** @var int */
-	public $entityRuntimeId;
+	public int $entityRuntimeId;
 	/**
 	 * @var MetadataProperty[]
 	 * @phpstan-var array<int, MetadataProperty>
 	 */
-	public $metadata;
-
-	/** @var int */
-	public $tick = 0;
+	public array $metadata;
+	public int $tick = 0;
 
 	/**
 	 * @param MetadataProperty[] $metadata

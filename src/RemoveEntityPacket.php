@@ -30,8 +30,7 @@ use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 class RemoveEntityPacket extends DataPacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::REMOVE_ENTITY_PACKET;
 
-	/** @var int */
-	private $entityNetId;
+	private int $entityNetId;
 
 	public static function create(int $entityNetId) : self{
 		$result = new self;

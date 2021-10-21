@@ -30,8 +30,7 @@ use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 class SetDifficultyPacket extends DataPacket implements ClientboundPacket, ServerboundPacket{
 	public const NETWORK_ID = ProtocolInfo::SET_DIFFICULTY_PACKET;
 
-	/** @var int */
-	public $difficulty;
+	public int $difficulty;
 
 	public static function create(int $difficulty) : self{
 		$result = new self;

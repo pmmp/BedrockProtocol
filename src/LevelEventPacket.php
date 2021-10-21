@@ -114,12 +114,9 @@ class LevelEventPacket extends DataPacket implements ClientboundPacket{
 
 	public const EVENT_ADD_PARTICLE_MASK = 0x4000;
 
-	/** @var int */
-	public $evid;
-	/** @var Vector3|null */
-	public $position;
-	/** @var int */
-	public $data;
+	public int $evid;
+	public ?Vector3 $position;
+	public int $data;
 
 	public static function create(int $evid, int $data, ?Vector3 $pos) : self{
 		$pk = new self;

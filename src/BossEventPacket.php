@@ -47,23 +47,16 @@ class BossEventPacket extends DataPacket implements ClientboundPacket, Serverbou
 	/* S2C: Not implemented :( Intended to alter bar appearance, but these currently produce no effect on client-side whatsoever. */
 	public const TYPE_TEXTURE = 7;
 
-	/** @var int */
-	public $bossEid;
-	/** @var int */
-	public $eventType;
+	public int $bossEid;
+	public int $eventType;
 
 	/** @var int (long) */
-	public $playerEid;
-	/** @var float */
-	public $healthPercent;
-	/** @var string */
-	public $title;
-	/** @var int */
-	public $unknownShort;
-	/** @var int */
-	public $color;
-	/** @var int */
-	public $overlay;
+	public int $playerEid;
+	public float $healthPercent;
+	public string $title;
+	public int $unknownShort;
+	public int $color;
+	public int $overlay;
 
 	private static function base(int $bossEntityUniqueId, int $eventId) : self{
 		$result = new self;

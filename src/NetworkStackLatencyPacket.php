@@ -30,10 +30,8 @@ use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 class NetworkStackLatencyPacket extends DataPacket implements ClientboundPacket, ServerboundPacket{
 	public const NETWORK_ID = ProtocolInfo::NETWORK_STACK_LATENCY_PACKET;
 
-	/** @var int */
-	public $timestamp;
-	/** @var bool */
-	public $needResponse;
+	public int $timestamp;
+	public bool $needResponse;
 
 	public static function request(int $timestampNs) : self{
 		$result = new self;

@@ -31,16 +31,11 @@ use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 class BlockEventPacket extends DataPacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::BLOCK_EVENT_PACKET;
 
-	/** @var int */
-	public $x;
-	/** @var int */
-	public $y;
-	/** @var int */
-	public $z;
-	/** @var int */
-	public $eventType;
-	/** @var int */
-	public $eventData;
+	public int $x;
+	public int $y;
+	public int $z;
+	public int $eventType;
+	public int $eventData;
 
 	public static function create(int $eventId, int $eventData, Vector3 $pos) : self{
 		$pk = new self;

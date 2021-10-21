@@ -36,14 +36,10 @@ class CameraShakePacket extends DataPacket implements ClientboundPacket{
 	public const ACTION_ADD = 0;
 	public const ACTION_STOP = 1;
 
-	/** @var float */
-	private $intensity;
-	/** @var float */
-	private $duration;
-	/** @var int */
-	private $shakeType;
-	/** @var int */
-	private $shakeAction;
+	private float $intensity;
+	private float $duration;
+	private int $shakeType;
+	private int $shakeAction;
 
 	public static function create(float $intensity, float $duration, int $shakeType, int $shakeAction) : self{
 		$result = new self;

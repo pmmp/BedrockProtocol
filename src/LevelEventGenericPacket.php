@@ -32,13 +32,9 @@ use pocketmine\network\mcpe\protocol\types\CacheableNbt;
 class LevelEventGenericPacket extends DataPacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::LEVEL_EVENT_GENERIC_PACKET;
 
-	/** @var int */
-	private $eventId;
-	/**
-	 * @var CacheableNbt
-	 * @phpstan-var CacheableNbt<\pocketmine\nbt\tag\CompoundTag>
-	 */
-	private $eventData;
+	private int $eventId;
+	/** @phpstan-var CacheableNbt<\pocketmine\nbt\tag\CompoundTag> */
+	private CacheableNbt $eventData;
 
 	public static function create(int $eventId, CompoundTag $data) : self{
 		$result = new self;

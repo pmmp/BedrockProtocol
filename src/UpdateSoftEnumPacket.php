@@ -35,12 +35,10 @@ class UpdateSoftEnumPacket extends DataPacket implements ClientboundPacket{
 	public const TYPE_REMOVE = 1;
 	public const TYPE_SET = 2;
 
-	/** @var string */
-	public $enumName;
+	public string $enumName;
 	/** @var string[] */
-	public $values = [];
-	/** @var int */
-	public $type;
+	public array $values = [];
+	public int $type;
 
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->enumName = $in->getString();

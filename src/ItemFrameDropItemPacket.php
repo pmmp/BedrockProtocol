@@ -31,12 +31,9 @@ class ItemFrameDropItemPacket extends DataPacket implements ServerboundPacket{
 
 	public const NETWORK_ID = ProtocolInfo::ITEM_FRAME_DROP_ITEM_PACKET;
 
-	/** @var int */
-	public $x;
-	/** @var int */
-	public $y;
-	/** @var int */
-	public $z;
+	public int $x;
+	public int $y;
+	public int $z;
 
 	protected function decodePayload(PacketSerializer $in) : void{
 		$in->getBlockPosition($this->x, $this->y, $this->z);

@@ -31,16 +31,11 @@ use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 class AddPaintingPacket extends DataPacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::ADD_PAINTING_PACKET;
 
-	/** @var int|null */
-	public $entityUniqueId = null;
-	/** @var int */
-	public $entityRuntimeId;
-	/** @var Vector3 */
-	public $position;
-	/** @var int */
-	public $direction;
-	/** @var string */
-	public $title;
+	public ?int $entityUniqueId = null;
+	public int $entityRuntimeId;
+	public Vector3 $position;
+	public int $direction;
+	public string $title;
 
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->entityUniqueId = $in->getEntityUniqueId();

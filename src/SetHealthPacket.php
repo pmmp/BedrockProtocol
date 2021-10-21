@@ -30,8 +30,7 @@ use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 class SetHealthPacket extends DataPacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::SET_HEALTH_PACKET;
 
-	/** @var int */
-	public $health;
+	public int $health;
 
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->health = $in->getVarInt();

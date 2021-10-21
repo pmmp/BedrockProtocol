@@ -30,16 +30,11 @@ use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 class BlockPickRequestPacket extends DataPacket implements ServerboundPacket{
 	public const NETWORK_ID = ProtocolInfo::BLOCK_PICK_REQUEST_PACKET;
 
-	/** @var int */
-	public $blockX;
-	/** @var int */
-	public $blockY;
-	/** @var int */
-	public $blockZ;
-	/** @var bool */
-	public $addUserData = false;
-	/** @var int */
-	public $hotbarSlot;
+	public int $blockX;
+	public int $blockY;
+	public int $blockZ;
+	public bool $addUserData = false;
+	public int $hotbarSlot;
 
 	protected function decodePayload(PacketSerializer $in) : void{
 		$in->getSignedBlockPosition($this->blockX, $this->blockY, $this->blockZ);

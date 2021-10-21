@@ -34,24 +34,16 @@ class ClientboundDebugRendererPacket extends DataPacket implements ClientboundPa
 	public const TYPE_CLEAR = 1;
 	public const TYPE_ADD_CUBE = 2;
 
-	/** @var int */
-	private $type;
+	private int $type;
 
 	//TODO: if more types are added, we'll probably want to make a separate data type and interfaces
-	/** @var string */
-	private $text;
-	/** @var Vector3 */
-	private $position;
-	/** @var float */
-	private $red;
-	/** @var float */
-	private $green;
-	/** @var float */
-	private $blue;
-	/** @var float */
-	private $alpha;
-	/** @var int */
-	private $durationMillis;
+	private string $text;
+	private Vector3 $position;
+	private float $red;
+	private float $green;
+	private float $blue;
+	private float $alpha;
+	private int $durationMillis;
 
 	private static function base(int $type) : self{
 		$result = new self;

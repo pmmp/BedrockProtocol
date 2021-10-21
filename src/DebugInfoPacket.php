@@ -30,10 +30,8 @@ use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 class DebugInfoPacket extends DataPacket implements ClientboundPacket, ServerboundPacket{
 	public const NETWORK_ID = ProtocolInfo::DEBUG_INFO_PACKET;
 
-	/** @var int */
-	private $entityUniqueId;
-	/** @var string */
-	private $data;
+	private int $entityUniqueId;
+	private string $data;
 
 	public static function create(int $entityUniqueId, string $data) : self{
 		$result = new self;

@@ -30,20 +30,13 @@ use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 class PhotoTransferPacket extends DataPacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::PHOTO_TRANSFER_PACKET;
 
-	/** @var string */
-	public $photoName;
-	/** @var string */
-	public $photoData;
-	/** @var string */
-	public $bookId; //photos are stored in a sibling directory to the games folder (screenshots/(some UUID)/bookID/example.png)
-	/** @var int */
-	public $type;
-	/** @var int */
-	public $sourceType;
-	/** @var int */
-	public $ownerEntityUniqueId;
-	/** @var string */
-	public $newPhotoName; //???
+	public string $photoName;
+	public string $photoData;
+	public string $bookId; //photos are stored in a sibling directory to the games folder (screenshots/(some UUID)/bookID/example.png)
+	public int $type;
+	public int $sourceType;
+	public int $ownerEntityUniqueId;
+	public string $newPhotoName; //???
 
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->photoName = $in->getString();

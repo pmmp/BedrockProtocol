@@ -39,22 +39,17 @@ class UpdateBlockPacket extends DataPacket implements ClientboundPacket{
 	public const DATA_LAYER_NORMAL = 0;
 	public const DATA_LAYER_LIQUID = 1;
 
-	/** @var int */
-	public $x;
-	/** @var int */
-	public $z;
-	/** @var int */
-	public $y;
-	/** @var int */
-	public $blockRuntimeId;
+	public int $x;
+	public int $z;
+	public int $y;
+	public int $blockRuntimeId;
 	/**
 	 * @var int
 	 * Flags are used by MCPE internally for block setting, but only flag 2 (network flag) is relevant for network.
 	 * This field is pointless really.
 	 */
-	public $flags = self::FLAG_NETWORK;
-	/** @var int */
-	public $dataLayerId = self::DATA_LAYER_NORMAL;
+	public int $flags = self::FLAG_NETWORK;
+	public int $dataLayerId = self::DATA_LAYER_NORMAL;
 
 	public static function create(int $x, int $y, int $z, int $blockRuntimeId, int $dataLayerId = self::DATA_LAYER_NORMAL) : self{
 		$result = new self;

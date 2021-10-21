@@ -34,8 +34,7 @@ class MultiplayerSettingsPacket extends DataPacket implements ClientboundPacket,
 	public const ACTION_DISABLE_MULTIPLAYER = 1;
 	public const ACTION_REFRESH_JOIN_CODE = 2;
 
-	/** @var int */
-	private $action;
+	private int $action;
 
 	public static function create(int $action) : self{
 		$result = new self;

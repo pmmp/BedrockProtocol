@@ -30,18 +30,12 @@ use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 class LecternUpdatePacket extends DataPacket implements ServerboundPacket{
 	public const NETWORK_ID = ProtocolInfo::LECTERN_UPDATE_PACKET;
 
-	/** @var int */
-	public $page;
-	/** @var int */
-	public $totalPages;
-	/** @var int */
-	public $x;
-	/** @var int */
-	public $y;
-	/** @var int */
-	public $z;
-	/** @var bool */
-	public $dropBook;
+	public int $page;
+	public int $totalPages;
+	public int $x;
+	public int $y;
+	public int $z;
+	public bool $dropBook;
 
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->page = $in->getByte();

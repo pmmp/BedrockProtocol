@@ -30,14 +30,10 @@ use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 class ResourcePackChunkDataPacket extends DataPacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::RESOURCE_PACK_CHUNK_DATA_PACKET;
 
-	/** @var string */
-	public $packId;
-	/** @var int */
-	public $chunkIndex;
-	/** @var int */
-	public $progress;
-	/** @var string */
-	public $data;
+	public string $packId;
+	public int $chunkIndex;
+	public int $progress;
+	public string $data;
 
 	public static function create(string $packId, int $chunkIndex, int $chunkOffset, string $data) : self{
 		$result = new self;

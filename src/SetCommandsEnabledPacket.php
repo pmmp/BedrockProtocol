@@ -30,8 +30,7 @@ use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 class SetCommandsEnabledPacket extends DataPacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::SET_COMMANDS_ENABLED_PACKET;
 
-	/** @var bool */
-	public $enabled;
+	public bool $enabled;
 
 	public static function create(bool $enabled) : self{
 		$result = new self;

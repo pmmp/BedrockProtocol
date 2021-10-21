@@ -43,20 +43,14 @@ class TextPacket extends DataPacket implements ClientboundPacket, ServerboundPac
 	public const TYPE_JSON_WHISPER = 9;
 	public const TYPE_JSON = 10;
 
-	/** @var int */
-	public $type;
-	/** @var bool */
-	public $needsTranslation = false;
-	/** @var string */
-	public $sourceName;
-	/** @var string */
-	public $message;
+	public int $type;
+	public bool $needsTranslation = false;
+	public string $sourceName;
+	public string $message;
 	/** @var string[] */
-	public $parameters = [];
-	/** @var string */
-	public $xboxUserId = "";
-	/** @var string */
-	public $platformChatId = "";
+	public array $parameters = [];
+	public string $xboxUserId = "";
+	public string $platformChatId = "";
 
 	private static function messageOnly(int $type, string $message) : self{
 		$result = new self;

@@ -30,8 +30,7 @@ use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 class RemoveObjectivePacket extends DataPacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::REMOVE_OBJECTIVE_PACKET;
 
-	/** @var string */
-	public $objectiveName;
+	public string $objectiveName;
 
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->objectiveName = $in->getString();

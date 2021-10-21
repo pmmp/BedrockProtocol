@@ -30,11 +30,8 @@ use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 class ServerToClientHandshakePacket extends DataPacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::SERVER_TO_CLIENT_HANDSHAKE_PACKET;
 
-	/**
-	 * @var string
-	 * Server pubkey and token is contained in the JWT.
-	 */
-	public $jwt;
+	/** Server pubkey and token is contained in the JWT. */
+	public string $jwt;
 
 	public static function create(string $jwt) : self{
 		$result = new self;

@@ -371,18 +371,12 @@ class LevelSoundEventPacket extends DataPacket implements ClientboundPacket, Ser
 		return $result;
 	}
 
-	/** @var int */
-	public $sound;
-	/** @var Vector3 */
-	public $position;
-	/** @var int */
-	public $extraData = -1;
-	/** @var string */
-	public $entityType = ":"; //???
-	/** @var bool */
-	public $isBabyMob = false; //...
-	/** @var bool */
-	public $disableRelativeVolume = false;
+	public int $sound;
+	public Vector3 $position;
+	public int $extraData = -1;
+	public string $entityType = ":"; //???
+	public bool $isBabyMob = false; //...
+	public bool $disableRelativeVolume = false;
 
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->sound = $in->getUnsignedVarInt();

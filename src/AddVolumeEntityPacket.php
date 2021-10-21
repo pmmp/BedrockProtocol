@@ -33,12 +33,9 @@ use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 class AddVolumeEntityPacket extends DataPacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::ADD_VOLUME_ENTITY_PACKET;
 
-	/** @var int */
-	private $entityNetId;
-	/** @var CompoundTag */
-	private $data;
-	/** @var string */
-	private $engineVersion;
+	private int $entityNetId;
+	private CompoundTag $data;
+	private string $engineVersion;
 
 	public static function create(int $entityNetId, CompoundTag $data, string $engineVersion) : self{
 		$result = new self;

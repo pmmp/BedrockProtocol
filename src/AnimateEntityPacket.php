@@ -31,23 +31,17 @@ use function count;
 class AnimateEntityPacket extends DataPacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::ANIMATE_ENTITY_PACKET;
 
-	/** @var string */
-	private $animation;
-	/** @var string */
-	private $nextState;
-	/** @var string */
-	private $stopExpression;
-	/** @var int */
-	private $stopExpressionVersion;
-	/** @var string */
-	private $controller;
-	/** @var float */
-	private $blendOutTime;
+	private string $animation;
+	private string $nextState;
+	private string $stopExpression;
+	private int $stopExpressionVersion;
+	private string $controller;
+	private float $blendOutTime;
 	/**
 	 * @var int[]
 	 * @phpstan-var list<int>
 	 */
-	private $actorRuntimeIds;
+	private array $actorRuntimeIds;
 
 	/**
 	 * @param int[] $actorRuntimeIds

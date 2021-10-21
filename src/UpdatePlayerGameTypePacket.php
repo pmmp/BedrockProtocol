@@ -31,14 +31,9 @@ use pocketmine\network\mcpe\protocol\types\GameMode;
 class UpdatePlayerGameTypePacket extends DataPacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::UPDATE_PLAYER_GAME_TYPE_PACKET;
 
-	/**
-	 * @var int
-	 * @see GameMode
-	 */
-	private $gameMode;
-
-	/** @var int */
-	private $playerEntityUniqueId;
+	/** @see GameMode */
+	private int $gameMode;
+	private int $playerEntityUniqueId;
 
 	public static function create(int $gameMode, int $playerEntityUniqueId) : self{
 		$result = new self;

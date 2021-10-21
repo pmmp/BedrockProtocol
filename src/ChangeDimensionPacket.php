@@ -31,12 +31,9 @@ use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 class ChangeDimensionPacket extends DataPacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::CHANGE_DIMENSION_PACKET;
 
-	/** @var int */
-	public $dimension;
-	/** @var Vector3 */
-	public $position;
-	/** @var bool */
-	public $respawn = false;
+	public int $dimension;
+	public Vector3 $position;
+	public bool $respawn = false;
 
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->dimension = $in->getVarInt();

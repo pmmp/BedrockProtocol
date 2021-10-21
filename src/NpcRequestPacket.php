@@ -38,14 +38,10 @@ class NpcRequestPacket extends DataPacket implements ServerboundPacket{
 	public const REQUEST_SET_INTERACTION_TEXT = 5;
 	public const REQUEST_EXECUTE_OPENING_COMMANDS = 6;
 
-	/** @var int */
-	public $entityRuntimeId;
-	/** @var int */
-	public $requestType;
-	/** @var string */
-	public $commandString;
-	/** @var int */
-	public $actionType;
+	public int $entityRuntimeId;
+	public int $requestType;
+	public string $commandString;
+	public int $actionType;
 	public string $sceneName;
 
 	protected function decodePayload(PacketSerializer $in) : void{

@@ -91,12 +91,9 @@ class ActorEventPacket extends DataPacket implements ClientboundPacket, Serverbo
 
 	//TODO: add more events
 
-	/** @var int */
-	public $entityRuntimeId;
-	/** @var int */
-	public $event;
-	/** @var int */
-	public $data = 0;
+	public int $entityRuntimeId;
+	public int $event;
+	public int $data = 0;
 
 	public static function create(int $entityRuntimeId, int $eventId, int $eventData) : self{
 		$result = new self;

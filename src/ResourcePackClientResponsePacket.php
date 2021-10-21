@@ -36,10 +36,9 @@ class ResourcePackClientResponsePacket extends DataPacket implements Serverbound
 	public const STATUS_HAVE_ALL_PACKS = 3;
 	public const STATUS_COMPLETED = 4;
 
-	/** @var int */
-	public $status;
+	public int $status;
 	/** @var string[] */
-	public $packIds = [];
+	public array $packIds = [];
 
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->status = $in->getByte();

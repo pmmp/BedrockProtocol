@@ -64,18 +64,12 @@ class AdventureSettingsPacket extends DataPacket implements ClientboundPacket, S
 	public const BUILD = 0x100 | self::BITFLAG_SECOND_SET;
 	public const DEFAULT = 0x200 | self::BITFLAG_SECOND_SET;
 
-	/** @var int */
-	public $flags = 0;
-	/** @var int */
-	public $commandPermission = self::PERMISSION_NORMAL;
-	/** @var int */
-	public $flags2 = -1;
-	/** @var int */
-	public $playerPermission = PlayerPermissions::MEMBER;
-	/** @var int */
-	public $customFlags = 0; //...
-	/** @var int */
-	public $entityUniqueId; //This is a little-endian long, NOT a var-long. (WTF Mojang)
+	public int $flags = 0;
+	public int $commandPermission = self::PERMISSION_NORMAL;
+	public int $flags2 = -1;
+	public int $playerPermission = PlayerPermissions::MEMBER;
+	public int $customFlags = 0; //...
+	public int $entityUniqueId; //This is a little-endian long, NOT a var-long. (WTF Mojang)
 
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->flags = $in->getUnsignedVarInt();

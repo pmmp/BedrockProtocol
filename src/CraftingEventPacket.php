@@ -33,16 +33,13 @@ use function count;
 class CraftingEventPacket extends DataPacket implements ServerboundPacket{
 	public const NETWORK_ID = ProtocolInfo::CRAFTING_EVENT_PACKET;
 
-	/** @var int */
-	public $windowId;
-	/** @var int */
-	public $type;
-	/** @var UuidInterface */
-	public $id;
+	public int $windowId;
+	public int $type;
+	public UuidInterface $id;
 	/** @var ItemStackWrapper[] */
-	public $input = [];
+	public array $input = [];
 	/** @var ItemStackWrapper[] */
-	public $output = [];
+	public array $output = [];
 
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->windowId = $in->getByte();

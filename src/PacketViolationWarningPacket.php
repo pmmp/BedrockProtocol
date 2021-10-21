@@ -36,14 +36,10 @@ class PacketViolationWarningPacket extends DataPacket implements ServerboundPack
 	public const SEVERITY_FINAL_WARNING = 1;
 	public const SEVERITY_TERMINATING_CONNECTION = 2;
 
-	/** @var int */
-	private $type;
-	/** @var int */
-	private $severity;
-	/** @var int */
-	private $packetId;
-	/** @var string */
-	private $message;
+	private int $type;
+	private int $severity;
+	private int $packetId;
+	private string $message;
 
 	public static function create(int $type, int $severity, int $packetId, string $message) : self{
 		$result = new self;

@@ -30,8 +30,7 @@ use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 class SetTimePacket extends DataPacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::SET_TIME_PACKET;
 
-	/** @var int */
-	public $time;
+	public int $time;
 
 	public static function create(int $time) : self{
 		$result = new self;

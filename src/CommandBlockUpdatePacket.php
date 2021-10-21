@@ -30,37 +30,23 @@ use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 class CommandBlockUpdatePacket extends DataPacket implements ServerboundPacket{
 	public const NETWORK_ID = ProtocolInfo::COMMAND_BLOCK_UPDATE_PACKET;
 
-	/** @var bool */
-	public $isBlock;
+	public bool $isBlock;
 
-	/** @var int */
-	public $x;
-	/** @var int */
-	public $y;
-	/** @var int */
-	public $z;
-	/** @var int */
-	public $commandBlockMode;
-	/** @var bool */
-	public $isRedstoneMode;
-	/** @var bool */
-	public $isConditional;
+	public int $x;
+	public int $y;
+	public int $z;
+	public int $commandBlockMode;
+	public bool $isRedstoneMode;
+	public bool $isConditional;
 
-	/** @var int */
-	public $minecartEid;
+	public int $minecartEid;
 
-	/** @var string */
-	public $command;
-	/** @var string */
-	public $lastOutput;
-	/** @var string */
-	public $name;
-	/** @var bool */
-	public $shouldTrackOutput;
-	/** @var int */
-	public $tickDelay;
-	/** @var bool */
-	public $executeOnFirstTick;
+	public string $command;
+	public string $lastOutput;
+	public string $name;
+	public bool $shouldTrackOutput;
+	public int $tickDelay;
+	public bool $executeOnFirstTick;
 
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->isBlock = $in->getBool();

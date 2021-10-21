@@ -35,10 +35,9 @@ class SetScoreboardIdentityPacket extends DataPacket implements ClientboundPacke
 	public const TYPE_REGISTER_IDENTITY = 0;
 	public const TYPE_CLEAR_IDENTITY = 1;
 
-	/** @var int */
-	public $type;
+	public int $type;
 	/** @var ScoreboardIdentityPacketEntry[] */
-	public $entries = [];
+	public array $entries = [];
 
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->type = $in->getByte();

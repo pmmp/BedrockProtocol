@@ -33,8 +33,7 @@ use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 class SyncActorPropertyPacket extends DataPacket{
 	public const NETWORK_ID = ProtocolInfo::SYNC_ACTOR_PROPERTY_PACKET;
 
-	/** @var CompoundTag */
-	private $data;
+	private CompoundTag $data;
 
 	public static function create(CompoundTag $data) : self{
 		$result = new self;

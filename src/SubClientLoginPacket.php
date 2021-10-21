@@ -30,8 +30,7 @@ use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 class SubClientLoginPacket extends DataPacket implements ServerboundPacket{
 	public const NETWORK_ID = ProtocolInfo::SUB_CLIENT_LOGIN_PACKET;
 
-	/** @var string */
-	public $connectionRequestData;
+	public string $connectionRequestData;
 
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->connectionRequestData = $in->getString();

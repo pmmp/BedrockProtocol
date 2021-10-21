@@ -30,10 +30,8 @@ use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 class ResourcePackChunkRequestPacket extends DataPacket implements ServerboundPacket{
 	public const NETWORK_ID = ProtocolInfo::RESOURCE_PACK_CHUNK_REQUEST_PACKET;
 
-	/** @var string */
-	public $packId;
-	/** @var int */
-	public $chunkIndex;
+	public string $packId;
+	public int $chunkIndex;
 
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->packId = $in->getString();

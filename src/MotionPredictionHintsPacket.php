@@ -31,12 +31,9 @@ use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 class MotionPredictionHintsPacket extends DataPacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::MOTION_PREDICTION_HINTS_PACKET;
 
-	/** @var int */
-	private $entityRuntimeId;
-	/** @var Vector3 */
-	private $motion;
-	/** @var bool */
-	private $onGround;
+	private int $entityRuntimeId;
+	private Vector3 $motion;
+	private bool $onGround;
 
 	public static function create(int $entityRuntimeId, Vector3 $motion, bool $onGround) : self{
 		$result = new self;

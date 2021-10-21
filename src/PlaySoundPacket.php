@@ -30,18 +30,12 @@ use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 class PlaySoundPacket extends DataPacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::PLAY_SOUND_PACKET;
 
-	/** @var string */
-	public $soundName;
-	/** @var float */
-	public $x;
-	/** @var float */
-	public $y;
-	/** @var float */
-	public $z;
-	/** @var float */
-	public $volume;
-	/** @var float */
-	public $pitch;
+	public string $soundName;
+	public float $x;
+	public float $y;
+	public float $z;
+	public float $volume;
+	public float $pitch;
 
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->soundName = $in->getString();

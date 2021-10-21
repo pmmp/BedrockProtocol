@@ -50,15 +50,14 @@ class CraftingDataPacket extends DataPacket implements ClientboundPacket{
 	public const ENTRY_SHAPED_CHEMISTRY = 7;
 
 	/** @var RecipeWithTypeId[] */
-	public $entries = [];
+	public array $entries = [];
 	/** @var PotionTypeRecipe[] */
-	public $potionTypeRecipes = [];
+	public array $potionTypeRecipes = [];
 	/** @var PotionContainerChangeRecipe[] */
-	public $potionContainerRecipes = [];
+	public array $potionContainerRecipes = [];
 	/** @var MaterialReducerRecipe[] */
-	public $materialReducerRecipes = [];
-	/** @var bool */
-	public $cleanRecipes = false;
+	public array $materialReducerRecipes = [];
+	public bool $cleanRecipes = false;
 
 	protected function decodePayload(PacketSerializer $in) : void{
 		$recipeCount = $in->getUnsignedVarInt();

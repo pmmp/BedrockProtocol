@@ -41,22 +41,14 @@ class MoveActorDeltaPacket extends DataPacket implements ClientboundPacket{
 	public const FLAG_TELEPORT = 0x80;
 	public const FLAG_FORCE_MOVE_LOCAL_ENTITY = 0x100;
 
-	/** @var int */
-	public $entityRuntimeId;
-	/** @var int */
-	public $flags;
-	/** @var float */
-	public $xPos = 0;
-	/** @var float */
-	public $yPos = 0;
-	/** @var float */
-	public $zPos = 0;
-	/** @var float */
-	public $xRot = 0.0;
-	/** @var float */
-	public $yRot = 0.0;
-	/** @var float */
-	public $zRot = 0.0;
+	public int $entityRuntimeId;
+	public int $flags;
+	public float $xPos = 0;
+	public float $yPos = 0;
+	public float $zPos = 0;
+	public float $xRot = 0.0;
+	public float $yRot = 0.0;
+	public float $zRot = 0.0;
 
 	/**
 	 * @throws BinaryDataException

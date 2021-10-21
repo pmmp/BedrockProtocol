@@ -35,17 +35,11 @@ class InteractPacket extends DataPacket implements ServerboundPacket{
 	public const ACTION_OPEN_NPC = 5;
 	public const ACTION_OPEN_INVENTORY = 6;
 
-	/** @var int */
-	public $action;
-	/** @var int */
-	public $target;
-
-	/** @var float */
-	public $x;
-	/** @var float */
-	public $y;
-	/** @var float */
-	public $z;
+	public int $action;
+	public int $target;
+	public float $x;
+	public float $y;
+	public float $z;
 
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->action = $in->getByte();

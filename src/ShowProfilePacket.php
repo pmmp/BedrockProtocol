@@ -30,8 +30,7 @@ use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 class ShowProfilePacket extends DataPacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::SHOW_PROFILE_PACKET;
 
-	/** @var string */
-	public $xuid;
+	public string $xuid;
 
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->xuid = $in->getString();

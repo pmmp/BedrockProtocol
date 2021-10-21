@@ -39,10 +39,8 @@ abstract class DataPacket implements Packet{
 	private const SENDER_SUBCLIENT_ID_SHIFT = 10;
 	private const RECIPIENT_SUBCLIENT_ID_SHIFT = 12;
 
-	/** @var int */
-	public $senderSubId = 0;
-	/** @var int */
-	public $recipientSubId = 0;
+	public int $senderSubId = 0;
+	public int $recipientSubId = 0;
 
 	public function pid() : int{
 		return $this::NETWORK_ID;

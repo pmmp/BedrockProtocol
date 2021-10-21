@@ -30,10 +30,8 @@ use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 class CodeBuilderPacket extends DataPacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::CODE_BUILDER_PACKET;
 
-	/** @var string */
-	private $url;
-	/** @var bool */
-	private $openCodeBuilder;
+	private string $url;
+	private bool $openCodeBuilder;
 
 	public static function create(string $url, bool $openCodeBuilder) : self{
 		$result = new self;

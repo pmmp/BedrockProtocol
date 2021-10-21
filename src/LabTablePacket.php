@@ -34,18 +34,11 @@ class LabTablePacket extends DataPacket implements ClientboundPacket, Serverboun
 	public const TYPE_START_REACTION = 1;
 	public const TYPE_RESET = 2;
 
-	/** @var int */
-	public $type;
-
-	/** @var int */
-	public $x;
-	/** @var int */
-	public $y;
-	/** @var int */
-	public $z;
-
-	/** @var int */
-	public $reactionType;
+	public int $type;
+	public int $x;
+	public int $y;
+	public int $z;
+	public int $reactionType;
 
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->type = $in->getByte();

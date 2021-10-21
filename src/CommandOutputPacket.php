@@ -39,16 +39,12 @@ class CommandOutputPacket extends DataPacket implements ClientboundPacket{
 	public const TYPE_ALL = 3;
 	public const TYPE_DATA_SET = 4;
 
-	/** @var CommandOriginData */
-	public $originData;
-	/** @var int */
-	public $outputType;
-	/** @var int */
-	public $successCount;
+	public CommandOriginData $originData;
+	public int $outputType;
+	public int $successCount;
 	/** @var CommandOutputMessage[] */
-	public $messages = [];
-	/** @var string */
-	public $unknownString;
+	public array $messages = [];
+	public string $unknownString;
 
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->originData = $in->getCommandOriginData();

@@ -47,10 +47,8 @@ class CompletedUsingItemPacket extends DataPacket implements ClientboundPacket{
 	public const ACTION_DYED = 13;
 	public const ACTION_TRADED = 14;
 
-	/** @var int */
-	public $itemId;
-	/** @var int */
-	public $action;
+	public int $itemId;
+	public int $action;
 
 	public function decodePayload(PacketSerializer $in) : void{
 		$this->itemId = $in->getShort();

@@ -31,16 +31,11 @@ use pocketmine\network\mcpe\protocol\types\StructureEditorData;
 class StructureBlockUpdatePacket extends DataPacket implements ServerboundPacket{
 	public const NETWORK_ID = ProtocolInfo::STRUCTURE_BLOCK_UPDATE_PACKET;
 
-	/** @var int */
-	public $x;
-	/** @var int */
-	public $y;
-	/** @var int */
-	public $z;
-	/** @var StructureEditorData */
-	public $structureEditorData;
-	/** @var bool */
-	public $isPowered;
+	public int $x;
+	public int $y;
+	public int $z;
+	public StructureEditorData $structureEditorData;
+	public bool $isPowered;
 
 	protected function decodePayload(PacketSerializer $in) : void{
 		$in->getBlockPosition($this->x, $this->y, $this->z);

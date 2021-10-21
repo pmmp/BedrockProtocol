@@ -40,12 +40,9 @@ class ContainerSetDataPacket extends DataPacket implements ClientboundPacket{
 	public const PROPERTY_BREWING_STAND_FUEL_AMOUNT = 1;
 	public const PROPERTY_BREWING_STAND_FUEL_TOTAL = 2;
 
-	/** @var int */
-	public $windowId;
-	/** @var int */
-	public $property;
-	/** @var int */
-	public $value;
+	public int $windowId;
+	public int $property;
+	public int $value;
 
 	public static function create(int $windowId, int $propertyId, int $value) : self{
 		$result = new self;

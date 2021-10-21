@@ -38,13 +38,9 @@ use const JSON_THROW_ON_ERROR;
 class LoginPacket extends DataPacket implements ServerboundPacket{
 	public const NETWORK_ID = ProtocolInfo::LOGIN_PACKET;
 
-	/** @var int */
-	public $protocol;
-
-	/** @var JwtChain */
-	public $chainDataJwt;
-	/** @var string */
-	public $clientDataJwt;
+	public int $protocol;
+	public JwtChain $chainDataJwt;
+	public string $clientDataJwt;
 
 	public function canBeSentBeforeLogin() : bool{
 		return true;

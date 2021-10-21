@@ -30,14 +30,10 @@ use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 class AnvilDamagePacket extends DataPacket implements ServerboundPacket{
 	public const NETWORK_ID = ProtocolInfo::ANVIL_DAMAGE_PACKET;
 
-	/** @var int */
-	private $x;
-	/** @var int */
-	private $y;
-	/** @var int */
-	private $z;
-	/** @var int */
-	private $damageAmount;
+	private int $x;
+	private int $y;
+	private int $z;
+	private int $damageAmount;
 
 	public static function create(int $x, int $y, int $z, int $damageAmount) : self{
 		$result = new self;

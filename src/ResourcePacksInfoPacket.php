@@ -33,16 +33,13 @@ use function count;
 class ResourcePacksInfoPacket extends DataPacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::RESOURCE_PACKS_INFO_PACKET;
 
-	/** @var bool */
-	public $mustAccept = false; //if true, forces client to choose between accepting packs or being disconnected
-	/** @var bool */
-	public $hasScripts = false; //if true, causes disconnect for any platform that doesn't support scripts yet
-
+	public bool $mustAccept = false; //if true, forces client to choose between accepting packs or being disconnected
+	public bool $hasScripts = false; //if true, causes disconnect for any platform that doesn't support scripts yet
 	public bool $forceServerPacks = false;
 	/** @var BehaviorPackInfoEntry[] */
-	public $behaviorPackEntries = [];
+	public array $behaviorPackEntries = [];
 	/** @var ResourcePackInfoEntry[] */
-	public $resourcePackEntries = [];
+	public array $resourcePackEntries = [];
 
 	/**
 	 * @param ResourcePackInfoEntry[] $resourcePacks

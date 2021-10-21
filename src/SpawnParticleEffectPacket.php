@@ -32,14 +32,10 @@ use pocketmine\network\mcpe\protocol\types\DimensionIds;
 class SpawnParticleEffectPacket extends DataPacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::SPAWN_PARTICLE_EFFECT_PACKET;
 
-	/** @var int */
-	public $dimensionId = DimensionIds::OVERWORLD; //wtf mojang
-	/** @var int */
-	public $entityUniqueId = -1; //default none
-	/** @var Vector3 */
-	public $position;
-	/** @var string */
-	public $particleName;
+	public int $dimensionId = DimensionIds::OVERWORLD; //wtf mojang
+	public int $entityUniqueId = -1; //default none
+	public Vector3 $position;
+	public string $particleName;
 
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->dimensionId = $in->getByte();

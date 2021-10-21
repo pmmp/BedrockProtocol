@@ -30,8 +30,7 @@ use function strlen;
 class UnknownPacket extends DataPacket{
 	public const NETWORK_ID = -1; //Invalid, do not try to write this
 
-	/** @var string */
-	public $payload;
+	public string $payload;
 
 	public function pid() : int{
 		if(strlen($this->payload ?? "") > 0){

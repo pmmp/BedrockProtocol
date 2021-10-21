@@ -30,10 +30,8 @@ use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 class TransferPacket extends DataPacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::TRANSFER_PACKET;
 
-	/** @var string */
-	public $address;
-	/** @var int */
-	public $port = 19132;
+	public string $address;
+	public int $port = 19132;
 
 	public static function create(string $address, int $port) : self{
 		$result = new self;

@@ -35,32 +35,24 @@ use function count;
 class AddActorPacket extends DataPacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::ADD_ACTOR_PACKET;
 
-	/** @var int|null */
-	public $entityUniqueId = null; //TODO
-	/** @var int */
-	public $entityRuntimeId;
-	/** @var string */
-	public $type;
-	/** @var Vector3 */
-	public $position;
-	/** @var Vector3|null */
-	public $motion;
-	/** @var float */
-	public $pitch = 0.0;
-	/** @var float */
-	public $yaw = 0.0;
-	/** @var float */
-	public $headYaw = 0.0;
+	public ?int $entityUniqueId = null; //TODO
+	public int $entityRuntimeId;
+	public string $type;
+	public Vector3 $position;
+	public ?Vector3 $motion;
+	public float $pitch = 0.0;
+	public float $yaw = 0.0;
+	public float $headYaw = 0.0;
 
 	/** @var Attribute[] */
-	public $attributes = [];
+	public array $attributes = [];
 	/**
 	 * @var MetadataProperty[]
 	 * @phpstan-var array<int, MetadataProperty>
 	 */
-	public $metadata = [];
+	public array $metadata = [];
 	/** @var EntityLink[] */
-	public $links = [];
+	public array $links = [];
 
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->entityUniqueId = $in->getEntityUniqueId();

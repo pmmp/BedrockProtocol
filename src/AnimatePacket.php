@@ -38,12 +38,9 @@ class AnimatePacket extends DataPacket implements ClientboundPacket, Serverbound
 	public const ACTION_ROW_RIGHT = 128;
 	public const ACTION_ROW_LEFT = 129;
 
-	/** @var int */
-	public $action;
-	/** @var int */
-	public $entityRuntimeId;
-	/** @var float */
-	public $float = 0.0; //TODO (Boat rowing time?)
+	public int $action;
+	public int $entityRuntimeId;
+	public float $float = 0.0; //TODO (Boat rowing time?)
 
 	public static function create(int $entityRuntimeId, int $actionId) : self{
 		$result = new self;

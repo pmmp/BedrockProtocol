@@ -87,27 +87,27 @@ class AvailableCommandsPacket extends DataPacket implements ClientboundPacket{
 	 * @var CommandData[]
 	 * List of command data, including name, description, alias indexes and parameters.
 	 */
-	public $commandData = [];
+	public array $commandData = [];
 
 	/**
 	 * @var CommandEnum[]
 	 * List of enums which aren't directly referenced by any vanilla command.
 	 * This is used for the `CommandName` enum, which is a magic enum used by the `command` argument type.
 	 */
-	public $hardcodedEnums = [];
+	public array $hardcodedEnums = [];
 
 	/**
 	 * @var CommandEnum[]
 	 * List of dynamic command enums, also referred to as "soft" enums. These can by dynamically updated mid-game
 	 * without resending this packet.
 	 */
-	public $softEnums = [];
+	public array $softEnums = [];
 
 	/**
 	 * @var CommandEnumConstraint[]
 	 * List of constraints for enum members. Used to constrain gamerules that can bechanged in nocheats mode and more.
 	 */
-	public $enumConstraints = [];
+	public array $enumConstraints = [];
 
 	protected function decodePayload(PacketSerializer $in) : void{
 		/** @var string[] $enumValues */

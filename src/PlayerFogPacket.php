@@ -35,7 +35,7 @@ class PlayerFogPacket extends DataPacket implements ClientboundPacket{
 	 * @var string[]
 	 * @phpstan-var list<string>
 	 */
-	private $fogLayers;
+	private array $fogLayers;
 
 	/**
 	 * @param string[] $fogLayers

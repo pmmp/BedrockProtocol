@@ -35,14 +35,10 @@ class PlayerArmorDamagePacket extends DataPacket implements ClientboundPacket{
 	private const FLAG_LEGS = 2;
 	private const FLAG_FEET = 3;
 
-	/** @var int|null */
-	private $headSlotDamage;
-	/** @var int|null */
-	private $chestSlotDamage;
-	/** @var int|null */
-	private $legsSlotDamage;
-	/** @var int|null */
-	private $feetSlotDamage;
+	private ?int $headSlotDamage;
+	private ?int $chestSlotDamage;
+	private ?int $legsSlotDamage;
+	private ?int $feetSlotDamage;
 
 	public static function create(?int $headSlotDamage, ?int $chestSlotDamage, ?int $legsSlotDamage, ?int $feetSlotDamage) : self{
 		$result = new self;

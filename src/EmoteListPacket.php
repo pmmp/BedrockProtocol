@@ -32,10 +32,9 @@ use function count;
 class EmoteListPacket extends DataPacket implements ClientboundPacket, ServerboundPacket{
 	public const NETWORK_ID = ProtocolInfo::EMOTE_LIST_PACKET;
 
-	/** @var int */
-	private $playerEntityRuntimeId;
+	private int $playerEntityRuntimeId;
 	/** @var UuidInterface[] */
-	private $emoteIds;
+	private array $emoteIds;
 
 	/**
 	 * @param UuidInterface[] $emoteIds

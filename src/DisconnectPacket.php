@@ -30,10 +30,8 @@ use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 class DisconnectPacket extends DataPacket implements ClientboundPacket, ServerboundPacket{
 	public const NETWORK_ID = ProtocolInfo::DISCONNECT_PACKET;
 
-	/** @var bool */
-	public $hideDisconnectionScreen = false;
-	/** @var string */
-	public $message = "";
+	public bool $hideDisconnectionScreen = false;
+	public string $message = "";
 
 	public static function silent() : self{
 		$result = new self;

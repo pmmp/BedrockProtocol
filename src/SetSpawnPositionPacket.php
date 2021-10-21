@@ -33,22 +33,14 @@ class SetSpawnPositionPacket extends DataPacket implements ClientboundPacket{
 	public const TYPE_PLAYER_SPAWN = 0;
 	public const TYPE_WORLD_SPAWN = 1;
 
-	/** @var int */
-	public $spawnType;
-	/** @var int */
-	public $x;
-	/** @var int */
-	public $y;
-	/** @var int */
-	public $z;
-	/** @var int */
-	public $dimension;
-	/** @var int */
-	public $x2;
-	/** @var int */
-	public $y2;
-	/** @var int */
-	public $z2;
+	public int $spawnType;
+	public int $x;
+	public int $y;
+	public int $z;
+	public int $dimension;
+	public int $x2;
+	public int $y2;
+	public int $z2;
 
 	public static function playerSpawn(int $x, int $y, int $z, int $dimension, int $x2, int $y2, int $z2) : self{
 		$result = new self;

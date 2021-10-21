@@ -31,12 +31,9 @@ use pocketmine\network\mcpe\protocol\types\command\CommandOriginData;
 class CommandRequestPacket extends DataPacket implements ServerboundPacket{
 	public const NETWORK_ID = ProtocolInfo::COMMAND_REQUEST_PACKET;
 
-	/** @var string */
-	public $command;
-	/** @var CommandOriginData */
-	public $originData;
-	/** @var bool */
-	public $isInternal;
+	public string $command;
+	public CommandOriginData $originData;
+	public bool $isInternal;
 
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->command = $in->getString();

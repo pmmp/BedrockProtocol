@@ -31,18 +31,12 @@ use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 class ContainerOpenPacket extends DataPacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::CONTAINER_OPEN_PACKET;
 
-	/** @var int */
-	public $windowId;
-	/** @var int */
-	public $type;
-	/** @var int */
-	public $x;
-	/** @var int */
-	public $y;
-	/** @var int */
-	public $z;
-	/** @var int */
-	public $entityUniqueId = -1;
+	public int $windowId;
+	public int $type;
+	public int $x;
+	public int $y;
+	public int $z;
+	public int $entityUniqueId = -1;
 
 	public static function blockInv(int $windowId, int $windowType, int $x, int $y, int $z) : self{
 		$result = new self;

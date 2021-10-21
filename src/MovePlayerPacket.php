@@ -36,28 +36,17 @@ class MovePlayerPacket extends DataPacket implements ClientboundPacket, Serverbo
 	public const MODE_TELEPORT = 2;
 	public const MODE_PITCH = 3; //facepalm Mojang
 
-	/** @var int */
-	public $entityRuntimeId;
-	/** @var Vector3 */
-	public $position;
-	/** @var float */
-	public $pitch;
-	/** @var float */
-	public $yaw;
-	/** @var float */
-	public $headYaw;
-	/** @var int */
-	public $mode = self::MODE_NORMAL;
-	/** @var bool */
-	public $onGround = false; //TODO
-	/** @var int */
-	public $ridingEid = 0;
-	/** @var int */
-	public $teleportCause = 0;
-	/** @var int */
-	public $teleportItem = 0;
-	/** @var int */
-	public $tick = 0;
+	public int $entityRuntimeId;
+	public Vector3 $position;
+	public float $pitch;
+	public float $yaw;
+	public float $headYaw;
+	public int $mode = self::MODE_NORMAL;
+	public bool $onGround = false; //TODO
+	public int $ridingEid = 0;
+	public int $teleportCause = 0;
+	public int $teleportItem = 0;
+	public int $tick = 0;
 
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->entityRuntimeId = $in->getEntityRuntimeId();

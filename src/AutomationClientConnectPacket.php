@@ -30,8 +30,7 @@ use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 class AutomationClientConnectPacket extends DataPacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::AUTOMATION_CLIENT_CONNECT_PACKET;
 
-	/** @var string */
-	public $serverUri;
+	public string $serverUri;
 
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->serverUri = $in->getString();

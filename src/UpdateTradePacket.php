@@ -34,29 +34,17 @@ class UpdateTradePacket extends DataPacket implements ClientboundPacket{
 
 	//TODO: find fields
 
-	/** @var int */
-	public $windowId;
-	/** @var int */
-	public $windowType = WindowTypes::TRADING; //Mojang hardcoded this -_-
-	/** @var int */
-	public $windowSlotCount = 0; //useless, seems to be part of a standard container header
-	/** @var int */
-	public $tradeTier;
-	/** @var int */
-	public $traderEid;
-	/** @var int */
-	public $playerEid;
-	/** @var string */
-	public $displayName;
-	/** @var bool */
-	public $isV2Trading;
-	/** @var bool */
-	public $isWilling;
-	/**
-	 * @var CacheableNbt
-	 * @phpstan-var CacheableNbt<\pocketmine\nbt\tag\CompoundTag>
-	 */
-	public $offers;
+	public int $windowId;
+	public int $windowType = WindowTypes::TRADING; //Mojang hardcoded this -_-
+	public int $windowSlotCount = 0; //useless, seems to be part of a standard container header
+	public int $tradeTier;
+	public int $traderEid;
+	public int $playerEid;
+	public string $displayName;
+	public bool $isV2Trading;
+	public bool $isWilling;
+	/** @phpstan-var CacheableNbt<\pocketmine\nbt\tag\CompoundTag> */
+	public CacheableNbt $offers;
 
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->windowId = $in->getByte();

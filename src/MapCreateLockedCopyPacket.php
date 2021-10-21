@@ -30,10 +30,8 @@ use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 class MapCreateLockedCopyPacket extends DataPacket implements ServerboundPacket{
 	public const NETWORK_ID = ProtocolInfo::MAP_CREATE_LOCKED_COPY_PACKET;
 
-	/** @var int */
-	public $originalMapId;
-	/** @var int */
-	public $newMapId;
+	public int $originalMapId;
+	public int $newMapId;
 
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->originalMapId = $in->getEntityUniqueId();

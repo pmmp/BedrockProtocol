@@ -28,7 +28,7 @@ use pocketmine\utils\BinaryDataException;
 
 class PacketPool{
 	/** @var self|null */
-	protected static $instance = null;
+	protected static ?PacketPool $instance = null;
 
 	public static function getInstance() : self{
 		if(self::$instance === null){
@@ -38,7 +38,7 @@ class PacketPool{
 	}
 
 	/** @var \SplFixedArray<Packet> */
-	protected $pool;
+	protected \SplFixedArray $pool;
 
 	public function __construct(){
 		$this->pool = new \SplFixedArray(256);

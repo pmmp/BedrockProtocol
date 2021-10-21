@@ -30,14 +30,10 @@ use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 class PlayerInputPacket extends DataPacket implements ServerboundPacket{
 	public const NETWORK_ID = ProtocolInfo::PLAYER_INPUT_PACKET;
 
-	/** @var float */
-	public $motionX;
-	/** @var float */
-	public $motionY;
-	/** @var bool */
-	public $jumping;
-	/** @var bool */
-	public $sneaking;
+	public float $motionX;
+	public float $motionY;
+	public bool $jumping;
+	public bool $sneaking;
 
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->motionX = $in->getLFloat();

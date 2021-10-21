@@ -33,7 +33,7 @@ class ItemStackResponsePacket extends DataPacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::ITEM_STACK_RESPONSE_PACKET;
 
 	/** @var ItemStackResponse[] */
-	private $responses;
+	private array $responses;
 
 	/**
 	 * @param ItemStackResponse[] $responses

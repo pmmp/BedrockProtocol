@@ -35,30 +35,18 @@ use function assert;
 class PlayerAuthInputPacket extends DataPacket implements ServerboundPacket{
 	public const NETWORK_ID = ProtocolInfo::PLAYER_AUTH_INPUT_PACKET;
 
-	/** @var Vector3 */
-	private $position;
-	/** @var float */
-	private $pitch;
-	/** @var float */
-	private $yaw;
-	/** @var float */
-	private $headYaw;
-	/** @var float */
-	private $moveVecX;
-	/** @var float */
-	private $moveVecZ;
-	/** @var int */
-	private $inputFlags;
-	/** @var int */
-	private $inputMode;
-	/** @var int */
-	private $playMode;
-	/** @var Vector3|null */
-	private $vrGazeDirection = null;
-	/** @var int */
-	private $tick;
-	/** @var Vector3 */
-	private $delta;
+	private Vector3 $position;
+	private float $pitch;
+	private float $yaw;
+	private float $headYaw;
+	private float $moveVecX;
+	private float $moveVecZ;
+	private int $inputFlags;
+	private int $inputMode;
+	private int $playMode;
+	private ?Vector3 $vrGazeDirection = null;
+	private int $tick;
+	private Vector3 $delta;
 
 	/**
 	 * @param int          $inputFlags @see InputFlags

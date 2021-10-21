@@ -31,18 +31,13 @@ use function count;
 class LevelChunkPacket extends DataPacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::LEVEL_CHUNK_PACKET;
 
-	/** @var int */
-	private $chunkX;
-	/** @var int */
-	private $chunkZ;
-	/** @var int */
-	private $subChunkCount;
-	/** @var bool */
-	private $cacheEnabled;
+	private int $chunkX;
+	private int $chunkZ;
+	private int $subChunkCount;
+	private bool $cacheEnabled;
 	/** @var int[] */
-	private $usedBlobHashes = [];
-	/** @var string */
-	private $extraPayload;
+	private array $usedBlobHashes = [];
+	private string $extraPayload;
 
 	public static function withoutCache(int $chunkX, int $chunkZ, int $subChunkCount, string $payload) : self{
 		$result = new self;

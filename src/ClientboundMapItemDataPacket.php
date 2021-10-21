@@ -42,29 +42,22 @@ class ClientboundMapItemDataPacket extends DataPacket implements ClientboundPack
 	public const BITFLAG_TEXTURE_UPDATE = 0x02;
 	public const BITFLAG_DECORATION_UPDATE = 0x04;
 
-	/** @var int */
-	public $mapId;
-	/** @var int */
-	public $type;
-	/** @var int */
-	public $dimensionId = DimensionIds::OVERWORLD;
-	/** @var bool */
-	public $isLocked = false;
+	public int $mapId;
+	public int $type;
+	public int $dimensionId = DimensionIds::OVERWORLD;
+	public bool $isLocked = false;
 
 	/** @var int[] */
-	public $eids = [];
-	/** @var int */
-	public $scale;
+	public array $eids = [];
+	public int $scale;
 
 	/** @var MapTrackedObject[] */
-	public $trackedEntities = [];
+	public array $trackedEntities = [];
 	/** @var MapDecoration[] */
-	public $decorations = [];
+	public array $decorations = [];
 
-	/** @var int */
-	public $xOffset = 0;
-	/** @var int */
-	public $yOffset = 0;
+	public int $xOffset = 0;
+	public int $yOffset = 0;
 	public ?MapImage $colors = null;
 
 	protected function decodePayload(PacketSerializer $in) : void{

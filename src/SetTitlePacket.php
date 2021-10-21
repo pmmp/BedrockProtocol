@@ -40,16 +40,11 @@ class SetTitlePacket extends DataPacket implements ClientboundPacket{
 	public const TYPE_SET_SUBTITLE_JSON = 7;
 	public const TYPE_SET_ACTIONBAR_MESSAGE_JSON = 8;
 
-	/** @var int */
-	public $type;
-	/** @var string */
-	public $text = "";
-	/** @var int */
-	public $fadeInTime = 0;
-	/** @var int */
-	public $stayTime = 0;
-	/** @var int */
-	public $fadeOutTime = 0;
+	public int $type;
+	public string $text = "";
+	public int $fadeInTime = 0;
+	public int $stayTime = 0;
+	public int $fadeOutTime = 0;
 	public string $xuid = "";
 	public string $platformOnlineId = "";
 

@@ -36,9 +36,8 @@ class PlayerListPacket extends DataPacket implements ClientboundPacket{
 	public const TYPE_REMOVE = 1;
 
 	/** @var PlayerListEntry[] */
-	public $entries = [];
-	/** @var int */
-	public $type;
+	public array $entries = [];
+	public int $type;
 
 	/**
 	 * @param PlayerListEntry[] $entries

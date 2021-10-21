@@ -31,19 +31,13 @@ use pocketmine\network\mcpe\protocol\types\inventory\ItemStackWrapper;
 class MobArmorEquipmentPacket extends DataPacket implements ClientboundPacket, ServerboundPacket{
 	public const NETWORK_ID = ProtocolInfo::MOB_ARMOR_EQUIPMENT_PACKET;
 
-	/** @var int */
-	public $entityRuntimeId;
+	public int $entityRuntimeId;
 
 	//this intentionally doesn't use an array because we don't want any implicit dependencies on internal order
-
-	/** @var ItemStackWrapper */
-	public $head;
-	/** @var ItemStackWrapper */
-	public $chest;
-	/** @var ItemStackWrapper */
-	public $legs;
-	/** @var ItemStackWrapper */
-	public $feet;
+	public ItemStackWrapper $head;
+	public ItemStackWrapper $chest;
+	public ItemStackWrapper $legs;
+	public ItemStackWrapper $feet;
 
 	public static function create(int $entityRuntimeId, ItemStackWrapper $head, ItemStackWrapper $chest, ItemStackWrapper $legs, ItemStackWrapper $feet) : self{
 		$result = new self;

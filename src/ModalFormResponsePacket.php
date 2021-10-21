@@ -30,10 +30,8 @@ use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 class ModalFormResponsePacket extends DataPacket implements ServerboundPacket{
 	public const NETWORK_ID = ProtocolInfo::MODAL_FORM_RESPONSE_PACKET;
 
-	/** @var int */
-	public $formId;
-	/** @var string */
-	public $formData; //json
+	public int $formId;
+	public string $formData; //json
 
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->formId = $in->getUnsignedVarInt();

@@ -30,8 +30,7 @@ use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 class PassengerJumpPacket extends DataPacket implements ServerboundPacket{
 	public const NETWORK_ID = ProtocolInfo::PASSENGER_JUMP_PACKET;
 
-	/** @var int */
-	public $jumpStrength; //percentage
+	public int $jumpStrength; //percentage
 
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->jumpStrength = $in->getVarInt();

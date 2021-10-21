@@ -59,18 +59,12 @@ class PlayerActionPacket extends DataPacket implements ServerboundPacket{
 	public const ACTION_PREDICT_DESTROY_BLOCK = 26;
 	public const ACTION_CONTINUE_DESTROY_BLOCK = 27;
 
-	/** @var int */
-	public $entityRuntimeId;
-	/** @var int */
-	public $action;
-	/** @var int */
-	public $x;
-	/** @var int */
-	public $y;
-	/** @var int */
-	public $z;
-	/** @var int */
-	public $face;
+	public int $entityRuntimeId;
+	public int $action;
+	public int $x;
+	public int $y;
+	public int $z;
+	public int $face;
 
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->entityRuntimeId = $in->getEntityRuntimeId();

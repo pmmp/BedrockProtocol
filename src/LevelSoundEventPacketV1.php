@@ -34,18 +34,12 @@ use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 class LevelSoundEventPacketV1 extends DataPacket{
 	public const NETWORK_ID = ProtocolInfo::LEVEL_SOUND_EVENT_PACKET_V1;
 
-	/** @var int */
-	public $sound;
-	/** @var Vector3 */
-	public $position;
-	/** @var int */
-	public $extraData = 0;
-	/** @var int */
-	public $entityType = 1;
-	/** @var bool */
-	public $isBabyMob = false; //...
-	/** @var bool */
-	public $disableRelativeVolume = false;
+	public int $sound;
+	public Vector3 $position;
+	public int $extraData = 0;
+	public int $entityType = 1;
+	public bool $isBabyMob = false; //...
+	public bool $disableRelativeVolume = false;
 
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->sound = $in->getByte();

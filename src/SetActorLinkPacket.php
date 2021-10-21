@@ -31,8 +31,7 @@ use pocketmine\network\mcpe\protocol\types\entity\EntityLink;
 class SetActorLinkPacket extends DataPacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::SET_ACTOR_LINK_PACKET;
 
-	/** @var EntityLink */
-	public $link;
+	public EntityLink $link;
 
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->link = $in->getEntityLink();

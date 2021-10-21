@@ -32,12 +32,10 @@ use function array_values;
 class UpdateAttributesPacket extends DataPacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::UPDATE_ATTRIBUTES_PACKET;
 
-	/** @var int */
-	public $entityRuntimeId;
+	public int $entityRuntimeId;
 	/** @var Attribute[] */
-	public $entries = [];
-	/** @var int */
-	public $tick = 0;
+	public array $entries = [];
+	public int $tick = 0;
 
 	/**
 	 * @param Attribute[] $attributes

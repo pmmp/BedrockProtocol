@@ -31,13 +31,9 @@ use pocketmine\network\mcpe\protocol\types\CacheableNbt;
 class StructureTemplateDataResponsePacket extends DataPacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::STRUCTURE_TEMPLATE_DATA_RESPONSE_PACKET;
 
-	/** @var string */
-	public $structureTemplateName;
-	/**
-	 * @var CacheableNbt|null
-	 * @phpstan-var CacheableNbt<\pocketmine\nbt\tag\CompoundTag>
-	 */
-	public $namedtag;
+	public string $structureTemplateName;
+	/** @phpstan-var CacheableNbt<\pocketmine\nbt\tag\CompoundTag> */
+	public ?CacheableNbt $namedtag;
 
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->structureTemplateName = $in->getString();

@@ -35,10 +35,9 @@ class SetScorePacket extends DataPacket implements ClientboundPacket{
 	public const TYPE_CHANGE = 0;
 	public const TYPE_REMOVE = 1;
 
-	/** @var int */
-	public $type;
+	public int $type;
 	/** @var ScorePacketEntry[] */
-	public $entries = [];
+	public array $entries = [];
 
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->type = $in->getByte();

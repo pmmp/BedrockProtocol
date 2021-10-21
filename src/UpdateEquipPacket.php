@@ -31,19 +31,12 @@ use pocketmine\network\mcpe\protocol\types\CacheableNbt;
 class UpdateEquipPacket extends DataPacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::UPDATE_EQUIP_PACKET;
 
-	/** @var int */
-	public $windowId;
-	/** @var int */
-	public $windowType;
-	/** @var int */
-	public $windowSlotCount; //useless, seems to be part of a standard container header
-	/** @var int */
-	public $entityUniqueId;
-	/**
-	 * @var CacheableNbt
-	 * @phpstan-var CacheableNbt<\pocketmine\nbt\tag\CompoundTag>
-	 */
-	public $namedtag;
+	public int $windowId;
+	public int $windowType;
+	public int $windowSlotCount; //useless, seems to be part of a standard container header
+	public int $entityUniqueId;
+	/** @phpstan-var CacheableNbt<\pocketmine\nbt\tag\CompoundTag> */
+	public CacheableNbt $namedtag;
 
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->windowId = $in->getByte();

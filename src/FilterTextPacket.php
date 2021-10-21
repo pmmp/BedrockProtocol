@@ -30,10 +30,8 @@ use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 class FilterTextPacket extends DataPacket implements ClientboundPacket, ServerboundPacket{
 	public const NETWORK_ID = ProtocolInfo::FILTER_TEXT_PACKET;
 
-	/** @var string */
-	private $text;
-	/** @var bool */
-	private $fromServer;
+	private string $text;
+	private bool $fromServer;
 
 	public static function create(string $text, bool $server) : self{
 		$result = new self;

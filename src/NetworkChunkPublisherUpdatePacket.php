@@ -30,14 +30,10 @@ use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 class NetworkChunkPublisherUpdatePacket extends DataPacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::NETWORK_CHUNK_PUBLISHER_UPDATE_PACKET;
 
-	/** @var int */
-	public $x;
-	/** @var int */
-	public $y;
-	/** @var int */
-	public $z;
-	/** @var int */
-	public $radius;
+	public int $x;
+	public int $y;
+	public int $z;
+	public int $radius;
 
 	public static function create(int $x, int $y, int $z, int $blockRadius) : self{
 		$result = new self;

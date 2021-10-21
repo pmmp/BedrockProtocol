@@ -47,12 +47,10 @@ class InventoryTransactionPacket extends DataPacket implements ClientboundPacket
 	public const TYPE_USE_ITEM_ON_ENTITY = 3;
 	public const TYPE_RELEASE_ITEM = 4;
 
-	/** @var int */
-	public $requestId;
+	public int $requestId;
 	/** @var InventoryTransactionChangedSlotsHack[] */
-	public $requestChangedSlots;
-	/** @var TransactionData */
-	public $trData;
+	public array $requestChangedSlots;
+	public TransactionData $trData;
 
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->requestId = $in->readGenericTypeNetworkId();

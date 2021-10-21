@@ -31,14 +31,10 @@ use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 class CorrectPlayerMovePredictionPacket extends DataPacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::CORRECT_PLAYER_MOVE_PREDICTION_PACKET;
 
-	/** @var Vector3 */
-	private $position;
-	/** @var Vector3 */
-	private $delta;
-	/** @var bool */
-	private $onGround;
-	/** @var int */
-	private $tick;
+	private Vector3 $position;
+	private Vector3 $delta;
+	private bool $onGround;
+	private int $tick;
 
 	public static function create(Vector3 $position, Vector3 $delta, bool $onGround, int $tick) : self{
 		$result = new self;

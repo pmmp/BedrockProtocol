@@ -34,18 +34,12 @@ class MobEffectPacket extends DataPacket implements ClientboundPacket{
 	public const EVENT_MODIFY = 2;
 	public const EVENT_REMOVE = 3;
 
-	/** @var int */
-	public $entityRuntimeId;
-	/** @var int */
-	public $eventId;
-	/** @var int */
-	public $effectId;
-	/** @var int */
-	public $amplifier = 0;
-	/** @var bool */
-	public $particles = true;
-	/** @var int */
-	public $duration = 0;
+	public int $entityRuntimeId;
+	public int $eventId;
+	public int $effectId;
+	public int $amplifier = 0;
+	public bool $particles = true;
+	public int $duration = 0;
 
 	public static function add(int $entityRuntimeId, bool $replace, int $effectId, int $amplifier, bool $particles, int $duration) : self{
 		$result = new self;

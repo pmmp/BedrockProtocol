@@ -34,18 +34,12 @@ class StructureTemplateDataRequestPacket extends DataPacket implements Serverbou
 	public const TYPE_ALWAYS_LOAD = 1;
 	public const TYPE_CREATE_AND_LOAD = 2;
 
-	/** @var string */
-	public $structureTemplateName;
-	/** @var int */
-	public $structureBlockX;
-	/** @var int */
-	public $structureBlockY;
-	/** @var int */
-	public $structureBlockZ;
-	/** @var StructureSettings */
-	public $structureSettings;
-	/** @var int */
-	public $structureTemplateResponseType;
+	public string $structureTemplateName;
+	public int $structureBlockX;
+	public int $structureBlockY;
+	public int $structureBlockZ;
+	public StructureSettings $structureSettings;
+	public int $structureTemplateResponseType;
 
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->structureTemplateName = $in->getString();

@@ -30,10 +30,8 @@ use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 class TickSyncPacket extends DataPacket implements ClientboundPacket, ServerboundPacket{
 	public const NETWORK_ID = ProtocolInfo::TICK_SYNC_PACKET;
 
-	/** @var int */
-	private $clientSendTime;
-	/** @var int */
-	private $serverReceiveTime;
+	private int $clientSendTime;
+	private int $serverReceiveTime;
 
 	public static function request(int $clientTime) : self{
 		$result = new self;

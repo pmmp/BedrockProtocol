@@ -32,26 +32,16 @@ use pocketmine\network\mcpe\protocol\types\EducationSettingsExternalLinkSettings
 class EducationSettingsPacket extends DataPacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::EDUCATION_SETTINGS_PACKET;
 
-	/** @var string */
-	private $codeBuilderDefaultUri;
-	/** @var string */
-	private $codeBuilderTitle;
-	/** @var bool */
-	private $canResizeCodeBuilder;
-	/** @var bool */
-	private $disableLegacyTitleBar;
-	/** @var string */
-	private $postProcessFilter;
-	/** @var string */
-	private $screenshotBorderResourcePath;
-	/** @var EducationSettingsAgentCapabilities|null */
-	private $agentCapabilities;
-	/** @var string|null */
-	private $codeBuilderOverrideUri;
-	/** @var bool */
-	private $hasQuiz;
-	/** @var EducationSettingsExternalLinkSettings|null */
-	private $linkSettings;
+	private string $codeBuilderDefaultUri;
+	private string $codeBuilderTitle;
+	private bool $canResizeCodeBuilder;
+	private bool $disableLegacyTitleBar;
+	private string $postProcessFilter;
+	private string $screenshotBorderResourcePath;
+	private ?EducationSettingsAgentCapabilities $agentCapabilities;
+	private ?string $codeBuilderOverrideUri;
+	private bool $hasQuiz;
+	private ?EducationSettingsExternalLinkSettings $linkSettings;
 
 	public static function create(
 		string $codeBuilderDefaultUri,

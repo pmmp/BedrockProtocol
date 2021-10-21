@@ -25,17 +25,25 @@ namespace pocketmine\network\mcpe\protocol\types;
 
 use pocketmine\math\Vector3;
 
-class StructureSettings{
+final class BlockPosition{
 
-	public string $paletteName;
-	public bool $ignoreEntities;
-	public bool $ignoreBlocks;
-	public BlockPosition $dimensions;
-	public BlockPosition $offset;
-	public int $lastTouchedByPlayerID;
-	public int $rotation;
-	public int $mirror;
-	public float $integrityValue;
-	public int $integritySeed;
-	public Vector3 $pivot;
+	public function __construct(
+		private int $x,
+		private int $y,
+		private int $z
+	){}
+
+	public function getX() : int{ return $this->x; }
+
+	public function getY() : int{ return $this->y; }
+
+	public function getZ() : int{ return $this->z; }
+
+	public static function fromVector3(Vector3 $vector3) : self{
+		return new self($vector3->getFloorX(), $vector3->getFloorY(), $vector3->getFloorZ());
+	}
+
+	public function equals(BlockPosition $other) : bool{
+		return $this->x === $other->x && $this->y === $other->y && $this->z === $other->z;
+	}
 }

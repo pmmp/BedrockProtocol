@@ -28,36 +28,27 @@ use pocketmine\network\mcpe\protocol\UpdateBlockPacket;
 
 final class UpdateSubChunkBlocksPacketEntry{
 
-	private int $x;
-	private int $y;
-	private int $z;
+	private BlockPosition $blockPosition;
 	private int $blockRuntimeId;
-
 	private int $flags;
 
 	//These two fields are useless 99.9% of the time; they are here to allow this packet to provide UpdateBlockSyncedPacket functionality.
 	private int $syncedUpdateEntityUniqueId;
 	private int $syncedUpdateType;
 
-	public function __construct(int $x, int $y, int $z, int $blockRuntimeId, int $flags, int $syncedUpdateEntityUniqueId, int $syncedUpdateType){
-		$this->x = $x;
-		$this->y = $y;
-		$this->z = $z;
+	public function __construct(BlockPosition $blockPosition, int $blockRuntimeId, int $flags, int $syncedUpdateEntityUniqueId, int $syncedUpdateType){
+		$this->blockPosition = $blockPosition;
 		$this->blockRuntimeId = $blockRuntimeId;
 		$this->flags = $flags;
 		$this->syncedUpdateEntityUniqueId = $syncedUpdateEntityUniqueId;
 		$this->syncedUpdateType = $syncedUpdateType;
 	}
 
-	public static function simple(int $x, int $y, int $z, int $blockRuntimeId) : self{
-		return new self($x, $y, $z, $blockRuntimeId, UpdateBlockPacket::FLAG_NETWORK, 0, 0);
+	public static function simple(BlockPosition $blockPosition, int $blockRuntimeId) : self{
+		return new self($blockPosition, $blockRuntimeId, UpdateBlockPacket::FLAG_NETWORK, 0, 0);
 	}
 
-	public function getX() : int{ return $this->x; }
-
-	public function getY() : int{ return $this->y; }
-
-	public function getZ() : int{ return $this->z; }
+	public function getBlockPosition() : BlockPosition{ return $this->blockPosition; }
 
 	public function getBlockRuntimeId() : int{ return $this->blockRuntimeId; }
 
@@ -68,18 +59,17 @@ final class UpdateSubChunkBlocksPacketEntry{
 	public function getSyncedUpdateType() : int{ return $this->syncedUpdateType; }
 
 	public static function read(PacketSerializer $in) : self{
-		$x = $y = $z = 0;
-		$in->getBlockPosition($x, $y, $z);
+		$blockPosition = $in->getBlockPosition();
 		$blockRuntimeId = $in->getUnsignedVarInt();
 		$updateFlags = $in->getUnsignedVarInt();
 		$syncedUpdateEntityUniqueId = $in->getUnsignedVarLong(); //this can't use the standard method because it's unsigned as opposed to the usual signed... !!!!!!
 		$syncedUpdateType = $in->getUnsignedVarInt(); //this isn't even consistent with UpdateBlockSyncedPacket?!
 
-		return new self($x, $y, $z, $blockRuntimeId, $updateFlags, $syncedUpdateEntityUniqueId, $syncedUpdateType);
+		return new self($blockPosition, $blockRuntimeId, $updateFlags, $syncedUpdateEntityUniqueId, $syncedUpdateType);
 	}
 
 	public function write(PacketSerializer $out) : void{
-		$out->putBlockPosition($this->x, $this->y, $this->z);
+		$out->putBlockPosition($this->blockPosition);
 		$out->putUnsignedVarInt($this->blockRuntimeId);
 		$out->putUnsignedVarInt($this->flags);
 		$out->putUnsignedVarLong($this->syncedUpdateEntityUniqueId);

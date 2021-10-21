@@ -82,7 +82,7 @@ class ClientboundMapItemDataPacket extends DataPacket implements ClientboundPack
 				$object = new MapTrackedObject();
 				$object->type = $in->getLInt();
 				if($object->type === MapTrackedObject::TYPE_BLOCK){
-					$in->getBlockPosition($object->x, $object->y, $object->z);
+					$object->blockPosition = $in->getBlockPosition();
 				}elseif($object->type === MapTrackedObject::TYPE_ENTITY){
 					$object->entityUniqueId = $in->getEntityUniqueId();
 				}else{
@@ -151,7 +151,7 @@ class ClientboundMapItemDataPacket extends DataPacket implements ClientboundPack
 			foreach($this->trackedEntities as $object){
 				$out->putLInt($object->type);
 				if($object->type === MapTrackedObject::TYPE_BLOCK){
-					$out->putBlockPosition($object->x, $object->y, $object->z);
+					$out->putBlockPosition($object->blockPosition);
 				}elseif($object->type === MapTrackedObject::TYPE_ENTITY){
 					$out->putEntityUniqueId($object->entityUniqueId);
 				}else{

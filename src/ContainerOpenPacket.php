@@ -25,29 +25,23 @@ namespace pocketmine\network\mcpe\protocol;
 
 #include <rules/DataPacket.h>
 
-use pocketmine\math\Vector3;
 use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pocketmine\network\mcpe\protocol\types\BlockPosition;
 
 class ContainerOpenPacket extends DataPacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::CONTAINER_OPEN_PACKET;
 
 	public int $windowId;
 	public int $type;
-	public int $x;
-	public int $y;
-	public int $z;
+	public BlockPosition $blockPosition;
 	public int $entityUniqueId = -1;
 
-	public static function blockInv(int $windowId, int $windowType, int $x, int $y, int $z) : self{
+	public static function blockInv(int $windowId, int $windowType, BlockPosition $blockPosition) : self{
 		$result = new self;
 		$result->windowId = $windowId;
 		$result->type = $windowType;
-		[$result->x, $result->y, $result->z] = [$x, $y, $z];
+		$result->blockPosition = $blockPosition;
 		return $result;
-	}
-
-	public static function blockInvVec3(int $windowId, int $windowType, Vector3 $vector3) : self{
-		return self::blockInv($windowId, $windowType, $vector3->getFloorX(), $vector3->getFloorY(), $vector3->getFloorZ());
 	}
 
 	public static function entityInv(int $windowId, int $windowType, int $entityUniqueId) : self{
@@ -55,21 +49,21 @@ class ContainerOpenPacket extends DataPacket implements ClientboundPacket{
 		$result->windowId = $windowId;
 		$result->type = $windowType;
 		$result->entityUniqueId = $entityUniqueId;
-		$result->x = $result->y = $result->z = 0; //these have to be set even if they aren't used
+		$result->blockPosition = new BlockPosition(0, 0, 0); //this has to be set even if it isn't used
 		return $result;
 	}
 
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->windowId = $in->getByte();
 		$this->type = $in->getByte();
-		$in->getBlockPosition($this->x, $this->y, $this->z);
+		$this->blockPosition = $in->getBlockPosition();
 		$this->entityUniqueId = $in->getEntityUniqueId();
 	}
 
 	protected function encodePayload(PacketSerializer $out) : void{
 		$out->putByte($this->windowId);
 		$out->putByte($this->type);
-		$out->putBlockPosition($this->x, $this->y, $this->z);
+		$out->putBlockPosition($this->blockPosition);
 		$out->putEntityUniqueId($this->entityUniqueId);
 	}
 

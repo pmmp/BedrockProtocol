@@ -25,6 +25,7 @@ namespace pocketmine\network\mcpe\protocol\types\entity;
 
 use pocketmine\math\Vector3;
 use pocketmine\nbt\tag\CompoundTag;
+use pocketmine\network\mcpe\protocol\types\BlockPosition;
 use function get_class;
 
 class EntityMetadataCollection{
@@ -69,8 +70,8 @@ class EntityMetadataCollection{
 		$this->set($key, new CompoundTagMetadataProperty($value), $force);
 	}
 
-	public function setBlockPos(int $key, ?Vector3 $value, bool $force = false) : void{
-		$this->set($key, new BlockPosMetadataProperty($value ?? new Vector3(0, 0, 0)), $force);
+	public function setBlockPos(int $key, ?BlockPosition $value, bool $force = false) : void{
+		$this->set($key, new BlockPosMetadataProperty($value ?? new BlockPosition(0, 0, 0)), $force);
 	}
 
 	public function setLong(int $key, int $value, bool $force = false) : void{

@@ -23,18 +23,18 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol\types\entity;
 
-use pocketmine\math\Vector3;
 use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pocketmine\network\mcpe\protocol\types\BlockPosition;
 
 final class BlockPosMetadataProperty implements MetadataProperty{
 
-	private Vector3 $value;
+	private BlockPosition $value;
 
-	public function __construct(Vector3 $value){
-		$this->value = $value->floor();
+	public function __construct(BlockPosition $value){
+		$this->value = $value;
 	}
 
-	public function getValue() : Vector3{
+	public function getValue() : BlockPosition{
 		return $this->value;
 	}
 
@@ -43,13 +43,11 @@ final class BlockPosMetadataProperty implements MetadataProperty{
 	}
 
 	public static function read(PacketSerializer $in) : self{
-		$x = $y = $z = 0;
-		$in->getSignedBlockPosition($x, $y, $z);
-		return new self(new Vector3($x, $y, $z));
+		return new self($in->getSignedBlockPosition());
 	}
 
 	public function write(PacketSerializer $out) : void{
-		$out->putSignedBlockPosition($this->value->getFloorX(), $this->value->getFloorY(), $this->value->getFloorZ());
+		$out->putSignedBlockPosition($this->value);
 	}
 
 	public function equals(MetadataProperty $other) : bool{

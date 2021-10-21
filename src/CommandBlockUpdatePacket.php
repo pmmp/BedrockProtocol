@@ -26,15 +26,14 @@ namespace pocketmine\network\mcpe\protocol;
 #include <rules/DataPacket.h>
 
 use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pocketmine\network\mcpe\protocol\types\BlockPosition;
 
 class CommandBlockUpdatePacket extends DataPacket implements ServerboundPacket{
 	public const NETWORK_ID = ProtocolInfo::COMMAND_BLOCK_UPDATE_PACKET;
 
 	public bool $isBlock;
 
-	public int $x;
-	public int $y;
-	public int $z;
+	public BlockPosition $blockPosition;
 	public int $commandBlockMode;
 	public bool $isRedstoneMode;
 	public bool $isConditional;
@@ -52,7 +51,7 @@ class CommandBlockUpdatePacket extends DataPacket implements ServerboundPacket{
 		$this->isBlock = $in->getBool();
 
 		if($this->isBlock){
-			$in->getBlockPosition($this->x, $this->y, $this->z);
+			$this->blockPosition = $in->getBlockPosition();
 			$this->commandBlockMode = $in->getUnsignedVarInt();
 			$this->isRedstoneMode = $in->getBool();
 			$this->isConditional = $in->getBool();
@@ -74,7 +73,7 @@ class CommandBlockUpdatePacket extends DataPacket implements ServerboundPacket{
 		$out->putBool($this->isBlock);
 
 		if($this->isBlock){
-			$out->putBlockPosition($this->x, $this->y, $this->z);
+			$out->putBlockPosition($this->blockPosition);
 			$out->putUnsignedVarInt($this->commandBlockMode);
 			$out->putBool($this->isRedstoneMode);
 			$out->putBool($this->isConditional);

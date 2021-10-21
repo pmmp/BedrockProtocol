@@ -26,6 +26,7 @@ namespace pocketmine\network\mcpe\protocol;
 #include <rules/DataPacket.h>
 
 use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pocketmine\network\mcpe\protocol\types\BlockPosition;
 
 class PlayerActionPacket extends DataPacket implements ServerboundPacket{
 	public const NETWORK_ID = ProtocolInfo::PLAYER_ACTION_PACKET;
@@ -61,22 +62,20 @@ class PlayerActionPacket extends DataPacket implements ServerboundPacket{
 
 	public int $entityRuntimeId;
 	public int $action;
-	public int $x;
-	public int $y;
-	public int $z;
+	public BlockPosition $blockPosition;
 	public int $face;
 
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->entityRuntimeId = $in->getEntityRuntimeId();
 		$this->action = $in->getVarInt();
-		$in->getBlockPosition($this->x, $this->y, $this->z);
+		$this->blockPosition = $in->getBlockPosition();
 		$this->face = $in->getVarInt();
 	}
 
 	protected function encodePayload(PacketSerializer $out) : void{
 		$out->putEntityRuntimeId($this->entityRuntimeId);
 		$out->putVarInt($this->action);
-		$out->putBlockPosition($this->x, $this->y, $this->z);
+		$out->putBlockPosition($this->blockPosition);
 		$out->putVarInt($this->face);
 	}
 

@@ -26,6 +26,7 @@ namespace pocketmine\network\mcpe\protocol;
 #include <rules/DataPacket.h>
 
 use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pocketmine\network\mcpe\protocol\types\BlockPosition;
 use pocketmine\network\mcpe\protocol\types\StructureSettings;
 
 class StructureTemplateDataRequestPacket extends DataPacket implements ServerboundPacket{
@@ -35,22 +36,20 @@ class StructureTemplateDataRequestPacket extends DataPacket implements Serverbou
 	public const TYPE_CREATE_AND_LOAD = 2;
 
 	public string $structureTemplateName;
-	public int $structureBlockX;
-	public int $structureBlockY;
-	public int $structureBlockZ;
+	public BlockPosition $structureBlockPos;
 	public StructureSettings $structureSettings;
 	public int $structureTemplateResponseType;
 
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->structureTemplateName = $in->getString();
-		$in->getBlockPosition($this->structureBlockX, $this->structureBlockY, $this->structureBlockZ);
+		$this->structureBlockPos = $in->getBlockPosition();
 		$this->structureSettings = $in->getStructureSettings();
 		$this->structureTemplateResponseType = $in->getByte();
 	}
 
 	protected function encodePayload(PacketSerializer $out) : void{
 		$out->putString($this->structureTemplateName);
-		$out->putBlockPosition($this->structureBlockX, $this->structureBlockY, $this->structureBlockZ);
+		$out->putBlockPosition($this->structureBlockPos);
 		$out->putStructureSettings($this->structureSettings);
 		$out->putByte($this->structureTemplateResponseType);
 	}

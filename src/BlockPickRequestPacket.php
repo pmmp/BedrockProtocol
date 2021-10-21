@@ -26,24 +26,23 @@ namespace pocketmine\network\mcpe\protocol;
 #include <rules/DataPacket.h>
 
 use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pocketmine\network\mcpe\protocol\types\BlockPosition;
 
 class BlockPickRequestPacket extends DataPacket implements ServerboundPacket{
 	public const NETWORK_ID = ProtocolInfo::BLOCK_PICK_REQUEST_PACKET;
 
-	public int $blockX;
-	public int $blockY;
-	public int $blockZ;
+	public BlockPosition $blockPosition;
 	public bool $addUserData = false;
 	public int $hotbarSlot;
 
 	protected function decodePayload(PacketSerializer $in) : void{
-		$in->getSignedBlockPosition($this->blockX, $this->blockY, $this->blockZ);
+		$this->blockPosition = $in->getSignedBlockPosition();
 		$this->addUserData = $in->getBool();
 		$this->hotbarSlot = $in->getByte();
 	}
 
 	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putSignedBlockPosition($this->blockX, $this->blockY, $this->blockZ);
+		$out->putSignedBlockPosition($this->blockPosition);
 		$out->putBool($this->addUserData);
 		$out->putByte($this->hotbarSlot);
 	}

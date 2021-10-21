@@ -26,6 +26,7 @@ namespace pocketmine\network\mcpe\protocol\types\inventory;
 use pocketmine\math\Vector3;
 use pocketmine\network\mcpe\protocol\InventoryTransactionPacket;
 use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pocketmine\network\mcpe\protocol\types\BlockPosition;
 
 class UseItemTransactionData extends TransactionData{
 	public const ACTION_CLICK_BLOCK = 0;
@@ -33,7 +34,7 @@ class UseItemTransactionData extends TransactionData{
 	public const ACTION_BREAK_BLOCK = 2;
 
 	private int $actionType;
-	private Vector3 $blockPos;
+	private BlockPosition $blockPosition;
 	private int $face;
 	private int $hotbarSlot;
 	private ItemStackWrapper $itemInHand;
@@ -45,8 +46,8 @@ class UseItemTransactionData extends TransactionData{
 		return $this->actionType;
 	}
 
-	public function getBlockPos() : Vector3{
-		return $this->blockPos;
+	public function getBlockPos() : BlockPosition{
+		return $this->blockPosition;
 	}
 
 	public function getFace() : int{
@@ -79,9 +80,7 @@ class UseItemTransactionData extends TransactionData{
 
 	protected function decodeData(PacketSerializer $stream) : void{
 		$this->actionType = $stream->getUnsignedVarInt();
-		$x = $y = $z = 0;
-		$stream->getBlockPosition($x, $y, $z);
-		$this->blockPos = new Vector3($x, $y, $z);
+		$this->blockPosition = $stream->getBlockPosition();
 		$this->face = $stream->getVarInt();
 		$this->hotbarSlot = $stream->getVarInt();
 		$this->itemInHand = ItemStackWrapper::read($stream);
@@ -92,7 +91,7 @@ class UseItemTransactionData extends TransactionData{
 
 	protected function encodeData(PacketSerializer $stream) : void{
 		$stream->putUnsignedVarInt($this->actionType);
-		$stream->putBlockPosition($this->blockPos->getFloorX(), $this->blockPos->getFloorY(), $this->blockPos->getFloorZ());
+		$stream->putBlockPosition($this->blockPosition);
 		$stream->putVarInt($this->face);
 		$stream->putVarInt($this->hotbarSlot);
 		$this->itemInHand->write($stream);
@@ -104,11 +103,11 @@ class UseItemTransactionData extends TransactionData{
 	/**
 	 * @param NetworkInventoryAction[] $actions
 	 */
-	public static function new(array $actions, int $actionType, Vector3 $blockPos, int $face, int $hotbarSlot, ItemStackWrapper $itemInHand, Vector3 $playerPos, Vector3 $clickPos, int $blockRuntimeId) : self{
+	public static function new(array $actions, int $actionType, BlockPosition $blockPosition, int $face, int $hotbarSlot, ItemStackWrapper $itemInHand, Vector3 $playerPos, Vector3 $clickPos, int $blockRuntimeId) : self{
 		$result = new self;
 		$result->actions = $actions;
 		$result->actionType = $actionType;
-		$result->blockPos = $blockPos;
+		$result->blockPosition = $blockPosition;
 		$result->face = $face;
 		$result->hotbarSlot = $hotbarSlot;
 		$result->itemInHand = $itemInHand;

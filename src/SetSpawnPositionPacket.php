@@ -26,6 +26,8 @@ namespace pocketmine\network\mcpe\protocol;
 #include <rules/DataPacket.h>
 
 use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pocketmine\network\mcpe\protocol\types\BlockPosition;
+use pocketmine\utils\Limits;
 
 class SetSpawnPositionPacket extends DataPacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::SET_SPAWN_POSITION_PACKET;
@@ -34,44 +36,40 @@ class SetSpawnPositionPacket extends DataPacket implements ClientboundPacket{
 	public const TYPE_WORLD_SPAWN = 1;
 
 	public int $spawnType;
-	public int $x;
-	public int $y;
-	public int $z;
+	public BlockPosition $spawnPosition;
 	public int $dimension;
-	public int $x2;
-	public int $y2;
-	public int $z2;
+	public BlockPosition $spawnPosition2; //this has no obvious use
 
-	public static function playerSpawn(int $x, int $y, int $z, int $dimension, int $x2, int $y2, int $z2) : self{
+	public static function playerSpawn(BlockPosition $spawnPosition, int $dimension, BlockPosition $spawnPosition2) : self{
 		$result = new self;
 		$result->spawnType = self::TYPE_PLAYER_SPAWN;
-		[$result->x, $result->y, $result->z] = [$x, $y, $z];
-		[$result->x2, $result->y2, $result->z2] = [$x2, $y2, $z2];
+		$result->spawnPosition = $spawnPosition;
+		$result->spawnPosition2 = $spawnPosition2;
 		$result->dimension = $dimension;
 		return $result;
 	}
 
-	public static function worldSpawn(int $x, int $y, int $z, int $dimension) : self{
+	public static function worldSpawn(BlockPosition $spawnPosition, int $dimension) : self{
 		$result = new self;
 		$result->spawnType = self::TYPE_WORLD_SPAWN;
-		[$result->x, $result->y, $result->z] = [$x, $y, $z];
-		[$result->x2, $result->y2, $result->z2] = [$x, $y, $z];
+		$result->spawnPosition = $spawnPosition;
+		$result->spawnPosition2 = new BlockPosition(Limits::INT32_MIN, Limits::INT32_MIN, Limits::INT32_MIN);
 		$result->dimension = $dimension;
 		return $result;
 	}
 
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->spawnType = $in->getVarInt();
-		$in->getBlockPosition($this->x, $this->y, $this->z);
+		$this->spawnPosition = $in->getBlockPosition();
 		$this->dimension = $in->getVarInt();
-		$in->getBlockPosition($this->x2, $this->y2, $this->z2);
+		$this->spawnPosition2 = $in->getBlockPosition();
 	}
 
 	protected function encodePayload(PacketSerializer $out) : void{
 		$out->putVarInt($this->spawnType);
-		$out->putBlockPosition($this->x, $this->y, $this->z);
+		$out->putBlockPosition($this->spawnPosition);
 		$out->putVarInt($this->dimension);
-		$out->putBlockPosition($this->x2, $this->y2, $this->z2);
+		$out->putBlockPosition($this->spawnPosition2);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

@@ -26,25 +26,24 @@ namespace pocketmine\network\mcpe\protocol;
 #include <rules/DataPacket.h>
 
 use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pocketmine\network\mcpe\protocol\types\BlockPosition;
 use pocketmine\network\mcpe\protocol\types\StructureEditorData;
 
 class StructureBlockUpdatePacket extends DataPacket implements ServerboundPacket{
 	public const NETWORK_ID = ProtocolInfo::STRUCTURE_BLOCK_UPDATE_PACKET;
 
-	public int $x;
-	public int $y;
-	public int $z;
+	public BlockPosition $blockPosition;
 	public StructureEditorData $structureEditorData;
 	public bool $isPowered;
 
 	protected function decodePayload(PacketSerializer $in) : void{
-		$in->getBlockPosition($this->x, $this->y, $this->z);
+		$this->blockPosition = $in->getBlockPosition();
 		$this->structureEditorData = $in->getStructureEditorData();
 		$this->isPowered = $in->getBool();
 	}
 
 	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putBlockPosition($this->x, $this->y, $this->z);
+		$out->putBlockPosition($this->blockPosition);
 		$out->putStructureEditorData($this->structureEditorData);
 		$out->putBool($this->isPowered);
 	}

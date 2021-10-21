@@ -26,6 +26,7 @@ namespace pocketmine\network\mcpe\protocol;
 #include <rules/DataPacket.h>
 
 use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pocketmine\network\mcpe\protocol\types\BlockPosition;
 
 class LabTablePacket extends DataPacket implements ClientboundPacket, ServerboundPacket{
 	public const NETWORK_ID = ProtocolInfo::LAB_TABLE_PACKET;
@@ -35,20 +36,18 @@ class LabTablePacket extends DataPacket implements ClientboundPacket, Serverboun
 	public const TYPE_RESET = 2;
 
 	public int $type;
-	public int $x;
-	public int $y;
-	public int $z;
+	public BlockPosition $blockPosition;
 	public int $reactionType;
 
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->type = $in->getByte();
-		$in->getSignedBlockPosition($this->x, $this->y, $this->z);
+		$this->blockPosition = $in->getSignedBlockPosition();
 		$this->reactionType = $in->getByte();
 	}
 
 	protected function encodePayload(PacketSerializer $out) : void{
 		$out->putByte($this->type);
-		$out->putSignedBlockPosition($this->x, $this->y, $this->z);
+		$out->putSignedBlockPosition($this->blockPosition);
 		$out->putByte($this->reactionType);
 	}
 

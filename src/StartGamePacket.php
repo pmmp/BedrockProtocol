@@ -30,6 +30,7 @@ use pocketmine\nbt\TreeRoot;
 use pocketmine\network\mcpe\protocol\serializer\NetworkNbtSerializer;
 use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 use pocketmine\network\mcpe\protocol\types\BlockPaletteEntry;
+use pocketmine\network\mcpe\protocol\types\BlockPosition;
 use pocketmine\network\mcpe\protocol\types\EducationEditionOffer;
 use pocketmine\network\mcpe\protocol\types\EducationUriResource;
 use pocketmine\network\mcpe\protocol\types\Experiments;
@@ -59,9 +60,7 @@ class StartGamePacket extends DataPacket implements ClientboundPacket{
 	public int $generator = GeneratorType::OVERWORLD;
 	public int $worldGamemode;
 	public int $difficulty;
-	public int $spawnX;
-	public int $spawnY;
-	public int $spawnZ;
+	public BlockPosition $spawnPosition;
 	public bool $hasAchievementsDisabled = true;
 	public int $time = -1;
 	public int $eduEditionOffer = EducationEditionOffer::NONE;
@@ -140,7 +139,7 @@ class StartGamePacket extends DataPacket implements ClientboundPacket{
 		$this->generator = $in->getVarInt();
 		$this->worldGamemode = $in->getVarInt();
 		$this->difficulty = $in->getVarInt();
-		$in->getBlockPosition($this->spawnX, $this->spawnY, $this->spawnZ);
+		$this->spawnPosition = $in->getBlockPosition();
 		$this->hasAchievementsDisabled = $in->getBool();
 		$this->time = $in->getVarInt();
 		$this->eduEditionOffer = $in->getVarInt();
@@ -225,7 +224,7 @@ class StartGamePacket extends DataPacket implements ClientboundPacket{
 		$out->putVarInt($this->generator);
 		$out->putVarInt($this->worldGamemode);
 		$out->putVarInt($this->difficulty);
-		$out->putBlockPosition($this->spawnX, $this->spawnY, $this->spawnZ);
+		$out->putBlockPosition($this->spawnPosition);
 		$out->putBool($this->hasAchievementsDisabled);
 		$out->putVarInt($this->time);
 		$out->putVarInt($this->eduEditionOffer);

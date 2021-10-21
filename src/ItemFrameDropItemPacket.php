@@ -26,21 +26,20 @@ namespace pocketmine\network\mcpe\protocol;
 #include <rules/DataPacket.h>
 
 use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pocketmine\network\mcpe\protocol\types\BlockPosition;
 
 class ItemFrameDropItemPacket extends DataPacket implements ServerboundPacket{
 
 	public const NETWORK_ID = ProtocolInfo::ITEM_FRAME_DROP_ITEM_PACKET;
 
-	public int $x;
-	public int $y;
-	public int $z;
+	public BlockPosition $blockPosition;
 
 	protected function decodePayload(PacketSerializer $in) : void{
-		$in->getBlockPosition($this->x, $this->y, $this->z);
+		$this->blockPosition = $in->getBlockPosition();
 	}
 
 	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putBlockPosition($this->x, $this->y, $this->z);
+		$out->putBlockPosition($this->blockPosition);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

@@ -32,8 +32,6 @@ class MapTrackedObject{
 	/** @var int Only set if is TYPE_ENTITY */
 	public int $entityUniqueId;
 
-	public int $x;
-	public int $y;
-	public int $z;
-
+	/** Only set if is TYPE_BLOCK */
+	public BlockPosition $blockPosition;
 }

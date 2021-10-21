@@ -31,6 +31,7 @@ use pocketmine\nbt\NbtDataException;
 use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\nbt\TreeRoot;
 use pocketmine\network\mcpe\protocol\PacketDecodeException;
+use pocketmine\network\mcpe\protocol\types\BlockPosition;
 use pocketmine\network\mcpe\protocol\types\BoolGameRule;
 use pocketmine\network\mcpe\protocol\types\command\CommandOriginData;
 use pocketmine\network\mcpe\protocol\types\entity\Attribute;
@@ -534,51 +535,45 @@ class PacketSerializer extends BinaryStream{
 	}
 
 	/**
-	 * Reads an block position with unsigned Y coordinate.
-	 *
-	 * @param int $x reference parameter
-	 * @param int $y reference parameter
-	 * @param int $z reference parameter
+	 * Reads a block position with unsigned Y coordinate.
 	 *
 	 * @throws BinaryDataException
 	 */
-	public function getBlockPosition(&$x, &$y, &$z) : void{
+	public function getBlockPosition() : BlockPosition{
 		$x = $this->getVarInt();
 		$y = $this->getUnsignedVarInt();
 		$z = $this->getVarInt();
+		return new BlockPosition($x, $y, $z);
 	}
 
 	/**
 	 * Writes a block position with unsigned Y coordinate.
 	 */
-	public function putBlockPosition(int $x, int $y, int $z) : void{
-		$this->putVarInt($x);
-		$this->putUnsignedVarInt($y);
-		$this->putVarInt($z);
+	public function putBlockPosition(BlockPosition $blockPosition) : void{
+		$this->putVarInt($blockPosition->getX());
+		$this->putUnsignedVarInt($blockPosition->getY());
+		$this->putVarInt($blockPosition->getZ());
 	}
 
 	/**
 	 * Reads a block position with a signed Y coordinate.
 	 *
-	 * @param int $x reference parameter
-	 * @param int $y reference parameter
-	 * @param int $z reference parameter
-	 *
 	 * @throws BinaryDataException
 	 */
-	public function getSignedBlockPosition(&$x, &$y, &$z) : void{
+	public function getSignedBlockPosition() : BlockPosition{
 		$x = $this->getVarInt();
 		$y = $this->getVarInt();
 		$z = $this->getVarInt();
+		return new BlockPosition($x, $y, $z);
 	}
 
 	/**
 	 * Writes a block position with a signed Y coordinate.
 	 */
-	public function putSignedBlockPosition(int $x, int $y, int $z) : void{
-		$this->putVarInt($x);
-		$this->putVarInt($y);
-		$this->putVarInt($z);
+	public function putSignedBlockPosition(BlockPosition $blockPosition) : void{
+		$this->putVarInt($blockPosition->getX());
+		$this->putVarInt($blockPosition->getY());
+		$this->putVarInt($blockPosition->getZ());
 	}
 
 	/**
@@ -734,8 +729,8 @@ class PacketSerializer extends BinaryStream{
 		$result->ignoreEntities = $this->getBool();
 		$result->ignoreBlocks = $this->getBool();
 
-		$this->getBlockPosition($result->structureSizeX, $result->structureSizeY, $result->structureSizeZ);
-		$this->getBlockPosition($result->structureOffsetX, $result->structureOffsetY, $result->structureOffsetZ);
+		$result->dimensions = $this->getBlockPosition();
+		$result->offset = $this->getBlockPosition();
 
 		$result->lastTouchedByPlayerID = $this->getEntityUniqueId();
 		$result->rotation = $this->getByte();
@@ -753,8 +748,8 @@ class PacketSerializer extends BinaryStream{
 		$this->putBool($structureSettings->ignoreEntities);
 		$this->putBool($structureSettings->ignoreBlocks);
 
-		$this->putBlockPosition($structureSettings->structureSizeX, $structureSettings->structureSizeY, $structureSettings->structureSizeZ);
-		$this->putBlockPosition($structureSettings->structureOffsetX, $structureSettings->structureOffsetY, $structureSettings->structureOffsetZ);
+		$this->putBlockPosition($structureSettings->dimensions);
+		$this->putBlockPosition($structureSettings->offset);
 
 		$this->putEntityUniqueId($structureSettings->lastTouchedByPlayerID);
 		$this->putByte($structureSettings->rotation);

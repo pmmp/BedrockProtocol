@@ -26,18 +26,17 @@ namespace pocketmine\network\mcpe\protocol;
 #include <rules/DataPacket.h>
 
 use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pocketmine\network\mcpe\protocol\types\BlockPosition;
 
 class AnvilDamagePacket extends DataPacket implements ServerboundPacket{
 	public const NETWORK_ID = ProtocolInfo::ANVIL_DAMAGE_PACKET;
 
-	private int $x;
-	private int $y;
-	private int $z;
+	private BlockPosition $blockPosition;
 	private int $damageAmount;
 
-	public static function create(int $x, int $y, int $z, int $damageAmount) : self{
+	public static function create(BlockPosition $blockPosition, int $damageAmount) : self{
 		$result = new self;
-		[$result->x, $result->y, $result->z] = [$x, $y, $z];
+		$result->blockPosition = $blockPosition;
 		$result->damageAmount = $damageAmount;
 		return $result;
 	}
@@ -46,26 +45,16 @@ class AnvilDamagePacket extends DataPacket implements ServerboundPacket{
 		return $this->damageAmount;
 	}
 
-	public function getX() : int{
-		return $this->x;
-	}
-
-	public function getY() : int{
-		return $this->y;
-	}
-
-	public function getZ() : int{
-		return $this->z;
-	}
+	public function getBlockPos() : BlockPosition{ return $this->blockPosition; }
 
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->damageAmount = $in->getByte();
-		$in->getBlockPosition($this->x, $this->y, $this->z);
+		$this->blockPosition = $in->getBlockPosition();
 	}
 
 	protected function encodePayload(PacketSerializer $out) : void{
 		$out->putByte($this->damageAmount);
-		$out->putBlockPosition($this->x, $this->y, $this->z);
+		$out->putBlockPosition($this->blockPosition);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

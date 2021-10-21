@@ -27,17 +27,17 @@ use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 
 final class MineBlockStackRequestAction extends ItemStackRequestAction{
 
-	private int $unknown1;
+	private int $hotbarSlot;
 	private int $predictedDurability;
 	private int $stackId;
 
-	public function __construct(int $unknown1, int $predictedDurability, int $stackId){
-		$this->unknown1 = $unknown1;
+	public function __construct(int $hotbarSlot, int $predictedDurability, int $stackId){
+		$this->hotbarSlot = $hotbarSlot;
 		$this->predictedDurability = $predictedDurability;
 		$this->stackId = $stackId;
 	}
 
-	public function getUnknown1() : int{ return $this->unknown1; }
+	public function getHotbarSlot() : int{ return $this->hotbarSlot; }
 
 	public function getPredictedDurability() : int{ return $this->predictedDurability; }
 
@@ -53,7 +53,7 @@ final class MineBlockStackRequestAction extends ItemStackRequestAction{
 	}
 
 	public function write(PacketSerializer $out) : void{
-		$out->putVarInt($this->unknown1);
+		$out->putVarInt($this->hotbarSlot);
 		$out->putVarInt($this->predictedDurability);
 		$out->writeGenericTypeNetworkId($this->stackId);
 	}

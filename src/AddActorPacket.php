@@ -39,7 +39,7 @@ class AddActorPacket extends DataPacket implements ClientboundPacket{
 	public int $entityRuntimeId;
 	public string $type;
 	public Vector3 $position;
-	public ?Vector3 $motion;
+	public ?Vector3 $motion = null;
 	public float $pitch = 0.0;
 	public float $yaw = 0.0;
 	public float $headYaw = 0.0;

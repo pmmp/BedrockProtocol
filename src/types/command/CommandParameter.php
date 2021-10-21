@@ -33,8 +33,8 @@ class CommandParameter{
 	public int $paramType;
 	public bool $isOptional;
 	public int $flags = 0; //shows enum name if 1, always zero except for in /gamerule command
-	public ?CommandEnum $enum;
-	public ?string $postfix;
+	public ?CommandEnum $enum = null;
+	public ?string $postfix = null;
 
 	private static function baseline(string $name, int $type, int $flags, bool $optional) : self{
 		$result = new self;

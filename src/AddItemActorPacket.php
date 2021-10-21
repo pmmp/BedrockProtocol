@@ -37,7 +37,7 @@ class AddItemActorPacket extends DataPacket implements ClientboundPacket{
 	public int $entityRuntimeId;
 	public ItemStackWrapper $item;
 	public Vector3 $position;
-	public ?Vector3 $motion;
+	public ?Vector3 $motion = null;
 	/**
 	 * @var MetadataProperty[]
 	 * @phpstan-var array<int, MetadataProperty>

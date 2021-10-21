@@ -26,8 +26,8 @@ namespace pocketmine\network\mcpe\protocol\types;
 use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 
 final class FloatGameRule extends GameRule{
-	/** @var float */
-	private $value;
+
+	private float $value;
 
 	public function __construct(float $value, bool $isPlayerModifiable){
 		parent::__construct($isPlayerModifiable);

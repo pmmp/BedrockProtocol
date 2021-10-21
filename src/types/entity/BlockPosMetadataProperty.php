@@ -28,8 +28,7 @@ use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 
 final class BlockPosMetadataProperty implements MetadataProperty{
 
-	/** @var Vector3 */
-	private $value;
+	private Vector3 $value;
 
 	public function __construct(Vector3 $value){
 		$this->value = $value->floor();

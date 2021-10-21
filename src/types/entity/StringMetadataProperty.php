@@ -26,8 +26,8 @@ namespace pocketmine\network\mcpe\protocol\types\entity;
 use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 
 final class StringMetadataProperty implements MetadataProperty{
-	/** @var string */
-	private $value;
+
+	private string $value;
 
 	public function __construct(string $value){
 		$this->value = $value;

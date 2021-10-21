@@ -32,18 +32,12 @@ class UseItemOnEntityTransactionData extends TransactionData{
 	public const ACTION_ATTACK = 1;
 	public const ACTION_ITEM_INTERACT = 2;
 
-	/** @var int */
-	private $entityRuntimeId;
-	/** @var int */
-	private $actionType;
-	/** @var int */
-	private $hotbarSlot;
-	/** @var ItemStackWrapper */
-	private $itemInHand;
-	/** @var Vector3 */
-	private $playerPos;
-	/** @var Vector3 */
-	private $clickPos;
+	private int $entityRuntimeId;
+	private int $actionType;
+	private int $hotbarSlot;
+	private ItemStackWrapper $itemInHand;
+	private Vector3 $playerPos;
+	private Vector3 $clickPos;
 
 	public function getEntityRuntimeId() : int{
 		return $this->entityRuntimeId;

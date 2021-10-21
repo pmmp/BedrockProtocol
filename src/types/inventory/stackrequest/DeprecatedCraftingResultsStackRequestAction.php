@@ -34,9 +34,8 @@ use function count;
 final class DeprecatedCraftingResultsStackRequestAction extends ItemStackRequestAction{
 
 	/** @var ItemStack[] */
-	private $results;
-	/** @var int */
-	private $iterations;
+	private array $results;
+	private int $iterations;
 
 	/**
 	 * @param ItemStack[] $results

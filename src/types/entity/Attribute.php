@@ -24,16 +24,11 @@ declare(strict_types=1);
 namespace pocketmine\network\mcpe\protocol\types\entity;
 
 final class Attribute{
-	/** @var string */
-	private $id;
-	/** @var float */
-	private $min;
-	/** @var float */
-	private $max;
-	/** @var float */
-	private $current;
-	/** @var float */
-	private $default;
+	private string $id;
+	private float $min;
+	private float $max;
+	private float $current;
+	private float $default;
 
 	public function __construct(string $id, float $min, float $max, float $current, float $default){
 		$this->id = $id;

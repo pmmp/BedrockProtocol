@@ -27,10 +27,8 @@ use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 
 final class CreativeContentEntry{
 
-	/** @var int */
-	private $entryId;
-	/** @var ItemStack */
-	private $item;
+	private int $entryId;
+	private ItemStack $item;
 
 	public function __construct(int $entryId, ItemStack $item){
 		$this->entryId = $entryId;

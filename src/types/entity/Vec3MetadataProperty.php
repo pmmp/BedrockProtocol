@@ -27,8 +27,8 @@ use pocketmine\math\Vector3;
 use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 
 class Vec3MetadataProperty implements MetadataProperty{
-	/** @var Vector3 */
-	private $value;
+
+	private Vector3 $value;
 
 	public function __construct(Vector3 $value){
 		$this->value = $value->asVector3();

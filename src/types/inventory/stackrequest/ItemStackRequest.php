@@ -30,15 +30,14 @@ use function count;
 
 final class ItemStackRequest{
 
-	/** @var int */
-	private $requestId;
+	private int $requestId;
 	/** @var ItemStackRequestAction[] */
-	private $actions;
+	private array $actions;
 	/**
 	 * @var string[]
 	 * @phpstan-var list<string>
 	 */
-	private $filterStrings;
+	private array $filterStrings;
 
 	/**
 	 * @param ItemStackRequestAction[] $actions

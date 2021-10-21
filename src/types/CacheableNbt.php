@@ -32,13 +32,9 @@ use pocketmine\network\mcpe\protocol\serializer\NetworkNbtSerializer;
  */
 final class CacheableNbt{
 
-	/**
-	 * @var Tag
-	 * @phpstan-var TTagType
-	 */
-	private $root;
-	/** @var string|null */
-	private $encodedNbt;
+	/** @phpstan-var TTagType */
+	private Tag $root;
+	private ?string $encodedNbt;
 
 	/**
 	 * @phpstan-param TTagType $nbtRoot

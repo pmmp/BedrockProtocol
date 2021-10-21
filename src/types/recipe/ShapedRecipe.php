@@ -30,20 +30,15 @@ use function count;
 
 final class ShapedRecipe extends RecipeWithTypeId{
 
-	/** @var string */
-	private $recipeId;
+	private string $recipeId;
 	/** @var RecipeIngredient[][] */
-	private $input;
+	private array $input;
 	/** @var ItemStack[] */
-	private $output;
-	/** @var UuidInterface */
-	private $uuid;
-	/** @var string */
-	private $blockName;
-	/** @var int */
-	private $priority;
-	/** @var int */
-	private $recipeNetId;
+	private array $output;
+	private UuidInterface $uuid;
+	private string $blockName;
+	private int $priority;
+	private int $recipeNetId;
 
 	/**
 	 * @param RecipeIngredient[][] $input

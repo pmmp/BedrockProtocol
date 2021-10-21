@@ -27,8 +27,7 @@ use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 
 final class BoolGameRule extends GameRule{
 
-	/** @var bool */
-	private $value;
+	private bool $value;
 
 	public function __construct(bool $value, bool $isPlayerModifiable){
 		parent::__construct($isPlayerModifiable);

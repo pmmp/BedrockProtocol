@@ -27,12 +27,9 @@ use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 
 trait TakeOrPlaceStackRequestActionTrait{
 
-	/** @var int */
-	private $count;
-	/** @var ItemStackRequestSlotInfo */
-	private $source;
-	/** @var ItemStackRequestSlotInfo */
-	private $destination;
+	private int $count;
+	private ItemStackRequestSlotInfo $source;
+	private ItemStackRequestSlotInfo $destination;
 
 	final public function __construct(int $count, ItemStackRequestSlotInfo $source, ItemStackRequestSlotInfo $destination){
 		$this->count = $count;

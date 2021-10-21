@@ -31,8 +31,7 @@ use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
  */
 final class CraftingMarkSecondaryResultStackRequestAction extends ItemStackRequestAction{
 
-	/** @var int */
-	private $craftingGridSlot;
+	private int $craftingGridSlot;
 
 	public function __construct(int $craftingGridSlot){
 		$this->craftingGridSlot = $craftingGridSlot;

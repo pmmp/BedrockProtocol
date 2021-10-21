@@ -30,10 +30,8 @@ use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
  */
 final class SwapStackRequestAction extends ItemStackRequestAction{
 
-	/** @var ItemStackRequestSlotInfo */
-	private $slot1;
-	/** @var ItemStackRequestSlotInfo */
-	private $slot2;
+	private ItemStackRequestSlotInfo $slot1;
+	private ItemStackRequestSlotInfo $slot2;
 
 	public function __construct(ItemStackRequestSlotInfo $slot1, ItemStackRequestSlotInfo $slot2){
 		$this->slot1 = $slot1;

@@ -27,12 +27,9 @@ use function strlen;
 
 class SkinImage{
 
-	/** @var int */
-	private $height;
-	/** @var int */
-	private $width;
-	/** @var string */
-	private $data;
+	private int $height;
+	private int $width;
+	private string $data;
 
 	public function __construct(int $height, int $width, string $data){
 		if($height < 0 or $width < 0){

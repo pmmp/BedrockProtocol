@@ -24,10 +24,9 @@ declare(strict_types=1);
 namespace pocketmine\network\mcpe\protocol\types;
 
 class ChunkCacheBlob{
-	/** @var int */
-	private $hash;
-	/** @var string */
-	private $payload;
+
+	private int $hash;
+	private string $payload;
 
 	/**
 	 * ChunkCacheBlob constructor.

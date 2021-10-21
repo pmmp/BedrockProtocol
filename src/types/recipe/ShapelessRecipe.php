@@ -30,20 +30,15 @@ use function count;
 
 final class ShapelessRecipe extends RecipeWithTypeId{
 
-	/** @var string */
-	private $recipeId;
+	private string $recipeId;
 	/** @var RecipeIngredient[] */
-	private $inputs;
+	private array $inputs;
 	/** @var ItemStack[] */
-	private $outputs;
-	/** @var UuidInterface */
-	private $uuid;
-	/** @var string */
-	private $blockName;
-	/** @var int */
-	private $priority;
-	/** @var int */
-	private $recipeNetId;
+	private array $outputs;
+	private UuidInterface $uuid;
+	private string $blockName;
+	private int $priority;
+	private int $recipeNetId;
 
 	/**
 	 * @param RecipeIngredient[] $inputs

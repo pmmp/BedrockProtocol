@@ -24,12 +24,11 @@ declare(strict_types=1);
 namespace pocketmine\network\mcpe\protocol\types\command;
 
 class CommandEnumConstraint{
-	/** @var CommandEnum */
-	private $enum;
-	/** @var int */
-	private $valueOffset;
+
+	private CommandEnum $enum;
+	private int $valueOffset;
 	/** @var int[] */
-	private $constraints; //TODO: find constants
+	private array $constraints; //TODO: find constants
 
 	/**
 	 * @param int[]       $constraints

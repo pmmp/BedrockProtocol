@@ -27,23 +27,17 @@ use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 use function count;
 
 final class EnchantOption{
-	/** @var int */
-	private $cost;
 
-	/** @var int */
-	private $slotFlags;
+	private int $cost;
+	private int $slotFlags;
 	/** @var Enchant[] */
-	private $equipActivatedEnchantments;
+	private array $equipActivatedEnchantments;
 	/** @var Enchant[] */
-	private $heldActivatedEnchantments;
+	private array $heldActivatedEnchantments;
 	/** @var Enchant[] */
-	private $selfActivatedEnchantments;
-
-	/** @var string */
-	private $name;
-
-	/** @var int */
-	private $optionId;
+	private array $selfActivatedEnchantments;
+	private string $name;
+	private int $optionId;
 
 	/**
 	 * @param Enchant[] $equipActivatedEnchantments

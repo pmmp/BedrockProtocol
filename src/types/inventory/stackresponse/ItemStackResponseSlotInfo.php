@@ -27,18 +27,12 @@ use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 
 final class ItemStackResponseSlotInfo{
 
-	/** @var int */
-	private $slot;
-	/** @var int */
-	private $hotbarSlot;
-	/** @var int */
-	private $count;
-	/** @var int */
-	private $itemStackId;
-	/** @var string */
-	private $customName;
-	/** @var int */
-	private $durabilityCorrection;
+	private int $slot;
+	private int $hotbarSlot;
+	private int $count;
+	private int $itemStackId;
+	private string $customName;
+	private int $durabilityCorrection;
 
 	public function __construct(int $slot, int $hotbarSlot, int $count, int $itemStackId, string $customName, int $durabilityCorrection){
 		$this->slot = $slot;

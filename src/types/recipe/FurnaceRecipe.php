@@ -29,14 +29,10 @@ use pocketmine\network\mcpe\protocol\types\inventory\ItemStack;
 
 final class FurnaceRecipe extends RecipeWithTypeId{
 
-	/** @var int */
-	private $inputId;
-	/** @var int|null */
-	private $inputMeta;
-	/** @var ItemStack */
-	private $result;
-	/** @var string */
-	private $blockName;
+	private int $inputId;
+	private ?int $inputMeta;
+	private ItemStack $result;
+	private string $blockName;
 
 	public function __construct(int $typeId, int $inputId, ?int $inputMeta, ItemStack $result, string $blockName){
 		parent::__construct($typeId);

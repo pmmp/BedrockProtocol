@@ -30,12 +30,9 @@ use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
  */
 final class DropStackRequestAction extends ItemStackRequestAction{
 
-	/** @var int */
-	private $count;
-	/** @var ItemStackRequestSlotInfo */
-	private $source;
-	/** @var bool */
-	private $randomly;
+	private int $count;
+	private ItemStackRequestSlotInfo $source;
+	private bool $randomly;
 
 	public function __construct(int $count, ItemStackRequestSlotInfo $source, bool $randomly){
 		$this->count = $count;

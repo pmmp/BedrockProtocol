@@ -36,16 +36,11 @@ final class PersonaSkinPiece{
 	public const PIECE_TYPE_PERSONA_SKIN = "persona_skin";
 	public const PIECE_TYPE_PERSONA_TOP = "persona_top";
 
-	/** @var string */
-	private $pieceId;
-	/** @var string */
-	private $pieceType;
-	/** @var string */
-	private $packId;
-	/** @var bool */
-	private $isDefaultPiece;
-	/** @var string */
-	private $productId;
+	private string $pieceId;
+	private string $pieceType;
+	private string $packId;
+	private bool $isDefaultPiece;
+	private string $productId;
 
 	public function __construct(string $pieceId, string $pieceType, string $packId, bool $isDefaultPiece, string $productId){
 		$this->pieceId = $pieceId;

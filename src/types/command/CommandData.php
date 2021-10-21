@@ -24,18 +24,13 @@ declare(strict_types=1);
 namespace pocketmine\network\mcpe\protocol\types\command;
 
 class CommandData{
-	/** @var string */
-	public $name;
-	/** @var string */
-	public $description;
-	/** @var int */
-	public $flags;
-	/** @var int */
-	public $permission;
-	/** @var CommandEnum|null */
-	public $aliases;
+	public string $name;
+	public string $description;
+	public int $flags;
+	public int $permission;
+	public ?CommandEnum $aliases;
 	/** @var CommandParameter[][] */
-	public $overloads = [];
+	public array $overloads = [];
 
 	/**
 	 * @param CommandParameter[][] $overloads

@@ -33,12 +33,10 @@ final class ItemStackResponse{
 	//TODO: there are a ton more possible result types but we don't need them yet and they are wayyyyyy too many for me
 	//to waste my time on right now...
 
-	/** @var int */
-	private $result;
-	/** @var int */
-	private $requestId;
+	private int $result;
+	private int $requestId;
 	/** @var ItemStackResponseContainerInfo[] */
-	private $containerInfos;
+	private array $containerInfos;
 
 	/**
 	 * @param ItemStackResponseContainerInfo[] $containerInfos

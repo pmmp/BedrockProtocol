@@ -31,14 +31,10 @@ class ReleaseItemTransactionData extends TransactionData{
 	public const ACTION_RELEASE = 0; //bow shoot
 	public const ACTION_CONSUME = 1; //eat food, drink potion
 
-	/** @var int */
-	private $actionType;
-	/** @var int */
-	private $hotbarSlot;
-	/** @var ItemStackWrapper */
-	private $itemInHand;
-	/** @var Vector3 */
-	private $headPos;
+	private int $actionType;
+	private int $hotbarSlot;
+	private ItemStackWrapper $itemInHand;
+	private Vector3 $headPos;
 
 	public function getActionType() : int{
 		return $this->actionType;

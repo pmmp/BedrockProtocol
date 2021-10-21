@@ -24,18 +24,13 @@ declare(strict_types=1);
 namespace pocketmine\network\mcpe\protocol\types\recipe;
 
 class PotionTypeRecipe{
-	/** @var int */
-	private $inputItemId;
-	/** @var int */
-	private $inputItemMeta;
-	/** @var int */
-	private $ingredientItemId;
-	/** @var int */
-	private $ingredientItemMeta;
-	/** @var int */
-	private $outputItemId;
-	/** @var int */
-	private $outputItemMeta;
+
+	private int $inputItemId;
+	private int $inputItemMeta;
+	private int $ingredientItemId;
+	private int $ingredientItemMeta;
+	private int $outputItemId;
+	private int $outputItemMeta;
 
 	public function __construct(int $inputItemId, int $inputItemMeta, int $ingredientItemId, int $ingredientItemMeta, int $outputItemId, int $outputItemMeta){
 		$this->inputItemId = $inputItemId;

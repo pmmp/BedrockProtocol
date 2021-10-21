@@ -24,13 +24,13 @@ declare(strict_types=1);
 namespace pocketmine\network\mcpe\protocol\types\command;
 
 class CommandEnum{
-	/** @var string */
-	private $enumName;
+
+	private string $enumName;
 	/**
 	 * @var string[]
 	 * @phpstan-var list<string>
 	 */
-	private $enumValues = [];
+	private array $enumValues = [];
 
 	/**
 	 * @param string[] $enumValues

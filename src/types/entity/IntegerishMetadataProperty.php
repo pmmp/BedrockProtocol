@@ -24,8 +24,8 @@ declare(strict_types=1);
 namespace pocketmine\network\mcpe\protocol\types\entity;
 
 trait IntegerishMetadataProperty{
-	/** @var int */
-	private $value;
+
+	private int $value;
 
 	public function __construct(int $value){
 		if($value < $this->min() or $value > $this->max()){

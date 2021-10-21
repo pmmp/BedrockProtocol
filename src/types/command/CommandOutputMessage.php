@@ -24,11 +24,10 @@ declare(strict_types=1);
 namespace pocketmine\network\mcpe\protocol\types\command;
 
 class CommandOutputMessage{
-	/** @var bool */
-	public $isInternal;
-	/** @var string */
-	public $messageId;
+
+	public bool $isInternal;
+	public string $messageId;
 	/** @var string[] */
-	public $parameters = [];
+	public array $parameters = [];
 
 }

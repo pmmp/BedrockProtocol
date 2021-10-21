@@ -28,10 +28,9 @@ use function count;
 
 final class ItemStackResponseContainerInfo{
 
-	/** @var int */
-	private $containerId;
+	private int $containerId;
 	/** @var ItemStackResponseSlotInfo[] */
-	private $slots;
+	private array $slots;
 
 	/**
 	 * @param ItemStackResponseSlotInfo[] $slots

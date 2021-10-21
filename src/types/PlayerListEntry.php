@@ -28,24 +28,15 @@ use Ramsey\Uuid\UuidInterface;
 
 class PlayerListEntry{
 
-	/** @var UuidInterface */
-	public $uuid;
-	/** @var int */
-	public $entityUniqueId;
-	/** @var string */
-	public $username;
-	/** @var SkinData */
-	public $skinData;
-	/** @var string */
-	public $xboxUserId;
-	/** @var string */
-	public $platformChatId = "";
-	/** @var int */
-	public $buildPlatform = DeviceOS::UNKNOWN;
-	/** @var bool */
-	public $isTeacher = false;
-	/** @var bool */
-	public $isHost = false;
+	public UuidInterface $uuid;
+	public int $entityUniqueId;
+	public string $username;
+	public SkinData $skinData;
+	public string $xboxUserId;
+	public string $platformChatId = "";
+	public int $buildPlatform = DeviceOS::UNKNOWN;
+	public bool $isTeacher = false;
+	public bool $isHost = false;
 
 	public static function createRemovalEntry(UuidInterface $uuid) : PlayerListEntry{
 		$entry = new PlayerListEntry();

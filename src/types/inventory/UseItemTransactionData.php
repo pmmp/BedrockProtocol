@@ -32,22 +32,14 @@ class UseItemTransactionData extends TransactionData{
 	public const ACTION_CLICK_AIR = 1;
 	public const ACTION_BREAK_BLOCK = 2;
 
-	/** @var int */
-	private $actionType;
-	/** @var Vector3 */
-	private $blockPos;
-	/** @var int */
-	private $face;
-	/** @var int */
-	private $hotbarSlot;
-	/** @var ItemStackWrapper */
-	private $itemInHand;
-	/** @var Vector3 */
-	private $playerPos;
-	/** @var Vector3 */
-	private $clickPos;
-	/** @var int */
-	private $blockRuntimeId;
+	private int $actionType;
+	private Vector3 $blockPos;
+	private int $face;
+	private int $hotbarSlot;
+	private ItemStackWrapper $itemInHand;
+	private Vector3 $playerPos;
+	private Vector3 $clickPos;
+	private int $blockRuntimeId;
 
 	public function getActionType() : int{
 		return $this->actionType;

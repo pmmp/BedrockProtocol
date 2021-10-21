@@ -27,8 +27,7 @@ use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 
 final class FloatMetadataProperty implements MetadataProperty{
 
-	/** @var float */
-	private $value;
+	private float $value;
 
 	public function __construct(float $value){
 		$this->value = $value;

@@ -28,10 +28,9 @@ use function count;
 
 final class InventoryTransactionChangedSlotsHack{
 
-	/** @var int */
-	private $containerId;
+	private int $containerId;
 	/** @var int[] */
-	private $changedSlotIndexes;
+	private array $changedSlotIndexes;
 
 	/**
 	 * @param int[] $changedSlotIndexes

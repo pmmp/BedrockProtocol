@@ -27,22 +27,14 @@ use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 
 class ResourcePackInfoEntry{
 
-	/** @var string */
-	private $packId;
-	/** @var string */
-	private $version;
-	/** @var int */
-	private $sizeBytes;
-	/** @var string */
-	private $encryptionKey;
-	/** @var string */
-	private $subPackName;
-	/** @var string */
-	private $contentId;
-	/** @var bool */
-	private $hasScripts;
-	/** @var bool */
-	private $isRtxCapable;
+	private string $packId;
+	private string $version;
+	private int $sizeBytes;
+	private string $encryptionKey;
+	private string $subPackName;
+	private string $contentId;
+	private bool $hasScripts;
+	private bool $isRtxCapable;
 
 	public function __construct(string $packId, string $version, int $sizeBytes, string $encryptionKey = "", string $subPackName = "", string $contentId = "", bool $hasScripts = false, bool $isRtxCapable = false){
 		$this->packId = $packId;

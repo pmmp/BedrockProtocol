@@ -24,12 +24,10 @@ declare(strict_types=1);
 namespace pocketmine\network\mcpe\protocol\types\recipe;
 
 class PotionContainerChangeRecipe{
-	/** @var int */
-	private $inputItemId;
-	/** @var int */
-	private $ingredientItemId;
-	/** @var int */
-	private $outputItemId;
+
+	private int $inputItemId;
+	private int $ingredientItemId;
+	private int $outputItemId;
 
 	public function __construct(int $inputItemId, int $ingredientItemId, int $outputItemId){
 		$this->inputItemId = $inputItemId;

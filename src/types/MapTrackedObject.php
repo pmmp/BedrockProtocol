@@ -27,17 +27,13 @@ class MapTrackedObject{
 	public const TYPE_ENTITY = 0;
 	public const TYPE_BLOCK = 1;
 
-	/** @var int */
-	public $type;
+	public int $type;
 
 	/** @var int Only set if is TYPE_ENTITY */
-	public $entityUniqueId;
+	public int $entityUniqueId;
 
-	/** @var int */
-	public $x;
-	/** @var int */
-	public $y;
-	/** @var int */
-	public $z;
+	public int $x;
+	public int $y;
+	public int $z;
 
 }

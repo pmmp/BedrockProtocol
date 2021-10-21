@@ -29,18 +29,12 @@ class CommandParameter{
 	public const FLAG_FORCE_COLLAPSE_ENUM = 0x1;
 	public const FLAG_HAS_ENUM_CONSTRAINT = 0x2;
 
-	/** @var string */
-	public $paramName;
-	/** @var int */
-	public $paramType;
-	/** @var bool */
-	public $isOptional;
-	/** @var int */
-	public $flags = 0; //shows enum name if 1, always zero except for in /gamerule command
-	/** @var CommandEnum|null */
-	public $enum;
-	/** @var string|null */
-	public $postfix;
+	public string $paramName;
+	public int $paramType;
+	public bool $isOptional;
+	public int $flags = 0; //shows enum name if 1, always zero except for in /gamerule command
+	public ?CommandEnum $enum;
+	public ?string $postfix;
 
 	private static function baseline(string $name, int $type, int $flags, bool $optional) : self{
 		$result = new self;

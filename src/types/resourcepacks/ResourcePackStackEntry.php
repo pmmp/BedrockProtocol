@@ -27,12 +27,9 @@ use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 
 class ResourcePackStackEntry{
 
-	/** @var string */
-	private $packId;
-	/** @var string */
-	private $version;
-	/** @var string */
-	private $subPackName;
+	private string $packId;
+	private string $version;
+	private string $subPackName;
 
 	public function __construct(string $packId, string $version, string $subPackName){
 		$this->packId = $packId;

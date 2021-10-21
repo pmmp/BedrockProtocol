@@ -25,12 +25,9 @@ namespace pocketmine\network\mcpe\protocol\types\recipe;
 
 final class RecipeIngredient{
 
-	/** @var int */
-	private $id;
-	/** @var int */
-	private $meta;
-	/** @var int */
-	private $count;
+	private int $id;
+	private int $meta;
+	private int $count;
 
 	public function __construct(int $id, int $meta, int $count){
 		$this->id = $id;

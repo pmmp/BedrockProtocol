@@ -30,10 +30,8 @@ use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
  */
 final class BeaconPaymentStackRequestAction extends ItemStackRequestAction{
 
-	/** @var int */
-	private $primaryEffectId;
-	/** @var int */
-	private $secondaryEffectId;
+	private int $primaryEffectId;
+	private int $secondaryEffectId;
 
 	public function __construct(int $primaryEffectId, int $secondaryEffectId){
 		$this->primaryEffectId = $primaryEffectId;

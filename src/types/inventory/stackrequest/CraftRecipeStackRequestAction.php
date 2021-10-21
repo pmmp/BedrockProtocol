@@ -30,8 +30,7 @@ use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
  */
 final class CraftRecipeStackRequestAction extends ItemStackRequestAction{
 
-	/** @var int */
-	private $recipeId;
+	private int $recipeId;
 
 	final public function __construct(int $recipeId){
 		$this->recipeId = $recipeId;

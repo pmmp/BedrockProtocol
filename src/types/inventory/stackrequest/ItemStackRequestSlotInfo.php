@@ -27,12 +27,9 @@ use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 
 final class ItemStackRequestSlotInfo{
 
-	/** @var int */
-	private $containerId;
-	/** @var int */
-	private $slotId;
-	/** @var int */
-	private $stackId;
+	private int $containerId;
+	private int $slotId;
+	private int $stackId;
 
 	public function __construct(int $containerId, int $slotId, int $stackId){
 		$this->containerId = $containerId;

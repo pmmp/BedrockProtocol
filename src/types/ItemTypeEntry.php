@@ -25,12 +25,9 @@ namespace pocketmine\network\mcpe\protocol\types;
 
 final class ItemTypeEntry{
 
-	/** @var string */
-	private $stringId;
-	/** @var int */
-	private $numericId;
-	/** @var bool */
-	private $componentBased;
+	private string $stringId;
+	private int $numericId;
+	private bool $componentBased;
 
 	public function __construct(string $stringId, int $numericId, bool $componentBased){
 		$this->stringId = $stringId;

@@ -30,8 +30,7 @@ use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
  */
 final class CreativeCreateStackRequestAction extends ItemStackRequestAction{
 
-	/** @var int */
-	private $creativeItemId;
+	private int $creativeItemId;
 
 	public function __construct(int $creativeItemId){
 		$this->creativeItemId = $creativeItemId;

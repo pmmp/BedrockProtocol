@@ -27,10 +27,8 @@ use pocketmine\nbt\tag\CompoundTag;
 
 final class BlockPaletteEntry{
 
-	/** @var string */
-	private $name;
-	/** @var CompoundTag */
-	private $states;
+	private string $name;
+	private CompoundTag $states;
 
 	public function __construct(string $name, CompoundTag $states){
 		$this->name = $name;

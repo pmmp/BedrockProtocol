@@ -30,8 +30,8 @@ use pocketmine\network\mcpe\protocol\serializer\NetworkNbtSerializer;
 use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 
 final class CompoundTagMetadataProperty implements MetadataProperty{
-	/** @var CompoundTag */
-	private $value;
+
+	private CompoundTag $value;
 
 	public function __construct(CompoundTag $value){
 		$this->value = clone $value;

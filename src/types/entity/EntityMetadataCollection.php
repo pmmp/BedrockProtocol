@@ -33,12 +33,12 @@ class EntityMetadataCollection{
 	 * @var MetadataProperty[]
 	 * @phpstan-var array<int, MetadataProperty>
 	 */
-	private $properties = [];
+	private array $properties = [];
 	/**
 	 * @var MetadataProperty[]
 	 * @phpstan-var array<int, MetadataProperty>
 	 */
-	private $dirtyProperties = [];
+	private array $dirtyProperties = [];
 
 	public function __construct(){
 

@@ -32,14 +32,10 @@ class SkinAnimation{
 	public const EXPRESSION_LINEAR = 0; //???
 	public const EXPRESSION_BLINKING = 1;
 
-	/** @var SkinImage */
-	private $image;
-	/** @var int */
-	private $type;
-	/** @var float */
-	private $frames;
-	/** @var int */
-	private $expressionType;
+	private SkinImage $image;
+	private int $type;
+	private float $frames;
+	private int $expressionType;
 
 	public function __construct(SkinImage $image, int $type, float $frames, int $expressionType){
 		$this->image = $image;

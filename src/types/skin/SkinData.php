@@ -31,45 +31,29 @@ class SkinData{
 	public const ARM_SIZE_SLIM = "slim";
 	public const ARM_SIZE_WIDE = "wide";
 
-	/** @var string */
-	private $skinId;
-	/** @var string */
-	private $playFabId;
-	/** @var string */
-	private $resourcePatch;
-	/** @var SkinImage */
-	private $skinImage;
+	private string $skinId;
+	private string $playFabId;
+	private string $resourcePatch;
+	private SkinImage $skinImage;
 	/** @var SkinAnimation[] */
-	private $animations;
-	/** @var SkinImage */
-	private $capeImage;
-	/** @var string */
-	private $geometryData;
+	private array $animations;
+	private SkinImage $capeImage;
+	private string $geometryData;
 	private string $geometryDataEngineVersion;
-	/** @var string */
-	private $animationData;
-	/** @var string */
-	private $capeId;
-	/** @var string */
-	private $fullSkinId;
-	/** @var string */
-	private $armSize;
-	/** @var string */
-	private $skinColor;
+	private string $animationData;
+	private string $capeId;
+	private string $fullSkinId;
+	private string $armSize;
+	private string $skinColor;
 	/** @var PersonaSkinPiece[] */
-	private $personaPieces;
+	private array $personaPieces;
 	/** @var PersonaPieceTintColor[] */
-	private $pieceTintColors;
-	/** @var bool */
-	private $isVerified;
-	/** @var bool */
-	private $persona;
-	/** @var bool */
-	private $premium;
-	/** @var bool */
-	private $personaCapeOnClassic;
-	/** @var bool */
-	private $isPrimaryUser;
+	private array $pieceTintColors;
+	private bool $isVerified;
+	private bool $persona;
+	private bool $premium;
+	private bool $personaCapeOnClassic;
+	private bool $isPrimaryUser;
 
 	/**
 	 * @param SkinAnimation[]         $animations

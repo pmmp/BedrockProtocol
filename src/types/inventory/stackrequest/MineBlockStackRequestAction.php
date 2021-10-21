@@ -27,12 +27,9 @@ use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 
 final class MineBlockStackRequestAction extends ItemStackRequestAction{
 
-	/** @var int */
-	private $unknown1;
-	/** @var int */
-	private $predictedDurability;
-	/** @var int */
-	private $stackId;
+	private int $unknown1;
+	private int $predictedDurability;
+	private int $stackId;
 
 	public function __construct(int $unknown1, int $predictedDurability, int $stackId){
 		$this->unknown1 = $unknown1;

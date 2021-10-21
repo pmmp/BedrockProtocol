@@ -26,12 +26,10 @@ namespace pocketmine\network\mcpe\protocol\types;
 use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 
 final class PlayerMovementSettings{
-	/** @var int */
-	private $movementType;
-	/** @var int */
-	private $rewindHistorySize;
-	/** @var bool */
-	private $serverAuthoritativeBlockBreaking;
+
+	private int $movementType;
+	private int $rewindHistorySize;
+	private bool $serverAuthoritativeBlockBreaking;
 
 	public function __construct(int $movementType, int $rewindHistorySize, bool $serverAuthoritativeBlockBreaking){
 		$this->movementType = $movementType;

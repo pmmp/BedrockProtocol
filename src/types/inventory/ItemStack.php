@@ -31,22 +31,16 @@ use function count;
 
 final class ItemStack implements \JsonSerializable{
 
-	/** @var int */
-	private $id;
-	/** @var int */
-	private $meta;
-	/** @var int */
-	private $count;
-	/** @var int */
-	private $blockRuntimeId;
+	private int $id;
+	private int $meta;
+	private int $count;
+	private int $blockRuntimeId;
 	/** @var string[] */
-	private $canPlaceOn;
+	private array $canPlaceOn;
 	/** @var string[] */
-	private $canDestroy;
-	/** @var CompoundTag|null */
-	private $nbt;
-	/** @var int|null */
-	private $shieldBlockingTick;
+	private array $canDestroy;
+	private ?CompoundTag $nbt;
+	private ?int $shieldBlockingTick;
 
 	/**
 	 * @param string[] $canPlaceOn

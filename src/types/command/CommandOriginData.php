@@ -39,14 +39,8 @@ class CommandOriginData{
 	public const ORIGIN_GAME_ARGUMENT = 10;
 	public const ORIGIN_ENTITY_SERVER = 11; //???
 
-	/** @var int */
-	public $type;
-	/** @var UuidInterface */
-	public $uuid;
-
-	/** @var string */
-	public $requestId;
-
-	/** @var int */
-	public $playerEntityUniqueId;
+	public int $type;
+	public UuidInterface $uuid;
+	public string $requestId;
+	public int $playerEntityUniqueId;
 }

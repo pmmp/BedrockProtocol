@@ -40,10 +40,7 @@ class DebugInfoPacket extends DataPacket implements ClientboundPacket, Serverbou
 		return $result;
 	}
 
-	/**
-	 * TODO: we can't call this getEntityRuntimeId() because of base class collision (crap architecture, thanks Shoghi)
-	 */
-	public function getEntityUniqueIdField() : int{ return $this->entityUniqueId; }
+	public function getEntityUniqueId() : int{ return $this->entityUniqueId; }
 
 	public function getData() : string{ return $this->data; }
 

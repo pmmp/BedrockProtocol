@@ -57,18 +57,18 @@ class MoveActorAbsolutePacket extends DataPacket implements ClientboundPacket, S
 		$this->entityRuntimeId = $in->getEntityRuntimeId();
 		$this->flags = $in->getByte();
 		$this->position = $in->getVector3();
-		$this->xRot = $in->getByteRotation();
-		$this->yRot = $in->getByteRotation();
-		$this->zRot = $in->getByteRotation();
+		$this->xRot = $in->getRotationByte();
+		$this->yRot = $in->getRotationByte();
+		$this->zRot = $in->getRotationByte();
 	}
 
 	protected function encodePayload(PacketSerializer $out) : void{
 		$out->putEntityRuntimeId($this->entityRuntimeId);
 		$out->putByte($this->flags);
 		$out->putVector3($this->position);
-		$out->putByteRotation($this->xRot);
-		$out->putByteRotation($this->yRot);
-		$out->putByteRotation($this->zRot);
+		$out->putRotationByte($this->xRot);
+		$out->putRotationByte($this->yRot);
+		$out->putRotationByte($this->zRot);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

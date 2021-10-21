@@ -618,11 +618,11 @@ class PacketSerializer extends BinaryStream{
 	/**
 	 * @throws BinaryDataException
 	 */
-	public function getByteRotation() : float{
+	public function getRotationByte() : float{
 		return ($this->getByte() * (360 / 256));
 	}
 
-	public function putByteRotation(float $rotation) : void{
+	public function putRotationByte(float $rotation) : void{
 		$this->putByte((int) ($rotation / (360 / 256)));
 	}
 

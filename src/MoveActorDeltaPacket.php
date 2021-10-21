@@ -65,7 +65,7 @@ class MoveActorDeltaPacket extends DataPacket implements ClientboundPacket{
 	 */
 	private function maybeReadRotation(int $flag, PacketSerializer $in) : float{
 		if(($this->flags & $flag) !== 0){
-			return $in->getByteRotation();
+			return $in->getRotationByte();
 		}
 		return 0.0;
 	}
@@ -89,7 +89,7 @@ class MoveActorDeltaPacket extends DataPacket implements ClientboundPacket{
 
 	private function maybeWriteRotation(int $flag, float $val, PacketSerializer $out) : void{
 		if(($this->flags & $flag) !== 0){
-			$out->putByteRotation($val);
+			$out->putRotationByte($val);
 		}
 	}
 

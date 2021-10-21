@@ -33,7 +33,7 @@ use function count;
 class UpdateSubChunkBlocksPacket extends DataPacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::UPDATE_SUB_CHUNK_BLOCKS_PACKET;
 
-	private BlockPosition $baseBlockPos;
+	private BlockPosition $baseBlockPosition;
 
 	/** @var UpdateSubChunkBlocksPacketEntry[] */
 	private array $layer0Updates;
@@ -44,15 +44,15 @@ class UpdateSubChunkBlocksPacket extends DataPacket implements ClientboundPacket
 	 * @param UpdateSubChunkBlocksPacketEntry[] $layer0
 	 * @param UpdateSubChunkBlocksPacketEntry[] $layer1
 	 */
-	public static function create(BlockPosition $baseBlockPos, array $layer0, array $layer1) : self{
+	public static function create(BlockPosition $baseBlockPosition, array $layer0, array $layer1) : self{
 		$result = new self;
-		$result->baseBlockPos = $baseBlockPos;
+		$result->baseBlockPosition = $baseBlockPosition;
 		$result->layer0Updates = $layer0;
 		$result->layer1Updates = $layer1;
 		return $result;
 	}
 
-	public function getBaseBlockPos() : BlockPosition{ return $this->baseBlockPos; }
+	public function getBaseBlockPosition() : BlockPosition{ return $this->baseBlockPosition; }
 
 	/** @return UpdateSubChunkBlocksPacketEntry[] */
 	public function getLayer0Updates() : array{ return $this->layer0Updates; }
@@ -61,7 +61,7 @@ class UpdateSubChunkBlocksPacket extends DataPacket implements ClientboundPacket
 	public function getLayer1Updates() : array{ return $this->layer1Updates; }
 
 	protected function decodePayload(PacketSerializer $in) : void{
-		$this->baseBlockPos = $in->getBlockPosition();
+		$this->baseBlockPosition = $in->getBlockPosition();
 		$this->layer0Updates = [];
 		for($i = 0, $count = $in->getUnsignedVarInt(); $i < $count; ++$i){
 			$this->layer0Updates[] = UpdateSubChunkBlocksPacketEntry::read($in);
@@ -72,7 +72,7 @@ class UpdateSubChunkBlocksPacket extends DataPacket implements ClientboundPacket
 	}
 
 	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putBlockPosition($this->baseBlockPos);
+		$out->putBlockPosition($this->baseBlockPosition);
 		$out->putUnsignedVarInt(count($this->layer0Updates));
 		foreach($this->layer0Updates as $update){
 			$update->write($out);

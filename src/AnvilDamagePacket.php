@@ -45,7 +45,7 @@ class AnvilDamagePacket extends DataPacket implements ServerboundPacket{
 		return $this->damageAmount;
 	}
 
-	public function getBlockPos() : BlockPosition{ return $this->blockPosition; }
+	public function getBlockPosition() : BlockPosition{ return $this->blockPosition; }
 
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->damageAmount = $in->getByte();

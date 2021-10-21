@@ -36,20 +36,20 @@ class StructureTemplateDataRequestPacket extends DataPacket implements Serverbou
 	public const TYPE_CREATE_AND_LOAD = 2;
 
 	public string $structureTemplateName;
-	public BlockPosition $structureBlockPos;
+	public BlockPosition $structureBlockPosition;
 	public StructureSettings $structureSettings;
 	public int $structureTemplateResponseType;
 
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->structureTemplateName = $in->getString();
-		$this->structureBlockPos = $in->getBlockPosition();
+		$this->structureBlockPosition = $in->getBlockPosition();
 		$this->structureSettings = $in->getStructureSettings();
 		$this->structureTemplateResponseType = $in->getByte();
 	}
 
 	protected function encodePayload(PacketSerializer $out) : void{
 		$out->putString($this->structureTemplateName);
-		$out->putBlockPosition($this->structureBlockPos);
+		$out->putBlockPosition($this->structureBlockPosition);
 		$out->putStructureSettings($this->structureSettings);
 		$out->putByte($this->structureTemplateResponseType);
 	}

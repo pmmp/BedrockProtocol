@@ -38,15 +38,15 @@ class UseItemTransactionData extends TransactionData{
 	private int $face;
 	private int $hotbarSlot;
 	private ItemStackWrapper $itemInHand;
-	private Vector3 $playerPos;
-	private Vector3 $clickPos;
+	private Vector3 $playerPosition;
+	private Vector3 $clickPosition;
 	private int $blockRuntimeId;
 
 	public function getActionType() : int{
 		return $this->actionType;
 	}
 
-	public function getBlockPos() : BlockPosition{
+	public function getBlockPosition() : BlockPosition{
 		return $this->blockPosition;
 	}
 
@@ -62,12 +62,12 @@ class UseItemTransactionData extends TransactionData{
 		return $this->itemInHand;
 	}
 
-	public function getPlayerPos() : Vector3{
-		return $this->playerPos;
+	public function getPlayerPosition() : Vector3{
+		return $this->playerPosition;
 	}
 
-	public function getClickPos() : Vector3{
-		return $this->clickPos;
+	public function getClickPosition() : Vector3{
+		return $this->clickPosition;
 	}
 
 	public function getBlockRuntimeId() : int{
@@ -84,8 +84,8 @@ class UseItemTransactionData extends TransactionData{
 		$this->face = $stream->getVarInt();
 		$this->hotbarSlot = $stream->getVarInt();
 		$this->itemInHand = ItemStackWrapper::read($stream);
-		$this->playerPos = $stream->getVector3();
-		$this->clickPos = $stream->getVector3();
+		$this->playerPosition = $stream->getVector3();
+		$this->clickPosition = $stream->getVector3();
 		$this->blockRuntimeId = $stream->getUnsignedVarInt();
 	}
 
@@ -95,15 +95,15 @@ class UseItemTransactionData extends TransactionData{
 		$stream->putVarInt($this->face);
 		$stream->putVarInt($this->hotbarSlot);
 		$this->itemInHand->write($stream);
-		$stream->putVector3($this->playerPos);
-		$stream->putVector3($this->clickPos);
+		$stream->putVector3($this->playerPosition);
+		$stream->putVector3($this->clickPosition);
 		$stream->putUnsignedVarInt($this->blockRuntimeId);
 	}
 
 	/**
 	 * @param NetworkInventoryAction[] $actions
 	 */
-	public static function new(array $actions, int $actionType, BlockPosition $blockPosition, int $face, int $hotbarSlot, ItemStackWrapper $itemInHand, Vector3 $playerPos, Vector3 $clickPos, int $blockRuntimeId) : self{
+	public static function new(array $actions, int $actionType, BlockPosition $blockPosition, int $face, int $hotbarSlot, ItemStackWrapper $itemInHand, Vector3 $playerPosition, Vector3 $clickPosition, int $blockRuntimeId) : self{
 		$result = new self;
 		$result->actions = $actions;
 		$result->actionType = $actionType;
@@ -111,8 +111,8 @@ class UseItemTransactionData extends TransactionData{
 		$result->face = $face;
 		$result->hotbarSlot = $hotbarSlot;
 		$result->itemInHand = $itemInHand;
-		$result->playerPos = $playerPos;
-		$result->clickPos = $clickPos;
+		$result->playerPosition = $playerPosition;
+		$result->clickPosition = $clickPosition;
 		$result->blockRuntimeId = $blockRuntimeId;
 		return $result;
 	}

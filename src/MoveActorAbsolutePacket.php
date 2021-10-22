@@ -38,17 +38,17 @@ class MoveActorAbsolutePacket extends DataPacket implements ClientboundPacket, S
 	public int $actorRuntimeId;
 	public int $flags = 0;
 	public Vector3 $position;
-	public float $xRot;
-	public float $yRot;
-	public float $zRot;
+	public float $pitch;
+	public float $yaw;
+	public float $headYaw; //always zero for non-mobs
 
-	public static function create(int $actorRuntimeId, Vector3 $position, float $xRot, float $yRot, float $zRot, int $flags = 0) : self{
+	public static function create(int $actorRuntimeId, Vector3 $position, float $pitch, float $yaw, float $headYaw, int $flags = 0) : self{
 		$result = new self;
 		$result->actorRuntimeId = $actorRuntimeId;
 		$result->position = $position->asVector3();
-		$result->xRot = $xRot;
-		$result->yRot = $yRot;
-		$result->zRot = $zRot;
+		$result->pitch = $pitch;
+		$result->yaw = $yaw;
+		$result->headYaw = $headYaw;
 		$result->flags = $flags;
 		return $result;
 	}
@@ -57,18 +57,18 @@ class MoveActorAbsolutePacket extends DataPacket implements ClientboundPacket, S
 		$this->actorRuntimeId = $in->getActorRuntimeId();
 		$this->flags = $in->getByte();
 		$this->position = $in->getVector3();
-		$this->xRot = $in->getRotationByte();
-		$this->yRot = $in->getRotationByte();
-		$this->zRot = $in->getRotationByte();
+		$this->pitch = $in->getRotationByte();
+		$this->yaw = $in->getRotationByte();
+		$this->headYaw = $in->getRotationByte();
 	}
 
 	protected function encodePayload(PacketSerializer $out) : void{
 		$out->putActorRuntimeId($this->actorRuntimeId);
 		$out->putByte($this->flags);
 		$out->putVector3($this->position);
-		$out->putRotationByte($this->xRot);
-		$out->putRotationByte($this->yRot);
-		$out->putRotationByte($this->zRot);
+		$out->putRotationByte($this->pitch);
+		$out->putRotationByte($this->yaw);
+		$out->putRotationByte($this->headYaw);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

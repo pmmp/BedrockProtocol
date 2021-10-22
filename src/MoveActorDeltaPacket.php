@@ -34,9 +34,9 @@ class MoveActorDeltaPacket extends DataPacket implements ClientboundPacket{
 	public const FLAG_HAS_X = 0x01;
 	public const FLAG_HAS_Y = 0x02;
 	public const FLAG_HAS_Z = 0x04;
-	public const FLAG_HAS_ROT_X = 0x08;
-	public const FLAG_HAS_ROT_Y = 0x10;
-	public const FLAG_HAS_ROT_Z = 0x20;
+	public const FLAG_HAS_PITCH = 0x08;
+	public const FLAG_HAS_YAW = 0x10;
+	public const FLAG_HAS_HEAD_YAW = 0x20;
 	public const FLAG_GROUND = 0x40;
 	public const FLAG_TELEPORT = 0x80;
 	public const FLAG_FORCE_MOVE_LOCAL_ENTITY = 0x100;
@@ -46,9 +46,9 @@ class MoveActorDeltaPacket extends DataPacket implements ClientboundPacket{
 	public float $xPos = 0;
 	public float $yPos = 0;
 	public float $zPos = 0;
-	public float $xRot = 0.0;
-	public float $yRot = 0.0;
-	public float $zRot = 0.0;
+	public float $pitch = 0.0;
+	public float $yaw = 0.0;
+	public float $headYaw = 0.0;
 
 	/**
 	 * @throws BinaryDataException
@@ -76,9 +76,9 @@ class MoveActorDeltaPacket extends DataPacket implements ClientboundPacket{
 		$this->xPos = $this->maybeReadCoord(self::FLAG_HAS_X, $in);
 		$this->yPos = $this->maybeReadCoord(self::FLAG_HAS_Y, $in);
 		$this->zPos = $this->maybeReadCoord(self::FLAG_HAS_Z, $in);
-		$this->xRot = $this->maybeReadRotation(self::FLAG_HAS_ROT_X, $in);
-		$this->yRot = $this->maybeReadRotation(self::FLAG_HAS_ROT_Y, $in);
-		$this->zRot = $this->maybeReadRotation(self::FLAG_HAS_ROT_Z, $in);
+		$this->pitch = $this->maybeReadRotation(self::FLAG_HAS_PITCH, $in);
+		$this->yaw = $this->maybeReadRotation(self::FLAG_HAS_YAW, $in);
+		$this->headYaw = $this->maybeReadRotation(self::FLAG_HAS_HEAD_YAW, $in);
 	}
 
 	private function maybeWriteCoord(int $flag, float $val, PacketSerializer $out) : void{
@@ -99,9 +99,9 @@ class MoveActorDeltaPacket extends DataPacket implements ClientboundPacket{
 		$this->maybeWriteCoord(self::FLAG_HAS_X, $this->xPos, $out);
 		$this->maybeWriteCoord(self::FLAG_HAS_Y, $this->yPos, $out);
 		$this->maybeWriteCoord(self::FLAG_HAS_Z, $this->zPos, $out);
-		$this->maybeWriteRotation(self::FLAG_HAS_ROT_X, $this->xRot, $out);
-		$this->maybeWriteRotation(self::FLAG_HAS_ROT_Y, $this->yRot, $out);
-		$this->maybeWriteRotation(self::FLAG_HAS_ROT_Z, $this->zRot, $out);
+		$this->maybeWriteRotation(self::FLAG_HAS_PITCH, $this->pitch, $out);
+		$this->maybeWriteRotation(self::FLAG_HAS_YAW, $this->yaw, $out);
+		$this->maybeWriteRotation(self::FLAG_HAS_HEAD_YAW, $this->headYaw, $out);
 	}
 
 	public function handle(PacketHandlerInterface $session) : bool{

@@ -32,14 +32,14 @@ class ContainerOpenPacket extends DataPacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::CONTAINER_OPEN_PACKET;
 
 	public int $windowId;
-	public int $type;
+	public int $windowType;
 	public BlockPosition $blockPosition;
 	public int $actorUniqueId = -1;
 
 	public static function blockInv(int $windowId, int $windowType, BlockPosition $blockPosition) : self{
 		$result = new self;
 		$result->windowId = $windowId;
-		$result->type = $windowType;
+		$result->windowType = $windowType;
 		$result->blockPosition = $blockPosition;
 		return $result;
 	}
@@ -47,7 +47,7 @@ class ContainerOpenPacket extends DataPacket implements ClientboundPacket{
 	public static function entityInv(int $windowId, int $windowType, int $actorUniqueId) : self{
 		$result = new self;
 		$result->windowId = $windowId;
-		$result->type = $windowType;
+		$result->windowType = $windowType;
 		$result->actorUniqueId = $actorUniqueId;
 		$result->blockPosition = new BlockPosition(0, 0, 0); //this has to be set even if it isn't used
 		return $result;
@@ -55,14 +55,14 @@ class ContainerOpenPacket extends DataPacket implements ClientboundPacket{
 
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->windowId = $in->getByte();
-		$this->type = $in->getByte();
+		$this->windowType = $in->getByte();
 		$this->blockPosition = $in->getBlockPosition();
 		$this->actorUniqueId = $in->getActorUniqueId();
 	}
 
 	protected function encodePayload(PacketSerializer $out) : void{
 		$out->putByte($this->windowId);
-		$out->putByte($this->type);
+		$out->putByte($this->windowType);
 		$out->putBlockPosition($this->blockPosition);
 		$out->putActorUniqueId($this->actorUniqueId);
 	}

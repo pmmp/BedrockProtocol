@@ -360,6 +360,13 @@ class LevelSoundEventPacket extends DataPacket implements ClientboundPacket, Ser
 	public const SOUND_BUCKET_EMPTY_POWDER_SNOW = 329;
 	public const SOUND_UNDEFINED = 330;
 
+	public int $sound;
+	public Vector3 $position;
+	public int $extraData = -1;
+	public string $entityType = ":"; //???
+	public bool $isBabyMob = false; //...
+	public bool $disableRelativeVolume = false;
+
 	public static function create(int $sound, ?Vector3 $position, int $extraData = -1, string $entityType = ":", bool $isBabyMob = false) : self{
 		$result = new self;
 		$result->sound = $sound;
@@ -370,13 +377,6 @@ class LevelSoundEventPacket extends DataPacket implements ClientboundPacket, Ser
 		$result->isBabyMob = $isBabyMob;
 		return $result;
 	}
-
-	public int $sound;
-	public Vector3 $position;
-	public int $extraData = -1;
-	public string $entityType = ":"; //???
-	public bool $isBabyMob = false; //...
-	public bool $disableRelativeVolume = false;
 
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->sound = $in->getUnsignedVarInt();

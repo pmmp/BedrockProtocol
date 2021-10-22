@@ -49,7 +49,7 @@ class ClientboundMapItemDataPacket extends DataPacket implements ClientboundPack
 	public bool $isLocked = false;
 
 	/** @var int[] */
-	public array $eids = [];
+	public array $parentMapIds = [];
 	public int $scale;
 
 	/** @var MapTrackedObject[] */
@@ -70,7 +70,7 @@ class ClientboundMapItemDataPacket extends DataPacket implements ClientboundPack
 		if(($this->type & self::BITFLAG_MAP_CREATION) !== 0){
 			$count = $in->getUnsignedVarInt();
 			for($i = 0; $i < $count; ++$i){
-				$this->eids[] = $in->getEntityUniqueId();
+				$this->parentMapIds[] = $in->getEntityUniqueId();
 			}
 		}
 
@@ -122,7 +122,7 @@ class ClientboundMapItemDataPacket extends DataPacket implements ClientboundPack
 		$out->putEntityUniqueId($this->mapId);
 
 		$type = 0;
-		if(($eidsCount = count($this->eids)) > 0){
+		if(($parentMapIdsCount = count($this->parentMapIds)) > 0){
 			$type |= self::BITFLAG_MAP_CREATION;
 		}
 		if(($decorationCount = count($this->decorations)) > 0){
@@ -136,10 +136,10 @@ class ClientboundMapItemDataPacket extends DataPacket implements ClientboundPack
 		$out->putByte($this->dimensionId);
 		$out->putBool($this->isLocked);
 
-		if(($type & self::BITFLAG_MAP_CREATION) !== 0){ //TODO: find out what these are for
-			$out->putUnsignedVarInt($eidsCount);
-			foreach($this->eids as $eid){
-				$out->putEntityUniqueId($eid);
+		if(($type & self::BITFLAG_MAP_CREATION) !== 0){
+			$out->putUnsignedVarInt($parentMapIdsCount);
+			foreach($this->parentMapIds as $parentMapId){
+				$out->putEntityUniqueId($parentMapId);
 			}
 		}
 

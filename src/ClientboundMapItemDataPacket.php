@@ -41,6 +41,7 @@ class ClientboundMapItemDataPacket extends DataPacket implements ClientboundPack
 
 	public const BITFLAG_TEXTURE_UPDATE = 0x02;
 	public const BITFLAG_DECORATION_UPDATE = 0x04;
+	public const BITFLAG_MAP_CREATION = 0x08;
 
 	public int $mapId;
 	public int $type;
@@ -66,14 +67,14 @@ class ClientboundMapItemDataPacket extends DataPacket implements ClientboundPack
 		$this->dimensionId = $in->getByte();
 		$this->isLocked = $in->getBool();
 
-		if(($this->type & 0x08) !== 0){
+		if(($this->type & self::BITFLAG_MAP_CREATION) !== 0){
 			$count = $in->getUnsignedVarInt();
 			for($i = 0; $i < $count; ++$i){
 				$this->eids[] = $in->getEntityUniqueId();
 			}
 		}
 
-		if(($this->type & (0x08 | self::BITFLAG_DECORATION_UPDATE | self::BITFLAG_TEXTURE_UPDATE)) !== 0){ //Decoration bitflag or colour bitflag
+		if(($this->type & (self::BITFLAG_DECORATION_UPDATE | self::BITFLAG_DECORATION_UPDATE | self::BITFLAG_TEXTURE_UPDATE)) !== 0){ //Decoration bitflag or colour bitflag
 			$this->scale = $in->getByte();
 		}
 
@@ -122,7 +123,7 @@ class ClientboundMapItemDataPacket extends DataPacket implements ClientboundPack
 
 		$type = 0;
 		if(($eidsCount = count($this->eids)) > 0){
-			$type |= 0x08;
+			$type |= self::BITFLAG_MAP_CREATION;
 		}
 		if(($decorationCount = count($this->decorations)) > 0){
 			$type |= self::BITFLAG_DECORATION_UPDATE;
@@ -135,14 +136,14 @@ class ClientboundMapItemDataPacket extends DataPacket implements ClientboundPack
 		$out->putByte($this->dimensionId);
 		$out->putBool($this->isLocked);
 
-		if(($type & 0x08) !== 0){ //TODO: find out what these are for
+		if(($type & self::BITFLAG_MAP_CREATION) !== 0){ //TODO: find out what these are for
 			$out->putUnsignedVarInt($eidsCount);
 			foreach($this->eids as $eid){
 				$out->putEntityUniqueId($eid);
 			}
 		}
 
-		if(($type & (0x08 | self::BITFLAG_TEXTURE_UPDATE | self::BITFLAG_DECORATION_UPDATE)) !== 0){
+		if(($type & (self::BITFLAG_MAP_CREATION | self::BITFLAG_TEXTURE_UPDATE | self::BITFLAG_DECORATION_UPDATE)) !== 0){
 			$out->putByte($this->scale);
 		}
 

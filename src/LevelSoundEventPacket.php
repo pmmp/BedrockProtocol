@@ -361,7 +361,7 @@ class LevelSoundEventPacket extends DataPacket implements ClientboundPacket, Ser
 	public const SOUND_UNDEFINED = 330;
 
 	public int $sound;
-	public Vector3 $position;
+	public ?Vector3 $position;
 	public int $extraData = -1;
 	public string $entityType = ":"; //???
 	public bool $isBabyMob = false; //...
@@ -371,7 +371,7 @@ class LevelSoundEventPacket extends DataPacket implements ClientboundPacket, Ser
 		$result = new self;
 		$result->sound = $sound;
 		$result->extraData = $extraData;
-		$result->position = $position ?? new Vector3(0, 0, 0);
+		$result->position = $position;
 		$result->disableRelativeVolume = $position === null;
 		$result->entityType = $entityType;
 		$result->isBabyMob = $isBabyMob;
@@ -389,7 +389,7 @@ class LevelSoundEventPacket extends DataPacket implements ClientboundPacket, Ser
 
 	protected function encodePayload(PacketSerializer $out) : void{
 		$out->putUnsignedVarInt($this->sound);
-		$out->putVector3($this->position);
+		$out->putVector3Nullable($this->position);
 		$out->putVarInt($this->extraData);
 		$out->putString($this->entityType);
 		$out->putBool($this->isBabyMob);

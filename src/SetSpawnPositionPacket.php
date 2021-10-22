@@ -38,13 +38,18 @@ class SetSpawnPositionPacket extends DataPacket implements ClientboundPacket{
 	public int $spawnType;
 	public BlockPosition $spawnPosition;
 	public int $dimension;
-	public BlockPosition $spawnPosition2; //this has no obvious use
+	/**
+	 * Position of the respawn anchor or bed that this spawn position was set by.
+	 * This may be different from the spawn position (e.g. the actual spawn position may be next to a bed, while this
+	 * would be the position of the bed block itself).
+	 */
+	public BlockPosition $causingBlockPosition;
 
-	public static function playerSpawn(BlockPosition $spawnPosition, int $dimension, BlockPosition $spawnPosition2) : self{
+	public static function playerSpawn(BlockPosition $spawnPosition, int $dimension, BlockPosition $causingBlockPosition) : self{
 		$result = new self;
 		$result->spawnType = self::TYPE_PLAYER_SPAWN;
 		$result->spawnPosition = $spawnPosition;
-		$result->spawnPosition2 = $spawnPosition2;
+		$result->causingBlockPosition = $causingBlockPosition;
 		$result->dimension = $dimension;
 		return $result;
 	}
@@ -53,7 +58,7 @@ class SetSpawnPositionPacket extends DataPacket implements ClientboundPacket{
 		$result = new self;
 		$result->spawnType = self::TYPE_WORLD_SPAWN;
 		$result->spawnPosition = $spawnPosition;
-		$result->spawnPosition2 = new BlockPosition(Limits::INT32_MIN, Limits::INT32_MIN, Limits::INT32_MIN);
+		$result->causingBlockPosition = new BlockPosition(Limits::INT32_MIN, Limits::INT32_MIN, Limits::INT32_MIN);
 		$result->dimension = $dimension;
 		return $result;
 	}
@@ -62,14 +67,14 @@ class SetSpawnPositionPacket extends DataPacket implements ClientboundPacket{
 		$this->spawnType = $in->getVarInt();
 		$this->spawnPosition = $in->getBlockPosition();
 		$this->dimension = $in->getVarInt();
-		$this->spawnPosition2 = $in->getBlockPosition();
+		$this->causingBlockPosition = $in->getBlockPosition();
 	}
 
 	protected function encodePayload(PacketSerializer $out) : void{
 		$out->putVarInt($this->spawnType);
 		$out->putBlockPosition($this->spawnPosition);
 		$out->putVarInt($this->dimension);
-		$out->putBlockPosition($this->spawnPosition2);
+		$out->putBlockPosition($this->causingBlockPosition);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

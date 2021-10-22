@@ -32,6 +32,9 @@ class AddEntityPacket extends DataPacket implements ClientboundPacket{
 
 	private int $entityNetId;
 
+	/**
+	 * @generate-create-func
+	 */
 	public static function create(int $entityNetId) : self{
 		$result = new self;
 		$result->entityNetId = $entityNetId;

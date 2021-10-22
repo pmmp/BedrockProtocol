@@ -34,10 +34,13 @@ class SetActorMotionPacket extends DataPacket implements ClientboundPacket, Serv
 	public int $actorRuntimeId;
 	public Vector3 $motion;
 
+	/**
+	 * @generate-create-func
+	 */
 	public static function create(int $actorRuntimeId, Vector3 $motion) : self{
 		$result = new self;
 		$result->actorRuntimeId = $actorRuntimeId;
-		$result->motion = $motion->asVector3();
+		$result->motion = $motion;
 		return $result;
 	}
 

@@ -41,6 +41,9 @@ class PlayStatusPacket extends DataPacket implements ClientboundPacket{
 
 	public int $status;
 
+	/**
+	 * @generate-create-func
+	 */
 	public static function create(int $status) : self{
 		$result = new self;
 		$result->status = $status;

@@ -41,6 +41,9 @@ class CameraShakePacket extends DataPacket implements ClientboundPacket{
 	private int $shakeType;
 	private int $shakeAction;
 
+	/**
+	 * @generate-create-func
+	 */
 	public static function create(float $intensity, float $duration, int $shakeType, int $shakeAction) : self{
 		$result = new self;
 		$result->intensity = $intensity;

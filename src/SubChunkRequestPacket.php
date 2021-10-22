@@ -35,6 +35,9 @@ class SubChunkRequestPacket extends DataPacket implements ServerboundPacket{
 	private int $subChunkY;
 	private int $subChunkZ;
 
+	/**
+	 * @generate-create-func
+	 */
 	public static function create(int $dimension, int $subChunkX, int $subChunkY, int $subChunkZ) : self{
 		$result = new self;
 		$result->dimension = $dimension;

@@ -33,6 +33,9 @@ class ModalFormRequestPacket extends DataPacket implements ClientboundPacket{
 	public int $formId;
 	public string $formData; //json
 
+	/**
+	 * @generate-create-func
+	 */
 	public static function create(int $formId, string $formData) : self{
 		$result = new self;
 		$result->formId = $formId;

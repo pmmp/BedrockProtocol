@@ -33,25 +33,25 @@ use function count;
 class ResourcePackStackPacket extends DataPacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::RESOURCE_PACK_STACK_PACKET;
 
-	public bool $mustAccept = false;
-	/** @var ResourcePackStackEntry[] */
-	public array $behaviorPackStack = [];
 	/** @var ResourcePackStackEntry[] */
 	public array $resourcePackStack = [];
+	/** @var ResourcePackStackEntry[] */
+	public array $behaviorPackStack = [];
+	public bool $mustAccept = false;
 	public string $baseGameVersion = ProtocolInfo::MINECRAFT_VERSION_NETWORK;
 	public Experiments $experiments;
 
 	/**
-	 * @param ResourcePackStackEntry[] $resourcePacks
-	 * @param ResourcePackStackEntry[] $behaviorPacks
-	 *
-	 * @return ResourcePackStackPacket
+	 * @generate-create-func
+	 * @param ResourcePackStackEntry[] $resourcePackStack
+	 * @param ResourcePackStackEntry[] $behaviorPackStack
 	 */
-	public static function create(array $resourcePacks, array $behaviorPacks, bool $mustAccept, Experiments $experiments) : self{
+	public static function create(array $resourcePackStack, array $behaviorPackStack, bool $mustAccept, string $baseGameVersion, Experiments $experiments) : self{
 		$result = new self;
+		$result->resourcePackStack = $resourcePackStack;
+		$result->behaviorPackStack = $behaviorPackStack;
 		$result->mustAccept = $mustAccept;
-		$result->resourcePackStack = $resourcePacks;
-		$result->behaviorPackStack = $behaviorPacks;
+		$result->baseGameVersion = $baseGameVersion;
 		$result->experiments = $experiments;
 		return $result;
 	}

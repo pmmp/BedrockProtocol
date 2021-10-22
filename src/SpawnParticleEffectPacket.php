@@ -37,6 +37,18 @@ class SpawnParticleEffectPacket extends DataPacket implements ClientboundPacket{
 	public Vector3 $position;
 	public string $particleName;
 
+	/**
+	 * @generate-create-func
+	 */
+	public static function create(int $dimensionId, int $actorUniqueId, Vector3 $position, string $particleName) : self{
+		$result = new self;
+		$result->dimensionId = $dimensionId;
+		$result->actorUniqueId = $actorUniqueId;
+		$result->position = $position;
+		$result->particleName = $particleName;
+		return $result;
+	}
+
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->dimensionId = $in->getByte();
 		$this->actorUniqueId = $in->getActorUniqueId();

@@ -37,14 +37,11 @@ class ClientCacheBlobStatusPacket extends DataPacket implements ServerboundPacke
 	private array $missHashes = [];
 
 	/**
+	 * @generate-create-func
 	 * @param int[] $hitHashes
 	 * @param int[] $missHashes
 	 */
 	public static function create(array $hitHashes, array $missHashes) : self{
-		//type checks
-		(static function(int ...$hashes) : void{})(...$hitHashes);
-		(static function(int ...$hashes) : void{})(...$missHashes);
-
 		$result = new self;
 		$result->hitHashes = $hitHashes;
 		$result->missHashes = $missHashes;

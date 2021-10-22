@@ -36,6 +36,7 @@ class ItemStackResponsePacket extends DataPacket implements ClientboundPacket{
 	private array $responses;
 
 	/**
+	 * @generate-create-func
 	 * @param ItemStackResponse[] $responses
 	 */
 	public static function create(array $responses) : self{

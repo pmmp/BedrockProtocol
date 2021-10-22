@@ -38,6 +38,20 @@ class UpdateEquipPacket extends DataPacket implements ClientboundPacket{
 	/** @phpstan-var CacheableNbt<\pocketmine\nbt\tag\CompoundTag> */
 	public CacheableNbt $nbt;
 
+	/**
+	 * @generate-create-func
+	 * @phpstan-param CacheableNbt<\pocketmine\nbt\tag\CompoundTag> $nbt
+	 */
+	public static function create(int $windowId, int $windowType, int $windowSlotCount, int $actorUniqueId, CacheableNbt $nbt) : self{
+		$result = new self;
+		$result->windowId = $windowId;
+		$result->windowType = $windowType;
+		$result->windowSlotCount = $windowSlotCount;
+		$result->actorUniqueId = $actorUniqueId;
+		$result->nbt = $nbt;
+		return $result;
+	}
+
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->windowId = $in->getByte();
 		$this->windowType = $in->getByte();

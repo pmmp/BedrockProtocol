@@ -45,6 +45,31 @@ class AddItemActorPacket extends DataPacket implements ClientboundPacket{
 	public array $metadata = [];
 	public bool $isFromFishing = false;
 
+	/**
+	 * @generate-create-func
+	 * @param MetadataProperty[] $metadata
+	 * @phpstan-param array<int, MetadataProperty> $metadata
+	 */
+	public static function create(
+		?int $actorUniqueId,
+		int $actorRuntimeId,
+		ItemStackWrapper $item,
+		Vector3 $position,
+		?Vector3 $motion,
+		array $metadata,
+		bool $isFromFishing,
+	) : self{
+		$result = new self;
+		$result->actorUniqueId = $actorUniqueId;
+		$result->actorRuntimeId = $actorRuntimeId;
+		$result->item = $item;
+		$result->position = $position;
+		$result->motion = $motion;
+		$result->metadata = $metadata;
+		$result->isFromFishing = $isFromFishing;
+		return $result;
+	}
+
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->actorUniqueId = $in->getActorUniqueId();
 		$this->actorRuntimeId = $in->getActorRuntimeId();

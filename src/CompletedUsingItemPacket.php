@@ -50,6 +50,16 @@ class CompletedUsingItemPacket extends DataPacket implements ClientboundPacket{
 	public int $itemId;
 	public int $action;
 
+	/**
+	 * @generate-create-func
+	 */
+	public static function create(int $itemId, int $action) : self{
+		$result = new self;
+		$result->itemId = $itemId;
+		$result->action = $action;
+		return $result;
+	}
+
 	public function decodePayload(PacketSerializer $in) : void{
 		$this->itemId = $in->getShort();
 		$this->action = $in->getLInt();

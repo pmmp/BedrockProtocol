@@ -33,6 +33,16 @@ class StopSoundPacket extends DataPacket implements ClientboundPacket{
 	public string $soundName;
 	public bool $stopAll;
 
+	/**
+	 * @generate-create-func
+	 */
+	public static function create(string $soundName, bool $stopAll) : self{
+		$result = new self;
+		$result->soundName = $soundName;
+		$result->stopAll = $stopAll;
+		return $result;
+	}
+
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->soundName = $in->getString();
 		$this->stopAll = $in->getBool();

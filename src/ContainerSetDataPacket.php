@@ -44,11 +44,14 @@ class ContainerSetDataPacket extends DataPacket implements ClientboundPacket{
 	public int $property;
 	public int $value;
 
-	public static function create(int $windowId, int $propertyId, int $value) : self{
+	/**
+	 * @generate-create-func
+	 */
+	public static function create(int $windowId, int $property, int $value) : self{
 		$result = new self;
-		$result->property = $propertyId;
-		$result->value = $value;
 		$result->windowId = $windowId;
+		$result->property = $property;
+		$result->value = $value;
 		return $result;
 	}
 

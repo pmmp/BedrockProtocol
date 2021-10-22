@@ -33,6 +33,9 @@ class ServerToClientHandshakePacket extends DataPacket implements ClientboundPac
 	/** Server pubkey and token is contained in the JWT. */
 	public string $jwt;
 
+	/**
+	 * @generate-create-func
+	 */
 	public static function create(string $jwt) : self{
 		$result = new self;
 		$result->jwt = $jwt;

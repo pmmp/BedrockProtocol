@@ -39,10 +39,13 @@ class RespawnPacket extends DataPacket implements ClientboundPacket, Serverbound
 	public int $respawnState = self::SEARCHING_FOR_SPAWN;
 	public int $actorRuntimeId;
 
-	public static function create(Vector3 $position, int $respawnStatus, int $actorRuntimeId) : self{
+	/**
+	 * @generate-create-func
+	 */
+	public static function create(Vector3 $position, int $respawnState, int $actorRuntimeId) : self{
 		$result = new self;
-		$result->position = $position->asVector3();
-		$result->respawnState = $respawnStatus;
+		$result->position = $position;
+		$result->respawnState = $respawnState;
 		$result->actorRuntimeId = $actorRuntimeId;
 		return $result;
 	}

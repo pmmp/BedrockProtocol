@@ -40,13 +40,15 @@ class PlayerArmorDamagePacket extends DataPacket implements ClientboundPacket{
 	private ?int $legsSlotDamage;
 	private ?int $feetSlotDamage;
 
+	/**
+	 * @generate-create-func
+	 */
 	public static function create(?int $headSlotDamage, ?int $chestSlotDamage, ?int $legsSlotDamage, ?int $feetSlotDamage) : self{
 		$result = new self;
 		$result->headSlotDamage = $headSlotDamage;
 		$result->chestSlotDamage = $chestSlotDamage;
 		$result->legsSlotDamage = $legsSlotDamage;
 		$result->feetSlotDamage = $feetSlotDamage;
-
 		return $result;
 	}
 

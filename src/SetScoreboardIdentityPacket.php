@@ -39,6 +39,17 @@ class SetScoreboardIdentityPacket extends DataPacket implements ClientboundPacke
 	/** @var ScoreboardIdentityPacketEntry[] */
 	public array $entries = [];
 
+	/**
+	 * @generate-create-func
+	 * @param ScoreboardIdentityPacketEntry[] $entries
+	 */
+	public static function create(int $type, array $entries) : self{
+		$result = new self;
+		$result->type = $type;
+		$result->entries = $entries;
+		return $result;
+	}
+
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->type = $in->getByte();
 		for($i = 0, $count = $in->getUnsignedVarInt(); $i < $count; ++$i){

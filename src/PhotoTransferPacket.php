@@ -38,6 +38,29 @@ class PhotoTransferPacket extends DataPacket implements ClientboundPacket{
 	public int $ownerActorUniqueId;
 	public string $newPhotoName; //???
 
+	/**
+	 * @generate-create-func
+	 */
+	public static function create(
+		string $photoName,
+		string $photoData,
+		string $bookId,
+		int $type,
+		int $sourceType,
+		int $ownerActorUniqueId,
+		string $newPhotoName,
+	) : self{
+		$result = new self;
+		$result->photoName = $photoName;
+		$result->photoData = $photoData;
+		$result->bookId = $bookId;
+		$result->type = $type;
+		$result->sourceType = $sourceType;
+		$result->ownerActorUniqueId = $ownerActorUniqueId;
+		$result->newPhotoName = $newPhotoName;
+		return $result;
+	}
+
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->photoName = $in->getString();
 		$this->photoData = $in->getString();

@@ -35,6 +35,17 @@ class StructureTemplateDataResponsePacket extends DataPacket implements Clientbo
 	/** @phpstan-var CacheableNbt<\pocketmine\nbt\tag\CompoundTag> */
 	public ?CacheableNbt $nbt;
 
+	/**
+	 * @generate-create-func
+	 * @phpstan-param CacheableNbt<\pocketmine\nbt\tag\CompoundTag> $nbt
+	 */
+	public static function create(string $structureTemplateName, ?CacheableNbt $nbt) : self{
+		$result = new self;
+		$result->structureTemplateName = $structureTemplateName;
+		$result->nbt = $nbt;
+		return $result;
+	}
+
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->structureTemplateName = $in->getString();
 		if($in->getBool()){

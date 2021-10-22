@@ -33,6 +33,16 @@ class MapCreateLockedCopyPacket extends DataPacket implements ServerboundPacket{
 	public int $originalMapId;
 	public int $newMapId;
 
+	/**
+	 * @generate-create-func
+	 */
+	public static function create(int $originalMapId, int $newMapId) : self{
+		$result = new self;
+		$result->originalMapId = $originalMapId;
+		$result->newMapId = $newMapId;
+		return $result;
+	}
+
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->originalMapId = $in->getActorUniqueId();
 		$this->newMapId = $in->getActorUniqueId();

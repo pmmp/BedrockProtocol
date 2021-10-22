@@ -46,6 +46,36 @@ class UpdateTradePacket extends DataPacket implements ClientboundPacket{
 	/** @phpstan-var CacheableNbt<\pocketmine\nbt\tag\CompoundTag> */
 	public CacheableNbt $offers;
 
+	/**
+	 * @generate-create-func
+	 * @phpstan-param CacheableNbt<\pocketmine\nbt\tag\CompoundTag> $offers
+	 */
+	public static function create(
+		int $windowId,
+		int $windowType,
+		int $windowSlotCount,
+		int $tradeTier,
+		int $traderActorUniqueId,
+		int $playerActorUniqueId,
+		string $displayName,
+		bool $isV2Trading,
+		bool $isWilling,
+		CacheableNbt $offers,
+	) : self{
+		$result = new self;
+		$result->windowId = $windowId;
+		$result->windowType = $windowType;
+		$result->windowSlotCount = $windowSlotCount;
+		$result->tradeTier = $tradeTier;
+		$result->traderActorUniqueId = $traderActorUniqueId;
+		$result->playerActorUniqueId = $playerActorUniqueId;
+		$result->displayName = $displayName;
+		$result->isV2Trading = $isV2Trading;
+		$result->isWilling = $isWilling;
+		$result->offers = $offers;
+		return $result;
+	}
+
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->windowId = $in->getByte();
 		$this->windowType = $in->getByte();

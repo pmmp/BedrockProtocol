@@ -109,6 +109,22 @@ class AvailableCommandsPacket extends DataPacket implements ClientboundPacket{
 	 */
 	public array $enumConstraints = [];
 
+	/**
+	 * @generate-create-func
+	 * @param CommandData[]           $commandData
+	 * @param CommandEnum[]           $hardcodedEnums
+	 * @param CommandEnum[]           $softEnums
+	 * @param CommandEnumConstraint[] $enumConstraints
+	 */
+	public static function create(array $commandData, array $hardcodedEnums, array $softEnums, array $enumConstraints) : self{
+		$result = new self;
+		$result->commandData = $commandData;
+		$result->hardcodedEnums = $hardcodedEnums;
+		$result->softEnums = $softEnums;
+		$result->enumConstraints = $enumConstraints;
+		return $result;
+	}
+
 	protected function decodePayload(PacketSerializer $in) : void{
 		/** @var string[] $enumValues */
 		$enumValues = [];

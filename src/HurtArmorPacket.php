@@ -34,6 +34,17 @@ class HurtArmorPacket extends DataPacket implements ClientboundPacket{
 	public int $health;
 	public int $armorSlotFlags;
 
+	/**
+	 * @generate-create-func
+	 */
+	public static function create(int $cause, int $health, int $armorSlotFlags) : self{
+		$result = new self;
+		$result->cause = $cause;
+		$result->health = $health;
+		$result->armorSlotFlags = $armorSlotFlags;
+		return $result;
+	}
+
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->cause = $in->getVarInt();
 		$this->health = $in->getVarInt();

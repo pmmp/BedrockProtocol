@@ -32,6 +32,9 @@ class SetCommandsEnabledPacket extends DataPacket implements ClientboundPacket{
 
 	public bool $enabled;
 
+	/**
+	 * @generate-create-func
+	 */
 	public static function create(bool $enabled) : self{
 		$result = new self;
 		$result->enabled = $enabled;

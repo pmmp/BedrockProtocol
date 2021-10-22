@@ -33,6 +33,16 @@ class ResourcePackChunkRequestPacket extends DataPacket implements ServerboundPa
 	public string $packId;
 	public int $chunkIndex;
 
+	/**
+	 * @generate-create-func
+	 */
+	public static function create(string $packId, int $chunkIndex) : self{
+		$result = new self;
+		$result->packId = $packId;
+		$result->chunkIndex = $chunkIndex;
+		return $result;
+	}
+
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->packId = $in->getString();
 		$this->chunkIndex = $in->getLInt();

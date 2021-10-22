@@ -35,6 +35,17 @@ class ChangeDimensionPacket extends DataPacket implements ClientboundPacket{
 	public Vector3 $position;
 	public bool $respawn = false;
 
+	/**
+	 * @generate-create-func
+	 */
+	public static function create(int $dimension, Vector3 $position, bool $respawn) : self{
+		$result = new self;
+		$result->dimension = $dimension;
+		$result->position = $position;
+		$result->respawn = $respawn;
+		return $result;
+	}
+
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->dimension = $in->getVarInt();
 		$this->position = $in->getVector3();

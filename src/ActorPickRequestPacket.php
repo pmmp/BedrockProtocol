@@ -34,6 +34,17 @@ class ActorPickRequestPacket extends DataPacket implements ServerboundPacket{
 	public int $hotbarSlot;
 	public bool $addUserData;
 
+	/**
+	 * @generate-create-func
+	 */
+	public static function create(int $actorUniqueId, int $hotbarSlot, bool $addUserData) : self{
+		$result = new self;
+		$result->actorUniqueId = $actorUniqueId;
+		$result->hotbarSlot = $hotbarSlot;
+		$result->addUserData = $addUserData;
+		return $result;
+	}
+
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->actorUniqueId = $in->getLLong();
 		$this->hotbarSlot = $in->getByte();

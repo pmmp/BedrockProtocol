@@ -36,6 +36,18 @@ class LecternUpdatePacket extends DataPacket implements ServerboundPacket{
 	public BlockPosition $blockPosition;
 	public bool $dropBook;
 
+	/**
+	 * @generate-create-func
+	 */
+	public static function create(int $page, int $totalPages, BlockPosition $blockPosition, bool $dropBook) : self{
+		$result = new self;
+		$result->page = $page;
+		$result->totalPages = $totalPages;
+		$result->blockPosition = $blockPosition;
+		$result->dropBook = $dropBook;
+		return $result;
+	}
+
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->page = $in->getByte();
 		$this->totalPages = $in->getByte();

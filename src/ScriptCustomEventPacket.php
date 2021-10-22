@@ -34,6 +34,16 @@ class ScriptCustomEventPacket extends DataPacket{ //TODO: this doesn't have hand
 	/** @var string json data */
 	public string $eventData;
 
+	/**
+	 * @generate-create-func
+	 */
+	public static function create(string $eventName, string $eventData) : self{
+		$result = new self;
+		$result->eventName = $eventName;
+		$result->eventData = $eventData;
+		return $result;
+	}
+
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->eventName = $in->getString();
 		$this->eventData = $in->getString();

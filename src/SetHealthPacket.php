@@ -32,6 +32,15 @@ class SetHealthPacket extends DataPacket implements ClientboundPacket{
 
 	public int $health;
 
+	/**
+	 * @generate-create-func
+	 */
+	public static function create(int $health) : self{
+		$result = new self;
+		$result->health = $health;
+		return $result;
+	}
+
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->health = $in->getVarInt();
 	}

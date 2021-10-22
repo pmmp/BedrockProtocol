@@ -33,6 +33,9 @@ class CodeBuilderPacket extends DataPacket implements ClientboundPacket{
 	private string $url;
 	private bool $openCodeBuilder;
 
+	/**
+	 * @generate-create-func
+	 */
 	public static function create(string $url, bool $openCodeBuilder) : self{
 		$result = new self;
 		$result->url = $url;

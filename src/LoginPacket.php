@@ -42,6 +42,17 @@ class LoginPacket extends DataPacket implements ServerboundPacket{
 	public JwtChain $chainDataJwt;
 	public string $clientDataJwt;
 
+	/**
+	 * @generate-create-func
+	 */
+	public static function create(int $protocol, JwtChain $chainDataJwt, string $clientDataJwt) : self{
+		$result = new self;
+		$result->protocol = $protocol;
+		$result->chainDataJwt = $chainDataJwt;
+		$result->clientDataJwt = $clientDataJwt;
+		return $result;
+	}
+
 	public function canBeSentBeforeLogin() : bool{
 		return true;
 	}

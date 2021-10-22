@@ -40,11 +40,11 @@ class SetActorDataPacket extends DataPacket implements ClientboundPacket, Server
 	public int $tick = 0;
 
 	/**
+	 * @generate-create-func
 	 * @param MetadataProperty[] $metadata
 	 * @phpstan-param array<int, MetadataProperty> $metadata
 	 */
 	public static function create(int $actorRuntimeId, array $metadata, int $tick) : self{
-
 		$result = new self;
 		$result->actorRuntimeId = $actorRuntimeId;
 		$result->metadata = $metadata;

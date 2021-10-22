@@ -33,6 +33,9 @@ class DebugInfoPacket extends DataPacket implements ClientboundPacket, Serverbou
 	private int $actorUniqueId;
 	private string $data;
 
+	/**
+	 * @generate-create-func
+	 */
 	public static function create(int $actorUniqueId, string $data) : self{
 		$result = new self;
 		$result->actorUniqueId = $actorUniqueId;

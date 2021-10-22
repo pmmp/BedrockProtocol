@@ -65,6 +65,18 @@ class PlayerActionPacket extends DataPacket implements ServerboundPacket{
 	public BlockPosition $blockPosition;
 	public int $face;
 
+	/**
+	 * @generate-create-func
+	 */
+	public static function create(int $actorRuntimeId, int $action, BlockPosition $blockPosition, int $face) : self{
+		$result = new self;
+		$result->actorRuntimeId = $actorRuntimeId;
+		$result->action = $action;
+		$result->blockPosition = $blockPosition;
+		$result->face = $face;
+		return $result;
+	}
+
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->actorRuntimeId = $in->getActorRuntimeId();
 		$this->action = $in->getVarInt();

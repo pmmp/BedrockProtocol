@@ -35,11 +35,14 @@ class PlayerHotbarPacket extends DataPacket implements ClientboundPacket, Server
 	public int $windowId = ContainerIds::INVENTORY;
 	public bool $selectHotbarSlot = true;
 
-	public static function create(int $slot, int $windowId, bool $selectSlot = true) : self{
+	/**
+	 * @generate-create-func
+	 */
+	public static function create(int $selectedHotbarSlot, int $windowId, bool $selectHotbarSlot) : self{
 		$result = new self;
-		$result->selectedHotbarSlot = $slot;
+		$result->selectedHotbarSlot = $selectedHotbarSlot;
 		$result->windowId = $windowId;
-		$result->selectHotbarSlot = $selectSlot;
+		$result->selectHotbarSlot = $selectHotbarSlot;
 		return $result;
 	}
 

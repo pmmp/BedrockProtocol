@@ -36,6 +36,9 @@ class PhotoInfoRequestPacket extends DataPacket{
 
 	private int $photoId;
 
+	/**
+	 * @generate-create-func
+	 */
 	public static function create(int $photoId) : self{
 		$result = new self;
 		$result->photoId = $photoId;

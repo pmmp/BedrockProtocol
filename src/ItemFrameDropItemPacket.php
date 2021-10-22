@@ -34,6 +34,15 @@ class ItemFrameDropItemPacket extends DataPacket implements ServerboundPacket{
 
 	public BlockPosition $blockPosition;
 
+	/**
+	 * @generate-create-func
+	 */
+	public static function create(BlockPosition $blockPosition) : self{
+		$result = new self;
+		$result->blockPosition = $blockPosition;
+		return $result;
+	}
+
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->blockPosition = $in->getBlockPosition();
 	}

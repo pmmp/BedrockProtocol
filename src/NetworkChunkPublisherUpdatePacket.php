@@ -34,10 +34,13 @@ class NetworkChunkPublisherUpdatePacket extends DataPacket implements Clientboun
 	public BlockPosition $blockPosition;
 	public int $radius;
 
-	public static function create(BlockPosition $blockPosition, int $blockRadius) : self{
+	/**
+	 * @generate-create-func
+	 */
+	public static function create(BlockPosition $blockPosition, int $radius) : self{
 		$result = new self;
 		$result->blockPosition = $blockPosition;
-		$result->radius = $blockRadius;
+		$result->radius = $radius;
 		return $result;
 	}
 

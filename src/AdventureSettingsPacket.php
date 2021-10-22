@@ -71,6 +71,9 @@ class AdventureSettingsPacket extends DataPacket implements ClientboundPacket, S
 	public int $customFlags = 0; //...
 	public int $targetActorUniqueId; //This is a little-endian long, NOT a var-long. (WTF Mojang)
 
+	/**
+	 * @generate-create-func
+	 */
 	public static function create(int $flags, int $commandPermission, int $flags2, int $playerPermission, int $customFlags, int $targetActorUniqueId) : self{
 		$result = new self;
 		$result->flags = $flags;

@@ -40,6 +40,18 @@ class UpdateSoftEnumPacket extends DataPacket implements ClientboundPacket{
 	public array $values = [];
 	public int $type;
 
+	/**
+	 * @generate-create-func
+	 * @param string[] $values
+	 */
+	public static function create(string $enumName, array $values, int $type) : self{
+		$result = new self;
+		$result->enumName = $enumName;
+		$result->values = $values;
+		$result->type = $type;
+		return $result;
+	}
+
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->enumName = $in->getString();
 		for($i = 0, $count = $in->getUnsignedVarInt(); $i < $count; ++$i){

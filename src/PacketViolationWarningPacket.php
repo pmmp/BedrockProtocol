@@ -41,14 +41,15 @@ class PacketViolationWarningPacket extends DataPacket implements ServerboundPack
 	private int $packetId;
 	private string $message;
 
+	/**
+	 * @generate-create-func
+	 */
 	public static function create(int $type, int $severity, int $packetId, string $message) : self{
 		$result = new self;
-
 		$result->type = $type;
 		$result->severity = $severity;
 		$result->packetId = $packetId;
 		$result->message = $message;
-
 		return $result;
 	}
 

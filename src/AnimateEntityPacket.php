@@ -44,10 +44,19 @@ class AnimateEntityPacket extends DataPacket implements ClientboundPacket{
 	private array $actorRuntimeIds;
 
 	/**
+	 * @generate-create-func
 	 * @param int[] $actorRuntimeIds
 	 * @phpstan-param list<int> $actorRuntimeIds
 	 */
-	public static function create(string $animation, string $nextState, string $stopExpression, int $stopExpressionVersion, string $controller, float $blendOutTime, array $actorRuntimeIds) : self{
+	public static function create(
+		string $animation,
+		string $nextState,
+		string $stopExpression,
+		int $stopExpressionVersion,
+		string $controller,
+		float $blendOutTime,
+		array $actorRuntimeIds,
+	) : self{
 		$result = new self;
 		$result->animation = $animation;
 		$result->nextState = $nextState;

@@ -32,6 +32,9 @@ class SetDifficultyPacket extends DataPacket implements ClientboundPacket, Serve
 
 	public int $difficulty;
 
+	/**
+	 * @generate-create-func
+	 */
 	public static function create(int $difficulty) : self{
 		$result = new self;
 		$result->difficulty = $difficulty;

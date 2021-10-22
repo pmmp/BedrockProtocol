@@ -32,10 +32,13 @@ class SetPlayerGameTypePacket extends DataPacket implements ClientboundPacket, S
 
 	public int $gamemode;
 
+	/**
+	 * @generate-create-func
+	 */
 	public static function create(int $gamemode) : self{
-		$pk = new self;
-		$pk->gamemode = $gamemode;
-		return $pk;
+		$result = new self;
+		$result->gamemode = $gamemode;
+		return $result;
 	}
 
 	protected function decodePayload(PacketSerializer $in) : void{

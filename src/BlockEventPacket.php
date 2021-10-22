@@ -35,12 +35,15 @@ class BlockEventPacket extends DataPacket implements ClientboundPacket{
 	public int $eventType;
 	public int $eventData;
 
-	public static function create(BlockPosition $blockPosition, int $eventId, int $eventData) : self{
-		$pk = new self;
-		$pk->blockPosition = $blockPosition;
-		$pk->eventType = $eventId;
-		$pk->eventData = $eventData;
-		return $pk;
+	/**
+	 * @generate-create-func
+	 */
+	public static function create(BlockPosition $blockPosition, int $eventType, int $eventData) : self{
+		$result = new self;
+		$result->blockPosition = $blockPosition;
+		$result->eventType = $eventType;
+		$result->eventData = $eventData;
+		return $result;
 	}
 
 	protected function decodePayload(PacketSerializer $in) : void{

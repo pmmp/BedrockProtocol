@@ -43,6 +43,9 @@ class EducationSettingsPacket extends DataPacket implements ClientboundPacket{
 	private bool $hasQuiz;
 	private ?EducationSettingsExternalLinkSettings $linkSettings;
 
+	/**
+	 * @generate-create-func
+	 */
 	public static function create(
 		string $codeBuilderDefaultUri,
 		string $codeBuilderTitle,
@@ -53,7 +56,7 @@ class EducationSettingsPacket extends DataPacket implements ClientboundPacket{
 		?EducationSettingsAgentCapabilities $agentCapabilities,
 		?string $codeBuilderOverrideUri,
 		bool $hasQuiz,
-		?EducationSettingsExternalLinkSettings $linkSettings
+		?EducationSettingsExternalLinkSettings $linkSettings,
 	) : self{
 		$result = new self;
 		$result->codeBuilderDefaultUri = $codeBuilderDefaultUri;

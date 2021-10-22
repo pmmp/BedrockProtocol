@@ -44,6 +44,19 @@ class NpcRequestPacket extends DataPacket implements ServerboundPacket{
 	public int $actionIndex;
 	public string $sceneName;
 
+	/**
+	 * @generate-create-func
+	 */
+	public static function create(int $actorRuntimeId, int $requestType, string $commandString, int $actionIndex, string $sceneName) : self{
+		$result = new self;
+		$result->actorRuntimeId = $actorRuntimeId;
+		$result->requestType = $requestType;
+		$result->commandString = $commandString;
+		$result->actionIndex = $actionIndex;
+		$result->sceneName = $sceneName;
+		return $result;
+	}
+
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->actorRuntimeId = $in->getActorRuntimeId();
 		$this->requestType = $in->getByte();

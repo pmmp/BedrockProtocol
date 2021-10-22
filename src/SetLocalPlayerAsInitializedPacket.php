@@ -32,6 +32,15 @@ class SetLocalPlayerAsInitializedPacket extends DataPacket implements Serverboun
 
 	public int $actorRuntimeId;
 
+	/**
+	 * @generate-create-func
+	 */
+	public static function create(int $actorRuntimeId) : self{
+		$result = new self;
+		$result->actorRuntimeId = $actorRuntimeId;
+		return $result;
+	}
+
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->actorRuntimeId = $in->getActorRuntimeId();
 	}

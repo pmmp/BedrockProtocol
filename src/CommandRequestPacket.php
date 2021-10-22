@@ -35,6 +35,17 @@ class CommandRequestPacket extends DataPacket implements ServerboundPacket{
 	public CommandOriginData $originData;
 	public bool $isInternal;
 
+	/**
+	 * @generate-create-func
+	 */
+	public static function create(string $command, CommandOriginData $originData, bool $isInternal) : self{
+		$result = new self;
+		$result->command = $command;
+		$result->originData = $originData;
+		$result->isInternal = $isInternal;
+		return $result;
+	}
+
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->command = $in->getString();
 		$this->originData = $in->getCommandOriginData();

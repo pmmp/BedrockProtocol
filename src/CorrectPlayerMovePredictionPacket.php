@@ -36,6 +36,9 @@ class CorrectPlayerMovePredictionPacket extends DataPacket implements Clientboun
 	private bool $onGround;
 	private int $tick;
 
+	/**
+	 * @generate-create-func
+	 */
 	public static function create(Vector3 $position, Vector3 $delta, bool $onGround, int $tick) : self{
 		$result = new self;
 		$result->position = $position;

@@ -33,6 +33,16 @@ class ShowStoreOfferPacket extends DataPacket implements ClientboundPacket{
 	public string $offerId;
 	public bool $showAll;
 
+	/**
+	 * @generate-create-func
+	 */
+	public static function create(string $offerId, bool $showAll) : self{
+		$result = new self;
+		$result->offerId = $offerId;
+		$result->showAll = $showAll;
+		return $result;
+	}
+
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->offerId = $in->getString();
 		$this->showAll = $in->getBool();

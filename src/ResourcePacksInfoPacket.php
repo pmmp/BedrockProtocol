@@ -33,26 +33,25 @@ use function count;
 class ResourcePacksInfoPacket extends DataPacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::RESOURCE_PACKS_INFO_PACKET;
 
+	/** @var ResourcePackInfoEntry[] */
+	public array $resourcePackEntries = [];
+	/** @var BehaviorPackInfoEntry[] */
+	public array $behaviorPackEntries = [];
 	public bool $mustAccept = false; //if true, forces client to choose between accepting packs or being disconnected
 	public bool $hasScripts = false; //if true, causes disconnect for any platform that doesn't support scripts yet
 	public bool $forceServerPacks = false;
-	/** @var BehaviorPackInfoEntry[] */
-	public array $behaviorPackEntries = [];
-	/** @var ResourcePackInfoEntry[] */
-	public array $resourcePackEntries = [];
 
 	/**
-	 * @param ResourcePackInfoEntry[] $resourcePacks
-	 * @param BehaviorPackInfoEntry[] $behaviorPacks
-	 *
-	 * @return ResourcePacksInfoPacket
+	 * @generate-create-func
+	 * @param ResourcePackInfoEntry[] $resourcePackEntries
+	 * @param BehaviorPackInfoEntry[] $behaviorPackEntries
 	 */
-	public static function create(array $resourcePacks, array $behaviorPacks, bool $mustAccept, bool $hasScripts, bool $forceServerPacks) : self{
+	public static function create(array $resourcePackEntries, array $behaviorPackEntries, bool $mustAccept, bool $hasScripts, bool $forceServerPacks) : self{
 		$result = new self;
+		$result->resourcePackEntries = $resourcePackEntries;
+		$result->behaviorPackEntries = $behaviorPackEntries;
 		$result->mustAccept = $mustAccept;
 		$result->hasScripts = $hasScripts;
-		$result->resourcePackEntries = $resourcePacks;
-		$result->behaviorPackEntries = $behaviorPacks;
 		$result->forceServerPacks = $forceServerPacks;
 		return $result;
 	}

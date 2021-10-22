@@ -59,6 +59,23 @@ class CraftingDataPacket extends DataPacket implements ClientboundPacket{
 	public array $materialReducerRecipes = [];
 	public bool $cleanRecipes = false;
 
+	/**
+	 * @generate-create-func
+	 * @param RecipeWithTypeId[]            $recipesWithTypeIds
+	 * @param PotionTypeRecipe[]            $potionTypeRecipes
+	 * @param PotionContainerChangeRecipe[] $potionContainerRecipes
+	 * @param MaterialReducerRecipe[]       $materialReducerRecipes
+	 */
+	public static function create(array $recipesWithTypeIds, array $potionTypeRecipes, array $potionContainerRecipes, array $materialReducerRecipes, bool $cleanRecipes) : self{
+		$result = new self;
+		$result->recipesWithTypeIds = $recipesWithTypeIds;
+		$result->potionTypeRecipes = $potionTypeRecipes;
+		$result->potionContainerRecipes = $potionContainerRecipes;
+		$result->materialReducerRecipes = $materialReducerRecipes;
+		$result->cleanRecipes = $cleanRecipes;
+		return $result;
+	}
+
 	protected function decodePayload(PacketSerializer $in) : void{
 		$recipeCount = $in->getUnsignedVarInt();
 		for($i = 0; $i < $recipeCount; ++$i){

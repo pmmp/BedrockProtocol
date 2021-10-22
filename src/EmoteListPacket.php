@@ -37,6 +37,7 @@ class EmoteListPacket extends DataPacket implements ClientboundPacket, Serverbou
 	private array $emoteIds;
 
 	/**
+	 * @generate-create-func
 	 * @param UuidInterface[] $emoteIds
 	 */
 	public static function create(int $playerActorRuntimeId, array $emoteIds) : self{

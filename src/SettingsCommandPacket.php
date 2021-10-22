@@ -33,6 +33,9 @@ class SettingsCommandPacket extends DataPacket implements ServerboundPacket{
 	private string $command;
 	private bool $suppressOutput;
 
+	/**
+	 * @generate-create-func
+	 */
 	public static function create(string $command, bool $suppressOutput) : self{
 		$result = new self;
 		$result->command = $command;

@@ -36,6 +36,7 @@ class ItemStackRequestPacket extends DataPacket implements ServerboundPacket{
 	private array $requests;
 
 	/**
+	 * @generate-create-func
 	 * @param ItemStackRequest[] $requests
 	 */
 	public static function create(array $requests) : self{

@@ -33,6 +33,9 @@ class EduUriResourcePacket extends DataPacket implements ClientboundPacket{
 
 	private EducationUriResource $resource;
 
+	/**
+	 * @generate-create-func
+	 */
 	public static function create(EducationUriResource $resource) : self{
 		$result = new self;
 		$result->resource = $resource;

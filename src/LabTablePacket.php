@@ -39,6 +39,17 @@ class LabTablePacket extends DataPacket implements ClientboundPacket, Serverboun
 	public BlockPosition $blockPosition;
 	public int $reactionType;
 
+	/**
+	 * @generate-create-func
+	 */
+	public static function create(int $actionType, BlockPosition $blockPosition, int $reactionType) : self{
+		$result = new self;
+		$result->actionType = $actionType;
+		$result->blockPosition = $blockPosition;
+		$result->reactionType = $reactionType;
+		return $result;
+	}
+
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->actionType = $in->getByte();
 		$this->blockPosition = $in->getSignedBlockPosition();

@@ -36,6 +36,16 @@ class ShowCreditsPacket extends DataPacket implements ClientboundPacket, Serverb
 	public int $playerActorRuntimeId;
 	public int $status;
 
+	/**
+	 * @generate-create-func
+	 */
+	public static function create(int $playerActorRuntimeId, int $status) : self{
+		$result = new self;
+		$result->playerActorRuntimeId = $playerActorRuntimeId;
+		$result->status = $status;
+		return $result;
+	}
+
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->playerActorRuntimeId = $in->getActorRuntimeId();
 		$this->status = $in->getVarInt();

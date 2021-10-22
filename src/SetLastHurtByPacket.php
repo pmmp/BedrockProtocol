@@ -32,6 +32,15 @@ class SetLastHurtByPacket extends DataPacket implements ClientboundPacket{
 
 	public int $entityTypeId;
 
+	/**
+	 * @generate-create-func
+	 */
+	public static function create(int $entityTypeId) : self{
+		$result = new self;
+		$result->entityTypeId = $entityTypeId;
+		return $result;
+	}
+
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->entityTypeId = $in->getVarInt();
 	}

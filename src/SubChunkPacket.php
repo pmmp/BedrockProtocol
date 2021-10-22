@@ -40,7 +40,18 @@ class SubChunkPacket extends DataPacket implements ClientboundPacket{
 	private int $requestResult;
 	private ?SubChunkPacketHeightMapInfo $heightMapData = null;
 
-	public static function create(int $dimension, int $subChunkX, int $subChunkY, int $subChunkZ, string $data, int $requestResult, ?SubChunkPacketHeightMapInfo $heightMapData) : self{
+	/**
+	 * @generate-create-func
+	 */
+	public static function create(
+		int $dimension,
+		int $subChunkX,
+		int $subChunkY,
+		int $subChunkZ,
+		string $data,
+		int $requestResult,
+		?SubChunkPacketHeightMapInfo $heightMapData,
+	) : self{
 		$result = new self;
 		$result->dimension = $dimension;
 		$result->subChunkX = $subChunkX;

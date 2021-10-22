@@ -36,6 +36,7 @@ class PlayerEnchantOptionsPacket extends DataPacket implements ClientboundPacket
 	private array $options;
 
 	/**
+	 * @generate-create-func
 	 * @param EnchantOption[] $options
 	 */
 	public static function create(array $options) : self{

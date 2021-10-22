@@ -35,12 +35,14 @@ class InventorySlotPacket extends DataPacket implements ClientboundPacket{
 	public int $inventorySlot;
 	public ItemStackWrapper $item;
 
-	public static function create(int $windowId, int $slot, ItemStackWrapper $item) : self{
+	/**
+	 * @generate-create-func
+	 */
+	public static function create(int $windowId, int $inventorySlot, ItemStackWrapper $item) : self{
 		$result = new self;
-		$result->inventorySlot = $slot;
-		$result->item = $item;
 		$result->windowId = $windowId;
-
+		$result->inventorySlot = $inventorySlot;
+		$result->item = $item;
 		return $result;
 	}
 

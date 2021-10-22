@@ -34,6 +34,17 @@ class GuiDataPickItemPacket extends DataPacket implements ClientboundPacket{
 	public string $itemEffects;
 	public int $hotbarSlot;
 
+	/**
+	 * @generate-create-func
+	 */
+	public static function create(string $itemDescription, string $itemEffects, int $hotbarSlot) : self{
+		$result = new self;
+		$result->itemDescription = $itemDescription;
+		$result->itemEffects = $itemEffects;
+		$result->hotbarSlot = $hotbarSlot;
+		return $result;
+	}
+
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->itemDescription = $in->getString();
 		$this->itemEffects = $in->getString();

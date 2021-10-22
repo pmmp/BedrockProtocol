@@ -34,6 +34,9 @@ class CreatePhotoPacket extends DataPacket implements ServerboundPacket{
 	private string $photoName;
 	private string $photoItemName;
 
+	/**
+	 * @generate-create-func
+	 */
 	public static function create(int $actorUniqueId, string $photoName, string $photoItemName) : self{
 		$result = new self;
 		$result->actorUniqueId = $actorUniqueId;

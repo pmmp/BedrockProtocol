@@ -32,6 +32,9 @@ class ChunkRadiusUpdatedPacket extends DataPacket implements ClientboundPacket{
 
 	public int $radius;
 
+	/**
+	 * @generate-create-func
+	 */
 	public static function create(int $radius) : self{
 		$result = new self;
 		$result->radius = $radius;

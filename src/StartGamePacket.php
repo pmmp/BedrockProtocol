@@ -71,6 +71,57 @@ class StartGamePacket extends DataPacket implements ClientboundPacket{
 	 */
 	public array $itemTable;
 
+	/**
+	 * @generate-create-func
+	 * @param BlockPaletteEntry[] $blockPalette
+	 * @param ItemTypeEntry[]     $itemTable
+	 * @phpstan-param list<BlockPaletteEntry> $blockPalette
+	 * @phpstan-param list<ItemTypeEntry>     $itemTable
+	 */
+	public static function create(
+		int $actorUniqueId,
+		int $actorRuntimeId,
+		int $playerGamemode,
+		Vector3 $playerPosition,
+		float $pitch,
+		float $yaw,
+		LevelSettings $levelSettings,
+		string $levelId,
+		string $worldName,
+		string $premiumWorldTemplateId,
+		bool $isTrial,
+		PlayerMovementSettings $playerMovementSettings,
+		int $currentTick,
+		int $enchantmentSeed,
+		string $multiplayerCorrelationId,
+		bool $enableNewInventorySystem,
+		string $serverSoftwareVersion,
+		array $blockPalette,
+		array $itemTable,
+	) : self{
+		$result = new self;
+		$result->actorUniqueId = $actorUniqueId;
+		$result->actorRuntimeId = $actorRuntimeId;
+		$result->playerGamemode = $playerGamemode;
+		$result->playerPosition = $playerPosition;
+		$result->pitch = $pitch;
+		$result->yaw = $yaw;
+		$result->levelSettings = $levelSettings;
+		$result->levelId = $levelId;
+		$result->worldName = $worldName;
+		$result->premiumWorldTemplateId = $premiumWorldTemplateId;
+		$result->isTrial = $isTrial;
+		$result->playerMovementSettings = $playerMovementSettings;
+		$result->currentTick = $currentTick;
+		$result->enchantmentSeed = $enchantmentSeed;
+		$result->multiplayerCorrelationId = $multiplayerCorrelationId;
+		$result->enableNewInventorySystem = $enableNewInventorySystem;
+		$result->serverSoftwareVersion = $serverSoftwareVersion;
+		$result->blockPalette = $blockPalette;
+		$result->itemTable = $itemTable;
+		return $result;
+	}
+
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->actorUniqueId = $in->getActorUniqueId();
 		$this->actorRuntimeId = $in->getActorRuntimeId();

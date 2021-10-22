@@ -32,6 +32,9 @@ class ClientCacheStatusPacket extends DataPacket implements ServerboundPacket{
 
 	private bool $enabled;
 
+	/**
+	 * @generate-create-func
+	 */
 	public static function create(bool $enabled) : self{
 		$result = new self;
 		$result->enabled = $enabled;

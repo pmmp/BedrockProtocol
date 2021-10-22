@@ -41,6 +41,21 @@ class CraftingEventPacket extends DataPacket implements ServerboundPacket{
 	/** @var ItemStackWrapper[] */
 	public array $output = [];
 
+	/**
+	 * @generate-create-func
+	 * @param ItemStackWrapper[] $input
+	 * @param ItemStackWrapper[] $output
+	 */
+	public static function create(int $windowId, int $windowType, UuidInterface $recipeUUID, array $input, array $output) : self{
+		$result = new self;
+		$result->windowId = $windowId;
+		$result->windowType = $windowType;
+		$result->recipeUUID = $recipeUUID;
+		$result->input = $input;
+		$result->output = $output;
+		return $result;
+	}
+
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->windowId = $in->getByte();
 		$this->windowType = $in->getVarInt();

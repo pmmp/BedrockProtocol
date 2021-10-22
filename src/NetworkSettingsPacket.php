@@ -35,6 +35,9 @@ class NetworkSettingsPacket extends DataPacket implements ClientboundPacket{
 
 	private int $compressionThreshold;
 
+	/**
+	 * @generate-create-func
+	 */
 	public static function create(int $compressionThreshold) : self{
 		$result = new self;
 		$result->compressionThreshold = $compressionThreshold;

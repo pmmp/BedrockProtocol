@@ -38,14 +38,13 @@ class UpdateAttributesPacket extends DataPacket implements ClientboundPacket{
 	public int $tick = 0;
 
 	/**
-	 * @param Attribute[] $attributes
-	 *
-	 * @return UpdateAttributesPacket
+	 * @generate-create-func
+	 * @param Attribute[] $entries
 	 */
-	public static function create(int $actorRuntimeId, array $attributes, int $tick) : self{
+	public static function create(int $actorRuntimeId, array $entries, int $tick) : self{
 		$result = new self;
 		$result->actorRuntimeId = $actorRuntimeId;
-		$result->entries = $attributes;
+		$result->entries = $entries;
 		$result->tick = $tick;
 		return $result;
 	}

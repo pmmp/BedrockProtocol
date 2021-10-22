@@ -32,6 +32,9 @@ class RemoveActorPacket extends DataPacket implements ClientboundPacket{
 
 	public int $actorUniqueId;
 
+	/**
+	 * @generate-create-func
+	 */
 	public static function create(int $actorUniqueId) : self{
 		$result = new self;
 		$result->actorUniqueId = $actorUniqueId;

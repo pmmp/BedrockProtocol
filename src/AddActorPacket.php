@@ -54,6 +54,41 @@ class AddActorPacket extends DataPacket implements ClientboundPacket{
 	/** @var EntityLink[] */
 	public array $links = [];
 
+	/**
+	 * @generate-create-func
+	 * @param Attribute[]        $attributes
+	 * @param MetadataProperty[] $metadata
+	 * @param EntityLink[]       $links
+	 * @phpstan-param array<int, MetadataProperty> $metadata
+	 */
+	public static function create(
+		?int $actorUniqueId,
+		int $actorRuntimeId,
+		string $type,
+		Vector3 $position,
+		?Vector3 $motion,
+		float $pitch,
+		float $yaw,
+		float $headYaw,
+		array $attributes,
+		array $metadata,
+		array $links,
+	) : self{
+		$result = new self;
+		$result->actorUniqueId = $actorUniqueId;
+		$result->actorRuntimeId = $actorRuntimeId;
+		$result->type = $type;
+		$result->position = $position;
+		$result->motion = $motion;
+		$result->pitch = $pitch;
+		$result->yaw = $yaw;
+		$result->headYaw = $headYaw;
+		$result->attributes = $attributes;
+		$result->metadata = $metadata;
+		$result->links = $links;
+		return $result;
+	}
+
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->actorUniqueId = $in->getActorUniqueId();
 		$this->actorRuntimeId = $in->getActorRuntimeId();

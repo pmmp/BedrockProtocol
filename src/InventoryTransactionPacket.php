@@ -52,6 +52,18 @@ class InventoryTransactionPacket extends DataPacket implements ClientboundPacket
 	public array $requestChangedSlots;
 	public TransactionData $trData;
 
+	/**
+	 * @generate-create-func
+	 * @param InventoryTransactionChangedSlotsHack[] $requestChangedSlots
+	 */
+	public static function create(int $requestId, array $requestChangedSlots, TransactionData $trData) : self{
+		$result = new self;
+		$result->requestId = $requestId;
+		$result->requestChangedSlots = $requestChangedSlots;
+		$result->trData = $trData;
+		return $result;
+	}
+
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->requestId = $in->readGenericTypeNetworkId();
 		$this->requestChangedSlots = [];

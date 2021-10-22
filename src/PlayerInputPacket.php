@@ -35,6 +35,18 @@ class PlayerInputPacket extends DataPacket implements ServerboundPacket{
 	public bool $jumping;
 	public bool $sneaking;
 
+	/**
+	 * @generate-create-func
+	 */
+	public static function create(float $motionX, float $motionY, bool $jumping, bool $sneaking) : self{
+		$result = new self;
+		$result->motionX = $motionX;
+		$result->motionY = $motionY;
+		$result->jumping = $jumping;
+		$result->sneaking = $sneaking;
+		return $result;
+	}
+
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->motionX = $in->getLFloat();
 		$this->motionY = $in->getLFloat();

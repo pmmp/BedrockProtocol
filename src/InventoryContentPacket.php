@@ -37,9 +37,8 @@ class InventoryContentPacket extends DataPacket implements ClientboundPacket{
 	public array $items = [];
 
 	/**
+	 * @generate-create-func
 	 * @param ItemStackWrapper[] $items
-	 *
-	 * @return InventoryContentPacket
 	 */
 	public static function create(int $windowId, array $items) : self{
 		$result = new self;

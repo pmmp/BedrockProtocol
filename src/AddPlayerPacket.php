@@ -61,6 +61,50 @@ class AddPlayerPacket extends DataPacket implements ClientboundPacket{
 	public string $deviceId = ""; //TODO: fill player's device ID (???)
 	public int $buildPlatform = DeviceOS::UNKNOWN;
 
+	/**
+	 * @generate-create-func
+	 * @param MetadataProperty[] $metadata
+	 * @param EntityLink[]       $links
+	 * @phpstan-param array<int, MetadataProperty> $metadata
+	 */
+	public static function create(
+		UuidInterface $uuid,
+		string $username,
+		?int $actorUniqueId,
+		int $actorRuntimeId,
+		string $platformChatId,
+		Vector3 $position,
+		?Vector3 $motion,
+		float $pitch,
+		float $yaw,
+		?float $headYaw,
+		ItemStackWrapper $item,
+		array $metadata,
+		AdventureSettingsPacket $adventureSettingsPacket,
+		array $links,
+		string $deviceId,
+		int $buildPlatform,
+	) : self{
+		$result = new self;
+		$result->uuid = $uuid;
+		$result->username = $username;
+		$result->actorUniqueId = $actorUniqueId;
+		$result->actorRuntimeId = $actorRuntimeId;
+		$result->platformChatId = $platformChatId;
+		$result->position = $position;
+		$result->motion = $motion;
+		$result->pitch = $pitch;
+		$result->yaw = $yaw;
+		$result->headYaw = $headYaw;
+		$result->item = $item;
+		$result->metadata = $metadata;
+		$result->adventureSettingsPacket = $adventureSettingsPacket;
+		$result->links = $links;
+		$result->deviceId = $deviceId;
+		$result->buildPlatform = $buildPlatform;
+		return $result;
+	}
+
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->uuid = $in->getUUID();
 		$this->username = $in->getString();

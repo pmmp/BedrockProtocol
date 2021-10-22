@@ -48,6 +48,29 @@ class SetTitlePacket extends DataPacket implements ClientboundPacket{
 	public string $xuid = "";
 	public string $platformOnlineId = "";
 
+	/**
+	 * @generate-create-func
+	 */
+	public static function create(
+		int $type,
+		string $text,
+		int $fadeInTime,
+		int $stayTime,
+		int $fadeOutTime,
+		string $xuid,
+		string $platformOnlineId,
+	) : self{
+		$result = new self;
+		$result->type = $type;
+		$result->text = $text;
+		$result->fadeInTime = $fadeInTime;
+		$result->stayTime = $stayTime;
+		$result->fadeOutTime = $fadeOutTime;
+		$result->xuid = $xuid;
+		$result->platformOnlineId = $platformOnlineId;
+		return $result;
+	}
+
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->type = $in->getVarInt();
 		$this->text = $in->getString();

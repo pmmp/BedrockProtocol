@@ -32,6 +32,15 @@ class RemoveObjectivePacket extends DataPacket implements ClientboundPacket{
 
 	public string $objectiveName;
 
+	/**
+	 * @generate-create-func
+	 */
+	public static function create(string $objectiveName) : self{
+		$result = new self;
+		$result->objectiveName = $objectiveName;
+		return $result;
+	}
+
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->objectiveName = $in->getString();
 	}

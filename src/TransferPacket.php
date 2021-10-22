@@ -33,6 +33,9 @@ class TransferPacket extends DataPacket implements ClientboundPacket{
 	public string $address;
 	public int $port = 19132;
 
+	/**
+	 * @generate-create-func
+	 */
 	public static function create(string $address, int $port) : self{
 		$result = new self;
 		$result->address = $address;

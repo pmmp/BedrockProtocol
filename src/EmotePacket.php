@@ -36,6 +36,9 @@ class EmotePacket extends DataPacket implements ClientboundPacket, ServerboundPa
 	private string $emoteId;
 	private int $flags;
 
+	/**
+	 * @generate-create-func
+	 */
 	public static function create(int $actorRuntimeId, string $emoteId, int $flags) : self{
 		$result = new self;
 		$result->actorRuntimeId = $actorRuntimeId;

@@ -115,15 +115,18 @@ class LevelEventPacket extends DataPacket implements ClientboundPacket{
 	public const EVENT_ADD_PARTICLE_MASK = 0x4000;
 
 	public int $eventId;
-	public ?Vector3 $position = null;
 	public int $eventData;
+	public ?Vector3 $position = null;
 
+	/**
+	 * @generate-create-func
+	 */
 	public static function create(int $eventId, int $eventData, ?Vector3 $position) : self{
-		$pk = new self;
-		$pk->eventId = $eventId;
-		$pk->eventData = $eventData;
-		$pk->position = $position !== null ? $position->asVector3() : null;
-		return $pk;
+		$result = new self;
+		$result->eventId = $eventId;
+		$result->eventData = $eventData;
+		$result->position = $position;
+		return $result;
 	}
 
 	public static function standardParticle(int $particleId, int $data, Vector3 $position) : self{

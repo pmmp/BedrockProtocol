@@ -35,6 +35,9 @@ class UpdatePlayerGameTypePacket extends DataPacket implements ClientboundPacket
 	private int $gameMode;
 	private int $playerActorUniqueId;
 
+	/**
+	 * @generate-create-func
+	 */
 	public static function create(int $gameMode, int $playerActorUniqueId) : self{
 		$result = new self;
 		$result->gameMode = $gameMode;

@@ -39,13 +39,26 @@ class ResourcePackDataInfoPacket extends DataPacket implements ClientboundPacket
 	public bool $isPremium = false;
 	public int $packType = ResourcePackType::RESOURCES; //TODO: check the values for this
 
-	public static function create(string $packId, int $maxChunkSize, int $chunkCount, int $compressedPackSize, string $sha256sum) : self{
+	/**
+	 * @generate-create-func
+	 */
+	public static function create(
+		string $packId,
+		int $maxChunkSize,
+		int $chunkCount,
+		int $compressedPackSize,
+		string $sha256,
+		bool $isPremium,
+		int $packType,
+	) : self{
 		$result = new self;
 		$result->packId = $packId;
 		$result->maxChunkSize = $maxChunkSize;
 		$result->chunkCount = $chunkCount;
 		$result->compressedPackSize = $compressedPackSize;
-		$result->sha256 = $sha256sum;
+		$result->sha256 = $sha256;
+		$result->isPremium = $isPremium;
+		$result->packType = $packType;
 		return $result;
 	}
 

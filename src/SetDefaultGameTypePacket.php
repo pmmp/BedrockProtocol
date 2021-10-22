@@ -32,9 +32,12 @@ class SetDefaultGameTypePacket extends DataPacket implements ClientboundPacket, 
 
 	public int $gamemode;
 
-	public static function create(int $gameMode) : self{
+	/**
+	 * @generate-create-func
+	 */
+	public static function create(int $gamemode) : self{
 		$result = new self;
-		$result->gamemode = $gameMode;
+		$result->gamemode = $gamemode;
 		return $result;
 	}
 

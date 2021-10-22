@@ -32,6 +32,15 @@ class AddBehaviorTreePacket extends DataPacket implements ClientboundPacket{
 
 	public string $behaviorTreeJson;
 
+	/**
+	 * @generate-create-func
+	 */
+	public static function create(string $behaviorTreeJson) : self{
+		$result = new self;
+		$result->behaviorTreeJson = $behaviorTreeJson;
+		return $result;
+	}
+
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->behaviorTreeJson = $in->getString();
 	}

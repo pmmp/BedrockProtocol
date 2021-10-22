@@ -32,6 +32,15 @@ class OnScreenTextureAnimationPacket extends DataPacket implements ClientboundPa
 
 	public int $effectId;
 
+	/**
+	 * @generate-create-func
+	 */
+	public static function create(int $effectId) : self{
+		$result = new self;
+		$result->effectId = $effectId;
+		return $result;
+	}
+
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->effectId = $in->getLInt(); //unsigned
 	}

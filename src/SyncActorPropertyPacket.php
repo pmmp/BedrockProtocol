@@ -35,9 +35,12 @@ class SyncActorPropertyPacket extends DataPacket{
 
 	private CompoundTag $nbt;
 
-	public static function create(CompoundTag $data) : self{
+	/**
+	 * @generate-create-func
+	 */
+	public static function create(CompoundTag $nbt) : self{
 		$result = new self;
-		$result->nbt = $data;
+		$result->nbt = $nbt;
 		return $result;
 	}
 

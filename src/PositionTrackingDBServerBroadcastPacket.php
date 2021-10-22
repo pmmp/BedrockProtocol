@@ -41,6 +41,7 @@ class PositionTrackingDBServerBroadcastPacket extends DataPacket implements Clie
 	private CacheableNbt $nbt;
 
 	/**
+	 * @generate-create-func
 	 * @phpstan-param CacheableNbt<\pocketmine\nbt\tag\CompoundTag> $nbt
 	 */
 	public static function create(int $action, int $trackingId, CacheableNbt $nbt) : self{

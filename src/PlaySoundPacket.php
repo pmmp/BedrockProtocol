@@ -38,6 +38,20 @@ class PlaySoundPacket extends DataPacket implements ClientboundPacket{
 	public float $volume;
 	public float $pitch;
 
+	/**
+	 * @generate-create-func
+	 */
+	public static function create(string $soundName, float $x, float $y, float $z, float $volume, float $pitch) : self{
+		$result = new self;
+		$result->soundName = $soundName;
+		$result->x = $x;
+		$result->y = $y;
+		$result->z = $z;
+		$result->volume = $volume;
+		$result->pitch = $pitch;
+		return $result;
+	}
+
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->soundName = $in->getString();
 		$x = $y = $z = 0;

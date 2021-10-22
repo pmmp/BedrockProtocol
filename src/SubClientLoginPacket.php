@@ -32,6 +32,15 @@ class SubClientLoginPacket extends DataPacket implements ServerboundPacket{
 
 	public string $connectionRequestData;
 
+	/**
+	 * @generate-create-func
+	 */
+	public static function create(string $connectionRequestData) : self{
+		$result = new self;
+		$result->connectionRequestData = $connectionRequestData;
+		return $result;
+	}
+
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->connectionRequestData = $in->getString();
 	}

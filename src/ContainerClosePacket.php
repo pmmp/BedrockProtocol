@@ -33,6 +33,9 @@ class ContainerClosePacket extends DataPacket implements ClientboundPacket, Serv
 	public int $windowId;
 	public bool $server = false;
 
+	/**
+	 * @generate-create-func
+	 */
 	public static function create(int $windowId, bool $server) : self{
 		$result = new self;
 		$result->windowId = $windowId;

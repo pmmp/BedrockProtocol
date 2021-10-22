@@ -33,6 +33,15 @@ class SetActorLinkPacket extends DataPacket implements ClientboundPacket{
 
 	public EntityLink $link;
 
+	/**
+	 * @generate-create-func
+	 */
+	public static function create(EntityLink $link) : self{
+		$result = new self;
+		$result->link = $link;
+		return $result;
+	}
+
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->link = $in->getEntityLink();
 	}

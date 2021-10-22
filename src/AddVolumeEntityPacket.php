@@ -37,6 +37,9 @@ class AddVolumeEntityPacket extends DataPacket implements ClientboundPacket{
 	private CompoundTag $data;
 	private string $engineVersion;
 
+	/**
+	 * @generate-create-func
+	 */
 	public static function create(int $entityNetId, CompoundTag $data, string $engineVersion) : self{
 		$result = new self;
 		$result->entityNetId = $entityNetId;

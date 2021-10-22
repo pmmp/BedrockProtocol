@@ -37,6 +37,19 @@ class AddPaintingPacket extends DataPacket implements ClientboundPacket{
 	public int $direction;
 	public string $title;
 
+	/**
+	 * @generate-create-func
+	 */
+	public static function create(?int $actorUniqueId, int $actorRuntimeId, Vector3 $position, int $direction, string $title) : self{
+		$result = new self;
+		$result->actorUniqueId = $actorUniqueId;
+		$result->actorRuntimeId = $actorRuntimeId;
+		$result->position = $position;
+		$result->direction = $direction;
+		$result->title = $title;
+		return $result;
+	}
+
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->actorUniqueId = $in->getActorUniqueId();
 		$this->actorRuntimeId = $in->getActorRuntimeId();

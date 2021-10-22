@@ -39,6 +39,9 @@ class MobArmorEquipmentPacket extends DataPacket implements ClientboundPacket, S
 	public ItemStackWrapper $legs;
 	public ItemStackWrapper $feet;
 
+	/**
+	 * @generate-create-func
+	 */
 	public static function create(int $actorRuntimeId, ItemStackWrapper $head, ItemStackWrapper $chest, ItemStackWrapper $legs, ItemStackWrapper $feet) : self{
 		$result = new self;
 		$result->actorRuntimeId = $actorRuntimeId;
@@ -46,7 +49,6 @@ class MobArmorEquipmentPacket extends DataPacket implements ClientboundPacket, S
 		$result->chest = $chest;
 		$result->legs = $legs;
 		$result->feet = $feet;
-
 		return $result;
 	}
 

@@ -40,6 +40,17 @@ class ResourcePackClientResponsePacket extends DataPacket implements Serverbound
 	/** @var string[] */
 	public array $packIds = [];
 
+	/**
+	 * @generate-create-func
+	 * @param string[] $packIds
+	 */
+	public static function create(int $status, array $packIds) : self{
+		$result = new self;
+		$result->status = $status;
+		$result->packIds = $packIds;
+		return $result;
+	}
+
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->status = $in->getByte();
 		$entryCount = $in->getLShort();

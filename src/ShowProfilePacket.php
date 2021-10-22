@@ -32,6 +32,15 @@ class ShowProfilePacket extends DataPacket implements ClientboundPacket{
 
 	public string $xuid;
 
+	/**
+	 * @generate-create-func
+	 */
+	public static function create(string $xuid) : self{
+		$result = new self;
+		$result->xuid = $xuid;
+		return $result;
+	}
+
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->xuid = $in->getString();
 	}

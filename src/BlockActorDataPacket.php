@@ -37,6 +37,7 @@ class BlockActorDataPacket extends DataPacket implements ClientboundPacket, Serv
 	public CacheableNbt $nbt;
 
 	/**
+	 * @generate-create-func
 	 * @phpstan-param CacheableNbt<\pocketmine\nbt\tag\CompoundTag> $nbt
 	 */
 	public static function create(BlockPosition $blockPosition, CacheableNbt $nbt) : self{

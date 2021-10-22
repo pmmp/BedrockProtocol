@@ -35,11 +35,14 @@ class ResourcePackChunkDataPacket extends DataPacket implements ClientboundPacke
 	public int $offset;
 	public string $data;
 
-	public static function create(string $packId, int $chunkIndex, int $progress, string $data) : self{
+	/**
+	 * @generate-create-func
+	 */
+	public static function create(string $packId, int $chunkIndex, int $offset, string $data) : self{
 		$result = new self;
 		$result->packId = $packId;
 		$result->chunkIndex = $chunkIndex;
-		$result->offset = $progress;
+		$result->offset = $offset;
 		$result->data = $data;
 		return $result;
 	}

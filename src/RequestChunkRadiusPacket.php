@@ -32,6 +32,15 @@ class RequestChunkRadiusPacket extends DataPacket implements ServerboundPacket{
 
 	public int $radius;
 
+	/**
+	 * @generate-create-func
+	 */
+	public static function create(int $radius) : self{
+		$result = new self;
+		$result->radius = $radius;
+		return $result;
+	}
+
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->radius = $in->getVarInt();
 	}

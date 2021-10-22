@@ -33,10 +33,13 @@ class FilterTextPacket extends DataPacket implements ClientboundPacket, Serverbo
 	private string $text;
 	private bool $fromServer;
 
-	public static function create(string $text, bool $server) : self{
+	/**
+	 * @generate-create-func
+	 */
+	public static function create(string $text, bool $fromServer) : self{
 		$result = new self;
 		$result->text = $text;
-		$result->fromServer = $server;
+		$result->fromServer = $fromServer;
 		return $result;
 	}
 

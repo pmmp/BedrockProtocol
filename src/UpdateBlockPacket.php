@@ -50,10 +50,14 @@ class UpdateBlockPacket extends DataPacket implements ClientboundPacket{
 	public int $flags = self::FLAG_NETWORK;
 	public int $dataLayerId = self::DATA_LAYER_NORMAL;
 
-	public static function create(BlockPosition $blockPosition, int $blockRuntimeId, int $dataLayerId = self::DATA_LAYER_NORMAL) : self{
+	/**
+	 * @generate-create-func
+	 */
+	public static function create(BlockPosition $blockPosition, int $blockRuntimeId, int $flags, int $dataLayerId) : self{
 		$result = new self;
 		$result->blockPosition = $blockPosition;
 		$result->blockRuntimeId = $blockRuntimeId;
+		$result->flags = $flags;
 		$result->dataLayerId = $dataLayerId;
 		return $result;
 	}

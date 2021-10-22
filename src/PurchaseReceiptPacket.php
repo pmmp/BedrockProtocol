@@ -34,6 +34,16 @@ class PurchaseReceiptPacket extends DataPacket implements ServerboundPacket{
 	/** @var string[] */
 	public array $entries = [];
 
+	/**
+	 * @generate-create-func
+	 * @param string[] $entries
+	 */
+	public static function create(array $entries) : self{
+		$result = new self;
+		$result->entries = $entries;
+		return $result;
+	}
+
 	protected function decodePayload(PacketSerializer $in) : void{
 		$count = $in->getUnsignedVarInt();
 		for($i = 0; $i < $count; ++$i){

@@ -34,6 +34,16 @@ class SpawnExperienceOrbPacket extends DataPacket implements ServerboundPacket{
 	public Vector3 $position;
 	public int $amount;
 
+	/**
+	 * @generate-create-func
+	 */
+	public static function create(Vector3 $position, int $amount) : self{
+		$result = new self;
+		$result->position = $position;
+		$result->amount = $amount;
+		return $result;
+	}
+
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->position = $in->getVector3();
 		$this->amount = $in->getVarInt();

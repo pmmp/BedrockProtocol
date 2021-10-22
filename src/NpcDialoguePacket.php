@@ -40,6 +40,9 @@ class NpcDialoguePacket extends DataPacket implements ClientboundPacket{
 	private string $npcName;
 	private string $actionJson;
 
+	/**
+	 * @generate-create-func
+	 */
 	public static function create(int $npcActorUniqueId, int $actionType, string $dialogue, string $sceneName, string $npcName, string $actionJson) : self{
 		$result = new self;
 		$result->npcActorUniqueId = $npcActorUniqueId;

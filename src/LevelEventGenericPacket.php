@@ -25,7 +25,6 @@ namespace pocketmine\network\mcpe\protocol;
 
 #include <rules/DataPacket.h>
 
-use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 use pocketmine\network\mcpe\protocol\types\CacheableNbt;
 
@@ -36,10 +35,14 @@ class LevelEventGenericPacket extends DataPacket implements ClientboundPacket{
 	/** @phpstan-var CacheableNbt<\pocketmine\nbt\tag\CompoundTag> */
 	private CacheableNbt $eventData;
 
-	public static function create(int $eventId, CompoundTag $data) : self{
+	/**
+	 * @generate-create-func
+	 * @phpstan-param CacheableNbt<\pocketmine\nbt\tag\CompoundTag> $eventData
+	 */
+	public static function create(int $eventId, CacheableNbt $eventData) : self{
 		$result = new self;
 		$result->eventId = $eventId;
-		$result->eventData = new CacheableNbt($data);
+		$result->eventData = $eventData;
 		return $result;
 	}
 

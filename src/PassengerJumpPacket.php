@@ -32,6 +32,15 @@ class PassengerJumpPacket extends DataPacket implements ServerboundPacket{
 
 	public int $jumpStrength; //percentage
 
+	/**
+	 * @generate-create-func
+	 */
+	public static function create(int $jumpStrength) : self{
+		$result = new self;
+		$result->jumpStrength = $jumpStrength;
+		return $result;
+	}
+
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->jumpStrength = $in->getVarInt();
 	}

@@ -30,13 +30,16 @@ use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 class TakeItemActorPacket extends DataPacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::TAKE_ITEM_ACTOR_PACKET;
 
-	public int $itemActorRuntimeId;
 	public int $takerActorRuntimeId;
+	public int $itemActorRuntimeId;
 
+	/**
+	 * @generate-create-func
+	 */
 	public static function create(int $takerActorRuntimeId, int $itemActorRuntimeId) : self{
 		$result = new self;
-		$result->itemActorRuntimeId = $itemActorRuntimeId;
 		$result->takerActorRuntimeId = $takerActorRuntimeId;
+		$result->itemActorRuntimeId = $itemActorRuntimeId;
 		return $result;
 	}
 

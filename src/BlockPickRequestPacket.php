@@ -35,6 +35,17 @@ class BlockPickRequestPacket extends DataPacket implements ServerboundPacket{
 	public bool $addUserData = false;
 	public int $hotbarSlot;
 
+	/**
+	 * @generate-create-func
+	 */
+	public static function create(BlockPosition $blockPosition, bool $addUserData, int $hotbarSlot) : self{
+		$result = new self;
+		$result->blockPosition = $blockPosition;
+		$result->addUserData = $addUserData;
+		$result->hotbarSlot = $hotbarSlot;
+		return $result;
+	}
+
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->blockPosition = $in->getSignedBlockPosition();
 		$this->addUserData = $in->getBool();

@@ -34,6 +34,9 @@ class AnvilDamagePacket extends DataPacket implements ServerboundPacket{
 	private BlockPosition $blockPosition;
 	private int $damageAmount;
 
+	/**
+	 * @generate-create-func
+	 */
 	public static function create(BlockPosition $blockPosition, int $damageAmount) : self{
 		$result = new self;
 		$result->blockPosition = $blockPosition;

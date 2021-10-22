@@ -39,6 +39,17 @@ class SetScorePacket extends DataPacket implements ClientboundPacket{
 	/** @var ScorePacketEntry[] */
 	public array $entries = [];
 
+	/**
+	 * @generate-create-func
+	 * @param ScorePacketEntry[] $entries
+	 */
+	public static function create(int $type, array $entries) : self{
+		$result = new self;
+		$result->type = $type;
+		$result->entries = $entries;
+		return $result;
+	}
+
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->type = $in->getByte();
 		for($i = 0, $i2 = $in->getUnsignedVarInt(); $i < $i2; ++$i){

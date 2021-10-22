@@ -36,6 +36,17 @@ class StructureBlockUpdatePacket extends DataPacket implements ServerboundPacket
 	public StructureEditorData $structureEditorData;
 	public bool $isPowered;
 
+	/**
+	 * @generate-create-func
+	 */
+	public static function create(BlockPosition $blockPosition, StructureEditorData $structureEditorData, bool $isPowered) : self{
+		$result = new self;
+		$result->blockPosition = $blockPosition;
+		$result->structureEditorData = $structureEditorData;
+		$result->isPowered = $isPowered;
+		return $result;
+	}
+
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->blockPosition = $in->getBlockPosition();
 		$this->structureEditorData = $in->getStructureEditorData();

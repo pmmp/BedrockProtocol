@@ -41,14 +41,15 @@ class UpdateSubChunkBlocksPacket extends DataPacket implements ClientboundPacket
 	private array $layer1Updates;
 
 	/**
-	 * @param UpdateSubChunkBlocksPacketEntry[] $layer0
-	 * @param UpdateSubChunkBlocksPacketEntry[] $layer1
+	 * @generate-create-func
+	 * @param UpdateSubChunkBlocksPacketEntry[] $layer0Updates
+	 * @param UpdateSubChunkBlocksPacketEntry[] $layer1Updates
 	 */
-	public static function create(BlockPosition $baseBlockPosition, array $layer0, array $layer1) : self{
+	public static function create(BlockPosition $baseBlockPosition, array $layer0Updates, array $layer1Updates) : self{
 		$result = new self;
 		$result->baseBlockPosition = $baseBlockPosition;
-		$result->layer0Updates = $layer0;
-		$result->layer1Updates = $layer1;
+		$result->layer0Updates = $layer0Updates;
+		$result->layer1Updates = $layer1Updates;
 		return $result;
 	}
 

@@ -36,6 +36,9 @@ class MultiplayerSettingsPacket extends DataPacket implements ClientboundPacket,
 
 	private int $action;
 
+	/**
+	 * @generate-create-func
+	 */
 	public static function create(int $action) : self{
 		$result = new self;
 		$result->action = $action;

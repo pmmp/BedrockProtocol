@@ -36,16 +36,19 @@ class MoveActorAbsolutePacket extends DataPacket implements ClientboundPacket, S
 	public const FLAG_FORCE_MOVE_LOCAL_ENTITY = 0x04;
 
 	public int $actorRuntimeId;
-	public int $flags = 0;
 	public Vector3 $position;
 	public float $pitch;
 	public float $yaw;
 	public float $headYaw; //always zero for non-mobs
+	public int $flags = 0;
 
-	public static function create(int $actorRuntimeId, Vector3 $position, float $pitch, float $yaw, float $headYaw, int $flags = 0) : self{
+	/**
+	 * @generate-create-func
+	 */
+	public static function create(int $actorRuntimeId, Vector3 $position, float $pitch, float $yaw, float $headYaw, int $flags) : self{
 		$result = new self;
 		$result->actorRuntimeId = $actorRuntimeId;
-		$result->position = $position->asVector3();
+		$result->position = $position;
 		$result->pitch = $pitch;
 		$result->yaw = $yaw;
 		$result->headYaw = $headYaw;

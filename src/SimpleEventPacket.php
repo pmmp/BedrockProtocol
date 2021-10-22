@@ -36,6 +36,15 @@ class SimpleEventPacket extends DataPacket implements ClientboundPacket, Serverb
 
 	public int $eventType;
 
+	/**
+	 * @generate-create-func
+	 */
+	public static function create(int $eventType) : self{
+		$result = new self;
+		$result->eventType = $eventType;
+		return $result;
+	}
+
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->eventType = $in->getLShort();
 	}

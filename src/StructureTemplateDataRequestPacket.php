@@ -40,6 +40,18 @@ class StructureTemplateDataRequestPacket extends DataPacket implements Serverbou
 	public StructureSettings $structureSettings;
 	public int $requestType;
 
+	/**
+	 * @generate-create-func
+	 */
+	public static function create(string $structureTemplateName, BlockPosition $structureBlockPosition, StructureSettings $structureSettings, int $requestType) : self{
+		$result = new self;
+		$result->structureTemplateName = $structureTemplateName;
+		$result->structureBlockPosition = $structureBlockPosition;
+		$result->structureSettings = $structureSettings;
+		$result->requestType = $requestType;
+		return $result;
+	}
+
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->structureTemplateName = $in->getString();
 		$this->structureBlockPosition = $in->getBlockPosition();

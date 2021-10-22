@@ -37,6 +37,17 @@ class GameRulesChangedPacket extends DataPacket implements ClientboundPacket{
 	 */
 	public array $gameRules = [];
 
+	/**
+	 * @generate-create-func
+	 * @param GameRule[] $gameRules
+	 * @phpstan-param array<string, GameRule> $gameRules
+	 */
+	public static function create(array $gameRules) : self{
+		$result = new self;
+		$result->gameRules = $gameRules;
+		return $result;
+	}
+
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->gameRules = $in->getGameRules();
 	}

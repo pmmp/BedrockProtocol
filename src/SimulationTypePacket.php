@@ -36,6 +36,9 @@ class SimulationTypePacket extends DataPacket implements ClientboundPacket{
 
 	private int $type;
 
+	/**
+	 * @generate-create-func
+	 */
 	public static function create(int $type) : self{
 		$result = new self;
 		$result->type = $type;

@@ -32,6 +32,15 @@ class AutomationClientConnectPacket extends DataPacket implements ClientboundPac
 
 	public string $serverUri;
 
+	/**
+	 * @generate-create-func
+	 */
+	public static function create(string $serverUri) : self{
+		$result = new self;
+		$result->serverUri = $serverUri;
+		return $result;
+	}
+
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->serverUri = $in->getString();
 	}

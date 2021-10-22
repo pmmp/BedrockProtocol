@@ -30,17 +30,27 @@ use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 class CameraPacket extends DataPacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::CAMERA_PACKET;
 
-	public int $cameraUniqueId;
-	public int $playerUniqueId;
+	public int $cameraActorUniqueId;
+	public int $playerActorUniqueId;
+
+	/**
+	 * @generate-create-func
+	 */
+	public static function create(int $cameraActorUniqueId, int $playerActorUniqueId) : self{
+		$result = new self;
+		$result->cameraActorUniqueId = $cameraActorUniqueId;
+		$result->playerActorUniqueId = $playerActorUniqueId;
+		return $result;
+	}
 
 	protected function decodePayload(PacketSerializer $in) : void{
-		$this->cameraUniqueId = $in->getActorUniqueId();
-		$this->playerUniqueId = $in->getActorUniqueId();
+		$this->cameraActorUniqueId = $in->getActorUniqueId();
+		$this->playerActorUniqueId = $in->getActorUniqueId();
 	}
 
 	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putActorUniqueId($this->cameraUniqueId);
-		$out->putActorUniqueId($this->playerUniqueId);
+		$out->putActorUniqueId($this->cameraActorUniqueId);
+		$out->putActorUniqueId($this->playerActorUniqueId);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

@@ -34,18 +34,18 @@ class UpdateBlockSyncedPacket extends UpdateBlockPacket{
 	public const TYPE_CREATE = 1;
 	public const TYPE_DESTROY = 2;
 
-	public int $entityUniqueId;
+	public int $actorUniqueId;
 	public int $updateType;
 
 	protected function decodePayload(PacketSerializer $in) : void{
 		parent::decodePayload($in);
-		$this->entityUniqueId = $in->getUnsignedVarLong();
+		$this->actorUniqueId = $in->getUnsignedVarLong();
 		$this->updateType = $in->getUnsignedVarLong();
 	}
 
 	protected function encodePayload(PacketSerializer $out) : void{
 		parent::encodePayload($out);
-		$out->putUnsignedVarLong($this->entityUniqueId);
+		$out->putUnsignedVarLong($this->actorUniqueId);
 		$out->putUnsignedVarLong($this->updateType);
 	}
 

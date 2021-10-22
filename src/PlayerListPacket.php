@@ -67,7 +67,7 @@ class PlayerListPacket extends DataPacket implements ClientboundPacket{
 
 			if($this->type === self::TYPE_ADD){
 				$entry->uuid = $in->getUUID();
-				$entry->entityUniqueId = $in->getEntityUniqueId();
+				$entry->actorUniqueId = $in->getActorUniqueId();
 				$entry->username = $in->getString();
 				$entry->xboxUserId = $in->getString();
 				$entry->platformChatId = $in->getString();
@@ -94,7 +94,7 @@ class PlayerListPacket extends DataPacket implements ClientboundPacket{
 		foreach($this->entries as $entry){
 			if($this->type === self::TYPE_ADD){
 				$out->putUUID($entry->uuid);
-				$out->putEntityUniqueId($entry->entityUniqueId);
+				$out->putActorUniqueId($entry->actorUniqueId);
 				$out->putString($entry->username);
 				$out->putString($entry->xboxUserId);
 				$out->putString($entry->platformChatId);

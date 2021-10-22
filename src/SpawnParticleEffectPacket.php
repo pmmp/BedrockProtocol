@@ -33,20 +33,20 @@ class SpawnParticleEffectPacket extends DataPacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::SPAWN_PARTICLE_EFFECT_PACKET;
 
 	public int $dimensionId = DimensionIds::OVERWORLD; //wtf mojang
-	public int $entityUniqueId = -1; //default none
+	public int $actorUniqueId = -1; //default none
 	public Vector3 $position;
 	public string $particleName;
 
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->dimensionId = $in->getByte();
-		$this->entityUniqueId = $in->getEntityUniqueId();
+		$this->actorUniqueId = $in->getActorUniqueId();
 		$this->position = $in->getVector3();
 		$this->particleName = $in->getString();
 	}
 
 	protected function encodePayload(PacketSerializer $out) : void{
 		$out->putByte($this->dimensionId);
-		$out->putEntityUniqueId($this->entityUniqueId);
+		$out->putActorUniqueId($this->actorUniqueId);
 		$out->putVector3($this->position);
 		$out->putString($this->particleName);
 	}

@@ -34,7 +34,7 @@ class UpdateEquipPacket extends DataPacket implements ClientboundPacket{
 	public int $windowId;
 	public int $windowType;
 	public int $windowSlotCount; //useless, seems to be part of a standard container header
-	public int $entityUniqueId;
+	public int $actorUniqueId;
 	/** @phpstan-var CacheableNbt<\pocketmine\nbt\tag\CompoundTag> */
 	public CacheableNbt $namedtag;
 
@@ -42,7 +42,7 @@ class UpdateEquipPacket extends DataPacket implements ClientboundPacket{
 		$this->windowId = $in->getByte();
 		$this->windowType = $in->getByte();
 		$this->windowSlotCount = $in->getVarInt();
-		$this->entityUniqueId = $in->getEntityUniqueId();
+		$this->actorUniqueId = $in->getActorUniqueId();
 		$this->namedtag = new CacheableNbt($in->getNbtCompoundRoot());
 	}
 
@@ -50,7 +50,7 @@ class UpdateEquipPacket extends DataPacket implements ClientboundPacket{
 		$out->putByte($this->windowId);
 		$out->putByte($this->windowType);
 		$out->putVarInt($this->windowSlotCount);
-		$out->putEntityUniqueId($this->entityUniqueId);
+		$out->putActorUniqueId($this->actorUniqueId);
 		$out->put($this->namedtag->getEncodedNbt());
 	}
 

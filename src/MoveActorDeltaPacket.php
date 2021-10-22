@@ -41,7 +41,7 @@ class MoveActorDeltaPacket extends DataPacket implements ClientboundPacket{
 	public const FLAG_TELEPORT = 0x80;
 	public const FLAG_FORCE_MOVE_LOCAL_ENTITY = 0x100;
 
-	public int $entityRuntimeId;
+	public int $actorRuntimeId;
 	public int $flags;
 	public float $xPos = 0;
 	public float $yPos = 0;
@@ -71,7 +71,7 @@ class MoveActorDeltaPacket extends DataPacket implements ClientboundPacket{
 	}
 
 	protected function decodePayload(PacketSerializer $in) : void{
-		$this->entityRuntimeId = $in->getEntityRuntimeId();
+		$this->actorRuntimeId = $in->getActorRuntimeId();
 		$this->flags = $in->getLShort();
 		$this->xPos = $this->maybeReadCoord(self::FLAG_HAS_X, $in);
 		$this->yPos = $this->maybeReadCoord(self::FLAG_HAS_Y, $in);
@@ -94,7 +94,7 @@ class MoveActorDeltaPacket extends DataPacket implements ClientboundPacket{
 	}
 
 	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putEntityRuntimeId($this->entityRuntimeId);
+		$out->putActorRuntimeId($this->actorRuntimeId);
 		$out->putLShort($this->flags);
 		$this->maybeWriteCoord(self::FLAG_HAS_X, $this->xPos, $out);
 		$this->maybeWriteCoord(self::FLAG_HAS_Y, $this->yPos, $out);

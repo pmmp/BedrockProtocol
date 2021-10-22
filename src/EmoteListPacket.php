@@ -32,27 +32,27 @@ use function count;
 class EmoteListPacket extends DataPacket implements ClientboundPacket, ServerboundPacket{
 	public const NETWORK_ID = ProtocolInfo::EMOTE_LIST_PACKET;
 
-	private int $playerEntityRuntimeId;
+	private int $playerActorRuntimeId;
 	/** @var UuidInterface[] */
 	private array $emoteIds;
 
 	/**
 	 * @param UuidInterface[] $emoteIds
 	 */
-	public static function create(int $playerEntityRuntimeId, array $emoteIds) : self{
+	public static function create(int $playerActorRuntimeId, array $emoteIds) : self{
 		$result = new self;
-		$result->playerEntityRuntimeId = $playerEntityRuntimeId;
+		$result->playerActorRuntimeId = $playerActorRuntimeId;
 		$result->emoteIds = $emoteIds;
 		return $result;
 	}
 
-	public function getPlayerEntityRuntimeId() : int{ return $this->playerEntityRuntimeId; }
+	public function getPlayerActorRuntimeId() : int{ return $this->playerActorRuntimeId; }
 
 	/** @return UuidInterface[] */
 	public function getEmoteIds() : array{ return $this->emoteIds; }
 
 	protected function decodePayload(PacketSerializer $in) : void{
-		$this->playerEntityRuntimeId = $in->getEntityRuntimeId();
+		$this->playerActorRuntimeId = $in->getActorRuntimeId();
 		$this->emoteIds = [];
 		for($i = 0, $len = $in->getUnsignedVarInt(); $i < $len; ++$i){
 			$this->emoteIds[] = $in->getUUID();
@@ -60,7 +60,7 @@ class EmoteListPacket extends DataPacket implements ClientboundPacket, Serverbou
 	}
 
 	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putEntityRuntimeId($this->playerEntityRuntimeId);
+		$out->putActorRuntimeId($this->playerActorRuntimeId);
 		$out->putUnsignedVarInt(count($this->emoteIds));
 		foreach($this->emoteIds as $emoteId){
 			$out->putUUID($emoteId);

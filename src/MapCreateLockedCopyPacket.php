@@ -34,13 +34,13 @@ class MapCreateLockedCopyPacket extends DataPacket implements ServerboundPacket{
 	public int $newMapId;
 
 	protected function decodePayload(PacketSerializer $in) : void{
-		$this->originalMapId = $in->getEntityUniqueId();
-		$this->newMapId = $in->getEntityUniqueId();
+		$this->originalMapId = $in->getActorUniqueId();
+		$this->newMapId = $in->getActorUniqueId();
 	}
 
 	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putEntityUniqueId($this->originalMapId);
-		$out->putEntityUniqueId($this->newMapId);
+		$out->putActorUniqueId($this->originalMapId);
+		$out->putActorUniqueId($this->newMapId);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

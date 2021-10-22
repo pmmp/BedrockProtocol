@@ -29,7 +29,7 @@ use Ramsey\Uuid\UuidInterface;
 class PlayerListEntry{
 
 	public UuidInterface $uuid;
-	public int $entityUniqueId;
+	public int $actorUniqueId;
 	public string $username;
 	public SkinData $skinData;
 	public string $xboxUserId;
@@ -45,10 +45,10 @@ class PlayerListEntry{
 		return $entry;
 	}
 
-	public static function createAdditionEntry(UuidInterface $uuid, int $entityUniqueId, string $username, SkinData $skinData, string $xboxUserId = "", string $platformChatId = "", int $buildPlatform = -1, bool $isTeacher = false, bool $isHost = false) : PlayerListEntry{
+	public static function createAdditionEntry(UuidInterface $uuid, int $actorUniqueId, string $username, SkinData $skinData, string $xboxUserId = "", string $platformChatId = "", int $buildPlatform = -1, bool $isTeacher = false, bool $isHost = false) : PlayerListEntry{
 		$entry = new PlayerListEntry();
 		$entry->uuid = $uuid;
-		$entry->entityUniqueId = $entityUniqueId;
+		$entry->actorUniqueId = $actorUniqueId;
 		$entry->username = $username;
 		$entry->skinData = $skinData;
 		$entry->xboxUserId = $xboxUserId;

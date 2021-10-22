@@ -86,7 +86,7 @@ class AnimateEntityPacket extends DataPacket implements ClientboundPacket{
 		$this->blendOutTime = $in->getLFloat();
 		$this->actorRuntimeIds = [];
 		for($i = 0, $len = $in->getUnsignedVarInt(); $i < $len; ++$i){
-			$this->actorRuntimeIds[] = $in->getEntityRuntimeId();
+			$this->actorRuntimeIds[] = $in->getActorRuntimeId();
 		}
 	}
 
@@ -99,7 +99,7 @@ class AnimateEntityPacket extends DataPacket implements ClientboundPacket{
 		$out->putLFloat($this->blendOutTime);
 		$out->putUnsignedVarInt(count($this->actorRuntimeIds));
 		foreach($this->actorRuntimeIds as $id){
-			$out->putEntityRuntimeId($id);
+			$out->putActorRuntimeId($id);
 		}
 	}
 

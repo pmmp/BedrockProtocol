@@ -34,17 +34,17 @@ class MobEffectPacket extends DataPacket implements ClientboundPacket{
 	public const EVENT_MODIFY = 2;
 	public const EVENT_REMOVE = 3;
 
-	public int $entityRuntimeId;
+	public int $actorRuntimeId;
 	public int $eventId;
 	public int $effectId;
 	public int $amplifier = 0;
 	public bool $particles = true;
 	public int $duration = 0;
 
-	public static function add(int $entityRuntimeId, bool $replace, int $effectId, int $amplifier, bool $particles, int $duration) : self{
+	public static function add(int $actorRuntimeId, bool $replace, int $effectId, int $amplifier, bool $particles, int $duration) : self{
 		$result = new self;
 		$result->eventId = $replace ? self::EVENT_MODIFY : self::EVENT_ADD;
-		$result->entityRuntimeId = $entityRuntimeId;
+		$result->actorRuntimeId = $actorRuntimeId;
 		$result->effectId = $effectId;
 		$result->amplifier = $amplifier;
 		$result->particles = $particles;
@@ -52,16 +52,16 @@ class MobEffectPacket extends DataPacket implements ClientboundPacket{
 		return $result;
 	}
 
-	public static function remove(int $entityRuntimeId, int $effectId) : self{
+	public static function remove(int $actorRuntimeId, int $effectId) : self{
 		$pk = new self;
 		$pk->eventId = self::EVENT_REMOVE;
-		$pk->entityRuntimeId = $entityRuntimeId;
+		$pk->actorRuntimeId = $actorRuntimeId;
 		$pk->effectId = $effectId;
 		return $pk;
 	}
 
 	protected function decodePayload(PacketSerializer $in) : void{
-		$this->entityRuntimeId = $in->getEntityRuntimeId();
+		$this->actorRuntimeId = $in->getActorRuntimeId();
 		$this->eventId = $in->getByte();
 		$this->effectId = $in->getVarInt();
 		$this->amplifier = $in->getVarInt();
@@ -70,7 +70,7 @@ class MobEffectPacket extends DataPacket implements ClientboundPacket{
 	}
 
 	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putEntityRuntimeId($this->entityRuntimeId);
+		$out->putActorRuntimeId($this->actorRuntimeId);
 		$out->putByte($this->eventId);
 		$out->putVarInt($this->effectId);
 		$out->putVarInt($this->amplifier);

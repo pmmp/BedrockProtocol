@@ -31,7 +31,7 @@ use pocketmine\network\mcpe\protocol\types\inventory\ItemStackWrapper;
 class MobArmorEquipmentPacket extends DataPacket implements ClientboundPacket, ServerboundPacket{
 	public const NETWORK_ID = ProtocolInfo::MOB_ARMOR_EQUIPMENT_PACKET;
 
-	public int $entityRuntimeId;
+	public int $actorRuntimeId;
 
 	//this intentionally doesn't use an array because we don't want any implicit dependencies on internal order
 	public ItemStackWrapper $head;
@@ -39,9 +39,9 @@ class MobArmorEquipmentPacket extends DataPacket implements ClientboundPacket, S
 	public ItemStackWrapper $legs;
 	public ItemStackWrapper $feet;
 
-	public static function create(int $entityRuntimeId, ItemStackWrapper $head, ItemStackWrapper $chest, ItemStackWrapper $legs, ItemStackWrapper $feet) : self{
+	public static function create(int $actorRuntimeId, ItemStackWrapper $head, ItemStackWrapper $chest, ItemStackWrapper $legs, ItemStackWrapper $feet) : self{
 		$result = new self;
-		$result->entityRuntimeId = $entityRuntimeId;
+		$result->actorRuntimeId = $actorRuntimeId;
 		$result->head = $head;
 		$result->chest = $chest;
 		$result->legs = $legs;
@@ -51,7 +51,7 @@ class MobArmorEquipmentPacket extends DataPacket implements ClientboundPacket, S
 	}
 
 	protected function decodePayload(PacketSerializer $in) : void{
-		$this->entityRuntimeId = $in->getEntityRuntimeId();
+		$this->actorRuntimeId = $in->getActorRuntimeId();
 		$this->head = ItemStackWrapper::read($in);
 		$this->chest = ItemStackWrapper::read($in);
 		$this->legs = ItemStackWrapper::read($in);
@@ -59,7 +59,7 @@ class MobArmorEquipmentPacket extends DataPacket implements ClientboundPacket, S
 	}
 
 	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putEntityRuntimeId($this->entityRuntimeId);
+		$out->putActorRuntimeId($this->actorRuntimeId);
 		$this->head->write($out);
 		$this->chest->write($out);
 		$this->legs->write($out);

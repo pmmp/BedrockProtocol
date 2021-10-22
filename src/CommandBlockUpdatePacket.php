@@ -38,7 +38,7 @@ class CommandBlockUpdatePacket extends DataPacket implements ServerboundPacket{
 	public bool $isRedstoneMode;
 	public bool $isConditional;
 
-	public int $minecartEid;
+	public int $minecartActorRuntimeId;
 
 	public string $command;
 	public string $lastOutput;
@@ -57,7 +57,7 @@ class CommandBlockUpdatePacket extends DataPacket implements ServerboundPacket{
 			$this->isConditional = $in->getBool();
 		}else{
 			//Minecart with command block
-			$this->minecartEid = $in->getEntityRuntimeId();
+			$this->minecartActorRuntimeId = $in->getActorRuntimeId();
 		}
 
 		$this->command = $in->getString();
@@ -78,7 +78,7 @@ class CommandBlockUpdatePacket extends DataPacket implements ServerboundPacket{
 			$out->putBool($this->isRedstoneMode);
 			$out->putBool($this->isConditional);
 		}else{
-			$out->putEntityRuntimeId($this->minecartEid);
+			$out->putActorRuntimeId($this->minecartActorRuntimeId);
 		}
 
 		$out->putString($this->command);

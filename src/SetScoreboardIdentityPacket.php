@@ -45,7 +45,7 @@ class SetScoreboardIdentityPacket extends DataPacket implements ClientboundPacke
 			$entry = new ScoreboardIdentityPacketEntry();
 			$entry->scoreboardId = $in->getVarLong();
 			if($this->type === self::TYPE_REGISTER_IDENTITY){
-				$entry->entityUniqueId = $in->getEntityUniqueId();
+				$entry->actorUniqueId = $in->getActorUniqueId();
 			}
 
 			$this->entries[] = $entry;
@@ -58,7 +58,7 @@ class SetScoreboardIdentityPacket extends DataPacket implements ClientboundPacke
 		foreach($this->entries as $entry){
 			$out->putVarLong($entry->scoreboardId);
 			if($this->type === self::TYPE_REGISTER_IDENTITY){
-				$out->putEntityUniqueId($entry->entityUniqueId);
+				$out->putActorUniqueId($entry->actorUniqueId);
 			}
 		}
 	}

@@ -36,27 +36,27 @@ class MovePlayerPacket extends DataPacket implements ClientboundPacket, Serverbo
 	public const MODE_TELEPORT = 2;
 	public const MODE_PITCH = 3; //facepalm Mojang
 
-	public int $entityRuntimeId;
+	public int $actorRuntimeId;
 	public Vector3 $position;
 	public float $pitch;
 	public float $yaw;
 	public float $headYaw;
 	public int $mode = self::MODE_NORMAL;
 	public bool $onGround = false; //TODO
-	public int $ridingEid = 0;
+	public int $ridingActorRuntimeId = 0;
 	public int $teleportCause = 0;
 	public int $teleportItem = 0;
 	public int $tick = 0;
 
 	protected function decodePayload(PacketSerializer $in) : void{
-		$this->entityRuntimeId = $in->getEntityRuntimeId();
+		$this->actorRuntimeId = $in->getActorRuntimeId();
 		$this->position = $in->getVector3();
 		$this->pitch = $in->getLFloat();
 		$this->yaw = $in->getLFloat();
 		$this->headYaw = $in->getLFloat();
 		$this->mode = $in->getByte();
 		$this->onGround = $in->getBool();
-		$this->ridingEid = $in->getEntityRuntimeId();
+		$this->ridingActorRuntimeId = $in->getActorRuntimeId();
 		if($this->mode === MovePlayerPacket::MODE_TELEPORT){
 			$this->teleportCause = $in->getLInt();
 			$this->teleportItem = $in->getLInt();
@@ -65,14 +65,14 @@ class MovePlayerPacket extends DataPacket implements ClientboundPacket, Serverbo
 	}
 
 	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putEntityRuntimeId($this->entityRuntimeId);
+		$out->putActorRuntimeId($this->actorRuntimeId);
 		$out->putVector3($this->position);
 		$out->putLFloat($this->pitch);
 		$out->putLFloat($this->yaw);
 		$out->putLFloat($this->headYaw); //TODO
 		$out->putByte($this->mode);
 		$out->putBool($this->onGround);
-		$out->putEntityRuntimeId($this->ridingEid);
+		$out->putActorRuntimeId($this->ridingActorRuntimeId);
 		if($this->mode === MovePlayerPacket::MODE_TELEPORT){
 			$out->putLInt($this->teleportCause);
 			$out->putLInt($this->teleportItem);

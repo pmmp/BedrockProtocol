@@ -31,15 +31,15 @@ use pocketmine\network\mcpe\protocol\types\inventory\ItemStackWrapper;
 class MobEquipmentPacket extends DataPacket implements ClientboundPacket, ServerboundPacket{
 	public const NETWORK_ID = ProtocolInfo::MOB_EQUIPMENT_PACKET;
 
-	public int $entityRuntimeId;
+	public int $actorRuntimeId;
 	public ItemStackWrapper $item;
 	public int $inventorySlot;
 	public int $hotbarSlot;
 	public int $windowId = 0;
 
-	public static function create(int $entityRuntimeId, ItemStackWrapper $item, int $inventorySlot, int $windowId) : self{
+	public static function create(int $actorRuntimeId, ItemStackWrapper $item, int $inventorySlot, int $windowId) : self{
 		$result = new self;
-		$result->entityRuntimeId = $entityRuntimeId;
+		$result->actorRuntimeId = $actorRuntimeId;
 		$result->item = $item;
 		$result->inventorySlot = $inventorySlot;
 		$result->hotbarSlot = $inventorySlot;
@@ -48,7 +48,7 @@ class MobEquipmentPacket extends DataPacket implements ClientboundPacket, Server
 	}
 
 	protected function decodePayload(PacketSerializer $in) : void{
-		$this->entityRuntimeId = $in->getEntityRuntimeId();
+		$this->actorRuntimeId = $in->getActorRuntimeId();
 		$this->item = ItemStackWrapper::read($in);
 		$this->inventorySlot = $in->getByte();
 		$this->hotbarSlot = $in->getByte();
@@ -56,7 +56,7 @@ class MobEquipmentPacket extends DataPacket implements ClientboundPacket, Server
 	}
 
 	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putEntityRuntimeId($this->entityRuntimeId);
+		$out->putActorRuntimeId($this->actorRuntimeId);
 		$this->item->write($out);
 		$out->putByte($this->inventorySlot);
 		$out->putByte($this->hotbarSlot);

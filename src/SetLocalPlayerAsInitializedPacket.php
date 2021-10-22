@@ -30,14 +30,14 @@ use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 class SetLocalPlayerAsInitializedPacket extends DataPacket implements ServerboundPacket{
 	public const NETWORK_ID = ProtocolInfo::SET_LOCAL_PLAYER_AS_INITIALIZED_PACKET;
 
-	public int $entityRuntimeId;
+	public int $actorRuntimeId;
 
 	protected function decodePayload(PacketSerializer $in) : void{
-		$this->entityRuntimeId = $in->getEntityRuntimeId();
+		$this->actorRuntimeId = $in->getActorRuntimeId();
 	}
 
 	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putEntityRuntimeId($this->entityRuntimeId);
+		$out->putActorRuntimeId($this->actorRuntimeId);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

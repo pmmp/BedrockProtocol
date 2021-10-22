@@ -30,20 +30,20 @@ use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 class RemoveActorPacket extends DataPacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::REMOVE_ACTOR_PACKET;
 
-	public int $entityUniqueId;
+	public int $actorUniqueId;
 
-	public static function create(int $entityUniqueId) : self{
+	public static function create(int $actorUniqueId) : self{
 		$result = new self;
-		$result->entityUniqueId = $entityUniqueId;
+		$result->actorUniqueId = $actorUniqueId;
 		return $result;
 	}
 
 	protected function decodePayload(PacketSerializer $in) : void{
-		$this->entityUniqueId = $in->getEntityUniqueId();
+		$this->actorUniqueId = $in->getActorUniqueId();
 	}
 
 	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putEntityUniqueId($this->entityUniqueId);
+		$out->putActorUniqueId($this->actorUniqueId);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

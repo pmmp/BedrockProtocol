@@ -35,16 +35,16 @@ class MoveActorAbsolutePacket extends DataPacket implements ClientboundPacket, S
 	public const FLAG_TELEPORT = 0x02;
 	public const FLAG_FORCE_MOVE_LOCAL_ENTITY = 0x04;
 
-	public int $entityRuntimeId;
+	public int $actorRuntimeId;
 	public int $flags = 0;
 	public Vector3 $position;
 	public float $xRot;
 	public float $yRot;
 	public float $zRot;
 
-	public static function create(int $entityRuntimeId, Vector3 $position, float $xRot, float $yRot, float $zRot, int $flags = 0) : self{
+	public static function create(int $actorRuntimeId, Vector3 $position, float $xRot, float $yRot, float $zRot, int $flags = 0) : self{
 		$result = new self;
-		$result->entityRuntimeId = $entityRuntimeId;
+		$result->actorRuntimeId = $actorRuntimeId;
 		$result->position = $position->asVector3();
 		$result->xRot = $xRot;
 		$result->yRot = $yRot;
@@ -54,7 +54,7 @@ class MoveActorAbsolutePacket extends DataPacket implements ClientboundPacket, S
 	}
 
 	protected function decodePayload(PacketSerializer $in) : void{
-		$this->entityRuntimeId = $in->getEntityRuntimeId();
+		$this->actorRuntimeId = $in->getActorRuntimeId();
 		$this->flags = $in->getByte();
 		$this->position = $in->getVector3();
 		$this->xRot = $in->getRotationByte();
@@ -63,7 +63,7 @@ class MoveActorAbsolutePacket extends DataPacket implements ClientboundPacket, S
 	}
 
 	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putEntityRuntimeId($this->entityRuntimeId);
+		$out->putActorRuntimeId($this->actorRuntimeId);
 		$out->putByte($this->flags);
 		$out->putVector3($this->position);
 		$out->putRotationByte($this->xRot);

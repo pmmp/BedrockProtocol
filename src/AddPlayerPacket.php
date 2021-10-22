@@ -39,8 +39,8 @@ class AddPlayerPacket extends DataPacket implements ClientboundPacket{
 
 	public UuidInterface $uuid;
 	public string $username;
-	public ?int $entityUniqueId = null; //TODO
-	public int $entityRuntimeId;
+	public ?int $actorUniqueId = null; //TODO
+	public int $actorRuntimeId;
 	public string $platformChatId = "";
 	public Vector3 $position;
 	public ?Vector3 $motion = null;
@@ -70,8 +70,8 @@ class AddPlayerPacket extends DataPacket implements ClientboundPacket{
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->uuid = $in->getUUID();
 		$this->username = $in->getString();
-		$this->entityUniqueId = $in->getEntityUniqueId();
-		$this->entityRuntimeId = $in->getEntityRuntimeId();
+		$this->actorUniqueId = $in->getActorUniqueId();
+		$this->actorRuntimeId = $in->getActorRuntimeId();
 		$this->platformChatId = $in->getString();
 		$this->position = $in->getVector3();
 		$this->motion = $in->getVector3();
@@ -101,8 +101,8 @@ class AddPlayerPacket extends DataPacket implements ClientboundPacket{
 	protected function encodePayload(PacketSerializer $out) : void{
 		$out->putUUID($this->uuid);
 		$out->putString($this->username);
-		$out->putEntityUniqueId($this->entityUniqueId ?? $this->entityRuntimeId);
-		$out->putEntityRuntimeId($this->entityRuntimeId);
+		$out->putActorUniqueId($this->actorUniqueId ?? $this->actorRuntimeId);
+		$out->putActorRuntimeId($this->actorRuntimeId);
 		$out->putString($this->platformChatId);
 		$out->putVector3($this->position);
 		$out->putVector3Nullable($this->motion);

@@ -32,7 +32,7 @@ use function array_values;
 class UpdateAttributesPacket extends DataPacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::UPDATE_ATTRIBUTES_PACKET;
 
-	public int $entityRuntimeId;
+	public int $actorRuntimeId;
 	/** @var Attribute[] */
 	public array $entries = [];
 	public int $tick = 0;
@@ -42,22 +42,22 @@ class UpdateAttributesPacket extends DataPacket implements ClientboundPacket{
 	 *
 	 * @return UpdateAttributesPacket
 	 */
-	public static function create(int $entityRuntimeId, array $attributes, int $tick) : self{
+	public static function create(int $actorRuntimeId, array $attributes, int $tick) : self{
 		$result = new self;
-		$result->entityRuntimeId = $entityRuntimeId;
+		$result->actorRuntimeId = $actorRuntimeId;
 		$result->entries = $attributes;
 		$result->tick = $tick;
 		return $result;
 	}
 
 	protected function decodePayload(PacketSerializer $in) : void{
-		$this->entityRuntimeId = $in->getEntityRuntimeId();
+		$this->actorRuntimeId = $in->getActorRuntimeId();
 		$this->entries = $in->getAttributeList();
 		$this->tick = $in->getUnsignedVarLong();
 	}
 
 	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putEntityRuntimeId($this->entityRuntimeId);
+		$out->putActorRuntimeId($this->actorRuntimeId);
 		$out->putAttributeList(...array_values($this->entries));
 		$out->putUnsignedVarLong($this->tick);
 	}

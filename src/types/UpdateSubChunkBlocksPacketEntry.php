@@ -33,14 +33,14 @@ final class UpdateSubChunkBlocksPacketEntry{
 	private int $flags;
 
 	//These two fields are useless 99.9% of the time; they are here to allow this packet to provide UpdateBlockSyncedPacket functionality.
-	private int $syncedUpdateEntityUniqueId;
+	private int $syncedUpdateActorUniqueId;
 	private int $syncedUpdateType;
 
-	public function __construct(BlockPosition $blockPosition, int $blockRuntimeId, int $flags, int $syncedUpdateEntityUniqueId, int $syncedUpdateType){
+	public function __construct(BlockPosition $blockPosition, int $blockRuntimeId, int $flags, int $syncedUpdateActorUniqueId, int $syncedUpdateType){
 		$this->blockPosition = $blockPosition;
 		$this->blockRuntimeId = $blockRuntimeId;
 		$this->flags = $flags;
-		$this->syncedUpdateEntityUniqueId = $syncedUpdateEntityUniqueId;
+		$this->syncedUpdateActorUniqueId = $syncedUpdateActorUniqueId;
 		$this->syncedUpdateType = $syncedUpdateType;
 	}
 
@@ -54,7 +54,7 @@ final class UpdateSubChunkBlocksPacketEntry{
 
 	public function getFlags() : int{ return $this->flags; }
 
-	public function getSyncedUpdateEntityUniqueId() : int{ return $this->syncedUpdateEntityUniqueId; }
+	public function getSyncedUpdateActorUniqueId() : int{ return $this->syncedUpdateActorUniqueId; }
 
 	public function getSyncedUpdateType() : int{ return $this->syncedUpdateType; }
 
@@ -62,17 +62,17 @@ final class UpdateSubChunkBlocksPacketEntry{
 		$blockPosition = $in->getBlockPosition();
 		$blockRuntimeId = $in->getUnsignedVarInt();
 		$updateFlags = $in->getUnsignedVarInt();
-		$syncedUpdateEntityUniqueId = $in->getUnsignedVarLong(); //this can't use the standard method because it's unsigned as opposed to the usual signed... !!!!!!
+		$syncedUpdateActorUniqueId = $in->getUnsignedVarLong(); //this can't use the standard method because it's unsigned as opposed to the usual signed... !!!!!!
 		$syncedUpdateType = $in->getUnsignedVarInt(); //this isn't even consistent with UpdateBlockSyncedPacket?!
 
-		return new self($blockPosition, $blockRuntimeId, $updateFlags, $syncedUpdateEntityUniqueId, $syncedUpdateType);
+		return new self($blockPosition, $blockRuntimeId, $updateFlags, $syncedUpdateActorUniqueId, $syncedUpdateType);
 	}
 
 	public function write(PacketSerializer $out) : void{
 		$out->putBlockPosition($this->blockPosition);
 		$out->putUnsignedVarInt($this->blockRuntimeId);
 		$out->putUnsignedVarInt($this->flags);
-		$out->putUnsignedVarLong($this->syncedUpdateEntityUniqueId);
+		$out->putUnsignedVarLong($this->syncedUpdateActorUniqueId);
 		$out->putUnsignedVarInt($this->syncedUpdateType);
 	}
 }

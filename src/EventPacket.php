@@ -61,7 +61,7 @@ class EventPacket extends DataPacket implements ClientboundPacket{
 	public int $type;
 
 	protected function decodePayload(PacketSerializer $in) : void{
-		$this->playerRuntimeId = $in->getEntityRuntimeId();
+		$this->playerRuntimeId = $in->getActorRuntimeId();
 		$this->eventData = $in->getVarInt();
 		$this->type = $in->getByte();
 
@@ -69,7 +69,7 @@ class EventPacket extends DataPacket implements ClientboundPacket{
 	}
 
 	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putEntityRuntimeId($this->playerRuntimeId);
+		$out->putActorRuntimeId($this->playerRuntimeId);
 		$out->putVarInt($this->eventData);
 		$out->putByte($this->type);
 

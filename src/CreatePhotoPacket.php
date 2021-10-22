@@ -30,32 +30,32 @@ use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 class CreatePhotoPacket extends DataPacket implements ServerboundPacket{
 	public const NETWORK_ID = ProtocolInfo::CREATE_PHOTO_PACKET;
 
-	private int $entityUniqueId;
+	private int $actorUniqueId;
 	private string $photoName;
 	private string $photoItemName;
 
 	public static function create(int $actorUniqueId, string $photoName, string $photoItemName) : self{
 		$result = new self;
-		$result->entityUniqueId = $actorUniqueId;
+		$result->actorUniqueId = $actorUniqueId;
 		$result->photoName = $photoName;
 		$result->photoItemName = $photoItemName;
 		return $result;
 	}
 
-	public function getEntityUniqueId() : int{ return $this->entityUniqueId; }
+	public function getActorUniqueId() : int{ return $this->actorUniqueId; }
 
 	public function getPhotoName() : string{ return $this->photoName; }
 
 	public function getPhotoItemName() : string{ return $this->photoItemName; }
 
 	protected function decodePayload(PacketSerializer $in) : void{
-		$this->entityUniqueId = $in->getLLong(); //why be consistent mojang ?????
+		$this->actorUniqueId = $in->getLLong(); //why be consistent mojang ?????
 		$this->photoName = $in->getString();
 		$this->photoItemName = $in->getString();
 	}
 
 	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putLLong($this->entityUniqueId);
+		$out->putLLong($this->actorUniqueId);
 		$out->putString($this->photoName);
 		$out->putString($this->photoItemName);
 	}

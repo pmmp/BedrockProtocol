@@ -42,5 +42,5 @@ class CommandOriginData{
 	public int $type;
 	public UuidInterface $uuid;
 	public string $requestId;
-	public int $playerEntityUniqueId;
+	public int $playerActorUniqueId;
 }

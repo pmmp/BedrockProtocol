@@ -35,7 +35,7 @@ class PhotoTransferPacket extends DataPacket implements ClientboundPacket{
 	public string $bookId; //photos are stored in a sibling directory to the games folder (screenshots/(some UUID)/bookID/example.png)
 	public int $type;
 	public int $sourceType;
-	public int $ownerEntityUniqueId;
+	public int $ownerActorUniqueId;
 	public string $newPhotoName; //???
 
 	protected function decodePayload(PacketSerializer $in) : void{
@@ -44,7 +44,7 @@ class PhotoTransferPacket extends DataPacket implements ClientboundPacket{
 		$this->bookId = $in->getString();
 		$this->type = $in->getByte();
 		$this->sourceType = $in->getByte();
-		$this->ownerEntityUniqueId = $in->getLLong(); //...............
+		$this->ownerActorUniqueId = $in->getLLong(); //...............
 		$this->newPhotoName = $in->getString();
 	}
 
@@ -54,7 +54,7 @@ class PhotoTransferPacket extends DataPacket implements ClientboundPacket{
 		$out->putString($this->bookId);
 		$out->putByte($this->type);
 		$out->putByte($this->sourceType);
-		$out->putLLong($this->ownerEntityUniqueId);
+		$out->putLLong($this->ownerActorUniqueId);
 		$out->putString($this->newPhotoName);
 	}
 

@@ -33,8 +33,8 @@ use pocketmine\network\mcpe\protocol\types\inventory\ItemStackWrapper;
 class AddItemActorPacket extends DataPacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::ADD_ITEM_ACTOR_PACKET;
 
-	public ?int $entityUniqueId = null; //TODO
-	public int $entityRuntimeId;
+	public ?int $actorUniqueId = null; //TODO
+	public int $actorRuntimeId;
 	public ItemStackWrapper $item;
 	public Vector3 $position;
 	public ?Vector3 $motion = null;
@@ -46,8 +46,8 @@ class AddItemActorPacket extends DataPacket implements ClientboundPacket{
 	public bool $isFromFishing = false;
 
 	protected function decodePayload(PacketSerializer $in) : void{
-		$this->entityUniqueId = $in->getEntityUniqueId();
-		$this->entityRuntimeId = $in->getEntityRuntimeId();
+		$this->actorUniqueId = $in->getActorUniqueId();
+		$this->actorRuntimeId = $in->getActorRuntimeId();
 		$this->item = ItemStackWrapper::read($in);
 		$this->position = $in->getVector3();
 		$this->motion = $in->getVector3();
@@ -56,8 +56,8 @@ class AddItemActorPacket extends DataPacket implements ClientboundPacket{
 	}
 
 	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putEntityUniqueId($this->entityUniqueId ?? $this->entityRuntimeId);
-		$out->putEntityRuntimeId($this->entityRuntimeId);
+		$out->putActorUniqueId($this->actorUniqueId ?? $this->actorRuntimeId);
+		$out->putActorRuntimeId($this->actorRuntimeId);
 		$this->item->write($out);
 		$out->putVector3($this->position);
 		$out->putVector3Nullable($this->motion);

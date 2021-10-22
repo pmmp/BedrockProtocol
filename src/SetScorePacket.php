@@ -51,7 +51,7 @@ class SetScorePacket extends DataPacket implements ClientboundPacket{
 				switch($entry->type){
 					case ScorePacketEntry::TYPE_PLAYER:
 					case ScorePacketEntry::TYPE_ENTITY:
-						$entry->entityUniqueId = $in->getEntityUniqueId();
+						$entry->actorUniqueId = $in->getActorUniqueId();
 						break;
 					case ScorePacketEntry::TYPE_FAKE_PLAYER:
 						$entry->customName = $in->getString();
@@ -76,7 +76,7 @@ class SetScorePacket extends DataPacket implements ClientboundPacket{
 				switch($entry->type){
 					case ScorePacketEntry::TYPE_PLAYER:
 					case ScorePacketEntry::TYPE_ENTITY:
-						$out->putEntityUniqueId($entry->entityUniqueId);
+						$out->putActorUniqueId($entry->actorUniqueId);
 						break;
 					case ScorePacketEntry::TYPE_FAKE_PLAYER:
 						$out->putString($entry->customName);

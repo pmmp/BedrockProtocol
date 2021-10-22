@@ -503,34 +503,24 @@ class PacketSerializer extends BinaryStream{
 	}
 
 	/**
-	 * Reads and returns an EntityUniqueID
-	 *
 	 * @throws BinaryDataException
 	 */
-	final public function getEntityUniqueId() : int{
+	final public function getActorUniqueId() : int{
 		return $this->getVarLong();
 	}
 
-	/**
-	 * Writes an EntityUniqueID
-	 */
-	public function putEntityUniqueId(int $eid) : void{
+	public function putActorUniqueId(int $eid) : void{
 		$this->putVarLong($eid);
 	}
 
 	/**
-	 * Reads and returns an EntityRuntimeID
-	 *
 	 * @throws BinaryDataException
 	 */
-	final public function getEntityRuntimeId() : int{
+	final public function getActorRuntimeId() : int{
 		return $this->getUnsignedVarLong();
 	}
 
-	/**
-	 * Writes an EntityRuntimeID
-	 */
-	public function putEntityRuntimeId(int $eid) : void{
+	public function putActorRuntimeId(int $eid) : void{
 		$this->putUnsignedVarLong($eid);
 	}
 
@@ -678,17 +668,17 @@ class PacketSerializer extends BinaryStream{
 	 * @throws BinaryDataException
 	 */
 	public function getEntityLink() : EntityLink{
-		$fromEntityUniqueId = $this->getEntityUniqueId();
-		$toEntityUniqueId = $this->getEntityUniqueId();
+		$fromActorUniqueId = $this->getActorUniqueId();
+		$toActorUniqueId = $this->getActorUniqueId();
 		$type = $this->getByte();
 		$immediate = $this->getBool();
 		$causedByRider = $this->getBool();
-		return new EntityLink($fromEntityUniqueId, $toEntityUniqueId, $type, $immediate, $causedByRider);
+		return new EntityLink($fromActorUniqueId, $toActorUniqueId, $type, $immediate, $causedByRider);
 	}
 
 	public function putEntityLink(EntityLink $link) : void{
-		$this->putEntityUniqueId($link->fromEntityUniqueId);
-		$this->putEntityUniqueId($link->toEntityUniqueId);
+		$this->putActorUniqueId($link->fromActorUniqueId);
+		$this->putActorUniqueId($link->toActorUniqueId);
 		$this->putByte($link->type);
 		$this->putBool($link->immediate);
 		$this->putBool($link->causedByRider);
@@ -705,7 +695,7 @@ class PacketSerializer extends BinaryStream{
 		$result->requestId = $this->getString();
 
 		if($result->type === CommandOriginData::ORIGIN_DEV_CONSOLE or $result->type === CommandOriginData::ORIGIN_TEST){
-			$result->playerEntityUniqueId = $this->getVarLong();
+			$result->playerActorUniqueId = $this->getVarLong();
 		}
 
 		return $result;
@@ -717,7 +707,7 @@ class PacketSerializer extends BinaryStream{
 		$this->putString($data->requestId);
 
 		if($data->type === CommandOriginData::ORIGIN_DEV_CONSOLE or $data->type === CommandOriginData::ORIGIN_TEST){
-			$this->putVarLong($data->playerEntityUniqueId);
+			$this->putVarLong($data->playerActorUniqueId);
 		}
 	}
 
@@ -732,7 +722,7 @@ class PacketSerializer extends BinaryStream{
 		$result->dimensions = $this->getBlockPosition();
 		$result->offset = $this->getBlockPosition();
 
-		$result->lastTouchedByPlayerID = $this->getEntityUniqueId();
+		$result->lastTouchedByPlayerID = $this->getActorUniqueId();
 		$result->rotation = $this->getByte();
 		$result->mirror = $this->getByte();
 		$result->integrityValue = $this->getFloat();
@@ -751,7 +741,7 @@ class PacketSerializer extends BinaryStream{
 		$this->putBlockPosition($structureSettings->dimensions);
 		$this->putBlockPosition($structureSettings->offset);
 
-		$this->putEntityUniqueId($structureSettings->lastTouchedByPlayerID);
+		$this->putActorUniqueId($structureSettings->lastTouchedByPlayerID);
 		$this->putByte($structureSettings->rotation);
 		$this->putByte($structureSettings->mirror);
 		$this->putFloat($structureSettings->integrityValue);

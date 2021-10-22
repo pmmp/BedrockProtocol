@@ -47,26 +47,25 @@ class BossEventPacket extends DataPacket implements ClientboundPacket, Serverbou
 	/* S2C: Not implemented :( Intended to alter bar appearance, but these currently produce no effect on client-side whatsoever. */
 	public const TYPE_TEXTURE = 7;
 
-	public int $bossEid;
+	public int $bossActorUniqueId;
 	public int $eventType;
 
-	/** @var int (long) */
-	public int $playerEid;
+	public int $playerActorUniqueId;
 	public float $healthPercent;
 	public string $title;
 	public int $unknownShort;
 	public int $color;
 	public int $overlay;
 
-	private static function base(int $bossEntityUniqueId, int $eventId) : self{
+	private static function base(int $bossActorUniqueId, int $eventId) : self{
 		$result = new self;
-		$result->bossEid = $bossEntityUniqueId;
+		$result->bossActorUniqueId = $bossActorUniqueId;
 		$result->eventType = $eventId;
 		return $result;
 	}
 
-	public static function show(int $bossEntityUniqueId, string $title, float $healthPercent, int $unknownShort = 0) : self{
-		$result = self::base($bossEntityUniqueId, self::TYPE_SHOW);
+	public static function show(int $bossActorUniqueId, string $title, float $healthPercent, int $unknownShort = 0) : self{
+		$result = self::base($bossActorUniqueId, self::TYPE_SHOW);
 		$result->title = $title;
 		$result->healthPercent = $healthPercent;
 		$result->unknownShort = $unknownShort;
@@ -75,36 +74,36 @@ class BossEventPacket extends DataPacket implements ClientboundPacket, Serverbou
 		return $result;
 	}
 
-	public static function hide(int $bossEntityUniqueId) : self{
-		return self::base($bossEntityUniqueId, self::TYPE_HIDE);
+	public static function hide(int $bossActorUniqueId) : self{
+		return self::base($bossActorUniqueId, self::TYPE_HIDE);
 	}
 
-	public static function registerPlayer(int $bossEntityUniqueId, int $playerEntityUniqueId) : self{
-		$result = self::base($bossEntityUniqueId, self::TYPE_REGISTER_PLAYER);
-		$result->playerEid = $playerEntityUniqueId;
+	public static function registerPlayer(int $bossActorUniqueId, int $playerActorUniqueId) : self{
+		$result = self::base($bossActorUniqueId, self::TYPE_REGISTER_PLAYER);
+		$result->playerActorUniqueId = $playerActorUniqueId;
 		return $result;
 	}
 
-	public static function unregisterPlayer(int $bossEntityUniqueId, int $playerEntityUniqueId) : self{
-		$result = self::base($bossEntityUniqueId, self::TYPE_UNREGISTER_PLAYER);
-		$result->playerEid = $playerEntityUniqueId;
+	public static function unregisterPlayer(int $bossActorUniqueId, int $playerActorUniqueId) : self{
+		$result = self::base($bossActorUniqueId, self::TYPE_UNREGISTER_PLAYER);
+		$result->playerActorUniqueId = $playerActorUniqueId;
 		return $result;
 	}
 
-	public static function healthPercent(int $bossEntityUniqueId, float $healthPercent) : self{
-		$result = self::base($bossEntityUniqueId, self::TYPE_HEALTH_PERCENT);
+	public static function healthPercent(int $bossActorUniqueId, float $healthPercent) : self{
+		$result = self::base($bossActorUniqueId, self::TYPE_HEALTH_PERCENT);
 		$result->healthPercent = $healthPercent;
 		return $result;
 	}
 
-	public static function title(int $bossEntityUniqueId, string $title) : self{
-		$result = self::base($bossEntityUniqueId, self::TYPE_TITLE);
+	public static function title(int $bossActorUniqueId, string $title) : self{
+		$result = self::base($bossActorUniqueId, self::TYPE_TITLE);
 		$result->title = $title;
 		return $result;
 	}
 
-	public static function unknown6(int $bossEntityUniqueId, int $unknownShort) : self{
-		$result = self::base($bossEntityUniqueId, self::TYPE_UNKNOWN_6);
+	public static function unknown6(int $bossActorUniqueId, int $unknownShort) : self{
+		$result = self::base($bossActorUniqueId, self::TYPE_UNKNOWN_6);
 		$result->unknownShort = $unknownShort;
 		$result->color = 0; //hardcoded due to being useless
 		$result->overlay = 0;
@@ -112,12 +111,12 @@ class BossEventPacket extends DataPacket implements ClientboundPacket, Serverbou
 	}
 
 	protected function decodePayload(PacketSerializer $in) : void{
-		$this->bossEid = $in->getEntityUniqueId();
+		$this->bossActorUniqueId = $in->getActorUniqueId();
 		$this->eventType = $in->getUnsignedVarInt();
 		switch($this->eventType){
 			case self::TYPE_REGISTER_PLAYER:
 			case self::TYPE_UNREGISTER_PLAYER:
-				$this->playerEid = $in->getEntityUniqueId();
+				$this->playerActorUniqueId = $in->getActorUniqueId();
 				break;
 			/** @noinspection PhpMissingBreakStatementInspection */
 			case self::TYPE_SHOW:
@@ -142,12 +141,12 @@ class BossEventPacket extends DataPacket implements ClientboundPacket, Serverbou
 	}
 
 	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putEntityUniqueId($this->bossEid);
+		$out->putActorUniqueId($this->bossActorUniqueId);
 		$out->putUnsignedVarInt($this->eventType);
 		switch($this->eventType){
 			case self::TYPE_REGISTER_PLAYER:
 			case self::TYPE_UNREGISTER_PLAYER:
-				$out->putEntityUniqueId($this->playerEid);
+				$out->putActorUniqueId($this->playerActorUniqueId);
 				break;
 			/** @noinspection PhpMissingBreakStatementInspection */
 			case self::TYPE_SHOW:

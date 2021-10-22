@@ -31,7 +31,7 @@ use pocketmine\network\mcpe\protocol\types\entity\MetadataProperty;
 class SetActorDataPacket extends DataPacket implements ClientboundPacket, ServerboundPacket{ //TODO: check why this is serverbound
 	public const NETWORK_ID = ProtocolInfo::SET_ACTOR_DATA_PACKET;
 
-	public int $entityRuntimeId;
+	public int $actorRuntimeId;
 	/**
 	 * @var MetadataProperty[]
 	 * @phpstan-var array<int, MetadataProperty>
@@ -43,23 +43,23 @@ class SetActorDataPacket extends DataPacket implements ClientboundPacket, Server
 	 * @param MetadataProperty[] $metadata
 	 * @phpstan-param array<int, MetadataProperty> $metadata
 	 */
-	public static function create(int $entityRuntimeId, array $metadata, int $tick) : self{
+	public static function create(int $actorRuntimeId, array $metadata, int $tick) : self{
 
 		$result = new self;
-		$result->entityRuntimeId = $entityRuntimeId;
+		$result->actorRuntimeId = $actorRuntimeId;
 		$result->metadata = $metadata;
 		$result->tick = $tick;
 		return $result;
 	}
 
 	protected function decodePayload(PacketSerializer $in) : void{
-		$this->entityRuntimeId = $in->getEntityRuntimeId();
+		$this->actorRuntimeId = $in->getActorRuntimeId();
 		$this->metadata = $in->getEntityMetadata();
 		$this->tick = $in->getUnsignedVarLong();
 	}
 
 	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putEntityRuntimeId($this->entityRuntimeId);
+		$out->putActorRuntimeId($this->actorRuntimeId);
 		$out->putEntityMetadata($this->metadata);
 		$out->putUnsignedVarLong($this->tick);
 	}

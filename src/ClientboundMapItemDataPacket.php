@@ -62,7 +62,7 @@ class ClientboundMapItemDataPacket extends DataPacket implements ClientboundPack
 	public ?MapImage $colors = null;
 
 	protected function decodePayload(PacketSerializer $in) : void{
-		$this->mapId = $in->getEntityUniqueId();
+		$this->mapId = $in->getActorUniqueId();
 		$this->type = $in->getUnsignedVarInt();
 		$this->dimensionId = $in->getByte();
 		$this->isLocked = $in->getBool();
@@ -70,7 +70,7 @@ class ClientboundMapItemDataPacket extends DataPacket implements ClientboundPack
 		if(($this->type & self::BITFLAG_MAP_CREATION) !== 0){
 			$count = $in->getUnsignedVarInt();
 			for($i = 0; $i < $count; ++$i){
-				$this->parentMapIds[] = $in->getEntityUniqueId();
+				$this->parentMapIds[] = $in->getActorUniqueId();
 			}
 		}
 
@@ -85,7 +85,7 @@ class ClientboundMapItemDataPacket extends DataPacket implements ClientboundPack
 				if($object->type === MapTrackedObject::TYPE_BLOCK){
 					$object->blockPosition = $in->getBlockPosition();
 				}elseif($object->type === MapTrackedObject::TYPE_ENTITY){
-					$object->entityUniqueId = $in->getEntityUniqueId();
+					$object->actorUniqueId = $in->getActorUniqueId();
 				}else{
 					throw new PacketDecodeException("Unknown map object type $object->type");
 				}
@@ -119,7 +119,7 @@ class ClientboundMapItemDataPacket extends DataPacket implements ClientboundPack
 	}
 
 	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putEntityUniqueId($this->mapId);
+		$out->putActorUniqueId($this->mapId);
 
 		$type = 0;
 		if(($parentMapIdsCount = count($this->parentMapIds)) > 0){
@@ -139,7 +139,7 @@ class ClientboundMapItemDataPacket extends DataPacket implements ClientboundPack
 		if(($type & self::BITFLAG_MAP_CREATION) !== 0){
 			$out->putUnsignedVarInt($parentMapIdsCount);
 			foreach($this->parentMapIds as $parentMapId){
-				$out->putEntityUniqueId($parentMapId);
+				$out->putActorUniqueId($parentMapId);
 			}
 		}
 
@@ -154,7 +154,7 @@ class ClientboundMapItemDataPacket extends DataPacket implements ClientboundPack
 				if($object->type === MapTrackedObject::TYPE_BLOCK){
 					$out->putBlockPosition($object->blockPosition);
 				}elseif($object->type === MapTrackedObject::TYPE_ENTITY){
-					$out->putEntityUniqueId($object->entityUniqueId);
+					$out->putActorUniqueId($object->actorUniqueId);
 				}else{
 					throw new \InvalidArgumentException("Unknown map object type $object->type");
 				}

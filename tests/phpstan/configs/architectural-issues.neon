@@ -1,7 +1,7 @@
 parameters:
 	ignoreErrors:
 		-
-			message: "#^Parameter \\#1 \\$eid of method pocketmine\\\\network\\\\mcpe\\\\protocol\\\\serializer\\\\PacketSerializer\\:\\:putEntityUniqueId\\(\\) expects int, int\\|null given\\.$#"
+			message: "#^Parameter \\#1 \\$eid of method pocketmine\\\\network\\\\mcpe\\\\protocol\\\\serializer\\\\PacketSerializer\\:\\:putActorUniqueId\\(\\) expects int, int\\|null given\\.$#"
 			count: 1
 			path: ../../../src/SetScorePacket.php
 
@@ -11,7 +11,7 @@ parameters:
 			path: ../../../src/SetScorePacket.php
 
 		-
-			message: "#^Parameter \\#1 \\$eid of method pocketmine\\\\network\\\\mcpe\\\\protocol\\\\serializer\\\\PacketSerializer\\:\\:putEntityUniqueId\\(\\) expects int, int\\|null given\\.$#"
+			message: "#^Parameter \\#1 \\$eid of method pocketmine\\\\network\\\\mcpe\\\\protocol\\\\serializer\\\\PacketSerializer\\:\\:putActorUniqueId\\(\\) expects int, int\\|null given\\.$#"
 			count: 1
 			path: ../../../src/SetScoreboardIdentityPacket.php
 

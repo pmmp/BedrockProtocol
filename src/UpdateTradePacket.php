@@ -38,8 +38,8 @@ class UpdateTradePacket extends DataPacket implements ClientboundPacket{
 	public int $windowType = WindowTypes::TRADING; //Mojang hardcoded this -_-
 	public int $windowSlotCount = 0; //useless, seems to be part of a standard container header
 	public int $tradeTier;
-	public int $traderEid;
-	public int $playerEid;
+	public int $traderActorUniqueId;
+	public int $playerActorUniqueId;
 	public string $displayName;
 	public bool $isV2Trading;
 	public bool $isWilling;
@@ -51,8 +51,8 @@ class UpdateTradePacket extends DataPacket implements ClientboundPacket{
 		$this->windowType = $in->getByte();
 		$this->windowSlotCount = $in->getVarInt();
 		$this->tradeTier = $in->getVarInt();
-		$this->traderEid = $in->getEntityUniqueId();
-		$this->playerEid = $in->getEntityUniqueId();
+		$this->traderActorUniqueId = $in->getActorUniqueId();
+		$this->playerActorUniqueId = $in->getActorUniqueId();
 		$this->displayName = $in->getString();
 		$this->isV2Trading = $in->getBool();
 		$this->isWilling = $in->getBool();
@@ -64,8 +64,8 @@ class UpdateTradePacket extends DataPacket implements ClientboundPacket{
 		$out->putByte($this->windowType);
 		$out->putVarInt($this->windowSlotCount);
 		$out->putVarInt($this->tradeTier);
-		$out->putEntityUniqueId($this->traderEid);
-		$out->putEntityUniqueId($this->playerEid);
+		$out->putActorUniqueId($this->traderActorUniqueId);
+		$out->putActorUniqueId($this->playerActorUniqueId);
 		$out->putString($this->displayName);
 		$out->putBool($this->isV2Trading);
 		$out->putBool($this->isWilling);

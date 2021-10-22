@@ -33,11 +33,11 @@ class MapInfoRequestPacket extends DataPacket implements ServerboundPacket{
 	public int $mapId;
 
 	protected function decodePayload(PacketSerializer $in) : void{
-		$this->mapId = $in->getEntityUniqueId();
+		$this->mapId = $in->getActorUniqueId();
 	}
 
 	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putEntityUniqueId($this->mapId);
+		$out->putActorUniqueId($this->mapId);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

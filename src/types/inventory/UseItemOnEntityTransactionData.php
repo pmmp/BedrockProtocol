@@ -32,15 +32,15 @@ class UseItemOnEntityTransactionData extends TransactionData{
 	public const ACTION_ATTACK = 1;
 	public const ACTION_ITEM_INTERACT = 2;
 
-	private int $entityRuntimeId;
+	private int $actorRuntimeId;
 	private int $actionType;
 	private int $hotbarSlot;
 	private ItemStackWrapper $itemInHand;
 	private Vector3 $playerPosition;
 	private Vector3 $clickPosition;
 
-	public function getEntityRuntimeId() : int{
-		return $this->entityRuntimeId;
+	public function getActorRuntimeId() : int{
+		return $this->actorRuntimeId;
 	}
 
 	public function getActionType() : int{
@@ -68,7 +68,7 @@ class UseItemOnEntityTransactionData extends TransactionData{
 	}
 
 	protected function decodeData(PacketSerializer $stream) : void{
-		$this->entityRuntimeId = $stream->getEntityRuntimeId();
+		$this->actorRuntimeId = $stream->getActorRuntimeId();
 		$this->actionType = $stream->getUnsignedVarInt();
 		$this->hotbarSlot = $stream->getVarInt();
 		$this->itemInHand = ItemStackWrapper::read($stream);
@@ -77,7 +77,7 @@ class UseItemOnEntityTransactionData extends TransactionData{
 	}
 
 	protected function encodeData(PacketSerializer $stream) : void{
-		$stream->putEntityRuntimeId($this->entityRuntimeId);
+		$stream->putActorRuntimeId($this->actorRuntimeId);
 		$stream->putUnsignedVarInt($this->actionType);
 		$stream->putVarInt($this->hotbarSlot);
 		$this->itemInHand->write($stream);
@@ -88,10 +88,10 @@ class UseItemOnEntityTransactionData extends TransactionData{
 	/**
 	 * @param NetworkInventoryAction[] $actions
 	 */
-	public static function new(array $actions, int $entityRuntimeId, int $actionType, int $hotbarSlot, ItemStackWrapper $itemInHand, Vector3 $playerPosition, Vector3 $clickPosition) : self{
+	public static function new(array $actions, int $actorRuntimeId, int $actionType, int $hotbarSlot, ItemStackWrapper $itemInHand, Vector3 $playerPosition, Vector3 $clickPosition) : self{
 		$result = new self;
 		$result->actions = $actions;
-		$result->entityRuntimeId = $entityRuntimeId;
+		$result->actorRuntimeId = $actorRuntimeId;
 		$result->actionType = $actionType;
 		$result->hotbarSlot = $hotbarSlot;
 		$result->itemInHand = $itemInHand;

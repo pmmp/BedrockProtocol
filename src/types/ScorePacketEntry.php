@@ -33,7 +33,7 @@ class ScorePacketEntry{
 	public int $score;
 	public int $type;
 	/** @var int|null (if type entity or player) */
-	public ?int $entityUniqueId;
+	public ?int $actorUniqueId;
 	/** @var string|null (if type fake player) */
 	public ?string $customName;
 }

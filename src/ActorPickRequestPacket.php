@@ -30,18 +30,18 @@ use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 class ActorPickRequestPacket extends DataPacket implements ServerboundPacket{
 	public const NETWORK_ID = ProtocolInfo::ACTOR_PICK_REQUEST_PACKET;
 
-	public int $entityUniqueId;
+	public int $actorUniqueId;
 	public int $hotbarSlot;
 	public bool $addUserData;
 
 	protected function decodePayload(PacketSerializer $in) : void{
-		$this->entityUniqueId = $in->getLLong();
+		$this->actorUniqueId = $in->getLLong();
 		$this->hotbarSlot = $in->getByte();
 		$this->addUserData = $in->getBool();
 	}
 
 	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putLLong($this->entityUniqueId);
+		$out->putLLong($this->actorUniqueId);
 		$out->putByte($this->hotbarSlot);
 		$out->putBool($this->addUserData);
 	}

@@ -37,26 +37,26 @@ class RespawnPacket extends DataPacket implements ClientboundPacket, Serverbound
 
 	public Vector3 $position;
 	public int $respawnState = self::SEARCHING_FOR_SPAWN;
-	public int $entityRuntimeId;
+	public int $actorRuntimeId;
 
-	public static function create(Vector3 $position, int $respawnStatus, int $entityRuntimeId) : self{
+	public static function create(Vector3 $position, int $respawnStatus, int $actorRuntimeId) : self{
 		$result = new self;
 		$result->position = $position->asVector3();
 		$result->respawnState = $respawnStatus;
-		$result->entityRuntimeId = $entityRuntimeId;
+		$result->actorRuntimeId = $actorRuntimeId;
 		return $result;
 	}
 
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->position = $in->getVector3();
 		$this->respawnState = $in->getByte();
-		$this->entityRuntimeId = $in->getEntityRuntimeId();
+		$this->actorRuntimeId = $in->getActorRuntimeId();
 	}
 
 	protected function encodePayload(PacketSerializer $out) : void{
 		$out->putVector3($this->position);
 		$out->putByte($this->respawnState);
-		$out->putEntityRuntimeId($this->entityRuntimeId);
+		$out->putActorRuntimeId($this->actorRuntimeId);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

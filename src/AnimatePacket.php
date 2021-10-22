@@ -39,25 +39,25 @@ class AnimatePacket extends DataPacket implements ClientboundPacket, Serverbound
 	public const ACTION_ROW_LEFT = 129;
 
 	public int $action;
-	public int $entityRuntimeId;
+	public int $actorRuntimeId;
 	public float $float = 0.0; //TODO (Boat rowing time?)
 
-	public static function create(int $entityRuntimeId, int $actionId) : self{
+	public static function create(int $actorRuntimeId, int $actionId) : self{
 		$result = new self;
-		$result->entityRuntimeId = $entityRuntimeId;
+		$result->actorRuntimeId = $actorRuntimeId;
 		$result->action = $actionId;
 		return $result;
 	}
 
-	public static function boatHack(int $entityRuntimeId, int $actionId, float $data) : self{
-		$result = self::create($entityRuntimeId, $actionId);
+	public static function boatHack(int $actorRuntimeId, int $actionId, float $data) : self{
+		$result = self::create($actorRuntimeId, $actionId);
 		$result->float = $data;
 		return $result;
 	}
 
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->action = $in->getVarInt();
-		$this->entityRuntimeId = $in->getEntityRuntimeId();
+		$this->actorRuntimeId = $in->getActorRuntimeId();
 		if(($this->action & 0x80) !== 0){
 			$this->float = $in->getLFloat();
 		}
@@ -65,7 +65,7 @@ class AnimatePacket extends DataPacket implements ClientboundPacket, Serverbound
 
 	protected function encodePayload(PacketSerializer $out) : void{
 		$out->putVarInt($this->action);
-		$out->putEntityRuntimeId($this->entityRuntimeId);
+		$out->putActorRuntimeId($this->actorRuntimeId);
 		if(($this->action & 0x80) !== 0){
 			$out->putLFloat($this->float);
 		}

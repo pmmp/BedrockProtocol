@@ -46,8 +46,8 @@ use function count;
 class StartGamePacket extends DataPacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::START_GAME_PACKET;
 
-	public int $entityUniqueId;
-	public int $entityRuntimeId;
+	public int $actorUniqueId;
+	public int $actorRuntimeId;
 	public int $playerGamemode;
 
 	public Vector3 $playerPosition;
@@ -124,8 +124,8 @@ class StartGamePacket extends DataPacket implements ClientboundPacket{
 	public array $itemTable;
 
 	protected function decodePayload(PacketSerializer $in) : void{
-		$this->entityUniqueId = $in->getEntityUniqueId();
-		$this->entityRuntimeId = $in->getEntityRuntimeId();
+		$this->actorUniqueId = $in->getActorUniqueId();
+		$this->actorRuntimeId = $in->getActorRuntimeId();
 		$this->playerGamemode = $in->getVarInt();
 
 		$this->playerPosition = $in->getVector3();
@@ -209,8 +209,8 @@ class StartGamePacket extends DataPacket implements ClientboundPacket{
 	}
 
 	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putEntityUniqueId($this->entityUniqueId);
-		$out->putEntityRuntimeId($this->entityRuntimeId);
+		$out->putActorUniqueId($this->actorUniqueId);
+		$out->putActorRuntimeId($this->actorRuntimeId);
 		$out->putVarInt($this->playerGamemode);
 
 		$out->putVector3($this->playerPosition);

@@ -91,26 +91,26 @@ class ActorEventPacket extends DataPacket implements ClientboundPacket, Serverbo
 
 	//TODO: add more events
 
-	public int $entityRuntimeId;
+	public int $actorRuntimeId;
 	public int $event;
 	public int $data = 0;
 
-	public static function create(int $entityRuntimeId, int $eventId, int $eventData) : self{
+	public static function create(int $actorRuntimeId, int $eventId, int $eventData) : self{
 		$result = new self;
-		$result->entityRuntimeId = $entityRuntimeId;
+		$result->actorRuntimeId = $actorRuntimeId;
 		$result->event = $eventId;
 		$result->data = $eventData;
 		return $result;
 	}
 
 	protected function decodePayload(PacketSerializer $in) : void{
-		$this->entityRuntimeId = $in->getEntityRuntimeId();
+		$this->actorRuntimeId = $in->getActorRuntimeId();
 		$this->event = $in->getByte();
 		$this->data = $in->getVarInt();
 	}
 
 	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putEntityRuntimeId($this->entityRuntimeId);
+		$out->putActorRuntimeId($this->actorRuntimeId);
 		$out->putByte($this->event);
 		$out->putVarInt($this->data);
 	}

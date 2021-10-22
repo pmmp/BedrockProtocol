@@ -34,7 +34,7 @@ class BlockActorDataPacket extends DataPacket implements ClientboundPacket, Serv
 
 	public BlockPosition $blockPosition;
 	/** @phpstan-var CacheableNbt<\pocketmine\nbt\tag\CompoundTag> */
-	public CacheableNbt $namedtag;
+	public CacheableNbt $nbt;
 
 	/**
 	 * @phpstan-param CacheableNbt<\pocketmine\nbt\tag\CompoundTag> $nbt
@@ -42,18 +42,18 @@ class BlockActorDataPacket extends DataPacket implements ClientboundPacket, Serv
 	public static function create(BlockPosition $blockPosition, CacheableNbt $nbt) : self{
 		$result = new self;
 		$result->blockPosition = $blockPosition;
-		$result->namedtag = $nbt;
+		$result->nbt = $nbt;
 		return $result;
 	}
 
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->blockPosition = $in->getBlockPosition();
-		$this->namedtag = new CacheableNbt($in->getNbtCompoundRoot());
+		$this->nbt = new CacheableNbt($in->getNbtCompoundRoot());
 	}
 
 	protected function encodePayload(PacketSerializer $out) : void{
 		$out->putBlockPosition($this->blockPosition);
-		$out->put($this->namedtag->getEncodedNbt());
+		$out->put($this->nbt->getEncodedNbt());
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

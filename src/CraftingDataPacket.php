@@ -50,7 +50,7 @@ class CraftingDataPacket extends DataPacket implements ClientboundPacket{
 	public const ENTRY_SHAPED_CHEMISTRY = 7;
 
 	/** @var RecipeWithTypeId[] */
-	public array $entries = [];
+	public array $recipesWithTypeIds = [];
 	/** @var PotionTypeRecipe[] */
 	public array $potionTypeRecipes = [];
 	/** @var PotionContainerChangeRecipe[] */
@@ -68,18 +68,18 @@ class CraftingDataPacket extends DataPacket implements ClientboundPacket{
 				case self::ENTRY_SHAPELESS:
 				case self::ENTRY_SHULKER_BOX:
 				case self::ENTRY_SHAPELESS_CHEMISTRY:
-					$this->entries[] = ShapelessRecipe::decode($recipeType, $in);
+					$this->recipesWithTypeIds[] = ShapelessRecipe::decode($recipeType, $in);
 					break;
 				case self::ENTRY_SHAPED:
 				case self::ENTRY_SHAPED_CHEMISTRY:
-					$this->entries[] = ShapedRecipe::decode($recipeType, $in);
+					$this->recipesWithTypeIds[] = ShapedRecipe::decode($recipeType, $in);
 					break;
 				case self::ENTRY_FURNACE:
 				case self::ENTRY_FURNACE_DATA:
-					$this->entries[] = FurnaceRecipe::decode($recipeType, $in);
+					$this->recipesWithTypeIds[] = FurnaceRecipe::decode($recipeType, $in);
 					break;
 				case self::ENTRY_MULTI:
-					$this->entries[] = MultiRecipe::decode($recipeType, $in);
+					$this->recipesWithTypeIds[] = MultiRecipe::decode($recipeType, $in);
 					break;
 				default:
 					throw new PacketDecodeException("Unhandled recipe type $recipeType!"); //do not continue attempting to decode
@@ -115,8 +115,8 @@ class CraftingDataPacket extends DataPacket implements ClientboundPacket{
 	}
 
 	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putUnsignedVarInt(count($this->entries));
-		foreach($this->entries as $d){
+		$out->putUnsignedVarInt(count($this->recipesWithTypeIds));
+		foreach($this->recipesWithTypeIds as $d){
 			$out->putVarInt($d->getTypeId());
 			$d->encode($out);
 		}

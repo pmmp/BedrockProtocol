@@ -114,14 +114,14 @@ class LevelEventPacket extends DataPacket implements ClientboundPacket{
 
 	public const EVENT_ADD_PARTICLE_MASK = 0x4000;
 
-	public int $evid;
+	public int $eventId;
 	public ?Vector3 $position = null;
-	public int $data;
+	public int $eventData;
 
-	public static function create(int $evid, int $data, ?Vector3 $position) : self{
+	public static function create(int $eventId, int $eventData, ?Vector3 $position) : self{
 		$pk = new self;
-		$pk->evid = $evid;
-		$pk->data = $data;
+		$pk->eventId = $eventId;
+		$pk->eventData = $eventData;
 		$pk->position = $position !== null ? $position->asVector3() : null;
 		return $pk;
 	}
@@ -131,15 +131,15 @@ class LevelEventPacket extends DataPacket implements ClientboundPacket{
 	}
 
 	protected function decodePayload(PacketSerializer $in) : void{
-		$this->evid = $in->getVarInt();
+		$this->eventId = $in->getVarInt();
 		$this->position = $in->getVector3();
-		$this->data = $in->getVarInt();
+		$this->eventData = $in->getVarInt();
 	}
 
 	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putVarInt($this->evid);
+		$out->putVarInt($this->eventId);
 		$out->putVector3Nullable($this->position);
-		$out->putVarInt($this->data);
+		$out->putVarInt($this->eventData);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

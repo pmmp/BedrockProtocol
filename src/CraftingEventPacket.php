@@ -34,8 +34,8 @@ class CraftingEventPacket extends DataPacket implements ServerboundPacket{
 	public const NETWORK_ID = ProtocolInfo::CRAFTING_EVENT_PACKET;
 
 	public int $windowId;
-	public int $type;
-	public UuidInterface $id;
+	public int $windowType;
+	public UuidInterface $recipeUUID;
 	/** @var ItemStackWrapper[] */
 	public array $input = [];
 	/** @var ItemStackWrapper[] */
@@ -43,8 +43,8 @@ class CraftingEventPacket extends DataPacket implements ServerboundPacket{
 
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->windowId = $in->getByte();
-		$this->type = $in->getVarInt();
-		$this->id = $in->getUUID();
+		$this->windowType = $in->getVarInt();
+		$this->recipeUUID = $in->getUUID();
 
 		$size = $in->getUnsignedVarInt();
 		for($i = 0; $i < $size and $i < 128; ++$i){
@@ -59,8 +59,8 @@ class CraftingEventPacket extends DataPacket implements ServerboundPacket{
 
 	protected function encodePayload(PacketSerializer $out) : void{
 		$out->putByte($this->windowId);
-		$out->putVarInt($this->type);
-		$out->putUUID($this->id);
+		$out->putVarInt($this->windowType);
+		$out->putUUID($this->recipeUUID);
 
 		$out->putUnsignedVarInt(count($this->input));
 		foreach($this->input as $item){

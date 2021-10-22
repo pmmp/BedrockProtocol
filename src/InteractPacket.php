@@ -36,14 +36,14 @@ class InteractPacket extends DataPacket implements ServerboundPacket{
 	public const ACTION_OPEN_INVENTORY = 6;
 
 	public int $action;
-	public int $target;
+	public int $targetActorRuntimeId;
 	public float $x;
 	public float $y;
 	public float $z;
 
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->action = $in->getByte();
-		$this->target = $in->getActorRuntimeId();
+		$this->targetActorRuntimeId = $in->getActorRuntimeId();
 
 		if($this->action === self::ACTION_MOUSEOVER){
 			//TODO: should this be a vector3?
@@ -55,7 +55,7 @@ class InteractPacket extends DataPacket implements ServerboundPacket{
 
 	protected function encodePayload(PacketSerializer $out) : void{
 		$out->putByte($this->action);
-		$out->putActorRuntimeId($this->target);
+		$out->putActorRuntimeId($this->targetActorRuntimeId);
 
 		if($this->action === self::ACTION_MOUSEOVER){
 			$out->putLFloat($this->x);

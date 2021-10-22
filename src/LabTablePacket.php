@@ -35,18 +35,18 @@ class LabTablePacket extends DataPacket implements ClientboundPacket, Serverboun
 	public const TYPE_START_REACTION = 1;
 	public const TYPE_RESET = 2;
 
-	public int $type;
+	public int $actionType;
 	public BlockPosition $blockPosition;
 	public int $reactionType;
 
 	protected function decodePayload(PacketSerializer $in) : void{
-		$this->type = $in->getByte();
+		$this->actionType = $in->getByte();
 		$this->blockPosition = $in->getSignedBlockPosition();
 		$this->reactionType = $in->getByte();
 	}
 
 	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putByte($this->type);
+		$out->putByte($this->actionType);
 		$out->putSignedBlockPosition($this->blockPosition);
 		$out->putByte($this->reactionType);
 	}

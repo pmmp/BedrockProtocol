@@ -104,7 +104,7 @@ class MoveActorDeltaPacket extends DataPacket implements ClientboundPacket{
 		$this->maybeWriteRotation(self::FLAG_HAS_HEAD_YAW, $this->headYaw, $out);
 	}
 
-	public function handle(PacketHandlerInterface $session) : bool{
-		return $session->handleMoveActorDelta($this);
+	public function handle(PacketHandlerInterface $handler) : bool{
+		return $handler->handleMoveActorDelta($this);
 	}
 }

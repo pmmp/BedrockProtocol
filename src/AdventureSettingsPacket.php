@@ -69,7 +69,7 @@ class AdventureSettingsPacket extends DataPacket implements ClientboundPacket, S
 	public int $flags2 = -1;
 	public int $playerPermission = PlayerPermissions::MEMBER;
 	public int $customFlags = 0; //...
-	public int $actorUniqueId; //This is a little-endian long, NOT a var-long. (WTF Mojang)
+	public int $targetActorUniqueId; //This is a little-endian long, NOT a var-long. (WTF Mojang)
 
 	public static function create(int $flags, int $commandPermission, int $flags2, int $playerPermission, int $customFlags, int $targetActorUniqueId) : self{
 		$result = new self;
@@ -78,7 +78,7 @@ class AdventureSettingsPacket extends DataPacket implements ClientboundPacket, S
 		$result->flags2 = $flags2;
 		$result->playerPermission = $playerPermission;
 		$result->customFlags = $customFlags;
-		$result->actorUniqueId = $targetActorUniqueId;
+		$result->targetActorUniqueId = $targetActorUniqueId;
 		return $result;
 	}
 
@@ -88,7 +88,7 @@ class AdventureSettingsPacket extends DataPacket implements ClientboundPacket, S
 		$this->flags2 = $in->getUnsignedVarInt();
 		$this->playerPermission = $in->getUnsignedVarInt();
 		$this->customFlags = $in->getUnsignedVarInt();
-		$this->actorUniqueId = $in->getLLong();
+		$this->targetActorUniqueId = $in->getLLong();
 	}
 
 	protected function encodePayload(PacketSerializer $out) : void{
@@ -97,7 +97,7 @@ class AdventureSettingsPacket extends DataPacket implements ClientboundPacket, S
 		$out->putUnsignedVarInt($this->flags2);
 		$out->putUnsignedVarInt($this->playerPermission);
 		$out->putUnsignedVarInt($this->customFlags);
-		$out->putLLong($this->actorUniqueId);
+		$out->putLLong($this->targetActorUniqueId);
 	}
 
 	public function getFlag(int $flag) : bool{

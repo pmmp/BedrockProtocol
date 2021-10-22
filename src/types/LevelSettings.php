@@ -176,7 +176,7 @@ final class LevelSettings{
 		$out->putLInt($this->limitedWorldWidth);
 		$out->putLInt($this->limitedWorldLength);
 		$out->putBool($this->isNewNether);
-		$this->eduSharedUriResource->write($out);
+		($this->eduSharedUriResource ?? new EducationUriResource("", ""))->write($out);
 		$out->putBool($this->experimentalGameplayOverride !== null);
 		if($this->experimentalGameplayOverride !== null){
 			$out->putBool($this->experimentalGameplayOverride);

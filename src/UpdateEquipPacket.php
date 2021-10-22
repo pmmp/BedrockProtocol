@@ -36,14 +36,14 @@ class UpdateEquipPacket extends DataPacket implements ClientboundPacket{
 	public int $windowSlotCount; //useless, seems to be part of a standard container header
 	public int $actorUniqueId;
 	/** @phpstan-var CacheableNbt<\pocketmine\nbt\tag\CompoundTag> */
-	public CacheableNbt $namedtag;
+	public CacheableNbt $nbt;
 
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->windowId = $in->getByte();
 		$this->windowType = $in->getByte();
 		$this->windowSlotCount = $in->getVarInt();
 		$this->actorUniqueId = $in->getActorUniqueId();
-		$this->namedtag = new CacheableNbt($in->getNbtCompoundRoot());
+		$this->nbt = new CacheableNbt($in->getNbtCompoundRoot());
 	}
 
 	protected function encodePayload(PacketSerializer $out) : void{
@@ -51,7 +51,7 @@ class UpdateEquipPacket extends DataPacket implements ClientboundPacket{
 		$out->putByte($this->windowType);
 		$out->putVarInt($this->windowSlotCount);
 		$out->putActorUniqueId($this->actorUniqueId);
-		$out->put($this->namedtag->getEncodedNbt());
+		$out->put($this->nbt->getEncodedNbt());
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

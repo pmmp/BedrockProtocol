@@ -33,22 +33,22 @@ use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 class SyncActorPropertyPacket extends DataPacket{
 	public const NETWORK_ID = ProtocolInfo::SYNC_ACTOR_PROPERTY_PACKET;
 
-	private CompoundTag $data;
+	private CompoundTag $nbt;
 
 	public static function create(CompoundTag $data) : self{
 		$result = new self;
-		$result->data = $data;
+		$result->nbt = $data;
 		return $result;
 	}
 
-	public function getData() : CompoundTag{ return $this->data; }
+	public function getNbt() : CompoundTag{ return $this->nbt; }
 
 	protected function decodePayload(PacketSerializer $in) : void{
-		$this->data = $in->getNbtCompoundRoot();
+		$this->nbt = $in->getNbtCompoundRoot();
 	}
 
 	protected function encodePayload(PacketSerializer $out) : void{
-		$out->put((new NetworkNbtSerializer())->write(new TreeRoot($this->data)));
+		$out->put((new NetworkNbtSerializer())->write(new TreeRoot($this->nbt)));
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

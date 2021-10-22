@@ -41,14 +41,14 @@ class NpcRequestPacket extends DataPacket implements ServerboundPacket{
 	public int $actorRuntimeId;
 	public int $requestType;
 	public string $commandString;
-	public int $actionType;
+	public int $actionIndex;
 	public string $sceneName;
 
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->actorRuntimeId = $in->getActorRuntimeId();
 		$this->requestType = $in->getByte();
 		$this->commandString = $in->getString();
-		$this->actionType = $in->getByte();
+		$this->actionIndex = $in->getByte();
 		$this->sceneName = $in->getString();
 	}
 
@@ -56,7 +56,7 @@ class NpcRequestPacket extends DataPacket implements ServerboundPacket{
 		$out->putActorRuntimeId($this->actorRuntimeId);
 		$out->putByte($this->requestType);
 		$out->putString($this->commandString);
-		$out->putByte($this->actionType);
+		$out->putByte($this->actionIndex);
 		$out->putString($this->sceneName);
 	}
 

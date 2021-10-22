@@ -32,14 +32,14 @@ class ResourcePackChunkDataPacket extends DataPacket implements ClientboundPacke
 
 	public string $packId;
 	public int $chunkIndex;
-	public int $progress;
+	public int $offset;
 	public string $data;
 
-	public static function create(string $packId, int $chunkIndex, int $chunkOffset, string $data) : self{
+	public static function create(string $packId, int $chunkIndex, int $progress, string $data) : self{
 		$result = new self;
 		$result->packId = $packId;
 		$result->chunkIndex = $chunkIndex;
-		$result->progress = $chunkOffset;
+		$result->offset = $progress;
 		$result->data = $data;
 		return $result;
 	}
@@ -47,14 +47,14 @@ class ResourcePackChunkDataPacket extends DataPacket implements ClientboundPacke
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->packId = $in->getString();
 		$this->chunkIndex = $in->getLInt();
-		$this->progress = $in->getLLong();
+		$this->offset = $in->getLLong();
 		$this->data = $in->getString();
 	}
 
 	protected function encodePayload(PacketSerializer $out) : void{
 		$out->putString($this->packId);
 		$out->putLInt($this->chunkIndex);
-		$out->putLLong($this->progress);
+		$out->putLLong($this->offset);
 		$out->putString($this->data);
 	}
 

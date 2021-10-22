@@ -54,13 +54,7 @@ class AddPlayerPacket extends DataPacket implements ClientboundPacket{
 	 */
 	public array $metadata = [];
 
-	//TODO: adventure settings stuff
-	public int $uvarint1 = 0;
-	public int $uvarint2 = 0;
-	public int $uvarint3 = 0;
-	public int $uvarint4 = 0;
-	public int $uvarint5 = 0;
-	public int $long1 = 0;
+	public AdventureSettingsPacket $adventureSettingsPacket;
 
 	/** @var EntityLink[] */
 	public array $links = [];
@@ -81,13 +75,8 @@ class AddPlayerPacket extends DataPacket implements ClientboundPacket{
 		$this->item = ItemStackWrapper::read($in);
 		$this->metadata = $in->getEntityMetadata();
 
-		$this->uvarint1 = $in->getUnsignedVarInt();
-		$this->uvarint2 = $in->getUnsignedVarInt();
-		$this->uvarint3 = $in->getUnsignedVarInt();
-		$this->uvarint4 = $in->getUnsignedVarInt();
-		$this->uvarint5 = $in->getUnsignedVarInt();
-
-		$this->long1 = $in->getLLong();
+		$this->adventureSettingsPacket = new AdventureSettingsPacket();
+		$this->adventureSettingsPacket->decodePayload($in);
 
 		$linkCount = $in->getUnsignedVarInt();
 		for($i = 0; $i < $linkCount; ++$i){
@@ -112,13 +101,7 @@ class AddPlayerPacket extends DataPacket implements ClientboundPacket{
 		$this->item->write($out);
 		$out->putEntityMetadata($this->metadata);
 
-		$out->putUnsignedVarInt($this->uvarint1);
-		$out->putUnsignedVarInt($this->uvarint2);
-		$out->putUnsignedVarInt($this->uvarint3);
-		$out->putUnsignedVarInt($this->uvarint4);
-		$out->putUnsignedVarInt($this->uvarint5);
-
-		$out->putLLong($this->long1);
+		$this->adventureSettingsPacket->encodePayload($out);
 
 		$out->putUnsignedVarInt(count($this->links));
 		foreach($this->links as $link){

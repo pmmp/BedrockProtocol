@@ -381,6 +381,10 @@ class LevelSoundEventPacket extends DataPacket implements ClientboundPacket, Ser
 		return $result;
 	}
 
+	public static function nonActorSound(int $sound, ?Vector3 $position, bool $disableRelativeVolume, int $extraData = -1) : self{
+		return self::create($sound, $position, $extraData, ":", false, $disableRelativeVolume);
+	}
+
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->sound = $in->getUnsignedVarInt();
 		$this->position = $in->getVector3();

@@ -361,7 +361,7 @@ class LevelSoundEventPacket extends DataPacket implements ClientboundPacket, Ser
 	public const SOUND_UNDEFINED = 330;
 
 	public int $sound;
-	public ?Vector3 $position;
+	public Vector3 $position;
 	public int $extraData = -1;
 	public string $entityType = ":"; //???
 	public bool $isBabyMob = false; //...
@@ -370,7 +370,7 @@ class LevelSoundEventPacket extends DataPacket implements ClientboundPacket, Ser
 	/**
 	 * @generate-create-func
 	 */
-	public static function create(int $sound, ?Vector3 $position, int $extraData, string $entityType, bool $isBabyMob, bool $disableRelativeVolume) : self{
+	public static function create(int $sound, Vector3 $position, int $extraData, string $entityType, bool $isBabyMob, bool $disableRelativeVolume) : self{
 		$result = new self;
 		$result->sound = $sound;
 		$result->position = $position;
@@ -381,7 +381,7 @@ class LevelSoundEventPacket extends DataPacket implements ClientboundPacket, Ser
 		return $result;
 	}
 
-	public static function nonActorSound(int $sound, ?Vector3 $position, bool $disableRelativeVolume, int $extraData = -1) : self{
+	public static function nonActorSound(int $sound, Vector3 $position, bool $disableRelativeVolume, int $extraData = -1) : self{
 		return self::create($sound, $position, $extraData, ":", false, $disableRelativeVolume);
 	}
 
@@ -396,7 +396,7 @@ class LevelSoundEventPacket extends DataPacket implements ClientboundPacket, Ser
 
 	protected function encodePayload(PacketSerializer $out) : void{
 		$out->putUnsignedVarInt($this->sound);
-		$out->putVector3Nullable($this->position);
+		$out->putVector3($this->position);
 		$out->putVarInt($this->extraData);
 		$out->putString($this->entityType);
 		$out->putBool($this->isBabyMob);

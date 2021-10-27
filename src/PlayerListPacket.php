@@ -35,16 +35,17 @@ class PlayerListPacket extends DataPacket implements ClientboundPacket{
 	public const TYPE_ADD = 0;
 	public const TYPE_REMOVE = 1;
 
+	public int $type;
 	/** @var PlayerListEntry[] */
 	public array $entries = [];
-	public int $type;
 
 	/**
+	 * @generate-create-func
 	 * @param PlayerListEntry[] $entries
 	 */
-	public static function add(array $entries) : self{
+	private static function create(int $type, array $entries) : self{
 		$result = new self;
-		$result->type = self::TYPE_ADD;
+		$result->type = $type;
 		$result->entries = $entries;
 		return $result;
 	}
@@ -52,11 +53,15 @@ class PlayerListPacket extends DataPacket implements ClientboundPacket{
 	/**
 	 * @param PlayerListEntry[] $entries
 	 */
+	public static function add(array $entries) : self{
+		return self::create(self::TYPE_ADD, $entries);
+	}
+
+	/**
+	 * @param PlayerListEntry[] $entries
+	 */
 	public static function remove(array $entries) : self{
-		$result = new self;
-		$result->type = self::TYPE_REMOVE;
-		$result->entries = $entries;
-		return $result;
+		return self::create(self::TYPE_REMOVE, $entries);
 	}
 
 	protected function decodePayload(PacketSerializer $in) : void{

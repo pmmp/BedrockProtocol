@@ -30,6 +30,13 @@ use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 class ServerSettingsRequestPacket extends DataPacket implements ServerboundPacket{
 	public const NETWORK_ID = ProtocolInfo::SERVER_SETTINGS_REQUEST_PACKET;
 
+	/**
+	 * @generate-create-func
+	 */
+	public static function create() : self{
+		return new self;
+	}
+
 	protected function decodePayload(PacketSerializer $in) : void{
 		//No payload
 	}

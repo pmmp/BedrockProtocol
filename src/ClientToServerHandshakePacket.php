@@ -30,6 +30,13 @@ use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 class ClientToServerHandshakePacket extends DataPacket implements ServerboundPacket{
 	public const NETWORK_ID = ProtocolInfo::CLIENT_TO_SERVER_HANDSHAKE_PACKET;
 
+	/**
+	 * @generate-create-func
+	 */
+	public static function create() : self{
+		return new self;
+	}
+
 	public function canBeSentBeforeLogin() : bool{
 		return true;
 	}

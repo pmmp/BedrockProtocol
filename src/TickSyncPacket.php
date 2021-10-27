@@ -33,18 +33,22 @@ class TickSyncPacket extends DataPacket implements ClientboundPacket, Serverboun
 	private int $clientSendTime;
 	private int $serverReceiveTime;
 
-	public static function request(int $clientTime) : self{
-		$result = new self;
-		$result->clientSendTime = $clientTime;
-		$result->serverReceiveTime = 0; //useless
-		return $result;
-	}
-
-	public static function response(int $clientSendTime, int $serverReceiveTime) : self{
+	/**
+	 * @generate-create-func
+	 */
+	private static function create(int $clientSendTime, int $serverReceiveTime) : self{
 		$result = new self;
 		$result->clientSendTime = $clientSendTime;
 		$result->serverReceiveTime = $serverReceiveTime;
 		return $result;
+	}
+
+	public static function request(int $clientTime) : self{
+		return self::create($clientTime, 0 /* useless, but always written anyway */);
+	}
+
+	public static function response(int $clientSendTime, int $serverReceiveTime) : self{
+		return self::create($clientSendTime, $serverReceiveTime);
 	}
 
 	public function getClientSendTime() : int{

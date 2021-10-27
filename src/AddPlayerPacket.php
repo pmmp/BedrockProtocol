@@ -46,7 +46,7 @@ class AddPlayerPacket extends DataPacket implements ClientboundPacket{
 	public ?Vector3 $motion = null;
 	public float $pitch = 0.0;
 	public float $yaw = 0.0;
-	public ?float $headYaw = null; //TODO
+	public float $headYaw = 0.0;
 	public ItemStackWrapper $item;
 	/**
 	 * @var MetadataProperty[]
@@ -77,7 +77,7 @@ class AddPlayerPacket extends DataPacket implements ClientboundPacket{
 		?Vector3 $motion,
 		float $pitch,
 		float $yaw,
-		?float $headYaw,
+		float $headYaw,
 		ItemStackWrapper $item,
 		array $metadata,
 		AdventureSettingsPacket $adventureSettingsPacket,
@@ -141,7 +141,7 @@ class AddPlayerPacket extends DataPacket implements ClientboundPacket{
 		$out->putVector3Nullable($this->motion);
 		$out->putLFloat($this->pitch);
 		$out->putLFloat($this->yaw);
-		$out->putLFloat($this->headYaw ?? $this->yaw);
+		$out->putLFloat($this->headYaw);
 		$this->item->write($out);
 		$out->putEntityMetadata($this->metadata);
 

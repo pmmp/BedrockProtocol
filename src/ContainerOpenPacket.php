@@ -36,21 +36,24 @@ class ContainerOpenPacket extends DataPacket implements ClientboundPacket{
 	public BlockPosition $blockPosition;
 	public int $actorUniqueId = -1;
 
-	public static function blockInv(int $windowId, int $windowType, BlockPosition $blockPosition) : self{
+	/**
+	 * @generate-create-func
+	 */
+	private static function create(int $windowId, int $windowType, BlockPosition $blockPosition, int $actorUniqueId) : self{
 		$result = new self;
 		$result->windowId = $windowId;
 		$result->windowType = $windowType;
 		$result->blockPosition = $blockPosition;
+		$result->actorUniqueId = $actorUniqueId;
 		return $result;
 	}
 
+	public static function blockInv(int $windowId, int $windowType, BlockPosition $blockPosition) : self{
+		return self::create($windowId, $windowType, $blockPosition, -1);
+	}
+
 	public static function entityInv(int $windowId, int $windowType, int $actorUniqueId) : self{
-		$result = new self;
-		$result->windowId = $windowId;
-		$result->windowType = $windowType;
-		$result->actorUniqueId = $actorUniqueId;
-		$result->blockPosition = new BlockPosition(0, 0, 0); //this has to be set even if it isn't used
-		return $result;
+		return self::create($windowType, $windowType, new BlockPosition(0, 0, 0), $actorUniqueId);
 	}
 
 	protected function decodePayload(PacketSerializer $in) : void{

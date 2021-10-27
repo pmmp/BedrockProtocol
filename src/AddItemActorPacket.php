@@ -33,7 +33,7 @@ use pocketmine\network\mcpe\protocol\types\inventory\ItemStackWrapper;
 class AddItemActorPacket extends DataPacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::ADD_ITEM_ACTOR_PACKET;
 
-	public ?int $actorUniqueId = null; //TODO
+	public int $actorUniqueId;
 	public int $actorRuntimeId;
 	public ItemStackWrapper $item;
 	public Vector3 $position;
@@ -51,7 +51,7 @@ class AddItemActorPacket extends DataPacket implements ClientboundPacket{
 	 * @phpstan-param array<int, MetadataProperty> $metadata
 	 */
 	public static function create(
-		?int $actorUniqueId,
+		int $actorUniqueId,
 		int $actorRuntimeId,
 		ItemStackWrapper $item,
 		Vector3 $position,
@@ -81,7 +81,7 @@ class AddItemActorPacket extends DataPacket implements ClientboundPacket{
 	}
 
 	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putActorUniqueId($this->actorUniqueId ?? $this->actorRuntimeId);
+		$out->putActorUniqueId($this->actorUniqueId);
 		$out->putActorRuntimeId($this->actorRuntimeId);
 		$this->item->write($out);
 		$out->putVector3($this->position);

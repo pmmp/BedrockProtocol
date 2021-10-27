@@ -31,7 +31,7 @@ use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 class AddPaintingPacket extends DataPacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::ADD_PAINTING_PACKET;
 
-	public ?int $actorUniqueId = null;
+	public int $actorUniqueId;
 	public int $actorRuntimeId;
 	public Vector3 $position;
 	public int $direction;
@@ -40,7 +40,7 @@ class AddPaintingPacket extends DataPacket implements ClientboundPacket{
 	/**
 	 * @generate-create-func
 	 */
-	public static function create(?int $actorUniqueId, int $actorRuntimeId, Vector3 $position, int $direction, string $title) : self{
+	public static function create(int $actorUniqueId, int $actorRuntimeId, Vector3 $position, int $direction, string $title) : self{
 		$result = new self;
 		$result->actorUniqueId = $actorUniqueId;
 		$result->actorRuntimeId = $actorRuntimeId;
@@ -59,7 +59,7 @@ class AddPaintingPacket extends DataPacket implements ClientboundPacket{
 	}
 
 	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putActorUniqueId($this->actorUniqueId ?? $this->actorRuntimeId);
+		$out->putActorUniqueId($this->actorUniqueId);
 		$out->putActorRuntimeId($this->actorRuntimeId);
 		$out->putVector3($this->position);
 		$out->putVarInt($this->direction);

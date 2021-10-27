@@ -35,7 +35,7 @@ use function count;
 class AddActorPacket extends DataPacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::ADD_ACTOR_PACKET;
 
-	public ?int $actorUniqueId = null; //TODO
+	public int $actorUniqueId;
 	public int $actorRuntimeId;
 	public string $type;
 	public Vector3 $position;
@@ -62,7 +62,7 @@ class AddActorPacket extends DataPacket implements ClientboundPacket{
 	 * @phpstan-param array<int, MetadataProperty> $metadata
 	 */
 	public static function create(
-		?int $actorUniqueId,
+		int $actorUniqueId,
 		int $actorRuntimeId,
 		string $type,
 		Vector3 $position,
@@ -116,7 +116,7 @@ class AddActorPacket extends DataPacket implements ClientboundPacket{
 	}
 
 	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putActorUniqueId($this->actorUniqueId ?? $this->actorRuntimeId);
+		$out->putActorUniqueId($this->actorUniqueId);
 		$out->putActorRuntimeId($this->actorRuntimeId);
 		$out->putString($this->type);
 		$out->putVector3($this->position);

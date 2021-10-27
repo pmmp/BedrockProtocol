@@ -39,7 +39,7 @@ class AddPlayerPacket extends DataPacket implements ClientboundPacket{
 
 	public UuidInterface $uuid;
 	public string $username;
-	public ?int $actorUniqueId = null; //TODO
+	public int $actorUniqueId;
 	public int $actorRuntimeId;
 	public string $platformChatId = "";
 	public Vector3 $position;
@@ -70,7 +70,7 @@ class AddPlayerPacket extends DataPacket implements ClientboundPacket{
 	public static function create(
 		UuidInterface $uuid,
 		string $username,
-		?int $actorUniqueId,
+		int $actorUniqueId,
 		int $actorRuntimeId,
 		string $platformChatId,
 		Vector3 $position,
@@ -134,7 +134,7 @@ class AddPlayerPacket extends DataPacket implements ClientboundPacket{
 	protected function encodePayload(PacketSerializer $out) : void{
 		$out->putUUID($this->uuid);
 		$out->putString($this->username);
-		$out->putActorUniqueId($this->actorUniqueId ?? $this->actorRuntimeId);
+		$out->putActorUniqueId($this->actorUniqueId);
 		$out->putActorRuntimeId($this->actorRuntimeId);
 		$out->putString($this->platformChatId);
 		$out->putVector3($this->position);

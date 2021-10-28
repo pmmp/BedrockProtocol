@@ -53,7 +53,7 @@ class ContainerOpenPacket extends DataPacket implements ClientboundPacket{
 	}
 
 	public static function entityInv(int $windowId, int $windowType, int $actorUniqueId) : self{
-		return self::create($windowType, $windowType, new BlockPosition(0, 0, 0), $actorUniqueId);
+		return self::create($windowId, $windowType, new BlockPosition(0, 0, 0), $actorUniqueId);
 	}
 
 	protected function decodePayload(PacketSerializer $in) : void{

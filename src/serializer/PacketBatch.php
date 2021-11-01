@@ -38,8 +38,8 @@ class PacketBatch{
 	}
 
 	/**
-	 * @return \Generator|Packet[]
-	 * @phpstan-return \Generator<int, array{Packet, string}, void, void>
+	 * @return \Generator|Packet[]|null[]
+	 * @phpstan-return \Generator<int, array{?Packet, string}, void, void>
 	 * @throws PacketDecodeException
 	 */
 	public function getPackets(PacketPool $packetPool, PacketSerializerContext $decoderContext, int $max) : \Generator{

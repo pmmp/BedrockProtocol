@@ -46,6 +46,7 @@ class LoginPacketTest extends TestCase{
 		$stream->putString($stream2->getBuffer());
 
 		$pk = PacketPool::getInstance()->getPacket($stream->getBuffer());
+		self::assertInstanceOf(LoginPacket::class, $pk);
 
 		$this->expectException(PacketDecodeException::class);
 		$pk->decode(PacketSerializer::decoder($stream->getBuffer(), 0, $context)); //bang

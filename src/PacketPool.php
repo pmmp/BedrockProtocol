@@ -219,14 +219,14 @@ class PacketPool{
 		$this->pool[$packet->pid()] = clone $packet;
 	}
 
-	public function getPacketById(int $pid) : Packet{
-		return isset($this->pool[$pid]) ? clone $this->pool[$pid] : new UnknownPacket();
+	public function getPacketById(int $pid) : ?Packet{
+		return isset($this->pool[$pid]) ? clone $this->pool[$pid] : null;
 	}
 
 	/**
 	 * @throws BinaryDataException
 	 */
-	public function getPacket(string $buffer) : Packet{
+	public function getPacket(string $buffer) : ?Packet{
 		$offset = 0;
 		return $this->getPacketById(Binary::readUnsignedVarInt($buffer, $offset) & DataPacket::PID_MASK);
 	}

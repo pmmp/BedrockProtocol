@@ -18,6 +18,7 @@ jobs:
         with:
           php-version: ${{ matrix.php }}
           ini-values: xdebug.max_nesting_level=3000
+          tools: php-cs-fixer:3
 
       - name: Load Composer package cache
         uses: actions/cache@v2
@@ -28,6 +29,9 @@ jobs:
 
       - name: Install dependencies
         run: composer install --prefer-dist --no-interaction
+
+      - name: Run PHP-CS-Fixer
+        run: php-cs-fixer fix
 
       - name: Run PHPStan
         run: ./vendor/bin/phpstan analyze --no-progress

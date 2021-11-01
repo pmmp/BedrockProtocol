@@ -13,9 +13,9 @@
         "ramsey/uuid": "^4.1"
     },
     "require-dev": {
-        "phpstan/phpstan": "0.12.99",
-        "phpstan/phpstan-phpunit": "^0.12.21",
-        "phpstan/phpstan-strict-rules": "^0.12.10",
+        "phpstan/phpstan": "1.0.0",
+        "phpstan/phpstan-phpunit": "^1.0.0",
+        "phpstan/phpstan-strict-rules": "^1.0.0",
         "phpunit/phpunit": "^9.5"
     },
     "autoload": {

@@ -5,8 +5,7 @@ includes:
 	- vendor/phpstan/phpstan-strict-rules/rules.neon
 
 parameters:
-	level: 8
-	checkExplicitMixed: true
+	level: 9
 	checkMissingCallableSignature: true
 	treatPhpDocTypesAsCertain: false
 	paths:

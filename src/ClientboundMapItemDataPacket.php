@@ -31,10 +31,8 @@ use pocketmine\network\mcpe\protocol\types\DimensionIds;
 use pocketmine\network\mcpe\protocol\types\MapDecoration;
 use pocketmine\network\mcpe\protocol\types\MapImage;
 use pocketmine\network\mcpe\protocol\types\MapTrackedObject;
-use function count;
-#ifndef COMPILE
 use pocketmine\utils\Binary;
-#endif
+use function count;
 
 class ClientboundMapItemDataPacket extends DataPacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::CLIENTBOUND_MAP_ITEM_DATA_PACKET;

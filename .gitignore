@@ -4,3 +4,4 @@
 .idea/*
 !.idea/codeStyles/
 !.idea/fileTemplates/
+/.php-cs-fixer.cache

@@ -33,18 +33,22 @@ class NetworkStackLatencyPacket extends DataPacket implements ClientboundPacket,
 	public int $timestamp;
 	public bool $needResponse;
 
-	public static function request(int $timestampNs) : self{
+	/**
+	 * @generate-create-func
+	 */
+	public static function create(int $timestamp, bool $needResponse) : self{
 		$result = new self;
-		$result->timestamp = $timestampNs;
-		$result->needResponse = true;
+		$result->timestamp = $timestamp;
+		$result->needResponse = $needResponse;
 		return $result;
 	}
 
-	public static function response(int $timestampNs) : self{
-		$result = new self;
-		$result->timestamp = $timestampNs;
-		$result->needResponse = false;
-		return $result;
+	public static function request(int $timestamp) : self{
+		return self::create($timestamp, true);
+	}
+
+	public static function response(int $timestamp) : self{
+		return self::create($timestamp, false);
 	}
 
 	protected function decodePayload(PacketSerializer $in) : void{

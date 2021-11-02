@@ -41,6 +41,20 @@ class LevelSoundEventPacketV1 extends DataPacket{
 	public bool $isBabyMob = false; //...
 	public bool $disableRelativeVolume = false;
 
+	/**
+	 * @generate-create-func
+	 */
+	public static function create(int $sound, Vector3 $position, int $extraData, int $entityType, bool $isBabyMob, bool $disableRelativeVolume) : self{
+		$result = new self;
+		$result->sound = $sound;
+		$result->position = $position;
+		$result->extraData = $extraData;
+		$result->entityType = $entityType;
+		$result->isBabyMob = $isBabyMob;
+		$result->disableRelativeVolume = $disableRelativeVolume;
+		return $result;
+	}
+
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->sound = $in->getByte();
 		$this->position = $in->getVector3();

@@ -26,10 +26,9 @@ namespace pocketmine\network\mcpe\protocol;
 #include <rules/DataPacket.h>
 
 use pocketmine\math\Vector3;
-use pocketmine\nbt\TreeRoot;
-use pocketmine\network\mcpe\protocol\serializer\NetworkNbtSerializer;
 use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 use pocketmine\network\mcpe\protocol\types\BlockPaletteEntry;
+use pocketmine\network\mcpe\protocol\types\CacheableNbt;
 use pocketmine\network\mcpe\protocol\types\ItemTypeEntry;
 use pocketmine\network\mcpe\protocol\types\LevelSettings;
 use pocketmine\network\mcpe\protocol\types\PlayerMovementSettings;
@@ -147,7 +146,7 @@ class StartGamePacket extends DataPacket implements ClientboundPacket{
 		for($i = 0, $len = $in->getUnsignedVarInt(); $i < $len; ++$i){
 			$blockName = $in->getString();
 			$state = $in->getNbtCompoundRoot();
-			$this->blockPalette[] = new BlockPaletteEntry($blockName, $state);
+			$this->blockPalette[] = new BlockPaletteEntry($blockName, new CacheableNbt($state));
 		}
 
 		$this->itemTable = [];
@@ -186,10 +185,9 @@ class StartGamePacket extends DataPacket implements ClientboundPacket{
 		$out->putVarInt($this->enchantmentSeed);
 
 		$out->putUnsignedVarInt(count($this->blockPalette));
-		$nbtWriter = new NetworkNbtSerializer();
 		foreach($this->blockPalette as $entry){
 			$out->putString($entry->getName());
-			$out->put($nbtWriter->write(new TreeRoot($entry->getStates())));
+			$out->put($entry->getStates()->getEncodedNbt());
 		}
 
 		$out->putUnsignedVarInt(count($this->itemTable));

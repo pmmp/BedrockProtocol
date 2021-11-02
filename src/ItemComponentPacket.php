@@ -25,9 +25,8 @@ namespace pocketmine\network\mcpe\protocol;
 
 #include <rules/DataPacket.h>
 
-use pocketmine\nbt\TreeRoot;
-use pocketmine\network\mcpe\protocol\serializer\NetworkNbtSerializer;
 use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pocketmine\network\mcpe\protocol\types\CacheableNbt;
 use pocketmine\network\mcpe\protocol\types\ItemComponentPacketEntry;
 use function count;
 
@@ -62,7 +61,7 @@ class ItemComponentPacket extends DataPacket implements ClientboundPacket{
 		for($i = 0, $len = $in->getUnsignedVarInt(); $i < $len; ++$i){
 			$name = $in->getString();
 			$nbt = $in->getNbtCompoundRoot();
-			$this->entries[] = new ItemComponentPacketEntry($name, $nbt);
+			$this->entries[] = new ItemComponentPacketEntry($name, new CacheableNbt($nbt));
 		}
 	}
 
@@ -70,7 +69,7 @@ class ItemComponentPacket extends DataPacket implements ClientboundPacket{
 		$out->putUnsignedVarInt(count($this->entries));
 		foreach($this->entries as $entry){
 			$out->putString($entry->getName());
-			$out->put((new NetworkNbtSerializer())->write(new TreeRoot($entry->getComponentNbt())));
+			$out->put($entry->getComponentNbt()->getEncodedNbt());
 		}
 	}
 

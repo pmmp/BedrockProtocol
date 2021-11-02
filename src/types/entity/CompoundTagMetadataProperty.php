@@ -23,21 +23,25 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol\types\entity;
 
-use pocketmine\nbt\tag\CompoundTag;
-use pocketmine\nbt\TreeRoot;
 use pocketmine\network\mcpe\protocol\PacketDecodeException;
-use pocketmine\network\mcpe\protocol\serializer\NetworkNbtSerializer;
 use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pocketmine\network\mcpe\protocol\types\CacheableNbt;
 
 final class CompoundTagMetadataProperty implements MetadataProperty{
+	/** @phpstan-var CacheableNbt<\pocketmine\nbt\tag\CompoundTag> */
+	private CacheableNbt $value;
 
-	private CompoundTag $value;
-
-	public function __construct(CompoundTag $value){
+	/**
+	 * @phpstan-param CacheableNbt<\pocketmine\nbt\tag\CompoundTag> $value
+	 */
+	public function __construct(CacheableNbt $value){
 		$this->value = clone $value;
 	}
 
-	public function getValue() : CompoundTag{
+	/**
+	 * @phpstan-return CacheableNbt<\pocketmine\nbt\tag\CompoundTag>
+	 */
+	public function getValue() : CacheableNbt{
 		return clone $this->value;
 	}
 
@@ -46,17 +50,17 @@ final class CompoundTagMetadataProperty implements MetadataProperty{
 	}
 
 	public function equals(MetadataProperty $other) : bool{
-		return $other instanceof self and $other->value->equals($this->value);
+		return $other instanceof self and $other->value->getRoot()->equals($this->value->getRoot());
 	}
 
 	/**
 	 * @throws PacketDecodeException
 	 */
 	public static function read(PacketSerializer $in) : self{
-		return new self($in->getNbtCompoundRoot());
+		return new self(new CacheableNbt($in->getNbtCompoundRoot()));
 	}
 
 	public function write(PacketSerializer $out) : void{
-		$out->put((new NetworkNbtSerializer())->write(new TreeRoot($this->value)));
+		$out->put($this->value->getEncodedNbt());
 	}
 }

@@ -22,10 +22,9 @@
 namespace pocketmine\network\mcpe\protocol\types;
 
 use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
-use function in_array;
 
 /** This is used for PlayerAuthInput packet when the flags include PERFORM_BLOCK_ACTIONS */
-final class PlayerBlockAction {
+final class PlayerBlockAction{
 
 	public const START_BREAK = 0;
 	public const ABORT_BREAK = 1;
@@ -38,17 +37,23 @@ final class PlayerBlockAction {
 	public BlockPosition $blockPos;
 	public int $face;
 
-	public function read(PacketSerializer $in) : void {
+	public function read(PacketSerializer $in) : void{
 		$this->actionType = $in->getVarInt();
-		if(in_array($this->actionType, [PlayerBlockAction::ABORT_BREAK, PlayerBlockAction::START_BREAK, PlayerBlockAction::CRACK_BREAK, PlayerBlockAction::PREDICT_DESTROY, PlayerBlockAction::CONTINUE])){
+		if(match ($this->actionType) {
+			PlayerBlockAction::ABORT_BREAK, PlayerBlockAction::START_BREAK, PlayerBlockAction::CRACK_BREAK, PlayerBlockAction::PREDICT_DESTROY, PlayerBlockAction::CONTINUE => true,
+			default => false
+		}){
 			$this->blockPos = $in->getBlockPosition();
 			$this->face = $in->getVarInt();
 		}
 	}
 
-	public function write(PacketSerializer $out) : void {
+	public function write(PacketSerializer $out) : void{
 		$out->putVarInt($this->actionType);
-		if(in_array($this->actionType, [PlayerBlockAction::ABORT_BREAK, PlayerBlockAction::START_BREAK, PlayerBlockAction::CRACK_BREAK, PlayerBlockAction::PREDICT_DESTROY, PlayerBlockAction::CONTINUE])){
+		if(match ($this->actionType) {
+			PlayerBlockAction::ABORT_BREAK, PlayerBlockAction::START_BREAK, PlayerBlockAction::CRACK_BREAK, PlayerBlockAction::PREDICT_DESTROY, PlayerBlockAction::CONTINUE => true,
+			default => false
+		}){
 			$out->putBlockPosition($this->blockPos);
 			$out->putVarInt($this->face);
 		}

@@ -144,35 +144,35 @@ class PlayerAuthInputPacket extends DataPacket implements ServerboundPacket{
 		return $this->vrGazeDirection;
 	}
 
-	public function getTick() : int {
+	public function getTick() : int{
 		return $this->tick;
 	}
 
-	public function getDelta() : Vector3 {
+	public function getDelta() : Vector3{
 		return $this->delta;
 	}
 
-	public function getItemInteractionData() : ?UseItemTransactionData {
+	public function getItemInteractionData() : ?UseItemTransactionData{
 		return $this->itemInteractionData;
 	}
 
-	public function getItemStackRequest() : ?ItemStackRequest {
+	public function getItemStackRequest() : ?ItemStackRequest{
 		return $this->itemStackRequest;
 	}
 
-	public function getBlockActions() : ?array {
+	public function getBlockActions() : ?array{
 		return $this->blockActions;
 	}
 
-	public function getRequestId() : int {
+	public function getRequestId() : int{
 		return $this->requestId;
 	}
 
-	public function getRequestChangedSlots() : array {
+	public function getRequestChangedSlots() : array{
 		return $this->requestChangedSlots;
 	}
 
-	public function hasFlag(int $flag) : bool {
+	public function hasFlag(int $flag) : bool{
 		return ($this->getInputFlags() & (1 << $flag)) !== 0;
 	}
 
@@ -194,9 +194,9 @@ class PlayerAuthInputPacket extends DataPacket implements ServerboundPacket{
 		if($this->hasFlag(PlayerAuthInputFlags::PERFORM_ITEM_INTERACTION)){
 			$this->requestId = $in->getVarInt();
 			$this->requestChangedSlots = [];
-			if ($this->requestId !== 0) {
+			if($this->requestId !== 0){
 				$len = $in->getUnsignedVarInt();
-				for ($i = 0; $i < $len; ++$i) {
+				for($i = 0; $i < $len; ++$i){
 					$this->requestChangedSlots[] = InventoryTransactionChangedSlotsHack::read($in);
 				}
 			}
@@ -207,8 +207,8 @@ class PlayerAuthInputPacket extends DataPacket implements ServerboundPacket{
 			$this->itemStackRequest = ItemStackRequest::read($in);
 		}
 		if($this->hasFlag(PlayerAuthInputFlags::PERFORM_BLOCK_ACTIONS)){
-			$max = $in->getVarInt();
-			for ($i = 0; $i < $max; ++$i) {
+			$max = $in->getUnsignedVarInt();
+			for($i = 0; $i < $max; ++$i){
 				$blockAction = new PlayerBlockAction();
 				$blockAction->read($in);
 				$this->blockActions[] = $blockAction;
@@ -246,7 +246,7 @@ class PlayerAuthInputPacket extends DataPacket implements ServerboundPacket{
 			$this->itemStackRequest->write($out);
 		}
 		if($this->hasFlag(PlayerAuthInputFlags::PERFORM_BLOCK_ACTIONS)){
-			$out->putVarInt(count($this->blockActions));
+			$out->putUnsignedVarInt(count($this->blockActions));
 			foreach($this->blockActions as $blockAction){
 				$blockAction->write($out);
 			}

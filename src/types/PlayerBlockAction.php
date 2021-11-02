@@ -39,7 +39,7 @@ final class PlayerBlockAction{
 
 	public function read(PacketSerializer $in) : void{
 		$this->actionType = $in->getVarInt();
-		if(match ($this->actionType) {
+		if(match($this->actionType){
 			PlayerBlockAction::ABORT_BREAK, PlayerBlockAction::START_BREAK, PlayerBlockAction::CRACK_BREAK, PlayerBlockAction::PREDICT_DESTROY, PlayerBlockAction::CONTINUE => true,
 			default => false
 		}){
@@ -50,7 +50,7 @@ final class PlayerBlockAction{
 
 	public function write(PacketSerializer $out) : void{
 		$out->putVarInt($this->actionType);
-		if(match ($this->actionType) {
+		if(match($this->actionType){
 			PlayerBlockAction::ABORT_BREAK, PlayerBlockAction::START_BREAK, PlayerBlockAction::CRACK_BREAK, PlayerBlockAction::PREDICT_DESTROY, PlayerBlockAction::CONTINUE => true,
 			default => false
 		}){

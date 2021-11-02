@@ -30,18 +30,13 @@ use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 class DisconnectPacket extends DataPacket implements ClientboundPacket, ServerboundPacket{
 	public const NETWORK_ID = ProtocolInfo::DISCONNECT_PACKET;
 
-	public bool $hideDisconnectionScreen = false;
-	public string $message = "";
+	public ?string $message;
 
-	public static function silent() : self{
+	/**
+	 * @generate-create-func
+	 */
+	public static function create(?string $message) : self{
 		$result = new self;
-		$result->hideDisconnectionScreen = true;
-		return $result;
-	}
-
-	public static function message(string $message) : self{
-		$result = new self;
-		$result->hideDisconnectionScreen = false;
 		$result->message = $message;
 		return $result;
 	}
@@ -51,15 +46,15 @@ class DisconnectPacket extends DataPacket implements ClientboundPacket, Serverbo
 	}
 
 	protected function decodePayload(PacketSerializer $in) : void{
-		$this->hideDisconnectionScreen = $in->getBool();
-		if(!$this->hideDisconnectionScreen){
+		$hideDisconnectionScreen = $in->getBool();
+		if(!$hideDisconnectionScreen){
 			$this->message = $in->getString();
 		}
 	}
 
 	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putBool($this->hideDisconnectionScreen);
-		if(!$this->hideDisconnectionScreen){
+		$out->putBool($this->message !== null);
+		if($this->message !== null){
 			$out->putString($this->message);
 		}
 	}

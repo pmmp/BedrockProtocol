@@ -41,10 +41,13 @@ class MobEffectPacket extends DataPacket implements ClientboundPacket{
 	public bool $particles = true;
 	public int $duration = 0;
 
-	public static function add(int $actorRuntimeId, bool $replace, int $effectId, int $amplifier, bool $particles, int $duration) : self{
+	/**
+	 * @generate-create-func
+	 */
+	public static function create(int $actorRuntimeId, int $eventId, int $effectId, int $amplifier, bool $particles, int $duration) : self{
 		$result = new self;
-		$result->eventId = $replace ? self::EVENT_MODIFY : self::EVENT_ADD;
 		$result->actorRuntimeId = $actorRuntimeId;
+		$result->eventId = $eventId;
 		$result->effectId = $effectId;
 		$result->amplifier = $amplifier;
 		$result->particles = $particles;
@@ -52,12 +55,12 @@ class MobEffectPacket extends DataPacket implements ClientboundPacket{
 		return $result;
 	}
 
+	public static function add(int $actorRuntimeId, bool $replace, int $effectId, int $amplifier, bool $particles, int $duration) : self{
+		return self::create($actorRuntimeId, $replace ? self::EVENT_MODIFY : self::EVENT_ADD, $effectId, $amplifier, $particles, $duration);
+	}
+
 	public static function remove(int $actorRuntimeId, int $effectId) : self{
-		$pk = new self;
-		$pk->eventId = self::EVENT_REMOVE;
-		$pk->actorRuntimeId = $actorRuntimeId;
-		$pk->effectId = $effectId;
-		return $pk;
+		return self::create($actorRuntimeId, self::EVENT_REMOVE, $effectId, 0, false, 0);
 	}
 
 	protected function decodePayload(PacketSerializer $in) : void{

@@ -34,37 +34,21 @@ class LevelChunkPacket extends DataPacket implements ClientboundPacket{
 	private int $chunkX;
 	private int $chunkZ;
 	private int $subChunkCount;
-	private bool $cacheEnabled;
-	/** @var int[] */
-	private array $usedBlobHashes = [];
+	/** @var int[]|null */
+	private ?array $usedBlobHashes = null;
 	private string $extraPayload;
 
-	public static function withoutCache(int $chunkX, int $chunkZ, int $subChunkCount, string $payload) : self{
-		$result = new self;
-		$result->chunkX = $chunkX;
-		$result->chunkZ = $chunkZ;
-		$result->subChunkCount = $subChunkCount;
-		$result->extraPayload = $payload;
-
-		$result->cacheEnabled = false;
-
-		return $result;
-	}
-
 	/**
+	 * @generate-create-func
 	 * @param int[] $usedBlobHashes
 	 */
-	public static function withCache(int $chunkX, int $chunkZ, int $subChunkCount, array $usedBlobHashes, string $extraPayload) : self{
-		(static function(int ...$hashes) : void{})(...$usedBlobHashes);
+	public static function create(int $chunkX, int $chunkZ, int $subChunkCount, ?array $usedBlobHashes, string $extraPayload) : self{
 		$result = new self;
 		$result->chunkX = $chunkX;
 		$result->chunkZ = $chunkZ;
 		$result->subChunkCount = $subChunkCount;
-		$result->extraPayload = $extraPayload;
-
-		$result->cacheEnabled = true;
 		$result->usedBlobHashes = $usedBlobHashes;
-
+		$result->extraPayload = $extraPayload;
 		return $result;
 	}
 
@@ -81,13 +65,13 @@ class LevelChunkPacket extends DataPacket implements ClientboundPacket{
 	}
 
 	public function isCacheEnabled() : bool{
-		return $this->cacheEnabled;
+		return $this->usedBlobHashes !== null;
 	}
 
 	/**
-	 * @return int[]
+	 * @return int[]|null
 	 */
-	public function getUsedBlobHashes() : array{
+	public function getUsedBlobHashes() : ?array{
 		return $this->usedBlobHashes;
 	}
 
@@ -99,8 +83,9 @@ class LevelChunkPacket extends DataPacket implements ClientboundPacket{
 		$this->chunkX = $in->getVarInt();
 		$this->chunkZ = $in->getVarInt();
 		$this->subChunkCount = $in->getUnsignedVarInt();
-		$this->cacheEnabled = $in->getBool();
-		if($this->cacheEnabled){
+		$cacheEnabled = $in->getBool();
+		if($cacheEnabled){
+			$this->usedBlobHashes = [];
 			for($i =  0, $count = $in->getUnsignedVarInt(); $i < $count; ++$i){
 				$this->usedBlobHashes[] = $in->getLLong();
 			}
@@ -112,8 +97,8 @@ class LevelChunkPacket extends DataPacket implements ClientboundPacket{
 		$out->putVarInt($this->chunkX);
 		$out->putVarInt($this->chunkZ);
 		$out->putUnsignedVarInt($this->subChunkCount);
-		$out->putBool($this->cacheEnabled);
-		if($this->cacheEnabled){
+		$out->putBool($this->usedBlobHashes !== null);
+		if($this->usedBlobHashes !== null){
 			$out->putUnsignedVarInt(count($this->usedBlobHashes));
 			foreach($this->usedBlobHashes as $hash){
 				$out->putLLong($hash);

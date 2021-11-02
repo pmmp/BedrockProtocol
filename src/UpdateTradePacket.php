@@ -32,8 +32,6 @@ use pocketmine\network\mcpe\protocol\types\inventory\WindowTypes;
 class UpdateTradePacket extends DataPacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::UPDATE_TRADE_PACKET;
 
-	//TODO: find fields
-
 	public int $windowId;
 	public int $windowType = WindowTypes::TRADING; //Mojang hardcoded this -_-
 	public int $windowSlotCount = 0; //useless, seems to be part of a standard container header

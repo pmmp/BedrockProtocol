@@ -25,33 +25,34 @@ namespace pocketmine\network\mcpe\protocol;
 
 #include <rules/DataPacket.h>
 
-use pocketmine\nbt\tag\CompoundTag;
-use pocketmine\nbt\TreeRoot;
-use pocketmine\network\mcpe\protocol\serializer\NetworkNbtSerializer;
 use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pocketmine\network\mcpe\protocol\types\CacheableNbt;
 
 class SyncActorPropertyPacket extends DataPacket{
 	public const NETWORK_ID = ProtocolInfo::SYNC_ACTOR_PROPERTY_PACKET;
 
-	private CompoundTag $nbt;
+	/** @phpstan-var CacheableNbt<\pocketmine\nbt\tag\CompoundTag> */
+	private CacheableNbt $nbt;
 
 	/**
 	 * @generate-create-func
+	 * @phpstan-param CacheableNbt<\pocketmine\nbt\tag\CompoundTag> $nbt
 	 */
-	public static function create(CompoundTag $nbt) : self{
+	public static function create(CacheableNbt $nbt) : self{
 		$result = new self;
 		$result->nbt = $nbt;
 		return $result;
 	}
 
-	public function getNbt() : CompoundTag{ return $this->nbt; }
+	/** @phpstan-return CacheableNbt<\pocketmine\nbt\tag\CompoundTag> */
+	public function getNbt() : CacheableNbt{ return $this->nbt; }
 
 	protected function decodePayload(PacketSerializer $in) : void{
-		$this->nbt = $in->getNbtCompoundRoot();
+		$this->nbt = new CacheableNbt($in->getNbtCompoundRoot());
 	}
 
 	protected function encodePayload(PacketSerializer $out) : void{
-		$out->put((new NetworkNbtSerializer())->write(new TreeRoot($this->nbt)));
+		$out->put($this->nbt->getEncodedNbt());
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

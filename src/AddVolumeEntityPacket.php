@@ -25,22 +25,22 @@ namespace pocketmine\network\mcpe\protocol;
 
 #include <rules/DataPacket.h>
 
-use pocketmine\nbt\tag\CompoundTag;
-use pocketmine\nbt\TreeRoot;
-use pocketmine\network\mcpe\protocol\serializer\NetworkNbtSerializer;
 use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pocketmine\network\mcpe\protocol\types\CacheableNbt;
 
 class AddVolumeEntityPacket extends DataPacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::ADD_VOLUME_ENTITY_PACKET;
 
 	private int $entityNetId;
-	private CompoundTag $data;
+	/** @phpstan-var CacheableNbt<\pocketmine\nbt\tag\CompoundTag> */
+	private CacheableNbt $data;
 	private string $engineVersion;
 
 	/**
 	 * @generate-create-func
+	 * @phpstan-param CacheableNbt<\pocketmine\nbt\tag\CompoundTag> $data
 	 */
-	public static function create(int $entityNetId, CompoundTag $data, string $engineVersion) : self{
+	public static function create(int $entityNetId, CacheableNbt $data, string $engineVersion) : self{
 		$result = new self;
 		$result->entityNetId = $entityNetId;
 		$result->data = $data;
@@ -50,19 +50,20 @@ class AddVolumeEntityPacket extends DataPacket implements ClientboundPacket{
 
 	public function getEntityNetId() : int{ return $this->entityNetId; }
 
-	public function getData() : CompoundTag{ return $this->data; }
+	/** @phpstan-return CacheableNbt<\pocketmine\nbt\tag\CompoundTag> */
+	public function getData() : CacheableNbt{ return $this->data; }
 
 	public function getEngineVersion() : string{ return $this->engineVersion; }
 
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->entityNetId = $in->getUnsignedVarInt();
-		$this->data = $in->getNbtCompoundRoot();
+		$this->data = new CacheableNbt($in->getNbtCompoundRoot());
 		$this->engineVersion = $in->getString();
 	}
 
 	protected function encodePayload(PacketSerializer $out) : void{
 		$out->putUnsignedVarInt($this->entityNetId);
-		$out->put((new NetworkNbtSerializer())->write(new TreeRoot($this->data)));
+		$out->put($this->data->getEncodedNbt());
 		$out->putString($this->engineVersion);
 	}
 

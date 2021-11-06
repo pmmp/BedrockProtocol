@@ -167,6 +167,9 @@ class PlayerAuthInputPacket extends DataPacket implements ServerboundPacket{
 		return $this->itemStackRequest;
 	}
 
+	/**
+	 * @return PlayerBlockAction[]|null
+	 */
 	public function getBlockActions() : ?array{
 		return $this->blockActions;
 	}
@@ -190,7 +193,7 @@ class PlayerAuthInputPacket extends DataPacket implements ServerboundPacket{
 		}
 		$this->tick = $in->getUnsignedVarLong();
 		$this->delta = $in->getVector3();
-		if($this->hasFlag(PlayerAuthInputFlags::PERFORM_ITEM_INTERACTION)){
+		if($this->itemInteractionData !== null){
 			$requestId = $in->getVarInt();
 			$requestChangedSlots = [];
 			if($requestId !== 0){
@@ -202,10 +205,10 @@ class PlayerAuthInputPacket extends DataPacket implements ServerboundPacket{
 			$this->itemInteractionData = new ItemInteractionData($requestId, $requestChangedSlots, new UseItemTransactionData());
 			$this->itemInteractionData->getTransactionData()->decode($in);
 		}
-		if($this->hasFlag(PlayerAuthInputFlags::PERFORM_ITEM_STACK_REQUEST)){
+		if($this->itemStackRequest !== null){
 			$this->itemStackRequest = ItemStackRequest::read($in);
 		}
-		if($this->hasFlag(PlayerAuthInputFlags::PERFORM_BLOCK_ACTIONS)){
+		if($this->blockActions !== null){
 			$this->blockActions = [];
 			$max = $in->getUnsignedVarInt();
 			for($i = 0; $i < $max; ++$i){
@@ -232,7 +235,7 @@ class PlayerAuthInputPacket extends DataPacket implements ServerboundPacket{
 		}
 		$out->putUnsignedVarLong($this->tick);
 		$out->putVector3($this->delta);
-		if($this->hasFlag(PlayerAuthInputFlags::PERFORM_ITEM_INTERACTION)){
+		if($this->itemInteractionData !== null){
 			$out->putVarInt($this->itemInteractionData->getRequestId());
 			if($this->itemInteractionData->getRequestId() !== 0){
 				$out->putUnsignedVarInt(count($this->itemInteractionData->getRequestChangedSlots()));
@@ -242,10 +245,10 @@ class PlayerAuthInputPacket extends DataPacket implements ServerboundPacket{
 			}
 			$this->itemInteractionData->getTransactionData()->encode($out);
 		}
-		if($this->hasFlag(PlayerAuthInputFlags::PERFORM_ITEM_STACK_REQUEST)){
+		if($this->itemStackRequest !== null){
 			$this->itemStackRequest->write($out);
 		}
-		if($this->hasFlag(PlayerAuthInputFlags::PERFORM_BLOCK_ACTIONS)){
+		if($this->blockActions !== null){
 			$out->putUnsignedVarInt(count($this->blockActions));
 			foreach($this->blockActions as $blockAction){
 				$blockAction->write($out);

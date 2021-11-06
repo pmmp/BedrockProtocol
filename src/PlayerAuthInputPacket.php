@@ -193,7 +193,7 @@ class PlayerAuthInputPacket extends DataPacket implements ServerboundPacket{
 		}
 		$this->tick = $in->getUnsignedVarLong();
 		$this->delta = $in->getVector3();
-		if($this->itemInteractionData !== null){
+		if($this->hasFlag(PlayerAuthInputFlags::PERFORM_ITEM_INTERACTION)){
 			$requestId = $in->getVarInt();
 			$requestChangedSlots = [];
 			if($requestId !== 0){
@@ -205,10 +205,10 @@ class PlayerAuthInputPacket extends DataPacket implements ServerboundPacket{
 			$this->itemInteractionData = new ItemInteractionData($requestId, $requestChangedSlots, new UseItemTransactionData());
 			$this->itemInteractionData->getTransactionData()->decode($in);
 		}
-		if($this->itemStackRequest !== null){
+		if($this->hasFlag(PlayerAuthInputFlags::PERFORM_ITEM_STACK_REQUEST)){
 			$this->itemStackRequest = ItemStackRequest::read($in);
 		}
-		if($this->blockActions !== null){
+		if($this->hasFlag(PlayerAuthInputFlags::PERFORM_BLOCK_ACTIONS)){
 			$this->blockActions = [];
 			$max = $in->getUnsignedVarInt();
 			for($i = 0; $i < $max; ++$i){

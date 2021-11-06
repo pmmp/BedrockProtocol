@@ -8,12 +8,12 @@ use pocketmine\network\mcpe\protocol\types\inventory\UseItemTransactionData;
 final class ItemInteractionData{
 
 	private int $requestId;
-	/** @var InventoryTransactionChangedSlotsHack[]|null */
+	/** @var InventoryTransactionChangedSlotsHack[] */
 	private array $requestChangedSlots;
 	private UseItemTransactionData $transactionData;
 
 	/**
-	 * @param InventoryTransactionChangedSlotsHack[]|null $requestChangedSlots
+	 * @param InventoryTransactionChangedSlotsHack[] $requestChangedSlots
 	 */
 	public function __construct(int $requestId, array $requestChangedSlots, UseItemTransactionData $transactionData){
 		$this->requestId = $requestId;
@@ -25,6 +25,9 @@ final class ItemInteractionData{
 		return $this->requestId;
 	}
 
+	/**
+	 * @return InventoryTransactionChangedSlotsHack[]
+	 */
 	public function getRequestChangedSlots() : array{
 		return $this->requestChangedSlots;
 	}

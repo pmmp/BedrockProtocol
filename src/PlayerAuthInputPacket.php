@@ -28,9 +28,15 @@ namespace pocketmine\network\mcpe\protocol;
 use pocketmine\math\Vector3;
 use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 use pocketmine\network\mcpe\protocol\types\InputMode;
+use pocketmine\network\mcpe\protocol\types\inventory\InventoryTransactionChangedSlotsHack;
+use pocketmine\network\mcpe\protocol\types\inventory\stackrequest\ItemStackRequest;
+use pocketmine\network\mcpe\protocol\types\inventory\UseItemTransactionData;
+use pocketmine\network\mcpe\protocol\types\ItemInteractionData;
 use pocketmine\network\mcpe\protocol\types\PlayerAuthInputFlags;
+use pocketmine\network\mcpe\protocol\types\PlayerBlockAction;
 use pocketmine\network\mcpe\protocol\types\PlayMode;
 use function assert;
+use function count;
 
 class PlayerAuthInputPacket extends DataPacket implements ServerboundPacket{
 	public const NETWORK_ID = ProtocolInfo::PLAYER_AUTH_INPUT_PACKET;
@@ -47,14 +53,19 @@ class PlayerAuthInputPacket extends DataPacket implements ServerboundPacket{
 	private ?Vector3 $vrGazeDirection = null;
 	private int $tick;
 	private Vector3 $delta;
+	public ?ItemInteractionData $itemInteractionData;
+	private ?ItemStackRequest $itemStackRequest;
+	/** @var PlayerBlockAction[]|null */
+	private ?array $blockActions;
 
 	/**
-	 * @param int          $inputFlags @see InputFlags
-	 * @param int          $inputMode @see InputMode
-	 * @param int          $playMode @see PlayMode
-	 * @param Vector3|null $vrGazeDirection only used when PlayMode::VR
+	 * @param int                      $inputFlags @see InputFlags
+	 * @param int                      $inputMode @see InputMode
+	 * @param int                      $playMode @see PlayMode
+	 * @param Vector3|null             $vrGazeDirection only used when PlayMode::VR
+	 * @param PlayerBlockAction[]|null $blockActions Blocks that the client has interacted with
 	 */
-	public static function create(Vector3 $position, float $pitch, float $yaw, float $headYaw, float $moveVecX, float $moveVecZ, int $inputFlags, int $inputMode, int $playMode, ?Vector3 $vrGazeDirection, int $tick, Vector3 $delta) : self{
+	public static function create(Vector3 $position, float $pitch, float $yaw, float $headYaw, float $moveVecX, float $moveVecZ, int $inputFlags, int $inputMode, int $playMode, ?Vector3 $vrGazeDirection, int $tick, Vector3 $delta, ?ItemInteractionData $itemInteractionData, ?ItemStackRequest $itemStackRequest, ?array $blockActions) : self{
 		if($playMode === PlayMode::VR and $vrGazeDirection === null){
 			//yuck, can we get a properly written packet just once? ...
 			throw new \InvalidArgumentException("Gaze direction must be provided for VR play mode");
@@ -66,7 +77,18 @@ class PlayerAuthInputPacket extends DataPacket implements ServerboundPacket{
 		$result->headYaw = $headYaw;
 		$result->moveVecX = $moveVecX;
 		$result->moveVecZ = $moveVecZ;
-		$result->inputFlags = $inputFlags;
+
+		$result->inputFlags = $inputFlags & ~(PlayerAuthInputFlags::PERFORM_ITEM_STACK_REQUEST | PlayerAuthInputFlags::PERFORM_ITEM_INTERACTION | PlayerAuthInputFlags::PERFORM_BLOCK_ACTIONS);
+		if($itemStackRequest !== null){
+			$result->inputFlags |= PlayerAuthInputFlags::PERFORM_ITEM_STACK_REQUEST;
+		}
+		if($itemInteractionData !== null){
+			$result->inputFlags |= PlayerAuthInputFlags::PERFORM_ITEM_INTERACTION;
+		}
+		if($blockActions !== null){
+			$result->inputFlags |= PlayerAuthInputFlags::PERFORM_BLOCK_ACTIONS;
+		}
+
 		$result->inputMode = $inputMode;
 		$result->playMode = $playMode;
 		if($vrGazeDirection !== null){
@@ -74,6 +96,9 @@ class PlayerAuthInputPacket extends DataPacket implements ServerboundPacket{
 		}
 		$result->tick = $tick;
 		$result->delta = $delta;
+		$result->itemInteractionData = $itemInteractionData;
+		$result->itemStackRequest = $itemStackRequest;
+		$result->blockActions = $blockActions;
 		return $result;
 	}
 
@@ -126,6 +151,33 @@ class PlayerAuthInputPacket extends DataPacket implements ServerboundPacket{
 		return $this->vrGazeDirection;
 	}
 
+	public function getTick() : int{
+		return $this->tick;
+	}
+
+	public function getDelta() : Vector3{
+		return $this->delta;
+	}
+
+	public function getItemInteractionData() : ?ItemInteractionData{
+		return $this->itemInteractionData;
+	}
+
+	public function getItemStackRequest() : ?ItemStackRequest{
+		return $this->itemStackRequest;
+	}
+
+	/**
+	 * @return PlayerBlockAction[]|null
+	 */
+	public function getBlockActions() : ?array{
+		return $this->blockActions;
+	}
+
+	public function hasFlag(int $flag) : bool{
+		return ($this->getInputFlags() & (1 << $flag)) !== 0;
+	}
+
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->pitch = $in->getLFloat();
 		$this->yaw = $in->getLFloat();
@@ -141,6 +193,30 @@ class PlayerAuthInputPacket extends DataPacket implements ServerboundPacket{
 		}
 		$this->tick = $in->getUnsignedVarLong();
 		$this->delta = $in->getVector3();
+		if($this->hasFlag(PlayerAuthInputFlags::PERFORM_ITEM_INTERACTION)){
+			$requestId = $in->getVarInt();
+			$requestChangedSlots = [];
+			if($requestId !== 0){
+				$len = $in->getUnsignedVarInt();
+				for($i = 0; $i < $len; ++$i){
+					$requestChangedSlots[] = InventoryTransactionChangedSlotsHack::read($in);
+				}
+			}
+			$this->itemInteractionData = new ItemInteractionData($requestId, $requestChangedSlots, new UseItemTransactionData());
+			$this->itemInteractionData->getTransactionData()->decode($in);
+		}
+		if($this->hasFlag(PlayerAuthInputFlags::PERFORM_ITEM_STACK_REQUEST)){
+			$this->itemStackRequest = ItemStackRequest::read($in);
+		}
+		if($this->hasFlag(PlayerAuthInputFlags::PERFORM_BLOCK_ACTIONS)){
+			$this->blockActions = [];
+			$max = $in->getUnsignedVarInt();
+			for($i = 0; $i < $max; ++$i){
+				$blockAction = new PlayerBlockAction();
+				$blockAction->read($in);
+				$this->blockActions[] = $blockAction;
+			}
+		}
 	}
 
 	protected function encodePayload(PacketSerializer $out) : void{
@@ -159,6 +235,25 @@ class PlayerAuthInputPacket extends DataPacket implements ServerboundPacket{
 		}
 		$out->putUnsignedVarLong($this->tick);
 		$out->putVector3($this->delta);
+		if($this->itemInteractionData !== null){
+			$out->putVarInt($this->itemInteractionData->getRequestId());
+			if($this->itemInteractionData->getRequestId() !== 0){
+				$out->putUnsignedVarInt(count($this->itemInteractionData->getRequestChangedSlots()));
+				foreach($this->itemInteractionData->getRequestChangedSlots() as $changedSlot){
+					$changedSlot->write($out);
+				}
+			}
+			$this->itemInteractionData->getTransactionData()->encode($out);
+		}
+		if($this->itemStackRequest !== null){
+			$this->itemStackRequest->write($out);
+		}
+		if($this->blockActions !== null){
+			$out->putUnsignedVarInt(count($this->blockActions));
+			foreach($this->blockActions as $blockAction){
+				$blockAction->write($out);
+			}
+		}
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

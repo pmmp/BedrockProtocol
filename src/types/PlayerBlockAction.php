@@ -32,23 +32,29 @@ final class PlayerBlockAction{
 
 	public function read(PacketSerializer $in) : void{
 		$this->actionType = $in->getVarInt();
-		if(match($this->actionType){
-			PlayerAction::ABORT_BREAK, PlayerAction::START_BREAK, PlayerAction::CRACK_BREAK, PlayerAction::PREDICT_DESTROY_BLOCK, PlayerAction::CONTINUE_DESTROY_BLOCK => true,
-			default => false
-		}){
-			$this->blockPos = $in->getBlockPosition();
-			$this->face = $in->getVarInt();
+		switch($this->actionType){
+			case PlayerAction::ABORT_BREAK:
+			case PlayerAction::START_BREAK:
+			case PlayerAction::CRACK_BREAK:
+			case PlayerAction::PREDICT_DESTROY_BLOCK:
+			case PlayerAction::CONTINUE_DESTROY_BLOCK:
+				$this->blockPos = $in->getBlockPosition();
+				$this->face = $in->getVarInt();
+				break;
 		}
 	}
 
 	public function write(PacketSerializer $out) : void{
 		$out->putVarInt($this->actionType);
-		if(match($this->actionType){
-			PlayerAction::ABORT_BREAK, PlayerAction::START_BREAK, PlayerAction::CRACK_BREAK, PlayerAction::PREDICT_DESTROY_BLOCK, PlayerAction::CONTINUE_DESTROY_BLOCK => true,
-			default => false
-		}){
-			$out->putBlockPosition($this->blockPos);
-			$out->putVarInt($this->face);
+		switch($this->actionType){
+			case PlayerAction::ABORT_BREAK:
+			case PlayerAction::START_BREAK:
+			case PlayerAction::CRACK_BREAK:
+			case PlayerAction::PREDICT_DESTROY_BLOCK:
+			case PlayerAction::CONTINUE_DESTROY_BLOCK:
+				$out->putBlockPosition($this->blockPos);
+				$out->putVarInt($this->face);
+				break;
 		}
 	}
 

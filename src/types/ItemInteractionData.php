@@ -23,8 +23,10 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol\types;
 
+use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 use pocketmine\network\mcpe\protocol\types\inventory\InventoryTransactionChangedSlotsHack;
 use pocketmine\network\mcpe\protocol\types\inventory\UseItemTransactionData;
+use function count;
 
 final class ItemInteractionData{
 
@@ -57,4 +59,28 @@ final class ItemInteractionData{
 		return $this->transactionData;
 	}
 
+	public static function read(PacketSerializer $in) : self{
+		$requestId = $in->getVarInt();
+		$requestChangedSlots = [];
+		if($requestId !== 0){
+			$len = $in->getUnsignedVarInt();
+			for($i = 0; $i < $len; ++$i){
+				$requestChangedSlots[] = InventoryTransactionChangedSlotsHack::read($in);
+			}
+		}
+		$transactionData = new UseItemTransactionData();
+		$transactionData->decode($in);
+		return new ItemInteractionData($requestId, $requestChangedSlots, $transactionData);
+	}
+
+	public function write(PacketSerializer $out) : void{
+		$out->putVarInt($this->requestId);
+		if($this->requestId !== 0){
+			$out->putUnsignedVarInt(count($this->requestChangedSlots));
+			foreach($this->requestChangedSlots as $changedSlot){
+				$changedSlot->write($out);
+			}
+		}
+		$this->transactionData->encode($out);
+	}
 }

@@ -194,16 +194,7 @@ class PlayerAuthInputPacket extends DataPacket implements ServerboundPacket{
 		$this->tick = $in->getUnsignedVarLong();
 		$this->delta = $in->getVector3();
 		if($this->hasFlag(PlayerAuthInputFlags::PERFORM_ITEM_INTERACTION)){
-			$requestId = $in->getVarInt();
-			$requestChangedSlots = [];
-			if($requestId !== 0){
-				$len = $in->getUnsignedVarInt();
-				for($i = 0; $i < $len; ++$i){
-					$requestChangedSlots[] = InventoryTransactionChangedSlotsHack::read($in);
-				}
-			}
-			$this->itemInteractionData = new ItemInteractionData($requestId, $requestChangedSlots, new UseItemTransactionData());
-			$this->itemInteractionData->getTransactionData()->decode($in);
+			$this->itemInteractionData = ItemInteractionData::read($in);
 		}
 		if($this->hasFlag(PlayerAuthInputFlags::PERFORM_ITEM_STACK_REQUEST)){
 			$this->itemStackRequest = ItemStackRequest::read($in);
@@ -236,14 +227,7 @@ class PlayerAuthInputPacket extends DataPacket implements ServerboundPacket{
 		$out->putUnsignedVarLong($this->tick);
 		$out->putVector3($this->delta);
 		if($this->itemInteractionData !== null){
-			$out->putVarInt($this->itemInteractionData->getRequestId());
-			if($this->itemInteractionData->getRequestId() !== 0){
-				$out->putUnsignedVarInt(count($this->itemInteractionData->getRequestChangedSlots()));
-				foreach($this->itemInteractionData->getRequestChangedSlots() as $changedSlot){
-					$changedSlot->write($out);
-				}
-			}
-			$this->itemInteractionData->getTransactionData()->encode($out);
+			$this->itemInteractionData->write($out);
 		}
 		if($this->itemStackRequest !== null){
 			$this->itemStackRequest->write($out);

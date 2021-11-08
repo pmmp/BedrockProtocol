@@ -32,18 +32,20 @@ final class PlayerBlockAction{
 	public BlockPosition $blockPos;
 	public int $face;
 
-	public function read(PacketSerializer $in) : void{
-		$this->actionType = $in->getVarInt();
-		switch($this->actionType){
+	public static function read(PacketSerializer $in) : self{
+		$result = new self;
+		$result->actionType = $in->getVarInt();
+		switch($result->actionType){
 			case PlayerAction::ABORT_BREAK:
 			case PlayerAction::START_BREAK:
 			case PlayerAction::CRACK_BREAK:
 			case PlayerAction::PREDICT_DESTROY_BLOCK:
 			case PlayerAction::CONTINUE_DESTROY_BLOCK:
-				$this->blockPos = $in->getBlockPosition();
-				$this->face = $in->getVarInt();
+				$result->blockPos = $in->getBlockPosition();
+				$result->face = $in->getVarInt();
 				break;
 		}
+		return $result;
 	}
 
 	public function write(PacketSerializer $out) : void{

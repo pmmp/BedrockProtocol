@@ -59,6 +59,7 @@ use pocketmine\network\mcpe\protocol\types\skin\SkinData;
 use pocketmine\network\mcpe\protocol\types\skin\SkinImage;
 use pocketmine\network\mcpe\protocol\types\StructureEditorData;
 use pocketmine\network\mcpe\protocol\types\StructureSettings;
+use pocketmine\utils\Binary;
 use pocketmine\utils\BinaryDataException;
 use pocketmine\utils\BinaryStream;
 use Ramsey\Uuid\Uuid;
@@ -531,7 +532,7 @@ class PacketSerializer extends BinaryStream{
 	 */
 	public function getBlockPosition() : BlockPosition{
 		$x = $this->getVarInt();
-		$y = $this->getUnsignedVarInt();
+		$y = Binary::signInt($this->getUnsignedVarInt()); //Y coordinate may be signed, but it's written unsigned :<
 		$z = $this->getVarInt();
 		return new BlockPosition($x, $y, $z);
 	}
@@ -541,7 +542,7 @@ class PacketSerializer extends BinaryStream{
 	 */
 	public function putBlockPosition(BlockPosition $blockPosition) : void{
 		$this->putVarInt($blockPosition->getX());
-		$this->putUnsignedVarInt($blockPosition->getY());
+		$this->putUnsignedVarInt(Binary::unsignInt($blockPosition->getY())); //Y coordinate may be signed, but it's written unsigned :<
 		$this->putVarInt($blockPosition->getZ());
 	}
 

@@ -25,10 +25,13 @@ namespace pocketmine\network\mcpe\protocol\types;
 
 use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 
-/** This is used for PlayerAuthInput packet when the flags include PERFORM_BLOCK_ACTIONS */
-interface PlayerBlockAction{
+final class PlayerBlockActionStopBreak implements PlayerBlockAction{
 
-	public function getActionType() : int;
+	public function getActionType() : int{
+		return PlayerAction::STOP_BREAK;
+	}
 
-	public function write(PacketSerializer $out) : void;
+	public function write(PacketSerializer $out) : void{
+		//NOOP
+	}
 }

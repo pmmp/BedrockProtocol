@@ -30,8 +30,11 @@ use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 use pocketmine\network\mcpe\protocol\types\InputMode;
 use pocketmine\network\mcpe\protocol\types\inventory\stackrequest\ItemStackRequest;
 use pocketmine\network\mcpe\protocol\types\ItemInteractionData;
+use pocketmine\network\mcpe\protocol\types\PlayerAction;
 use pocketmine\network\mcpe\protocol\types\PlayerAuthInputFlags;
 use pocketmine\network\mcpe\protocol\types\PlayerBlockAction;
+use pocketmine\network\mcpe\protocol\types\PlayerBlockActionStopBreak;
+use pocketmine\network\mcpe\protocol\types\PlayerBlockActionWithBlockInfo;
 use pocketmine\network\mcpe\protocol\types\PlayMode;
 use function assert;
 use function count;
@@ -201,9 +204,12 @@ class PlayerAuthInputPacket extends DataPacket implements ServerboundPacket{
 			$this->blockActions = [];
 			$max = $in->getUnsignedVarInt();
 			for($i = 0; $i < $max; ++$i){
-				$blockAction = new PlayerBlockAction();
-				$blockAction->read($in);
-				$this->blockActions[] = $blockAction;
+				$actionType = $in->getVarInt();
+				$this->blockActions[] = match(true){
+					PlayerBlockActionWithBlockInfo::isValidActionType($actionType) => PlayerBlockActionWithBlockInfo::read($in, $actionType),
+					$actionType === PlayerAction::STOP_BREAK => new PlayerBlockActionStopBreak(),
+					default => throw new PacketDecodeException("Unexpected block action type $actionType")
+				};
 			}
 		}
 	}
@@ -233,6 +239,7 @@ class PlayerAuthInputPacket extends DataPacket implements ServerboundPacket{
 		if($this->blockActions !== null){
 			$out->putUnsignedVarInt(count($this->blockActions));
 			foreach($this->blockActions as $blockAction){
+				$out->putVarInt($blockAction->getActionType());
 				$blockAction->write($out);
 			}
 		}

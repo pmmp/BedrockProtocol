@@ -17,7 +17,9 @@
  * @link http://www.pocketmine.net/
  *
  *
-*/
+ */
+
+declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol\types;
 

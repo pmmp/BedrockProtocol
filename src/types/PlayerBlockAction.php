@@ -29,7 +29,7 @@ use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 final class PlayerBlockAction{
 
 	public int $actionType;
-	public BlockPosition $blockPos;
+	public BlockPosition $blockPosition;
 	public int $face;
 
 	public static function read(PacketSerializer $in) : self{
@@ -41,7 +41,7 @@ final class PlayerBlockAction{
 			case PlayerAction::CRACK_BREAK:
 			case PlayerAction::PREDICT_DESTROY_BLOCK:
 			case PlayerAction::CONTINUE_DESTROY_BLOCK:
-				$result->blockPos = $in->getBlockPosition();
+				$result->blockPosition = $in->getBlockPosition();
 				$result->face = $in->getVarInt();
 				break;
 		}
@@ -56,7 +56,7 @@ final class PlayerBlockAction{
 			case PlayerAction::CRACK_BREAK:
 			case PlayerAction::PREDICT_DESTROY_BLOCK:
 			case PlayerAction::CONTINUE_DESTROY_BLOCK:
-				$out->putBlockPosition($this->blockPos);
+				$out->putBlockPosition($this->blockPosition);
 				$out->putVarInt($this->face);
 				break;
 		}

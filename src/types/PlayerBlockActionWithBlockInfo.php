@@ -28,9 +28,9 @@ use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 /** This is used for PlayerAuthInput packet when the flags include PERFORM_BLOCK_ACTIONS */
 final class PlayerBlockActionWithBlockInfo implements PlayerBlockAction{
 
-	public int $actionType;
-	public BlockPosition $blockPosition;
-	public int $face;
+	private int $actionType;
+	private BlockPosition $blockPosition;
+	private int $face;
 
 	public function __construct(int $actionType, BlockPosition $blockPosition, int $face){
 		if(!self::isValidActionType($actionType)){
@@ -42,6 +42,10 @@ final class PlayerBlockActionWithBlockInfo implements PlayerBlockAction{
 	}
 
 	public function getActionType() : int{ return $this->actionType; }
+
+	public function getBlockPosition() : BlockPosition{ return $this->blockPosition; }
+
+	public function getFace() : int{ return $this->face; }
 
 	public static function read(PacketSerializer $in, int $actionType) : self{
 		$blockPosition = $in->getBlockPosition();

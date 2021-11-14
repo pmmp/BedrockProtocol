@@ -202,7 +202,7 @@ class PlayerAuthInputPacket extends DataPacket implements ServerboundPacket{
 		}
 		if($this->hasFlag(PlayerAuthInputFlags::PERFORM_BLOCK_ACTIONS)){
 			$this->blockActions = [];
-			$max = $in->getUnsignedVarInt();
+			$max = $in->getVarInt();
 			for($i = 0; $i < $max; ++$i){
 				$actionType = $in->getVarInt();
 				$this->blockActions[] = match(true){
@@ -237,7 +237,7 @@ class PlayerAuthInputPacket extends DataPacket implements ServerboundPacket{
 			$this->itemStackRequest->write($out);
 		}
 		if($this->blockActions !== null){
-			$out->putUnsignedVarInt(count($this->blockActions));
+			$out->putVarInt(count($this->blockActions));
 			foreach($this->blockActions as $blockAction){
 				$out->putVarInt($blockAction->getActionType());
 				$blockAction->write($out);

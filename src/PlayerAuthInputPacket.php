@@ -54,10 +54,10 @@ class PlayerAuthInputPacket extends DataPacket implements ServerboundPacket{
 	private ?Vector3 $vrGazeDirection = null;
 	private int $tick;
 	private Vector3 $delta;
-	public ?ItemInteractionData $itemInteractionData;
-	private ?ItemStackRequest $itemStackRequest;
+	public ?ItemInteractionData $itemInteractionData = null;
+	private ?ItemStackRequest $itemStackRequest = null;
 	/** @var PlayerBlockAction[]|null */
-	private ?array $blockActions;
+	private ?array $blockActions = null;
 
 	/**
 	 * @param int                      $inputFlags @see InputFlags

@@ -38,3 +38,10 @@ jobs:
 
       - name: Run PHPUnit tests
         run: ./vendor/bin/phpunit --bootstrap vendor/autoload.php --fail-on-warning tests/phpunit
+
+      - name: Verify ::create() methods are up to date
+        run: |
+          php tools/generate-create-static-methods.php
+          php-cs-fixer fix
+          git diff
+          git diff --quiet #to set the exit code

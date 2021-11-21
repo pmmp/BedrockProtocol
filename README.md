@@ -16,8 +16,12 @@ With this library, that's currently done using `PacketBatch`, like so:
 ```php
 $batch = new PacketBatch($payload);
 foreach($batch->getPackets($packetPool, $protocolContext, $maxPackets) as [$packetObject, $packetPayload]){
-  $packetObject->decode(PacketSerializer::decoder($packetPayload, 0, $protocolContext));
-  var_dump($packetObject); //tada
+  if($packetObject !== null){
+    $packetObject->decode(PacketSerializer::decoder($packetPayload, 0, $protocolContext));
+    var_dump($packetObject); //tada
+  }else{
+    var_dump("Got unknown packet", $packetPayload);
+  }
 }
 ```
 

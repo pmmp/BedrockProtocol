@@ -30,8 +30,9 @@ use pocketmine\network\mcpe\protocol\types\StructureSettings;
 class StructureTemplateDataRequestPacket extends DataPacket implements ServerboundPacket{
 	public const NETWORK_ID = ProtocolInfo::STRUCTURE_TEMPLATE_DATA_REQUEST_PACKET;
 
-	public const TYPE_ALWAYS_LOAD = 1;
-	public const TYPE_CREATE_AND_LOAD = 2;
+	public const TYPE_EXPORT_FROM_SAVE_MODE = 1;
+	public const TYPE_EXPORT_FROM_LOAD_MODE = 2;
+	public const TYPE_QUERY_SAVED_STRUCTURE = 3;
 
 	public string $structureTemplateName;
 	public BlockPosition $structureBlockPosition;

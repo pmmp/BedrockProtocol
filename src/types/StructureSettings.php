@@ -35,6 +35,8 @@ class StructureSettings{
 	public int $lastTouchedByPlayerID;
 	public int $rotation;
 	public int $mirror;
+	public int $animationMode;
+	public float $animationSeconds;
 	public float $integrityValue;
 	public int $integritySeed;
 	public Vector3 $pivot;

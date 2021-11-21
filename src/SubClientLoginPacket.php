@@ -23,8 +23,6 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-#include <rules/DataPacket.h>
-
 use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 
 class SubClientLoginPacket extends DataPacket implements ServerboundPacket{

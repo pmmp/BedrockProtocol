@@ -29,18 +29,24 @@ use pocketmine\network\mcpe\protocol\types\CacheableNbt;
 class StructureTemplateDataResponsePacket extends DataPacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::STRUCTURE_TEMPLATE_DATA_RESPONSE_PACKET;
 
+	public const TYPE_FAILURE = 0;
+	public const TYPE_EXPORT = 1;
+	public const TYPE_QUERY = 2;
+
 	public string $structureTemplateName;
 	/** @phpstan-var CacheableNbt<\pocketmine\nbt\tag\CompoundTag> */
 	public ?CacheableNbt $nbt;
+	public int $responseType;
 
 	/**
 	 * @generate-create-func
 	 * @phpstan-param CacheableNbt<\pocketmine\nbt\tag\CompoundTag> $nbt
 	 */
-	public static function create(string $structureTemplateName, ?CacheableNbt $nbt) : self{
+	public static function create(string $structureTemplateName, ?CacheableNbt $nbt, int $responseType) : self{
 		$result = new self;
 		$result->structureTemplateName = $structureTemplateName;
 		$result->nbt = $nbt;
+		$result->responseType = $responseType;
 		return $result;
 	}
 
@@ -49,6 +55,7 @@ class StructureTemplateDataResponsePacket extends DataPacket implements Clientbo
 		if($in->getBool()){
 			$this->nbt = new CacheableNbt($in->getNbtCompoundRoot());
 		}
+		$this->responseType = $in->getByte();
 	}
 
 	protected function encodePayload(PacketSerializer $out) : void{
@@ -57,6 +64,7 @@ class StructureTemplateDataResponsePacket extends DataPacket implements Clientbo
 		if($this->nbt !== null){
 			$out->put($this->nbt->getEncodedNbt());
 		}
+		$out->putByte($this->responseType);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

@@ -30,10 +30,9 @@ use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
  * At the time of writing, this includes using anvils.
  */
 final class DeprecatedCraftingNonImplementedStackRequestAction extends ItemStackRequestAction{
+	use GetTypeIdFromConstTrait;
 
-	public static function getTypeId() : int{
-		return ItemStackRequestActionType::CRAFTING_NON_IMPLEMENTED_DEPRECATED_ASK_TY_LAING;
-	}
+	public const ID = ItemStackRequestActionType::CRAFTING_NON_IMPLEMENTED_DEPRECATED_ASK_TY_LAING;
 
 	public static function read(PacketSerializer $in) : self{
 		return new self;

@@ -67,22 +67,22 @@ final class ItemStackRequest{
 	 */
 	private static function readAction(PacketSerializer $in, int $typeId) : ItemStackRequestAction{
 		switch($typeId){
-			case TakeStackRequestAction::getTypeId(): return TakeStackRequestAction::read($in);
-			case PlaceStackRequestAction::getTypeId(): return PlaceStackRequestAction::read($in);
-			case SwapStackRequestAction::getTypeId(): return SwapStackRequestAction::read($in);
-			case DropStackRequestAction::getTypeId(): return DropStackRequestAction::read($in);
-			case DestroyStackRequestAction::getTypeId(): return DestroyStackRequestAction::read($in);
-			case CraftingConsumeInputStackRequestAction::getTypeId(): return CraftingConsumeInputStackRequestAction::read($in);
-			case CraftingMarkSecondaryResultStackRequestAction::getTypeId(): return CraftingMarkSecondaryResultStackRequestAction::read($in);
-			case LabTableCombineStackRequestAction::getTypeId(): return LabTableCombineStackRequestAction::read($in);
-			case BeaconPaymentStackRequestAction::getTypeId(): return BeaconPaymentStackRequestAction::read($in);
-			case MineBlockStackRequestAction::getTypeId(): return MineBlockStackRequestAction::read($in);
-			case CraftRecipeStackRequestAction::getTypeId(): return CraftRecipeStackRequestAction::read($in);
-			case CraftRecipeAutoStackRequestAction::getTypeId(): return CraftRecipeAutoStackRequestAction::read($in);
-			case CreativeCreateStackRequestAction::getTypeId(): return CreativeCreateStackRequestAction::read($in);
-			case CraftRecipeOptionalStackRequestAction::getTypeId(): return CraftRecipeOptionalStackRequestAction::read($in);
-			case DeprecatedCraftingNonImplementedStackRequestAction::getTypeId(): return DeprecatedCraftingNonImplementedStackRequestAction::read($in);
-			case DeprecatedCraftingResultsStackRequestAction::getTypeId(): return DeprecatedCraftingResultsStackRequestAction::read($in);
+			case TakeStackRequestAction::ID: return TakeStackRequestAction::read($in);
+			case PlaceStackRequestAction::ID: return PlaceStackRequestAction::read($in);
+			case SwapStackRequestAction::ID: return SwapStackRequestAction::read($in);
+			case DropStackRequestAction::ID: return DropStackRequestAction::read($in);
+			case DestroyStackRequestAction::ID: return DestroyStackRequestAction::read($in);
+			case CraftingConsumeInputStackRequestAction::ID: return CraftingConsumeInputStackRequestAction::read($in);
+			case CraftingMarkSecondaryResultStackRequestAction::ID: return CraftingMarkSecondaryResultStackRequestAction::read($in);
+			case LabTableCombineStackRequestAction::ID: return LabTableCombineStackRequestAction::read($in);
+			case BeaconPaymentStackRequestAction::ID: return BeaconPaymentStackRequestAction::read($in);
+			case MineBlockStackRequestAction::ID: return MineBlockStackRequestAction::read($in);
+			case CraftRecipeStackRequestAction::ID: return CraftRecipeStackRequestAction::read($in);
+			case CraftRecipeAutoStackRequestAction::ID: return CraftRecipeAutoStackRequestAction::read($in);
+			case CreativeCreateStackRequestAction::ID: return CreativeCreateStackRequestAction::read($in);
+			case CraftRecipeOptionalStackRequestAction::ID: return CraftRecipeOptionalStackRequestAction::read($in);
+			case DeprecatedCraftingNonImplementedStackRequestAction::ID: return DeprecatedCraftingNonImplementedStackRequestAction::read($in);
+			case DeprecatedCraftingResultsStackRequestAction::ID: return DeprecatedCraftingResultsStackRequestAction::read($in);
 		}
 		throw new PacketDecodeException("Unhandled item stack request action type $typeId");
 	}
@@ -105,7 +105,7 @@ final class ItemStackRequest{
 		$out->writeGenericTypeNetworkId($this->requestId);
 		$out->putUnsignedVarInt(count($this->actions));
 		foreach($this->actions as $action){
-			$out->putByte($action::getTypeId());
+			$out->putByte($action->getTypeId());
 			$action->write($out);
 		}
 		$out->putUnsignedVarInt(count($this->filterStrings));

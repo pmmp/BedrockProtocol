@@ -29,6 +29,9 @@ use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
  * Completes a transaction involving a beacon consuming input to produce effects.
  */
 final class BeaconPaymentStackRequestAction extends ItemStackRequestAction{
+	use GetTypeIdFromConstTrait;
+
+	public const ID = ItemStackRequestActionType::BEACON_PAYMENT;
 
 	private int $primaryEffectId;
 	private int $secondaryEffectId;
@@ -41,8 +44,6 @@ final class BeaconPaymentStackRequestAction extends ItemStackRequestAction{
 	public function getPrimaryEffectId() : int{ return $this->primaryEffectId; }
 
 	public function getSecondaryEffectId() : int{ return $this->secondaryEffectId; }
-
-	public static function getTypeId() : int{ return ItemStackRequestActionType::BEACON_PAYMENT; }
 
 	public static function read(PacketSerializer $in) : self{
 		$primary = $in->getVarInt();

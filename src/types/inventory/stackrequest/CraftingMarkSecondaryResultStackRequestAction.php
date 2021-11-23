@@ -30,6 +30,9 @@ use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
  * X crafting grid slot". This is used for things like buckets.
  */
 final class CraftingMarkSecondaryResultStackRequestAction extends ItemStackRequestAction{
+	use GetTypeIdFromConstTrait;
+
+	public const ID = ItemStackRequestActionType::CRAFTING_MARK_SECONDARY_RESULT_SLOT;
 
 	private int $craftingGridSlot;
 
@@ -38,8 +41,6 @@ final class CraftingMarkSecondaryResultStackRequestAction extends ItemStackReque
 	}
 
 	public function getCraftingGridSlot() : int{ return $this->craftingGridSlot; }
-
-	public static function getTypeId() : int{ return ItemStackRequestActionType::CRAFTING_MARK_SECONDARY_RESULT_SLOT; }
 
 	public static function read(PacketSerializer $in) : self{
 		$slot = $in->getByte();

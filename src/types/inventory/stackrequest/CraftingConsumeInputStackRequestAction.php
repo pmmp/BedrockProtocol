@@ -28,6 +28,7 @@ namespace pocketmine\network\mcpe\protocol\types\inventory\stackrequest;
  */
 final class CraftingConsumeInputStackRequestAction extends ItemStackRequestAction{
 	use DisappearStackRequestActionTrait;
+	use GetTypeIdFromConstTrait;
 
-	public static function getTypeId() : int{ return ItemStackRequestActionType::CRAFTING_CONSUME_INPUT; }
+	public const ID = ItemStackRequestActionType::CRAFTING_CONSUME_INPUT;
 }

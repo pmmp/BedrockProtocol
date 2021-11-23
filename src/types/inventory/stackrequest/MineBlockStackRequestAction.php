@@ -26,6 +26,9 @@ namespace pocketmine\network\mcpe\protocol\types\inventory\stackrequest;
 use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 
 final class MineBlockStackRequestAction extends ItemStackRequestAction{
+	use GetTypeIdFromConstTrait;
+
+	public const ID = ItemStackRequestActionType::MINE_BLOCK;
 
 	private int $hotbarSlot;
 	private int $predictedDurability;
@@ -42,8 +45,6 @@ final class MineBlockStackRequestAction extends ItemStackRequestAction{
 	public function getPredictedDurability() : int{ return $this->predictedDurability; }
 
 	public function getStackId() : int{ return $this->stackId; }
-
-	public static function getTypeId() : int{ return ItemStackRequestActionType::MINE_BLOCK; }
 
 	public static function read(PacketSerializer $in) : self{
 		$unknown1 = $in->getVarInt();

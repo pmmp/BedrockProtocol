@@ -29,6 +29,9 @@ use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
  * Tells that the current transaction crafted the specified recipe.
  */
 final class CraftRecipeStackRequestAction extends ItemStackRequestAction{
+	use GetTypeIdFromConstTrait;
+
+	public const ID = ItemStackRequestActionType::CRAFTING_RECIPE;
 
 	private int $recipeId;
 
@@ -37,8 +40,6 @@ final class CraftRecipeStackRequestAction extends ItemStackRequestAction{
 	}
 
 	public function getRecipeId() : int{ return $this->recipeId; }
-
-	public static function getTypeId() : int{ return ItemStackRequestActionType::CRAFTING_RECIPE; }
 
 	public static function read(PacketSerializer $in) : self{
 		$recipeId = $in->readGenericTypeNetworkId();

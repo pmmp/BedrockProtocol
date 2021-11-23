@@ -32,6 +32,9 @@ use function count;
  * have to write a proper description for it.
  */
 final class DeprecatedCraftingResultsStackRequestAction extends ItemStackRequestAction{
+	use GetTypeIdFromConstTrait;
+
+	public const ID = ItemStackRequestActionType::CRAFTING_RESULTS_DEPRECATED_ASK_TY_LAING;
 
 	/** @var ItemStack[] */
 	private array $results;
@@ -49,10 +52,6 @@ final class DeprecatedCraftingResultsStackRequestAction extends ItemStackRequest
 	public function getResults() : array{ return $this->results; }
 
 	public function getIterations() : int{ return $this->iterations; }
-
-	public static function getTypeId() : int{
-		return ItemStackRequestActionType::CRAFTING_RESULTS_DEPRECATED_ASK_TY_LAING;
-	}
 
 	public static function read(PacketSerializer $in) : self{
 		$results = [];

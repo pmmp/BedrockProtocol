@@ -30,8 +30,9 @@ use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
  * is needed.
  */
 final class LabTableCombineStackRequestAction extends ItemStackRequestAction{
+	use GetTypeIdFromConstTrait;
 
-	public static function getTypeId() : int{ return ItemStackRequestActionType::LAB_TABLE_COMBINE; }
+	public const ID = ItemStackRequestActionType::LAB_TABLE_COMBINE;
 
 	public static function read(PacketSerializer $in) : self{
 		return new self;

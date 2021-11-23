@@ -27,7 +27,7 @@ use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 
 abstract class ItemStackRequestAction{
 
-	abstract public static function getTypeId() : int;
+	abstract public function getTypeId() : int;
 
 	abstract public function write(PacketSerializer $out) : void;
 }

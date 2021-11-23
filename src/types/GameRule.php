@@ -35,7 +35,7 @@ abstract class GameRule{
 
 	public function isPlayerModifiable() : bool{ return $this->playerModifiable; }
 
-	abstract public function getType() : int;
+	abstract public function getTypeId() : int;
 
 	abstract public function encode(PacketSerializer $out) : void;
 }

@@ -26,16 +26,15 @@ namespace pocketmine\network\mcpe\protocol\types;
 use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 
 final class FloatGameRule extends GameRule{
+	use GetTypeIdFromConstTrait;
+
+	public const ID = GameRuleType::FLOAT;
 
 	private float $value;
 
 	public function __construct(float $value, bool $isPlayerModifiable){
 		parent::__construct($isPlayerModifiable);
 		$this->value = $value;
-	}
-
-	public function getType() : int{
-		return GameRuleType::FLOAT;
 	}
 
 	public function getValue() : float{

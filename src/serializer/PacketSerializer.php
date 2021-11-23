@@ -617,9 +617,9 @@ class PacketSerializer extends BinaryStream{
 
 	private function readGameRule(int $type, bool $isPlayerModifiable) : GameRule{
 		switch($type){
-			case GameRuleType::BOOL: return BoolGameRule::decode($this, $isPlayerModifiable);
-			case GameRuleType::INT: return IntGameRule::decode($this, $isPlayerModifiable);
-			case GameRuleType::FLOAT: return FloatGameRule::decode($this, $isPlayerModifiable);
+			case BoolGameRule::ID: return BoolGameRule::decode($this, $isPlayerModifiable);
+			case IntGameRule::ID: return IntGameRule::decode($this, $isPlayerModifiable);
+			case FloatGameRule::ID: return FloatGameRule::decode($this, $isPlayerModifiable);
 			default:
 				throw new PacketDecodeException("Unknown gamerule type $type");
 		}
@@ -658,7 +658,7 @@ class PacketSerializer extends BinaryStream{
 		foreach($rules as $name => $rule){
 			$this->putString($name);
 			$this->putBool($rule->isPlayerModifiable());
-			$this->putUnsignedVarInt($rule->getType());
+			$this->putUnsignedVarInt($rule->getTypeId());
 			$rule->encode($this);
 		}
 	}

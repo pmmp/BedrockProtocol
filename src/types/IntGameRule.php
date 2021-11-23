@@ -26,16 +26,15 @@ namespace pocketmine\network\mcpe\protocol\types;
 use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 
 final class IntGameRule extends GameRule{
+	use GetTypeIdFromConstTrait;
+
+	public const ID = GameRuleType::INT;
 
 	private int $value;
 
 	public function __construct(int $value, bool $isPlayerModifiable){
 		parent::__construct($isPlayerModifiable);
 		$this->value = $value;
-	}
-
-	public function getType() : int{
-		return GameRuleType::INT;
 	}
 
 	public function getValue() : int{

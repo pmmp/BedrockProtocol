@@ -26,16 +26,15 @@ namespace pocketmine\network\mcpe\protocol\types;
 use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 
 final class BoolGameRule extends GameRule{
+	use GetTypeIdFromConstTrait;
+
+	public const ID = GameRuleType::BOOL;
 
 	private bool $value;
 
 	public function __construct(bool $value, bool $isPlayerModifiable){
 		parent::__construct($isPlayerModifiable);
 		$this->value = $value;
-	}
-
-	public function getType() : int{
-		return GameRuleType::BOOL;
 	}
 
 	public function getValue() : bool{

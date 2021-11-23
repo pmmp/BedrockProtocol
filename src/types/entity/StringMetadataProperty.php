@@ -24,17 +24,17 @@ declare(strict_types=1);
 namespace pocketmine\network\mcpe\protocol\types\entity;
 
 use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pocketmine\network\mcpe\protocol\types\GetTypeIdFromConstTrait;
 
 final class StringMetadataProperty implements MetadataProperty{
+	use GetTypeIdFromConstTrait;
+
+	public const ID = EntityMetadataTypes::STRING;
 
 	private string $value;
 
 	public function __construct(string $value){
 		$this->value = $value;
-	}
-
-	public static function id() : int{
-		return EntityMetadataTypes::STRING;
 	}
 
 	public static function read(PacketSerializer $in) : self{

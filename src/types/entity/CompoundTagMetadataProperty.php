@@ -26,8 +26,13 @@ namespace pocketmine\network\mcpe\protocol\types\entity;
 use pocketmine\network\mcpe\protocol\PacketDecodeException;
 use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 use pocketmine\network\mcpe\protocol\types\CacheableNbt;
+use pocketmine\network\mcpe\protocol\types\GetTypeIdFromConstTrait;
 
 final class CompoundTagMetadataProperty implements MetadataProperty{
+	use GetTypeIdFromConstTrait;
+
+	public const ID = EntityMetadataTypes::COMPOUND_TAG;
+
 	/** @phpstan-var CacheableNbt<\pocketmine\nbt\tag\CompoundTag> */
 	private CacheableNbt $value;
 
@@ -43,10 +48,6 @@ final class CompoundTagMetadataProperty implements MetadataProperty{
 	 */
 	public function getValue() : CacheableNbt{
 		return clone $this->value;
-	}
-
-	public static function id() : int{
-		return EntityMetadataTypes::COMPOUND_TAG;
 	}
 
 	public function equals(MetadataProperty $other) : bool{

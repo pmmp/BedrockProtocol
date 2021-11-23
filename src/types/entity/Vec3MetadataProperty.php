@@ -25,8 +25,12 @@ namespace pocketmine\network\mcpe\protocol\types\entity;
 
 use pocketmine\math\Vector3;
 use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pocketmine\network\mcpe\protocol\types\GetTypeIdFromConstTrait;
 
 class Vec3MetadataProperty implements MetadataProperty{
+	use GetTypeIdFromConstTrait;
+
+	public const ID = EntityMetadataTypes::VECTOR3F;
 
 	private Vector3 $value;
 
@@ -36,10 +40,6 @@ class Vec3MetadataProperty implements MetadataProperty{
 
 	public function getValue() : Vector3{
 		return clone $this->value;
-	}
-
-	public static function id() : int{
-		return EntityMetadataTypes::VECTOR3F;
 	}
 
 	public static function read(PacketSerializer $in) : self{

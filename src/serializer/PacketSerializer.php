@@ -423,23 +423,23 @@ class PacketSerializer extends BinaryStream{
 
 	private function readMetadataProperty(int $type) : MetadataProperty{
 		switch($type){
-			case ByteMetadataProperty::id():
+			case ByteMetadataProperty::ID:
 				return ByteMetadataProperty::read($this);
-			case ShortMetadataProperty::id():
+			case ShortMetadataProperty::ID:
 				return ShortMetadataProperty::read($this);
-			case IntMetadataProperty::id():
+			case IntMetadataProperty::ID:
 				return IntMetadataProperty::read($this);
-			case FloatMetadataProperty::id():
+			case FloatMetadataProperty::ID:
 				return FloatMetadataProperty::read($this);
-			case StringMetadataProperty::id():
+			case StringMetadataProperty::ID:
 				return StringMetadataProperty::read($this);
-			case CompoundTagMetadataProperty::id():
+			case CompoundTagMetadataProperty::ID:
 				return CompoundTagMetadataProperty::read($this);
-			case BlockPosMetadataProperty::id():
+			case BlockPosMetadataProperty::ID:
 				return BlockPosMetadataProperty::read($this);
-			case LongMetadataProperty::id():
+			case LongMetadataProperty::ID:
 				return LongMetadataProperty::read($this);
-			case Vec3MetadataProperty::id():
+			case Vec3MetadataProperty::ID:
 				return Vec3MetadataProperty::read($this);
 			default:
 				throw new PacketDecodeException("Unknown entity metadata type " . $type);
@@ -457,7 +457,7 @@ class PacketSerializer extends BinaryStream{
 		$this->putUnsignedVarInt(count($metadata));
 		foreach($metadata as $key => $d){
 			$this->putUnsignedVarInt($key);
-			$this->putUnsignedVarInt($d::id());
+			$this->putUnsignedVarInt($d->getTypeId());
 			$d->write($this);
 		}
 	}

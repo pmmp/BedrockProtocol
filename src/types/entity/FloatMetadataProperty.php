@@ -24,8 +24,12 @@ declare(strict_types=1);
 namespace pocketmine\network\mcpe\protocol\types\entity;
 
 use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pocketmine\network\mcpe\protocol\types\GetTypeIdFromConstTrait;
 
 final class FloatMetadataProperty implements MetadataProperty{
+	use GetTypeIdFromConstTrait;
+
+	public const ID = EntityMetadataTypes::FLOAT;
 
 	private float $value;
 
@@ -35,10 +39,6 @@ final class FloatMetadataProperty implements MetadataProperty{
 
 	public function getValue() : float{
 		return $this->value;
-	}
-
-	public static function id() : int{
-		return EntityMetadataTypes::FLOAT;
 	}
 
 	public function equals(MetadataProperty $other) : bool{

@@ -25,8 +25,12 @@ namespace pocketmine\network\mcpe\protocol\types\entity;
 
 use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 use pocketmine\network\mcpe\protocol\types\BlockPosition;
+use pocketmine\network\mcpe\protocol\types\GetTypeIdFromConstTrait;
 
 final class BlockPosMetadataProperty implements MetadataProperty{
+	use GetTypeIdFromConstTrait;
+
+	public const ID = EntityMetadataTypes::POS;
 
 	private BlockPosition $value;
 
@@ -36,10 +40,6 @@ final class BlockPosMetadataProperty implements MetadataProperty{
 
 	public function getValue() : BlockPosition{
 		return $this->value;
-	}
-
-	public static function id() : int{
-		return EntityMetadataTypes::POS;
 	}
 
 	public static function read(PacketSerializer $in) : self{

@@ -46,7 +46,6 @@ use pocketmine\network\mcpe\protocol\types\entity\StringMetadataProperty;
 use pocketmine\network\mcpe\protocol\types\entity\Vec3MetadataProperty;
 use pocketmine\network\mcpe\protocol\types\FloatGameRule;
 use pocketmine\network\mcpe\protocol\types\GameRule;
-use pocketmine\network\mcpe\protocol\types\GameRuleType;
 use pocketmine\network\mcpe\protocol\types\IntGameRule;
 use pocketmine\network\mcpe\protocol\types\inventory\ItemStack;
 use pocketmine\network\mcpe\protocol\types\recipe\RecipeIngredient;

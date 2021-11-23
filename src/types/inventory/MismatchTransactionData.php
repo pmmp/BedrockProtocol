@@ -26,13 +26,13 @@ namespace pocketmine\network\mcpe\protocol\types\inventory;
 use pocketmine\network\mcpe\protocol\InventoryTransactionPacket;
 use pocketmine\network\mcpe\protocol\PacketDecodeException;
 use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pocketmine\network\mcpe\protocol\types\GetTypeIdFromConstTrait;
 use function count;
 
 class MismatchTransactionData extends TransactionData{
+	use GetTypeIdFromConstTrait;
 
-	public function getTypeId() : int{
-		return InventoryTransactionPacket::TYPE_MISMATCH;
-	}
+	public const ID = InventoryTransactionPacket::TYPE_MISMATCH;
 
 	protected function decodeData(PacketSerializer $stream) : void{
 		if(count($this->actions) > 0){

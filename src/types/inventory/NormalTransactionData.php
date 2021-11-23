@@ -25,12 +25,12 @@ namespace pocketmine\network\mcpe\protocol\types\inventory;
 
 use pocketmine\network\mcpe\protocol\InventoryTransactionPacket;
 use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pocketmine\network\mcpe\protocol\types\GetTypeIdFromConstTrait;
 
 class NormalTransactionData extends TransactionData{
+	use GetTypeIdFromConstTrait;
 
-	public function getTypeId() : int{
-		return InventoryTransactionPacket::TYPE_NORMAL;
-	}
+	public const ID = InventoryTransactionPacket::TYPE_NORMAL;
 
 	protected function decodeData(PacketSerializer $stream) : void{
 

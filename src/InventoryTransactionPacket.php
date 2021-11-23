@@ -74,19 +74,19 @@ class InventoryTransactionPacket extends DataPacket implements ClientboundPacket
 		$transactionType = $in->getUnsignedVarInt();
 
 		switch($transactionType){
-			case self::TYPE_NORMAL:
+			case NormalTransactionData::ID:
 				$this->trData = new NormalTransactionData();
 				break;
-			case self::TYPE_MISMATCH:
+			case MismatchTransactionData::ID:
 				$this->trData = new MismatchTransactionData();
 				break;
-			case self::TYPE_USE_ITEM:
+			case UseItemTransactionData::ID:
 				$this->trData = new UseItemTransactionData();
 				break;
-			case self::TYPE_USE_ITEM_ON_ENTITY:
+			case UseItemOnEntityTransactionData::ID:
 				$this->trData = new UseItemOnEntityTransactionData();
 				break;
-			case self::TYPE_RELEASE_ITEM:
+			case ReleaseItemTransactionData::ID:
 				$this->trData = new ReleaseItemTransactionData();
 				break;
 			default:

@@ -26,8 +26,13 @@ namespace pocketmine\network\mcpe\protocol\types\inventory;
 use pocketmine\math\Vector3;
 use pocketmine\network\mcpe\protocol\InventoryTransactionPacket;
 use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pocketmine\network\mcpe\protocol\types\GetTypeIdFromConstTrait;
 
 class ReleaseItemTransactionData extends TransactionData{
+	use GetTypeIdFromConstTrait;
+
+	public const ID = InventoryTransactionPacket::TYPE_RELEASE_ITEM;
+
 	public const ACTION_RELEASE = 0; //bow shoot
 	public const ACTION_CONSUME = 1; //eat food, drink potion
 
@@ -50,10 +55,6 @@ class ReleaseItemTransactionData extends TransactionData{
 
 	public function getHeadPosition() : Vector3{
 		return $this->headPosition;
-	}
-
-	public function getTypeId() : int{
-		return InventoryTransactionPacket::TYPE_RELEASE_ITEM;
 	}
 
 	protected function decodeData(PacketSerializer $stream) : void{

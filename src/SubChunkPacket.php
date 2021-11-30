@@ -37,6 +37,7 @@ class SubChunkPacket extends DataPacket implements ClientboundPacket{
 	private string $data;
 	private int $requestResult;
 	private ?SubChunkPacketHeightMapInfo $heightMapData = null;
+	private ?int $usedBlobHash = null;
 
 	/**
 	 * @generate-create-func
@@ -49,6 +50,7 @@ class SubChunkPacket extends DataPacket implements ClientboundPacket{
 		string $data,
 		int $requestResult,
 		?SubChunkPacketHeightMapInfo $heightMapData,
+		?int $usedBlobHash,
 	) : self{
 		$result = new self;
 		$result->dimension = $dimension;
@@ -58,6 +60,7 @@ class SubChunkPacket extends DataPacket implements ClientboundPacket{
 		$result->data = $data;
 		$result->requestResult = $requestResult;
 		$result->heightMapData = $heightMapData;
+		$result->usedBlobHash = $usedBlobHash;
 		return $result;
 	}
 
@@ -75,6 +78,8 @@ class SubChunkPacket extends DataPacket implements ClientboundPacket{
 
 	public function getHeightMapData() : ?SubChunkPacketHeightMapInfo{ return $this->heightMapData; }
 
+	public function getUsedBlobHash() : ?int{ return $this->usedBlobHash; }
+
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->dimension = $in->getVarInt();
 		$this->subChunkX = $in->getVarInt();
@@ -90,6 +95,7 @@ class SubChunkPacket extends DataPacket implements ClientboundPacket{
 			SubChunkPacketHeightMapType::ALL_TOO_LOW => SubChunkPacketHeightMapInfo::allTooLow(),
 			default => throw new PacketDecodeException("Unknown heightmap data type $heightMapDataType")
 		};
+		$this->usedBlobHash = $in->getBool() ? $in->getLLong() : null;
 	}
 
 	protected function encodePayload(PacketSerializer $out) : void{
@@ -109,6 +115,11 @@ class SubChunkPacket extends DataPacket implements ClientboundPacket{
 			$heightMapData = $this->heightMapData; //avoid PHPStan purity issue
 			$out->putByte(SubChunkPacketHeightMapType::DATA);
 			$heightMapData->write($out);
+		}
+		$usedBlobHash = $this->usedBlobHash;
+		$out->putBool($usedBlobHash !== null);
+		if($usedBlobHash !== null){
+			$out->putLLong($usedBlobHash);
 		}
 	}
 

@@ -44,7 +44,7 @@ final class ActorEvent{
 	public const FISH_HOOK_TEASE = 14;
 	public const SQUID_INK_CLOUD = 15;
 	public const ZOMBIE_VILLAGER_CURE = 16;
-
+	public const PLAY_AMBIENT_SOUND = 17;
 	public const RESPAWN = 18;
 	public const IRON_GOLEM_OFFER_FLOWER = 19;
 	public const IRON_GOLEM_WITHDRAW_FLOWER = 20;
@@ -74,7 +74,7 @@ final class ActorEvent{
 	public const DEATH_SMOKE_CLOUD = 61;
 	public const COMPLETE_TRADE = 62;
 	public const REMOVE_LEASH = 63; //data 1 = cut leash
-
+	public const CARAVAN_UPDATED = 64;
 	public const CONSUME_TOTEM = 65;
 	public const PLAYER_CHECK_TREASURE_HUNTER_ACHIEVEMENT = 66; //mojang...
 	public const ENTITY_SPAWN = 67; //used for MinecraftEventing stuff, not needed
@@ -86,6 +86,7 @@ final class ActorEvent{
 	public const AGENT_SUMMON = 73;
 	public const CHARGED_CROSSBOW = 74;
 	public const FALL = 75;
+	public const GROW_UP = 76;
 
 	//TODO: add more events
 }

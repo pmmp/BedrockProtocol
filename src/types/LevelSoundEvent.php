@@ -179,7 +179,7 @@ final class LevelSoundEvent{
 	public const IMITATE_ELDER_GUARDIAN = 148;
 	public const IMITATE_ENDER_DRAGON = 149;
 	public const IMITATE_ENDERMAN = 150;
-
+	public const IMITATE_ENDERMITE = 151;
 	public const IMITATE_EVOCATION_ILLAGER = 152;
 	public const IMITATE_GHAST = 153;
 	public const IMITATE_HUSK = 154;
@@ -223,7 +223,10 @@ final class LevelSoundEvent{
 	public const LT_REACTION_BLEACH = 192;
 	public const LT_REACTION_EPASTE = 193;
 	public const LT_REACTION_EPASTE2 = 194;
-
+	public const LT_REACTION_GLOW_STICK = 195;
+	public const LT_REACTION_GLOW_STICK_2 = 196;
+	public const LT_REACTION_LUMINOL = 197;
+	public const LT_REACTION_SALT = 198;
 	public const LT_REACTION_FERTILIZER = 199;
 	public const LT_REACTION_FIREBALL = 200;
 	public const LT_REACTION_MGSALT = 201;
@@ -247,7 +250,7 @@ final class LevelSoundEvent{
 	public const HURT_BABY = 219;
 	public const DEATH_BABY = 220;
 	public const STEP_BABY = 221;
-
+	public const SPAWN_BABY = 222;
 	public const BORN = 223;
 	public const BLOCK_TURTLE_EGG_BREAK = 224;
 	public const BLOCK_TURTLE_EGG_CRACK = 225;
@@ -353,7 +356,48 @@ final class LevelSoundEvent{
 	public const AMBIENT_NETHER_WASTES_ADDITIONS = 325;
 	public const AMBIENT_BASALT_DELTAS_ADDITIONS = 326;
 	public const AMBIENT_CRIMSON_FOREST_ADDITIONS = 327;
-	public const BUCKET_FILL_POWDER_SNOW = 328;
-	public const BUCKET_EMPTY_POWDER_SNOW = 329;
-	public const UNDEFINED = 330;
+	public const SCULK_SENSOR_POWER_ON = 328;
+	public const SCULK_SENSOR_POWER_OFF = 329;
+	public const BUCKET_FILL_POWDER_SNOW = 330;
+	public const BUCKET_EMPTY_POWDER_SNOW = 331;
+	public const POINTED_DRIPSTONE_CAULDRON_DRIP_WATER = 332;
+	public const POINTED_DRIPSTONE_CAULDRON_DRIP_LAVA = 333;
+	public const POINTED_DRIPSTONE_DRIP_WATER = 334;
+	public const POINTED_DRIPSTONE_DRIP_LAVA = 335;
+	public const CAVE_VINES_PICK_BERRIES = 336;
+	public const BIG_DRIPLEAF_TILT_DOWN = 337;
+	public const BIG_DRIPLEAF_TILT_UP = 338;
+	public const COPPER_WAX_ON = 339;
+	public const COPPER_WAX_OFF = 340;
+	public const SCRAPE = 341;
+	public const PLAYER_HURT_DROWN = 342;
+	public const PLAYER_HURT_ON_FIRE = 343;
+	public const PLAYER_HURT_FREEZE = 344;
+	public const USE_SPYGLASS = 345;
+	public const STOP_USING_SPYGLASS = 346;
+	public const AMETHYST_BLOCK_CHIME = 347;
+	public const AMBIENT_SCREAMER = 348;
+	public const HURT_SCREAMER = 349;
+	public const DEATH_SCREAMER = 350;
+	public const MILK_SCREAMER = 351;
+	public const JUMP_TO_BLOCK = 352;
+	public const PRE_RAM = 353;
+	public const PRE_RAM_SCREAMER = 354;
+	public const RAM_IMPACT = 355;
+	public const RAM_IMPACT_SCREAMER = 356;
+	public const SQUID_INK_SQUIRT = 357;
+	public const GLOW_SQUID_INK_SQUIRT = 358;
+	public const CONVERT_TO_STRAY = 359;
+	public const CAKE_ADD_CANDLE = 360;
+	public const EXTINGUISH_CANDLE = 361;
+	public const AMBIENT_CANDLE = 362;
+	public const BLOCK_CLICK = 363;
+	public const BLOCK_CLICK_FAIL = 364;
+	public const SCULK_CATALYST_BLOOM = 365;
+	public const SCULK_SHRIEKER_SHRIEK = 366;
+	public const WARDEN_NEARBY_CLOSE = 367;
+	public const WARDEN_NEARBY_CLOSER = 368;
+	public const WARDEN_NEARBY_CLOSEST = 369;
+	public const WARDEN_SLIGHTLY_ANGRY = 370;
+	public const UNDEFINED = 371;
 }

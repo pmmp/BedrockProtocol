@@ -8,8 +8,8 @@ jobs:
     if: "!contains(github.event.head_commit.message, '[ci skip]')"
     strategy:
       matrix:
-        php: ['8.0']
-    name: PHP ${{ matrix.php }}
+        php: ['8.0', '8.1']
+    name: Tests (PHP ${{ matrix.php }})
     steps:
       - uses: actions/checkout@v2
 
@@ -30,14 +30,35 @@ jobs:
       - name: Install dependencies
         run: composer install --prefer-dist --no-interaction
 
-      - name: Run PHP-CS-Fixer
-        run: php-cs-fixer fix --dry-run --diff
-
       - name: Run PHPStan
         run: ./vendor/bin/phpstan analyze --no-progress
 
       - name: Run PHPUnit tests
         run: ./vendor/bin/phpunit --bootstrap vendor/autoload.php --fail-on-warning tests/phpunit
+
+  codegen:
+    runs-on: ubuntu-latest
+    if: "!contains(github.event.head_commit.message, '[ci skip]')"
+    name: Generated Code consistency checks
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@2.9.0
+        with:
+          php-version: 8.0
+          ini-values: xdebug.max_nesting_level=3000
+          tools: php-cs-fixer:3
+
+      - name: Load Composer package cache
+        uses: actions/cache@v2
+        with:
+          path: "~/.cache/composer"
+          key: "php-${{ matrix.php }}-composer-${{ hashFiles('**/composer.json') }}"
+          restore-keys: "php-${{ matrix.php }}-composer-"
+
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-interaction
 
       - name: Verify ::create() methods are up to date
         run: |
@@ -45,3 +66,20 @@ jobs:
           php-cs-fixer fix
           git diff
           git diff --quiet #to set the exit code
+
+  codestyle:
+    runs-on: ubuntu-latest
+    if: "!contains(github.event.head_commit.message, '[ci skip]')"
+    name: Code Style checks
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@2.9.0
+        with:
+          php-version: 8.0
+          ini-values: xdebug.max_nesting_level=3000
+          tools: php-cs-fixer:3
+
+      - name: Run PHP-CS-Fixer
+        run: php-cs-fixer fix --dry-run --diff

@@ -123,4 +123,9 @@ final class EntityMetadataFlags{
 	public const CELEBRATING = 92;
 	public const ADMIRING = 93;
 	public const CELEBRATING_SPECIAL = 94;
+	public const OUT_OF_CONTROL = 95;
+	public const RAM_ATTACK = 96;
+	public const PLAYING_DEAD = 97;
+	public const IN_ASCENDABLE_BLOCK = 98;
+	public const OVER_DESCENDABLE_BLOCK = 99;
 }

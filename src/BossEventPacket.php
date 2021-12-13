@@ -70,12 +70,12 @@ class BossEventPacket extends DataPacket implements ClientboundPacket, Serverbou
 		return $result;
 	}
 
-	public static function show(int $bossActorUniqueId, string $title, float $healthPercent, int $unknownShort = 0) : self{
+	public static function show(int $bossActorUniqueId, string $title, float $healthPercent, int $unknownShort = 0, int $color = self::COLOR_PINK) : self{
 		$result = self::base($bossActorUniqueId, self::TYPE_SHOW);
 		$result->title = $title;
 		$result->healthPercent = $healthPercent;
 		$result->unknownShort = $unknownShort;
-		$result->color = 0;
+		$result->color = $color;
 		$result->overlay = 0;
 		return $result;
 	}

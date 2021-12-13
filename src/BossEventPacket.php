@@ -67,7 +67,7 @@ class BossEventPacket extends DataPacket implements ClientboundPacket, Serverbou
 		$result->title = $title;
 		$result->healthPercent = $healthPercent;
 		$result->unknownShort = $unknownShort;
-		$result->color = 0; //hardcoded due to being useless
+		$result->color = 0;
 		$result->overlay = 0;
 		return $result;
 	}

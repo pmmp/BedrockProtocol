@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace pocketmine\network\mcpe\protocol;
 
 use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pocketmine\network\mcpe\protocol\types\BossBarColor;
 
 class BossEventPacket extends DataPacket implements ClientboundPacket, ServerboundPacket{
 	public const NETWORK_ID = ProtocolInfo::BOSS_EVENT_PACKET;
@@ -45,14 +46,6 @@ class BossEventPacket extends DataPacket implements ClientboundPacket, Serverbou
 	/* S2C: Not implemented :( Intended to alter bar appearance, but these currently produce no effect on client-side whatsoever. */
 	public const TYPE_TEXTURE = 7;
 
-	public const COLOR_PINK = 0;
-	public const COLOR_BLUE = 1;
-	public const COLOR_RED = 2;
-	public const COLOR_GREEN = 3;
-	public const COLOR_YELLOW = 4;
-	public const COLOR_PURPLE = 5;
-	public const COLOR_WHITE = 6;
-
 	public int $bossActorUniqueId;
 	public int $eventType;
 
@@ -70,7 +63,7 @@ class BossEventPacket extends DataPacket implements ClientboundPacket, Serverbou
 		return $result;
 	}
 
-	public static function show(int $bossActorUniqueId, string $title, float $healthPercent, int $unknownShort = 0, int $color = self::COLOR_PINK) : self{
+	public static function show(int $bossActorUniqueId, string $title, float $healthPercent, int $unknownShort = 0, int $color = BossBarColor::PURPLE) : self{
 		$result = self::base($bossActorUniqueId, self::TYPE_SHOW);
 		$result->title = $title;
 		$result->healthPercent = $healthPercent;

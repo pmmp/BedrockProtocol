@@ -1,0 +1,31 @@
+# This is a basic workflow to help you get started with Actions
+
+name: Draft release
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the master branch
+  push:
+    tags: "[0-9]+.[0-9]+.[0-9]+\\+bedrock-[0-9]+.[0-9]+.[0-9]+"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Parse version information
+        id: version-info
+        run: |
+          VERSION=${GITHUB_REF#refs/tags/}
+          echo ::set-output LIB_VERSION=$(echo $VERSION | cut -d '+' -f1)
+          echo ::set-output MC_VERSION=$(echo $VERSION | cut -d '-' -f2)
+          echo ::set-output TAG=$VERSION
+
+      - name: Create draft release
+        uses: ncipollo/release-action@v1.8.6
+        with:
+          commit: ${{ github.sha }}
+          draft: true
+          name: ${{ steps.version-info.outputs.LIB_VERSION }} for Minecraft Bedrock ${{ steps.version-info.outputs.MC_VERSION }}
+          tag: ${{ steps.version-info.outputs.TAG }}
+          token: ${{ secrets.GITHUB_TOKEN }}

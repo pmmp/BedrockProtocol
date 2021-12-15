@@ -46,7 +46,7 @@ final class PlayerAction{
 	public const START_GLIDE = 15;
 	public const STOP_GLIDE = 16;
 	public const BUILD_DENIED = 17;
-	public const CRACK_BREAK = 18;
+	public const CRACK_BLOCK = 18;
 	public const CHANGE_SKIN = 19;
 	public const SET_ENCHANTMENT_SEED = 20; //no longer used
 	public const START_SWIMMING = 21;
@@ -56,4 +56,7 @@ final class PlayerAction{
 	public const INTERACT_BLOCK = 25;
 	public const PREDICT_DESTROY_BLOCK = 26;
 	public const CONTINUE_DESTROY_BLOCK = 27;
+
+	//Backwards compatibility (blame @dktapps)
+	public const CRACK_BREAK = 18;
 }

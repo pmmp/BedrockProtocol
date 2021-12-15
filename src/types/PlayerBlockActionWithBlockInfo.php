@@ -48,13 +48,13 @@ final class PlayerBlockActionWithBlockInfo implements PlayerBlockAction{
 	public function getFace() : int{ return $this->face; }
 
 	public static function read(PacketSerializer $in, int $actionType) : self{
-		$blockPosition = $in->getBlockPosition();
+		$blockPosition = $in->getSignedBlockPosition();
 		$face = $in->getVarInt();
 		return new self($actionType, $blockPosition, $face);
 	}
 
 	public function write(PacketSerializer $out) : void{
-		$out->putBlockPosition($this->blockPosition);
+		$out->putSignedBlockPosition($this->blockPosition);
 		$out->putVarInt($this->face);
 	}
 

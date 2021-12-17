@@ -35,9 +35,9 @@ use pocketmine\network\mcpe\protocol\PlayerAuthInputPacket;
  * @see PlayerAuthInputPacket
  */
 final class PlayerAuthInputFlags{
-	/** Pressing the "fly down" key when using touch. */
-	public const ASCEND = 0;
 	/** Pressing the "fly up" key when using touch. */
+	public const ASCEND = 0;
+	/** Pressing the "fly down" key when using touch. */
 	public const DESCEND = 1;
 	/** Pressing (and optionally holding) the jump key (while not flying). */
 	public const NORTH_JUMP = 2;

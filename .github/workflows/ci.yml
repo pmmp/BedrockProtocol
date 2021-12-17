@@ -39,6 +39,7 @@ jobs:
   codegen:
     runs-on: ubuntu-latest
     if: "!contains(github.event.head_commit.message, '[ci skip]')"
+    needs: codestyle #to avoid false positives
     name: Generated Code consistency checks
     steps:
       - uses: actions/checkout@v2

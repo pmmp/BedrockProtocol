@@ -27,6 +27,7 @@ use pocketmine\math\Vector3;
 use pocketmine\network\mcpe\protocol\types\BlockPosition;
 use pocketmine\network\mcpe\protocol\types\CacheableNbt;
 use function get_class;
+use function get_debug_type;
 
 class EntityMetadataCollection{
 
@@ -91,6 +92,31 @@ class EntityMetadataCollection{
 		}
 		if(!isset($this->properties[$key]) or !$this->properties[$key]->equals($value)){
 			$this->properties[$key] = $this->dirtyProperties[$key] = $value;
+		}
+	}
+
+	/**
+	 * Set a group of properties together. If any of them are changed, they will all be flagged as dirty.
+	 */
+	public function setAtomicBatch(array $properties, bool $force = false) : void{
+		$anyDirty = false;
+		if(!$force){
+			foreach($properties as $key => $value){
+				if(isset($this->properties[$key]) and !($this->properties[$key] instanceof $value)){
+					throw new \InvalidArgumentException("Can't overwrite " . get_class($this->properties[$key]) . " with " . get_debug_type($value));
+				}
+			}
+		}
+		foreach($properties as $key => $value){
+			if(!isset($this->properties[$key]) or !$this->properties[$key]->equals($value)){
+				$anyDirty = true;
+				break;
+			}
+		}
+		if($anyDirty){
+			foreach($properties as $key => $value){
+				$this->properties[$key] = $this->dirtyProperties[$key] = $value;
+			}
 		}
 	}
 

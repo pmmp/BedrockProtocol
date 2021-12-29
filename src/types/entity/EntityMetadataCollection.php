@@ -97,6 +97,9 @@ class EntityMetadataCollection{
 
 	/**
 	 * Set a group of properties together. If any of them are changed, they will all be flagged as dirty.
+	 *
+	 * @param MetadataProperty[] $properties
+	 * @phpstan-param array<int, MetadataProperty> $properties
 	 */
 	public function setAtomicBatch(array $properties, bool $force = false) : void{
 		$anyDirty = false;

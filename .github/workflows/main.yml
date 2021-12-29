@@ -17,9 +17,9 @@ jobs:
         id: version-info
         run: |
           VERSION=${GITHUB_REF#refs/tags/}
-          echo ::set-output LIB_VERSION=$(echo $VERSION | cut -d '+' -f1)
-          echo ::set-output MC_VERSION=$(echo $VERSION | cut -d '-' -f2)
-          echo ::set-output TAG=$VERSION
+          echo ::set-output name=LIB_VERSION::$(echo $VERSION | cut -d '+' -f1)
+          echo ::set-output name=MC_VERSION::$(echo $VERSION | cut -d '-' -f2)
+          echo ::set-output name=TAG::$VERSION
 
       - name: Create draft release
         uses: ncipollo/release-action@v1.8.6

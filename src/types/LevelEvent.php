@@ -34,7 +34,7 @@ final class LevelEvent{
 	public const SOUND_DOOR = 1003;
 	public const SOUND_FIZZ = 1004;
 	public const SOUND_IGNITE = 1005;
-
+	public const SOUND_PLAY_RECORDING = 1006;
 	public const SOUND_GHAST = 1007;
 	public const SOUND_GHAST_SHOOT = 1008;
 	public const SOUND_BLAZE_SHOOT = 1009;
@@ -42,6 +42,8 @@ final class LevelEvent{
 
 	public const SOUND_DOOR_CRASH = 1012;
 
+	public const SOUND_ZOMBIE_INFECTED = 1016;
+	public const SOUND_ZOMBIE_CONVERT = 1017;
 	public const SOUND_ENDERMAN_TELEPORT = 1018;
 
 	public const SOUND_ANVIL_BREAK = 1020;
@@ -66,25 +68,47 @@ final class LevelEvent{
 	public const SOUND_ARMOR_STAND_HIT = 1061;
 	public const SOUND_ARMOR_STAND_FALL = 1062;
 	public const SOUND_ARMOR_STAND_PLACE = 1063;
-
+	public const SOUND_POINTED_DRIPSTONE_FALL = 1064;
 	public const SOUND_DYE_USED = 1065;
 	public const SOUND_INK_SAC_USED = 1066;
 
-	//TODO: check 2000-2017
 	public const PARTICLE_SHOOT = 2000;
-	public const PARTICLE_DESTROY = 2001;
+	public const PARTICLE_DESTROY = 2001; //sound + particles
 	public const PARTICLE_SPLASH = 2002;
 	public const PARTICLE_EYE_DESPAWN = 2003;
 	public const PARTICLE_SPAWN = 2004;
-
+	public const BONE_MEAL_USE = 2005; //sound + green particles
 	public const GUARDIAN_CURSE = 2006;
-
+	public const PARTICLE_DEATH_SMOKE = 2007;
 	public const PARTICLE_BLOCK_FORCE_FIELD = 2008;
 	public const PARTICLE_PROJECTILE_HIT = 2009;
 	public const PARTICLE_DRAGON_EGG_TELEPORT = 2010;
-
+	public const PARTICLE_CROP_EATEN = 2011;
+	public const PARTICLE_CRITICAL_HIT = 2012;
 	public const PARTICLE_ENDERMAN_TELEPORT = 2013;
 	public const PARTICLE_PUNCH_BLOCK = 2014;
+	public const PARTICLE_BUBBLE = 2015;
+	public const PARTICLE_EVAPORATE = 2016;
+	public const PARTICLE_ARMOR_STAND_DESTROY = 2017;
+	public const PARTICLE_EGG_PUNCH = 2018;
+	public const PARTICLE_EGG_BREAK = 2019;
+	public const PARTICLE_ICE_EVAPORATE = 2020;
+	public const PARTICLE_DESTROY_NO_SOUND = 2021;
+	public const PARTICLE_KNOCKBACK_ROAR = 2022; //spews out tons of white particles
+	public const PARTICLE_TELEPORT_TRAIL = 2023;
+	public const PARTICLE_POINT_CLOUD = 2024;
+	public const PARTICLE_EXPLODE = 2025; //data >= 2 = huge explode seed, otherwise huge explode
+	public const PARTICLE_BLOCK_EXPLODE = 2026;
+	public const PARTICLE_VIBRATION_SIGNAL = 2027;
+	public const PARTICLE_DRIPSTONE_DRIP = 2028;
+	public const PARTICLE_FIZZ = 2029;
+	public const COPPER_WAX_ON = 2030; //sound + particles
+	public const COPPER_WAX_OFF = 2031; //sound + particles
+	public const COPPER_SCRAPE = 2032; //sound + particles
+	public const PARTICLE_ELECTRIC_SPARK = 2033; //lightning rod
+	public const PARTICLE_TURTLE_EGG_GROW = 2034;
+	public const PARTICLE_SCULK_SHRIEK = 2035;
+	public const PARTICLE_SCULK_CATALYST_BLOOM = 2036;
 
 	public const START_RAIN = 3001;
 	public const START_THUNDER = 3002;
@@ -103,14 +127,22 @@ final class LevelEvent{
 	public const CAULDRON_FILL_WATER = 3506;
 	public const CAULDRON_TAKE_WATER = 3507;
 	public const CAULDRON_ADD_DYE = 3508;
-	public const CAULDRON_CLEAN_BANNER = 3509;
+	public const CAULDRON_CLEAN_BANNER = 3509; //particle + sound
+	public const PARTICLE_CAULDRON_FLUSH = 3510;
+	public const PARTICLE_AGENT_SPAWN = 3511;
+	public const SOUND_CAULDRON_FILL_LAVA = 3512;
+	public const SOUND_CAULDRON_TAKE_LAVA = 3513;
+	public const SOUND_CAULDRON_FILL_POWDER_SNOW = 3514;
+	public const SOUND_CAULDRON_TAKE_POWDER_SNOW = 3515;
 
 	public const BLOCK_START_BREAK = 3600;
 	public const BLOCK_STOP_BREAK = 3601;
+	public const BLOCK_BREAK_SPEED = 3602;
 
 	public const SET_DATA = 4000;
 
 	public const PLAYERS_SLEEPING = 9800;
+	public const NUMBER_OF_SLEEPING_PLAYERS = 9801;
 
 	public const ADD_PARTICLE_MASK = 0x4000;
 }

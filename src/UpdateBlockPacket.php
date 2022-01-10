@@ -29,11 +29,11 @@ use pocketmine\network\mcpe\protocol\types\BlockPosition;
 class UpdateBlockPacket extends DataPacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::UPDATE_BLOCK_PACKET;
 
-	public const FLAG_NONE      = 0b0000;
+	public const FLAG_NONE = 0b0000;
 	public const FLAG_NEIGHBORS = 0b0001;
-	public const FLAG_NETWORK   = 0b0010;
+	public const FLAG_NETWORK = 0b0010;
 	public const FLAG_NOGRAPHIC = 0b0100;
-	public const FLAG_PRIORITY  = 0b1000;
+	public const FLAG_PRIORITY = 0b1000;
 
 	public const DATA_LAYER_NORMAL = 0;
 	public const DATA_LAYER_LIQUID = 1;

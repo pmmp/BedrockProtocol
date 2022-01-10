@@ -111,9 +111,9 @@ class AdventureSettingsPacket extends DataPacket implements ClientboundPacket, S
 
 	public function setFlag(int $flag, bool $value) : void{
 		if(($flag & self::BITFLAG_SECOND_SET) !== 0){
-			$flagSet =& $this->flags2;
+			$flagSet = &$this->flags2;
 		}else{
-			$flagSet =& $this->flags;
+			$flagSet = &$this->flags;
 		}
 
 		if($value){

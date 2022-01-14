@@ -36,14 +36,14 @@ final class PlayerMovementSettings{
 	public function isServerAuthoritativeBlockBreaking() : bool{ return $this->serverAuthoritativeBlockBreaking; }
 
 	public static function read(PacketSerializer $in) : self{
-		$movementType = $in->getVarInt();
+		$movementType = $in->getUnsignedVarInt();
 		$rewindHistorySize = $in->getVarInt();
 		$serverAuthBlockBreaking = $in->getBool();
 		return new self($movementType, $rewindHistorySize, $serverAuthBlockBreaking);
 	}
 
 	public function write(PacketSerializer $out) : void{
-		$out->putVarInt($this->movementType);
+		$out->putUnsignedVarInt($this->movementType);
 		$out->putVarInt($this->rewindHistorySize);
 		$out->putBool($this->serverAuthoritativeBlockBreaking);
 	}

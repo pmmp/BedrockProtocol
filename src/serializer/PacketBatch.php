@@ -51,8 +51,6 @@ class PacketBatch{
 	/**
 	 * Constructs a packet batch from the given list of packets.
 	 *
-	 * @param Packet ...$packets
-	 *
 	 * @return PacketBatch
 	 */
 	public static function fromPackets(PacketSerializerContext $context, Packet ...$packets) : self{

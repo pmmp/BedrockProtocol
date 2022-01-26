@@ -16,6 +16,7 @@ namespace pocketmine\network\mcpe\protocol\types\entity;
 
 use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 use pocketmine\network\mcpe\protocol\types\GetTypeIdFromConstTrait;
+use pocketmine\utils\Binary;
 
 final class ByteMetadataProperty implements MetadataProperty{
 	use GetTypeIdFromConstTrait;
@@ -32,7 +33,7 @@ final class ByteMetadataProperty implements MetadataProperty{
 	}
 
 	public static function read(PacketSerializer $in) : self{
-		return new self($in->getByte());
+		return new self(Binary::signByte($in->getByte()));
 	}
 
 	public function write(PacketSerializer $out) : void{

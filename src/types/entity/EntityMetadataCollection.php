@@ -173,4 +173,20 @@ class EntityMetadataCollection{
 	public function clearDirtyProperties() : void{
 		$this->dirtyProperties = [];
 	}
+
+	/**
+	 * Marks the selected property for resending.
+	 */
+	public function markDirty(int $key) : void{
+		if(isset($this->properties[$key])){
+			$this->dirtyProperties[$key] = $this->properties[$key];
+		}
+	}
+
+	/**
+	 * Marks all properties for resending.
+	 */
+	public function markAllDirty() : void{
+		$this->dirtyProperties = $this->properties;
+	}
 }

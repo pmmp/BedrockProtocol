@@ -132,8 +132,8 @@ final class LevelSoundEvent{
 	public const RECORD_WARD = 110;
 	public const RECORD_11 = 111;
 	public const RECORD_WAIT = 112;
-        public const RECORD_PIGSTEP = 372;
-        public const RECORD_OTHERSIDE = 373;
+	public const RECORD_PIGSTEP = 372;
+	public const RECORD_OTHERSIDE = 373;
 	public const STOP_RECORD = 113; //Not really a sound
 	public const FLOP = 114;
 	public const ELDERGUARDIAN_CURSE = 115;

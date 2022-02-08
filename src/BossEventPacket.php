@@ -36,6 +36,8 @@ class BossEventPacket extends DataPacket implements ClientboundPacket, Serverbou
 	public const TYPE_UNKNOWN_6 = 6;
 	/* S2C: Not implemented :( Intended to alter bar appearance, but these currently produce no effect on client-side whatsoever. */
 	public const TYPE_TEXTURE = 7;
+	/* C2S: Client asking the server to resend all boss data. */
+	public const TYPE_QUERY = 8;
 
 	public int $bossActorUniqueId;
 	public int $eventType;
@@ -100,12 +102,19 @@ class BossEventPacket extends DataPacket implements ClientboundPacket, Serverbou
 		return $result;
 	}
 
+	public static function query(int $bossActorUniqueId, int $playerActorUniqueId) : self{
+		$result = self::base($bossActorUniqueId, self::TYPE_QUERY);
+		$result->playerActorUniqueId = $playerActorUniqueId;
+		return $result;
+	}
+
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->bossActorUniqueId = $in->getActorUniqueId();
 		$this->eventType = $in->getUnsignedVarInt();
 		switch($this->eventType){
 			case self::TYPE_REGISTER_PLAYER:
 			case self::TYPE_UNREGISTER_PLAYER:
+			case self::TYPE_QUERY:
 				$this->playerActorUniqueId = $in->getActorUniqueId();
 				break;
 			/** @noinspection PhpMissingBreakStatementInspection */
@@ -136,6 +145,7 @@ class BossEventPacket extends DataPacket implements ClientboundPacket, Serverbou
 		switch($this->eventType){
 			case self::TYPE_REGISTER_PLAYER:
 			case self::TYPE_UNREGISTER_PLAYER:
+			case self::TYPE_QUERY:
 				$out->putActorUniqueId($this->playerActorUniqueId);
 				break;
 			/** @noinspection PhpMissingBreakStatementInspection */

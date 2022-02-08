@@ -12,15 +12,16 @@
 
 declare(strict_types=1);
 
-namespace pocketmine\network\mcpe\protocol\types;
+namespace pocketmine\network\mcpe\protocol\types\inventory\stackrequest;
 
-final class SubChunkRequestResult{
+use pocketmine\network\mcpe\protocol\types\GetTypeIdFromConstTrait;
 
-	public const SUCCESS = 1;
-	//why even respond at all in these cases? ...
-	public const NO_SUCH_CHUNK = 2;
-	public const WRONG_DIMENSION = 3;
-	public const NULL_PLAYER = 4;
-	public const Y_INDEX_OUT_OF_BOUNDS = 5;
-	public const SUCCESS_ALL_AIR = 6;
+/**
+ * Take an item out of a bundle.
+ */
+final class TakeFromBundleStackRequestAction extends ItemStackRequestAction{
+	use GetTypeIdFromConstTrait;
+	use TakeOrPlaceStackRequestActionTrait;
+
+	public const ID = ItemStackRequestActionType::TAKE_FROM_BUNDLE;
 }

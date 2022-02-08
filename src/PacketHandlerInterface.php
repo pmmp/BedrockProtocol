@@ -357,4 +357,10 @@ interface PacketHandlerInterface{
 	public function handleSubChunk(SubChunkPacket $packet) : bool;
 
 	public function handleSubChunkRequest(SubChunkRequestPacket $packet) : bool;
+
+	public function handlePlayerStartItemCooldown(PlayerStartItemCooldownPacket $packet) : bool;
+
+	public function handleScriptMessage(ScriptMessagePacket $packet) : bool;
+
+	public function handleCodeBuilderSource(CodeBuilderSourcePacket $packet) : bool;
 }

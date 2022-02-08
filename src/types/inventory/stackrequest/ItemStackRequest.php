@@ -65,6 +65,8 @@ final class ItemStackRequest{
 			case DestroyStackRequestAction::ID: return DestroyStackRequestAction::read($in);
 			case CraftingConsumeInputStackRequestAction::ID: return CraftingConsumeInputStackRequestAction::read($in);
 			case CraftingMarkSecondaryResultStackRequestAction::ID: return CraftingMarkSecondaryResultStackRequestAction::read($in);
+			case PlaceIntoBundleStackRequestAction::ID: return PlaceIntoBundleStackRequestAction::read($in);
+			case TakeFromBundleStackRequestAction::ID: return TakeFromBundleStackRequestAction::read($in);
 			case LabTableCombineStackRequestAction::ID: return LabTableCombineStackRequestAction::read($in);
 			case BeaconPaymentStackRequestAction::ID: return BeaconPaymentStackRequestAction::read($in);
 			case MineBlockStackRequestAction::ID: return MineBlockStackRequestAction::read($in);
@@ -72,6 +74,8 @@ final class ItemStackRequest{
 			case CraftRecipeAutoStackRequestAction::ID: return CraftRecipeAutoStackRequestAction::read($in);
 			case CreativeCreateStackRequestAction::ID: return CreativeCreateStackRequestAction::read($in);
 			case CraftRecipeOptionalStackRequestAction::ID: return CraftRecipeOptionalStackRequestAction::read($in);
+			case GrindstoneStackRequestAction::ID: return GrindstoneStackRequestAction::read($in);
+			case LoomStackRequestAction::ID: return LoomStackRequestAction::read($in);
 			case DeprecatedCraftingNonImplementedStackRequestAction::ID: return DeprecatedCraftingNonImplementedStackRequestAction::read($in);
 			case DeprecatedCraftingResultsStackRequestAction::ID: return DeprecatedCraftingResultsStackRequestAction::read($in);
 		}

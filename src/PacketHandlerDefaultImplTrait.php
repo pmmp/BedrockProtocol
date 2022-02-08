@@ -701,4 +701,16 @@ trait PacketHandlerDefaultImplTrait{
 	public function handleSubChunkRequest(SubChunkRequestPacket $packet) : bool{
 		return false;
 	}
+
+	public function handlePlayerStartItemCooldown(PlayerStartItemCooldownPacket $packet) : bool{
+		return false;
+	}
+
+	public function handleScriptMessage(ScriptMessagePacket $packet) : bool{
+		return false;
+	}
+
+	public function handleCodeBuilderSource(CodeBuilderSourcePacket $packet) : bool{
+		return false;
+	}
 }

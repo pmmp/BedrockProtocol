@@ -204,6 +204,9 @@ class PacketPool{
 		$this->registerPacket(new PhotoInfoRequestPacket());
 		$this->registerPacket(new SubChunkPacket());
 		$this->registerPacket(new SubChunkRequestPacket());
+		$this->registerPacket(new PlayerStartItemCooldownPacket());
+		$this->registerPacket(new ScriptMessagePacket());
+		$this->registerPacket(new CodeBuilderSourcePacket());
 	}
 
 	public function registerPacket(Packet $packet) : void{

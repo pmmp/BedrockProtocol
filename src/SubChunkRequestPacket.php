@@ -15,47 +15,62 @@ declare(strict_types=1);
 namespace pocketmine\network\mcpe\protocol;
 
 use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pocketmine\network\mcpe\protocol\types\SubChunkPosition;
+use pocketmine\network\mcpe\protocol\types\SubChunkPositionOffset;
+use function count;
 
 class SubChunkRequestPacket extends DataPacket implements ServerboundPacket{
 	public const NETWORK_ID = ProtocolInfo::SUB_CHUNK_REQUEST_PACKET;
 
 	private int $dimension;
-	private int $subChunkX;
-	private int $subChunkY;
-	private int $subChunkZ;
+	private SubChunkPosition $basePosition;
+	/**
+	 * @var SubChunkPositionOffset[]
+	 * @phpstan-var list<SubChunkPositionOffset>
+	 */
+	private array $entries;
 
 	/**
 	 * @generate-create-func
+	 * @param SubChunkPositionOffset[] $entries
+	 * @phpstan-param list<SubChunkPositionOffset> $entries
 	 */
-	public static function create(int $dimension, int $subChunkX, int $subChunkY, int $subChunkZ) : self{
+	public static function create(int $dimension, SubChunkPosition $basePosition, array $entries) : self{
 		$result = new self;
 		$result->dimension = $dimension;
-		$result->subChunkX = $subChunkX;
-		$result->subChunkY = $subChunkY;
-		$result->subChunkZ = $subChunkZ;
+		$result->basePosition = $basePosition;
+		$result->entries = $entries;
 		return $result;
 	}
 
 	public function getDimension() : int{ return $this->dimension; }
 
-	public function getSubChunkX() : int{ return $this->subChunkX; }
+	public function getBasePosition() : SubChunkPosition{ return $this->basePosition; }
 
-	public function getSubChunkY() : int{ return $this->subChunkY; }
-
-	public function getSubChunkZ() : int{ return $this->subChunkZ; }
+	/**
+	 * @return SubChunkPositionOffset[]
+	 * @phpstan-return list<SubChunkPositionOffset>
+	 */
+	public function getEntries() : array{ return $this->entries; }
 
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->dimension = $in->getVarInt();
-		$this->subChunkX = $in->getVarInt();
-		$this->subChunkY = $in->getVarInt();
-		$this->subChunkZ = $in->getVarInt();
+		$this->basePosition = SubChunkPosition::read($in);
+
+		$this->entries = [];
+		for($i = 0, $count = $in->getLInt(); $i < $count; $i++){
+			$this->entries[] = SubChunkPositionOffset::read($in);
+		}
 	}
 
 	protected function encodePayload(PacketSerializer $out) : void{
 		$out->putVarInt($this->dimension);
-		$out->putVarInt($this->subChunkX);
-		$out->putVarInt($this->subChunkY);
-		$out->putVarInt($this->subChunkZ);
+		$this->basePosition->write($out);
+
+		$out->putLInt(count($this->entries));
+		foreach($this->entries as $entry){
+			$entry->write($out);
+		}
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

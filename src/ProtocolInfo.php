@@ -32,11 +32,11 @@ final class ProtocolInfo{
 	 */
 
 	/** Actual Minecraft: PE protocol version */
-	public const CURRENT_PROTOCOL = 475;
+	public const CURRENT_PROTOCOL = 486;
 	/** Current Minecraft PE version reported by the server. This is usually the earliest currently supported version. */
-	public const MINECRAFT_VERSION = 'v1.18.0';
+	public const MINECRAFT_VERSION = 'v1.18.10';
 	/** Version number sent to clients in ping responses. */
-	public const MINECRAFT_VERSION_NETWORK = '1.18.0';
+	public const MINECRAFT_VERSION_NETWORK = '1.18.10';
 
 	public const LOGIN_PACKET = 0x01;
 	public const PLAY_STATUS_PACKET = 0x02;
@@ -213,5 +213,8 @@ final class ProtocolInfo{
 	public const PHOTO_INFO_REQUEST_PACKET = 0xad;
 	public const SUB_CHUNK_PACKET = 0xae;
 	public const SUB_CHUNK_REQUEST_PACKET = 0xaf;
+	public const PLAYER_START_ITEM_COOLDOWN_PACKET = 0xb0;
+	public const SCRIPT_MESSAGE_PACKET = 0xb1;
+	public const CODE_BUILDER_SOURCE_PACKET = 0xb2;
 
 }

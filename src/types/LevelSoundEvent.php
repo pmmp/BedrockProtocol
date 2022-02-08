@@ -390,5 +390,9 @@ final class LevelSoundEvent{
 	public const WARDEN_NEARBY_CLOSER = 368;
 	public const WARDEN_NEARBY_CLOSEST = 369;
 	public const WARDEN_SLIGHTLY_ANGRY = 370;
-	public const UNDEFINED = 371;
+	public const RECORD_OTHERSIDE = 371;
+	public const TONGUE = 372;
+	public const IRONGOLEM_CRACK = 373;
+	public const IRONGOLEM_REPAIR = 374;
+	public const UNDEFINED = 375;
 }

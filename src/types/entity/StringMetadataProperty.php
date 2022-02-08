@@ -28,6 +28,8 @@ final class StringMetadataProperty implements MetadataProperty{
 		$this->value = $value;
 	}
 
+	public function getValue() : string{ return $this->value; }
+
 	public static function read(PacketSerializer $in) : self{
 		return new self($in->getString());
 	}

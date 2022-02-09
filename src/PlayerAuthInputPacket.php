@@ -49,7 +49,7 @@ class PlayerAuthInputPacket extends DataPacket implements ServerboundPacket{
 	private ?array $blockActions = null;
 
 	/**
-	 * @param int                      $inputFlags @see InputFlags
+	 * @param int                      $inputFlags @see PlayerAuthInputFlags
 	 * @param int                      $inputMode @see InputMode
 	 * @param int                      $playMode @see PlayMode
 	 * @param Vector3|null             $vrGazeDirection only used when PlayMode::VR

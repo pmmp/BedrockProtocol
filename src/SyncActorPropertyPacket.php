@@ -17,7 +17,7 @@ namespace pocketmine\network\mcpe\protocol;
 use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 use pocketmine\network\mcpe\protocol\types\CacheableNbt;
 
-class SyncActorPropertyPacket extends DataPacket{
+class SyncActorPropertyPacket extends DataPacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::SYNC_ACTOR_PROPERTY_PACKET;
 
 	/** @phpstan-var CacheableNbt<\pocketmine\nbt\tag\CompoundTag> */

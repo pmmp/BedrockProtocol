@@ -16,7 +16,7 @@ namespace pocketmine\network\mcpe\protocol;
 
 use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 
-class CodeBuilderSourcePacket extends DataPacket{
+class CodeBuilderSourcePacket extends DataPacket implements ServerboundPacket{
 	public const NETWORK_ID = ProtocolInfo::CODE_BUILDER_SOURCE_PACKET;
 
 	private int $operation;

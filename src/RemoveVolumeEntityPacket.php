@@ -16,7 +16,7 @@ namespace pocketmine\network\mcpe\protocol;
 
 use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 
-class RemoveVolumeEntityPacket extends DataPacket{
+class RemoveVolumeEntityPacket extends DataPacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::REMOVE_VOLUME_ENTITY_PACKET;
 
 	private int $entityNetId;

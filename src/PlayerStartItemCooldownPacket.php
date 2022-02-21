@@ -16,7 +16,7 @@ namespace pocketmine\network\mcpe\protocol;
 
 use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 
-class PlayerStartItemCooldownPacket extends DataPacket{
+class PlayerStartItemCooldownPacket extends DataPacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::PLAYER_START_ITEM_COOLDOWN_PACKET;
 
 	private string $itemCategory;

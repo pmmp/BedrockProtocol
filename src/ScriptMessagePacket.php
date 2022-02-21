@@ -16,7 +16,7 @@ namespace pocketmine\network\mcpe\protocol;
 
 use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 
-class ScriptMessagePacket extends DataPacket{
+class ScriptMessagePacket extends DataPacket implements ClientboundPacket, ServerboundPacket{
 	public const NETWORK_ID = ProtocolInfo::SCRIPT_MESSAGE_PACKET;
 
 	private string $messageId;

@@ -49,7 +49,7 @@ class PlayerAuthInputPacket extends DataPacket implements ServerboundPacket{
 	private ?array $blockActions = null;
 
 	/**
-	 * @param int                      $inputFlags @see InputFlags
+	 * @param int                      $inputFlags @see PlayerAuthInputFlags
 	 * @param int                      $inputMode @see InputMode
 	 * @param int                      $playMode @see PlayMode
 	 * @param Vector3|null             $vrGazeDirection only used when PlayMode::VR
@@ -68,15 +68,15 @@ class PlayerAuthInputPacket extends DataPacket implements ServerboundPacket{
 		$result->moveVecX = $moveVecX;
 		$result->moveVecZ = $moveVecZ;
 
-		$result->inputFlags = $inputFlags & ~(PlayerAuthInputFlags::PERFORM_ITEM_STACK_REQUEST | PlayerAuthInputFlags::PERFORM_ITEM_INTERACTION | PlayerAuthInputFlags::PERFORM_BLOCK_ACTIONS);
+		$result->inputFlags = $inputFlags & ~((1 << PlayerAuthInputFlags::PERFORM_ITEM_STACK_REQUEST) | (1 << PlayerAuthInputFlags::PERFORM_ITEM_INTERACTION) | (1 << PlayerAuthInputFlags::PERFORM_BLOCK_ACTIONS));
 		if($itemStackRequest !== null){
-			$result->inputFlags |= PlayerAuthInputFlags::PERFORM_ITEM_STACK_REQUEST;
+			$result->inputFlags |= 1 << PlayerAuthInputFlags::PERFORM_ITEM_STACK_REQUEST;
 		}
 		if($itemInteractionData !== null){
-			$result->inputFlags |= PlayerAuthInputFlags::PERFORM_ITEM_INTERACTION;
+			$result->inputFlags |= 1 << PlayerAuthInputFlags::PERFORM_ITEM_INTERACTION;
 		}
 		if($blockActions !== null){
-			$result->inputFlags |= PlayerAuthInputFlags::PERFORM_BLOCK_ACTIONS;
+			$result->inputFlags |= 1 << PlayerAuthInputFlags::PERFORM_BLOCK_ACTIONS;
 		}
 
 		$result->inputMode = $inputMode;

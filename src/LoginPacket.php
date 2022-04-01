@@ -54,7 +54,13 @@ class LoginPacket extends DataPacket implements ServerboundPacket{
 	protected function decodeConnectionRequest(string $binary) : void{
 		$connRequestReader = new BinaryStream($binary);
 
-		$chainDataJson = json_decode($connRequestReader->get($connRequestReader->getLInt()));
+		$chainDataJsonLength = $connRequestReader->getLInt();
+		if($chainDataJsonLength <= 0){
+			//technically this is always positive; the problem results because getLInt() is implicitly signed
+			//this is inconsistent with many other methods, but we can't do anything about that for now
+			throw new PacketDecodeException("Length of chain data JSON must be positive");
+		}
+		$chainDataJson = json_decode($connRequestReader->get($chainDataJsonLength));
 		if(!is_object($chainDataJson)){
 			throw new PacketDecodeException("Failed decoding chain data JSON: " . json_last_error_msg());
 		}
@@ -68,7 +74,13 @@ class LoginPacket extends DataPacket implements ServerboundPacket{
 		}
 
 		$this->chainDataJwt = $chainData;
-		$this->clientDataJwt = $connRequestReader->get($connRequestReader->getLInt());
+		$clientDataJwtLength = $connRequestReader->getLInt();
+		if($clientDataJwtLength <= 0){
+			//technically this is always positive; the problem results because getLInt() is implicitly signed
+			//this is inconsistent with many other methods, but we can't do anything about that for now
+			throw new PacketDecodeException("Length of clientData JWT must be positive");
+		}
+		$this->clientDataJwt = $connRequestReader->get($clientDataJwtLength);
 	}
 
 	protected function encodePayload(PacketSerializer $out) : void{

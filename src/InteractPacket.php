@@ -34,7 +34,7 @@ class InteractPacket extends DataPacket implements ServerboundPacket{
 		$this->action = $in->getByte();
 		$this->targetActorRuntimeId = $in->getActorRuntimeId();
 
-		if($this->action === self::ACTION_MOUSEOVER){
+		if($this->action === self::ACTION_MOUSEOVER || $this->action === self::ACTION_LEAVE_VEHICLE){
 			//TODO: should this be a vector3?
 			$this->x = $in->getLFloat();
 			$this->y = $in->getLFloat();
@@ -46,7 +46,7 @@ class InteractPacket extends DataPacket implements ServerboundPacket{
 		$out->putByte($this->action);
 		$out->putActorRuntimeId($this->targetActorRuntimeId);
 
-		if($this->action === self::ACTION_MOUSEOVER){
+		if($this->action === self::ACTION_MOUSEOVER || $this->action === self::ACTION_LEAVE_VEHICLE){
 			$out->putLFloat($this->x);
 			$out->putLFloat($this->y);
 			$out->putLFloat($this->z);

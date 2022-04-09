@@ -55,7 +55,7 @@ class InteractPacket extends DataPacket implements ServerboundPacket{
 		$out->putByte($this->action);
 		$out->putActorRuntimeId($this->targetActorRuntimeId);
 
-		if($this->action === self::ACTION_MOUSEOVER === self::ACTION_LEAVE_VEHICLE){
+		if($this->action === self::ACTION_MOUSEOVER || $this->action === self::ACTION_LEAVE_VEHICLE){
 			$out->putLFloat($this->x);
 			$out->putLFloat($this->y);
 			$out->putLFloat($this->z);

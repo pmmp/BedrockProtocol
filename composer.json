@@ -31,5 +31,8 @@
     "license": "LGPL-3.0",
     "config": {
         "sort-packages": true
+    },
+    "scripts": {
+        "update-create-methods": "@php tools/generate-create-static-methods.php"
     }
 }

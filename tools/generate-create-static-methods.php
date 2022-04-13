@@ -56,7 +56,7 @@ function generateCreateFunction(\ReflectionClass $reflect, int $indentLevel, int
 			$paramTags[] = [$matches[1], $property->getName()];
 			$longestParamType = max($longestParamType, strlen($matches[1]));
 		}
-		if(($phpDoc = $property->getDocComment()) !== false && preg_match('/@phpstan-var ([A-Za-z\d\[\]\\\\<>:\(\)\$ ,]+)/', $phpDoc, $matches) === 1){
+		if(($phpDoc = $property->getDocComment()) !== false && preg_match('/@phpstan-var ([A-Za-z\d\[\]\\\\<>:\*\(\)\$ ,]+)/', $phpDoc, $matches) === 1){
 			$matches[1] = trim($matches[1]);
 			$phpstanParamTags[] = [$matches[1], $property->getName()];
 			$longestPhpstanParamType = max($longestPhpstanParamType, strlen($matches[1]));

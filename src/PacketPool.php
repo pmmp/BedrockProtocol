@@ -207,6 +207,10 @@ class PacketPool{
 		$this->registerPacket(new PlayerStartItemCooldownPacket());
 		$this->registerPacket(new ScriptMessagePacket());
 		$this->registerPacket(new CodeBuilderSourcePacket());
+		$this->registerPacket(new TickingAreasLoadStatusPacket());
+		$this->registerPacket(new DimensionDataPacket());
+		$this->registerPacket(new AgentActionEventPacket());
+		$this->registerPacket(new ChangeMobPropertyPacket());
 	}
 
 	public function registerPacket(Packet $packet) : void{

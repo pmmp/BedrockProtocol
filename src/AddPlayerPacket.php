@@ -37,6 +37,7 @@ class AddPlayerPacket extends DataPacket implements ClientboundPacket{
 	public float $yaw = 0.0;
 	public float $headYaw = 0.0;
 	public ItemStackWrapper $item;
+	public int $gameMode;
 	/**
 	 * @var MetadataProperty[]
 	 * @phpstan-var array<int, MetadataProperty>
@@ -68,6 +69,7 @@ class AddPlayerPacket extends DataPacket implements ClientboundPacket{
 		float $yaw,
 		float $headYaw,
 		ItemStackWrapper $item,
+		int $gameMode,
 		array $metadata,
 		AdventureSettingsPacket $adventureSettingsPacket,
 		array $links,
@@ -86,6 +88,7 @@ class AddPlayerPacket extends DataPacket implements ClientboundPacket{
 		$result->yaw = $yaw;
 		$result->headYaw = $headYaw;
 		$result->item = $item;
+		$result->gameMode = $gameMode;
 		$result->metadata = $metadata;
 		$result->adventureSettingsPacket = $adventureSettingsPacket;
 		$result->links = $links;
@@ -106,6 +109,7 @@ class AddPlayerPacket extends DataPacket implements ClientboundPacket{
 		$this->yaw = $in->getLFloat();
 		$this->headYaw = $in->getLFloat();
 		$this->item = ItemStackWrapper::read($in);
+		$this->gameMode = $in->getVarInt();
 		$this->metadata = $in->getEntityMetadata();
 
 		$this->adventureSettingsPacket = new AdventureSettingsPacket();
@@ -132,6 +136,7 @@ class AddPlayerPacket extends DataPacket implements ClientboundPacket{
 		$out->putLFloat($this->yaw);
 		$out->putLFloat($this->headYaw);
 		$this->item->write($out);
+		$out->putVarInt($this->gameMode);
 		$out->putEntityMetadata($this->metadata);
 
 		$this->adventureSettingsPacket->encodePayload($out);

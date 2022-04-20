@@ -16,37 +16,31 @@ namespace pocketmine\network\mcpe\protocol;
 
 use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 
-class RemoveVolumeEntityPacket extends DataPacket implements ClientboundPacket{
-	public const NETWORK_ID = ProtocolInfo::REMOVE_VOLUME_ENTITY_PACKET;
+class TickingAreasLoadStatusPacket extends DataPacket implements ClientboundPacket{
+	public const NETWORK_ID = ProtocolInfo::TICKING_AREAS_LOAD_STATUS_PACKET;
 
-	private int $entityNetId;
-	private int $dimension;
+	private bool $waitingForPreload;
 
 	/**
 	 * @generate-create-func
 	 */
-	public static function create(int $entityNetId, int $dimension) : self{
+	public static function create(bool $waitingForPreload) : self{
 		$result = new self;
-		$result->entityNetId = $entityNetId;
-		$result->dimension = $dimension;
+		$result->waitingForPreload = $waitingForPreload;
 		return $result;
 	}
 
-	public function getEntityNetId() : int{ return $this->entityNetId; }
-
-	public function getDimension() : int{ return $this->dimension; }
+	public function isWaitingForPreload() : bool{ return $this->waitingForPreload; }
 
 	protected function decodePayload(PacketSerializer $in) : void{
-		$this->entityNetId = $in->getUnsignedVarInt();
-		$this->dimension = $in->getVarInt();
+		$this->waitingForPreload = $in->getBool();
 	}
 
 	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putUnsignedVarInt($this->entityNetId);
-		$out->putVarInt($this->dimension);
+		$out->putBool($this->waitingForPreload);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{
-		return $handler->handleRemoveVolumeEntity($this);
+		return $handler->handleTickingAreasLoadStatus($this);
 	}
 }

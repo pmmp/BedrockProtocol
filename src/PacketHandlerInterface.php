@@ -363,4 +363,12 @@ interface PacketHandlerInterface{
 	public function handleScriptMessage(ScriptMessagePacket $packet) : bool;
 
 	public function handleCodeBuilderSource(CodeBuilderSourcePacket $packet) : bool;
+
+	public function handleTickingAreasLoadStatus(TickingAreasLoadStatusPacket $packet) : bool;
+
+	public function handleDimensionData(DimensionDataPacket $packet) : bool;
+
+	public function handleAgentActionEvent(AgentActionEventPacket $packet) : bool;
+
+	public function handleChangeMobProperty(ChangeMobPropertyPacket $packet) : bool;
 }

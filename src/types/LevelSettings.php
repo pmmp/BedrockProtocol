@@ -84,7 +84,7 @@ final class LevelSettings{
 	 * @throws PacketDecodeException
 	 */
 	private function internalRead(PacketSerializer $in) : void{
-		$this->seed = $in->getVarInt();
+		$this->seed = $in->getLLong();
 		$this->spawnSettings = SpawnSettings::read($in);
 		$this->generator = $in->getVarInt();
 		$this->worldGamemode = $in->getVarInt();
@@ -130,7 +130,7 @@ final class LevelSettings{
 	}
 
 	public function write(PacketSerializer $out) : void{
-		$out->putVarInt($this->seed);
+		$out->putLLong($this->seed);
 		$this->spawnSettings->write($out);
 		$out->putVarInt($this->generator);
 		$out->putVarInt($this->worldGamemode);

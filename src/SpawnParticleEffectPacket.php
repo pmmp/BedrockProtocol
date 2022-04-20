@@ -25,16 +25,18 @@ class SpawnParticleEffectPacket extends DataPacket implements ClientboundPacket{
 	public int $actorUniqueId = -1; //default none
 	public Vector3 $position;
 	public string $particleName;
+	public string $molangVariablesJson;
 
 	/**
 	 * @generate-create-func
 	 */
-	public static function create(int $dimensionId, int $actorUniqueId, Vector3 $position, string $particleName) : self{
+	public static function create(int $dimensionId, int $actorUniqueId, Vector3 $position, string $particleName, string $molangVariablesJson) : self{
 		$result = new self;
 		$result->dimensionId = $dimensionId;
 		$result->actorUniqueId = $actorUniqueId;
 		$result->position = $position;
 		$result->particleName = $particleName;
+		$result->molangVariablesJson = $molangVariablesJson;
 		return $result;
 	}
 
@@ -43,6 +45,7 @@ class SpawnParticleEffectPacket extends DataPacket implements ClientboundPacket{
 		$this->actorUniqueId = $in->getActorUniqueId();
 		$this->position = $in->getVector3();
 		$this->particleName = $in->getString();
+		$this->molangVariablesJson = $in->getString();
 	}
 
 	protected function encodePayload(PacketSerializer $out) : void{
@@ -50,6 +53,7 @@ class SpawnParticleEffectPacket extends DataPacket implements ClientboundPacket{
 		$out->putActorUniqueId($this->actorUniqueId);
 		$out->putVector3($this->position);
 		$out->putString($this->particleName);
+		$out->putString($this->molangVariablesJson);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

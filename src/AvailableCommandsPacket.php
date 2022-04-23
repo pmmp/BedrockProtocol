@@ -47,11 +47,12 @@ class AvailableCommandsPacket extends DataPacket implements ClientboundPacket{
 
 	public const ARG_TYPE_FILEPATH = 0x10;
 
-	public const ARG_TYPE_POSITION = 0x20;
-
 	public const ARG_TYPE_EQUIPMENT_SLOT = 0x25;
 
 	public const ARG_TYPE_STRING = 0x26;
+
+	public const ARG_TYPE_INT_POSITION = 0x2e;
+	public const ARG_TYPE_FLOAT_POSITION = 0x2f;
 
 	public const ARG_TYPE_MESSAGE = 0x32;
 

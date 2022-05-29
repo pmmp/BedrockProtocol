@@ -53,9 +53,8 @@ class SpawnParticleEffectPacket extends DataPacket implements ClientboundPacket{
 		$out->putActorUniqueId($this->actorUniqueId);
 		$out->putVector3($this->position);
 		$out->putString($this->particleName);
-		$hasMolangVariables = ($this->molangVariablesJson !== null);
-		$out->putBool($hasMolangVariables);
-		if($hasMolangVariables){
+		$out->putBool($this->molangVariablesJson !== null);
+		if($this->molangVariablesJson !== null){
 			$out->putString($this->molangVariablesJson);
 		}
 	}

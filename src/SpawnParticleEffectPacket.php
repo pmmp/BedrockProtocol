@@ -45,7 +45,7 @@ class SpawnParticleEffectPacket extends DataPacket implements ClientboundPacket{
 		$this->actorUniqueId = $in->getActorUniqueId();
 		$this->position = $in->getVector3();
 		$this->particleName = $in->getString();
-		$this->molangVariablesJson = ($in->getBool()) ? $in->getString() : null;
+		$this->molangVariablesJson = $in->getBool() ? $in->getString() : null;
 	}
 
 	protected function encodePayload(PacketSerializer $out) : void{

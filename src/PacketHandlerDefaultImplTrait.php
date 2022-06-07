@@ -729,4 +729,20 @@ trait PacketHandlerDefaultImplTrait{
 	public function handleChangeMobProperty(ChangeMobPropertyPacket $packet) : bool{
 		return false;
 	}
+
+	public function handleLessonProgress(LessonProgressPacket $packet) : bool{
+		return false;
+	}
+
+	public function handleRequestAbility(RequestAbilityPacket $packet) : bool{
+		return false;
+	}
+
+	public function handleRequestPermissions(RequestPermissionsPacket $packet) : bool{
+		return false;
+	}
+
+	public function handleToastRequest(ToastRequestPacket $packet) : bool{
+		return false;
+	}
 }

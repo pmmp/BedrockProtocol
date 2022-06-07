@@ -211,6 +211,10 @@ class PacketPool{
 		$this->registerPacket(new DimensionDataPacket());
 		$this->registerPacket(new AgentActionEventPacket());
 		$this->registerPacket(new ChangeMobPropertyPacket());
+		$this->registerPacket(new LessonProgressPacket());
+		$this->registerPacket(new RequestAbilityPacket());
+		$this->registerPacket(new RequestPermissionsPacket());
+		$this->registerPacket(new ToastRequestPacket());
 	}
 
 	public function registerPacket(Packet $packet) : void{

@@ -47,6 +47,8 @@ final class PlayerAction{
 	public const INTERACT_BLOCK = 25;
 	public const PREDICT_DESTROY_BLOCK = 26;
 	public const CONTINUE_DESTROY_BLOCK = 27;
+	public const START_ITEM_USE_ON = 28;
+	public const STOP_ITEM_USE_ON = 29;
 
 	//Backwards compatibility (blame @dktapps)
 	public const CRACK_BREAK = 18;

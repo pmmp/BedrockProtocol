@@ -15,12 +15,14 @@ declare(strict_types=1);
 namespace pocketmine\network\mcpe\protocol;
 
 use pocketmine\math\Vector3;
+use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 use pocketmine\network\mcpe\protocol\types\BlockPaletteEntry;
 use pocketmine\network\mcpe\protocol\types\CacheableNbt;
 use pocketmine\network\mcpe\protocol\types\ItemTypeEntry;
 use pocketmine\network\mcpe\protocol\types\LevelSettings;
 use pocketmine\network\mcpe\protocol\types\PlayerMovementSettings;
+use Ramsey\Uuid\UuidInterface;
 use function count;
 
 class StartGamePacket extends DataPacket implements ClientboundPacket{
@@ -35,6 +37,9 @@ class StartGamePacket extends DataPacket implements ClientboundPacket{
 	public float $pitch;
 	public float $yaw;
 
+	/** @phpstan-var CacheableNbt<CompoundTag>  */
+	public CacheableNbt $playerActorProperties; //same as SyncActorPropertyPacket content
+
 	public LevelSettings $levelSettings;
 
 	public string $levelId = ""; //base64 string, usually the same as world folder name in vanilla
@@ -47,6 +52,7 @@ class StartGamePacket extends DataPacket implements ClientboundPacket{
 	public string $multiplayerCorrelationId = ""; //TODO: this should be filled with a UUID of some sort
 	public bool $enableNewInventorySystem = false; //TODO
 	public string $serverSoftwareVersion;
+	public UuidInterface $worldTemplateId; //why is this here twice ??? mojang
 
 	/**
 	 * @var BlockPaletteEntry[]
@@ -71,8 +77,9 @@ class StartGamePacket extends DataPacket implements ClientboundPacket{
 	 * @generate-create-func
 	 * @param BlockPaletteEntry[] $blockPalette
 	 * @param ItemTypeEntry[]     $itemTable
-	 * @phpstan-param list<BlockPaletteEntry> $blockPalette
-	 * @phpstan-param list<ItemTypeEntry>     $itemTable
+	 * @phpstan-param CacheableNbt<CompoundTag> $playerActorProperties
+	 * @phpstan-param list<BlockPaletteEntry>   $blockPalette
+	 * @phpstan-param list<ItemTypeEntry>       $itemTable
 	 */
 	public static function create(
 		int $actorUniqueId,
@@ -81,6 +88,7 @@ class StartGamePacket extends DataPacket implements ClientboundPacket{
 		Vector3 $playerPosition,
 		float $pitch,
 		float $yaw,
+		CacheableNbt $playerActorProperties,
 		LevelSettings $levelSettings,
 		string $levelId,
 		string $worldName,
@@ -92,6 +100,7 @@ class StartGamePacket extends DataPacket implements ClientboundPacket{
 		string $multiplayerCorrelationId,
 		bool $enableNewInventorySystem,
 		string $serverSoftwareVersion,
+		UuidInterface $worldTemplateId,
 		array $blockPalette,
 		int $blockPaletteChecksum,
 		array $itemTable,
@@ -103,6 +112,7 @@ class StartGamePacket extends DataPacket implements ClientboundPacket{
 		$result->playerPosition = $playerPosition;
 		$result->pitch = $pitch;
 		$result->yaw = $yaw;
+		$result->playerActorProperties = $playerActorProperties;
 		$result->levelSettings = $levelSettings;
 		$result->levelId = $levelId;
 		$result->worldName = $worldName;
@@ -114,6 +124,7 @@ class StartGamePacket extends DataPacket implements ClientboundPacket{
 		$result->multiplayerCorrelationId = $multiplayerCorrelationId;
 		$result->enableNewInventorySystem = $enableNewInventorySystem;
 		$result->serverSoftwareVersion = $serverSoftwareVersion;
+		$result->worldTemplateId = $worldTemplateId;
 		$result->blockPalette = $blockPalette;
 		$result->blockPaletteChecksum = $blockPaletteChecksum;
 		$result->itemTable = $itemTable;
@@ -160,7 +171,9 @@ class StartGamePacket extends DataPacket implements ClientboundPacket{
 		$this->multiplayerCorrelationId = $in->getString();
 		$this->enableNewInventorySystem = $in->getBool();
 		$this->serverSoftwareVersion = $in->getString();
+		$this->playerActorProperties = new CacheableNbt($in->getNbtCompoundRoot());
 		$this->blockPaletteChecksum = $in->getLLong();
+		$this->worldTemplateId = $in->getUUID();
 	}
 
 	protected function encodePayload(PacketSerializer $out) : void{
@@ -200,7 +213,9 @@ class StartGamePacket extends DataPacket implements ClientboundPacket{
 		$out->putString($this->multiplayerCorrelationId);
 		$out->putBool($this->enableNewInventorySystem);
 		$out->putString($this->serverSoftwareVersion);
+		$out->put($this->playerActorProperties->getEncodedNbt());
 		$out->putLLong($this->blockPaletteChecksum);
+		$out->putUUID($this->worldTemplateId);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

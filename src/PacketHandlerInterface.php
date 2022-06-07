@@ -371,4 +371,12 @@ interface PacketHandlerInterface{
 	public function handleAgentActionEvent(AgentActionEventPacket $packet) : bool;
 
 	public function handleChangeMobProperty(ChangeMobPropertyPacket $packet) : bool;
+
+	public function handleLessonProgress(LessonProgressPacket $packet) : bool;
+
+	public function handleRequestAbility(RequestAbilityPacket $packet) : bool;
+
+	public function handleRequestPermissions(RequestPermissionsPacket $packet) : bool;
+
+	public function handleToastRequest(ToastRequestPacket $packet) : bool;
 }

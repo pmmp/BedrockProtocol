@@ -17,6 +17,7 @@ namespace pocketmine\network\mcpe\protocol;
 use pocketmine\math\Vector3;
 use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 use pocketmine\network\mcpe\protocol\types\InputMode;
+use pocketmine\network\mcpe\protocol\types\InteractionMode;
 use pocketmine\network\mcpe\protocol\types\inventory\stackrequest\ItemStackRequest;
 use pocketmine\network\mcpe\protocol\types\ItemInteractionData;
 use pocketmine\network\mcpe\protocol\types\PlayerAction;
@@ -40,6 +41,7 @@ class PlayerAuthInputPacket extends DataPacket implements ServerboundPacket{
 	private int $inputFlags;
 	private int $inputMode;
 	private int $playMode;
+	private int $interactionMode;
 	private ?Vector3 $vrGazeDirection = null;
 	private int $tick;
 	private Vector3 $delta;
@@ -52,10 +54,11 @@ class PlayerAuthInputPacket extends DataPacket implements ServerboundPacket{
 	 * @param int                      $inputFlags @see PlayerAuthInputFlags
 	 * @param int                      $inputMode @see InputMode
 	 * @param int                      $playMode @see PlayMode
+	 * @param int                      $interactionMode @see InteractionMode
 	 * @param Vector3|null             $vrGazeDirection only used when PlayMode::VR
 	 * @param PlayerBlockAction[]|null $blockActions Blocks that the client has interacted with
 	 */
-	public static function create(Vector3 $position, float $pitch, float $yaw, float $headYaw, float $moveVecX, float $moveVecZ, int $inputFlags, int $inputMode, int $playMode, ?Vector3 $vrGazeDirection, int $tick, Vector3 $delta, ?ItemInteractionData $itemInteractionData, ?ItemStackRequest $itemStackRequest, ?array $blockActions) : self{
+	public static function create(Vector3 $position, float $pitch, float $yaw, float $headYaw, float $moveVecX, float $moveVecZ, int $inputFlags, int $inputMode, int $playMode, int $interactionMode, ?Vector3 $vrGazeDirection, int $tick, Vector3 $delta, ?ItemInteractionData $itemInteractionData, ?ItemStackRequest $itemStackRequest, ?array $blockActions) : self{
 		if($playMode === PlayMode::VR and $vrGazeDirection === null){
 			//yuck, can we get a properly written packet just once? ...
 			throw new \InvalidArgumentException("Gaze direction must be provided for VR play mode");
@@ -81,6 +84,7 @@ class PlayerAuthInputPacket extends DataPacket implements ServerboundPacket{
 
 		$result->inputMode = $inputMode;
 		$result->playMode = $playMode;
+		$result->interactionMode = $interactionMode;
 		if($vrGazeDirection !== null){
 			$result->vrGazeDirection = $vrGazeDirection->asVector3();
 		}
@@ -137,6 +141,13 @@ class PlayerAuthInputPacket extends DataPacket implements ServerboundPacket{
 		return $this->playMode;
 	}
 
+	/**
+	 * @see InteractionMode
+	 */
+	public function getInteractionMode() : int{
+		return $this->interactionMode;
+	}
+
 	public function getVrGazeDirection() : ?Vector3{
 		return $this->vrGazeDirection;
 	}
@@ -178,6 +189,7 @@ class PlayerAuthInputPacket extends DataPacket implements ServerboundPacket{
 		$this->inputFlags = $in->getUnsignedVarLong();
 		$this->inputMode = $in->getUnsignedVarInt();
 		$this->playMode = $in->getUnsignedVarInt();
+		$this->interactionMode = $in->getUnsignedVarInt();
 		if($this->playMode === PlayMode::VR){
 			$this->vrGazeDirection = $in->getVector3();
 		}
@@ -213,6 +225,7 @@ class PlayerAuthInputPacket extends DataPacket implements ServerboundPacket{
 		$out->putUnsignedVarLong($this->inputFlags);
 		$out->putUnsignedVarInt($this->inputMode);
 		$out->putUnsignedVarInt($this->playMode);
+		$out->putUnsignedVarInt($this->interactionMode);
 		if($this->playMode === PlayMode::VR){
 			assert($this->vrGazeDirection !== null);
 			$out->putVector3($this->vrGazeDirection);

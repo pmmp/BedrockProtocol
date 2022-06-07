@@ -37,30 +37,30 @@ class AvailableCommandsPacket extends DataPacket implements ClientboundPacket{
 	 * Basic parameter types. These must be combined with the ARG_FLAG_VALID constant.
 	 * ARG_FLAG_VALID | (type const)
 	 */
-	public const ARG_TYPE_INT = 1;
-	public const ARG_TYPE_FLOAT = 3;
-	public const ARG_TYPE_VALUE = 4;
-	public const ARG_TYPE_WILDCARD_INT = 5;
-	public const ARG_TYPE_OPERATOR = 6;
-	public const ARG_TYPE_TARGET = 8;
-	public const ARG_TYPE_WILDCARD_TARGET = 10;
+	public const ARG_TYPE_INT = 0x01;
+	public const ARG_TYPE_FLOAT = 0x03;
+	public const ARG_TYPE_VALUE = 0x04;
+	public const ARG_TYPE_WILDCARD_INT = 0x05;
+	public const ARG_TYPE_OPERATOR = 0x06;
+	public const ARG_TYPE_TARGET = 0x08;
+	public const ARG_TYPE_WILDCARD_TARGET = 0x0a;
 
-	public const ARG_TYPE_FILEPATH = 17;
+	public const ARG_TYPE_FILEPATH = 0x11;
 
-	public const ARG_TYPE_EQUIPMENT_SLOT = 37;
+	public const ARG_TYPE_EQUIPMENT_SLOT = 0x25;
 
-	public const ARG_TYPE_STRING = 39;
+	public const ARG_TYPE_STRING = 0x27;
 
-	public const ARG_TYPE_INT_POSITION = 47;
-	public const ARG_TYPE_POSITION = 48;
+	public const ARG_TYPE_INT_POSITION = 0x2f;
+	public const ARG_TYPE_POSITION = 0x30;
 
-	public const ARG_TYPE_MESSAGE = 51;
+	public const ARG_TYPE_MESSAGE = 0x33;
 
-	public const ARG_TYPE_RAWTEXT = 53;
+	public const ARG_TYPE_RAWTEXT = 0x35;
 
-	public const ARG_TYPE_JSON = 57;
+	public const ARG_TYPE_JSON = 0x39;
 
-	public const ARG_TYPE_COMMAND = 70;
+	public const ARG_TYPE_COMMAND = 0x46;
 
 	/**
 	 * Enums are a little different: they are composed as follows:

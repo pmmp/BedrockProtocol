@@ -15,6 +15,10 @@ declare(strict_types=1);
 namespace pocketmine\network\mcpe\protocol\types\command;
 
 class CommandEnumConstraint{
+	public const REQUIRES_CHEATS_ENABLED = 1 << 0;
+	public const REQUIRES_ELEVATED_PERMISSIONS = 1 << 1;
+	public const REQUIRES_HOST_PERMISSIONS = 1 << 2;
+	public const REQUIRES_ALLOW_ALIASES = 1 << 3;
 
 	private CommandEnum $enum;
 	private int $valueOffset;

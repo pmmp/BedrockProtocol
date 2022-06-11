@@ -27,9 +27,11 @@ final class EntityIds{
 	}
 
 	public const AGENT = "minecraft:agent";
+	public const ALLAY = "minecraft:allay";
 	public const AREA_EFFECT_CLOUD = "minecraft:area_effect_cloud";
 	public const ARMOR_STAND = "minecraft:armor_stand";
 	public const ARROW = "minecraft:arrow";
+	public const AXOLOTOL = "minecraft:axolotl";
 	public const BALLOON = "minecraft:balloon";
 	public const BAT = "minecraft:bat";
 	public const BEE = "minecraft:bee";
@@ -37,6 +39,7 @@ final class EntityIds{
 	public const BOAT = "minecraft:boat";
 	public const CAT = "minecraft:cat";
 	public const CAVE_SPIDER = "minecraft:cave_spider";
+	public const CHEST_BOAT = "minecraft:chest_boat";
 	public const CHEST_MINECART = "minecraft:chest_minecart";
 	public const CHICKEN = "minecraft:chicken";
 	public const COD = "minecraft:cod";
@@ -63,7 +66,10 @@ final class EntityIds{
 	public const FIREWORKS_ROCKET = "minecraft:fireworks_rocket";
 	public const FISHING_HOOK = "minecraft:fishing_hook";
 	public const FOX = "minecraft:fox";
+	public const FROG = "minecraft:frog";
 	public const GHAST = "minecraft:ghast";
+	public const GLOW_SQUID = "minecraft:glow_squid";
+	public const GOAT = "minecraft:goat";
 	public const GUARDIAN = "minecraft:guardian";
 	public const HOGLIN = "minecraft:hoglin";
 	public const HOPPER_MINECART = "minecraft:hopper_minecart";
@@ -89,6 +95,7 @@ final class EntityIds{
 	public const PHANTOM = "minecraft:phantom";
 	public const PIG = "minecraft:pig";
 	public const PIGLIN = "minecraft:piglin";
+	public const PIGLIN_BRUTE = "minecraft:piglin_brute";
 	public const PILLAGER = "minecraft:pillager";
 	public const PLAYER = "minecraft:player";
 	public const POLAR_BEAR = "minecraft:polar_bear";
@@ -122,6 +129,7 @@ final class EntityIds{
 	public const VILLAGER_V2 = "minecraft:villager_v2";
 	public const VINDICATOR = "minecraft:vindicator";
 	public const WANDERING_TRADER = "minecraft:wandering_trader";
+	public const WARDEN = "minecraft:warden";
 	public const WITCH = "minecraft:witch";
 	public const WITHER = "minecraft:wither";
 	public const WITHER_SKELETON = "minecraft:wither_skeleton";

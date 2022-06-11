@@ -119,4 +119,11 @@ final class EntityMetadataFlags{
 	public const PLAYING_DEAD = 97;
 	public const IN_ASCENDABLE_BLOCK = 98;
 	public const OVER_DESCENDABLE_BLOCK = 99;
+	public const CROAKING = 100;
+	public const EAT_MOB = 101;
+	public const JUMP_GOAL_JUMP = 102;
+	public const EMERGING = 103;
+	public const SNIFFING = 104;
+	public const DIGGING = 105;
+	public const SONIC_BOOM = 106;
 }

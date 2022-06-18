@@ -31,7 +31,7 @@ final class EntityIds{
 	public const AREA_EFFECT_CLOUD = "minecraft:area_effect_cloud";
 	public const ARMOR_STAND = "minecraft:armor_stand";
 	public const ARROW = "minecraft:arrow";
-	public const AXOLOTOL = "minecraft:axolotl";
+	public const AXOLOTL = "minecraft:axolotl";
 	public const BALLOON = "minecraft:balloon";
 	public const BAT = "minecraft:bat";
 	public const BEE = "minecraft:bee";

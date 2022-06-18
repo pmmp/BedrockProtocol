@@ -118,6 +118,7 @@ final class EntityIds{
 	public const SQUID = "minecraft:squid";
 	public const STRAY = "minecraft:stray";
 	public const STRIDER = "minecraft:strider";
+	public const TADPOLE = "minecraft:tadpole";
 	public const THROWN_TRIDENT = "minecraft:thrown_trident";
 	public const TNT = "minecraft:tnt";
 	public const TNT_MINECART = "minecraft:tnt_minecart";

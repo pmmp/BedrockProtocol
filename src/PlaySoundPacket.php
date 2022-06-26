@@ -43,7 +43,6 @@ class PlaySoundPacket extends DataPacket implements ClientboundPacket{
 
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->soundName = $in->getString();
-		$x = $y = $z = 0;
 		$blockPosition = $in->getBlockPosition();
 		$this->x = $blockPosition->getX() / 8;
 		$this->y = $blockPosition->getY() / 8;

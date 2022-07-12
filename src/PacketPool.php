@@ -215,6 +215,10 @@ class PacketPool{
 		$this->registerPacket(new RequestAbilityPacket());
 		$this->registerPacket(new RequestPermissionsPacket());
 		$this->registerPacket(new ToastRequestPacket());
+		$this->registerPacket(new UpdateAbilitiesPacket());
+		$this->registerPacket(new UpdateAdventureSettingsPacket());
+		$this->registerPacket(new DeathInfoPacket());
+		$this->registerPacket(new EditorNetworkPacket());
 	}
 
 	public function registerPacket(Packet $packet) : void{

@@ -78,6 +78,8 @@ final class ActorEvent{
 	public const CHARGED_CROSSBOW = 74;
 	public const FALL = 75;
 	public const GROW_UP = 76;
+	public const VIBRATION_DETECTED = 77;
+	public const DRINK_MILK = 78;
 
 	//TODO: add more events
 }

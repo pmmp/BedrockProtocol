@@ -27,6 +27,8 @@ class PlayStatusPacket extends DataPacket implements ClientboundPacket{
 	public const LOGIN_FAILED_VANILLA_EDU = 5;
 	public const LOGIN_FAILED_EDU_VANILLA = 6;
 	public const LOGIN_FAILED_SERVER_FULL = 7;
+	public const LOGIN_FAILED_EDITOR_VANILLA = 8;
+	public const LOGIN_FAILED_VANILLA_EDITOR = 9;
 
 	public int $status;
 

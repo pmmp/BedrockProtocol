@@ -745,4 +745,20 @@ trait PacketHandlerDefaultImplTrait{
 	public function handleToastRequest(ToastRequestPacket $packet) : bool{
 		return false;
 	}
+
+	public function handleUpdateAbilities(UpdateAbilitiesPacket $packet) : bool{
+		return false;
+	}
+
+	public function handleUpdateAdventureSettings(UpdateAdventureSettingsPacket $packet) : bool{
+		return false;
+	}
+
+	public function handleDeathInfo(DeathInfoPacket $packet) : bool{
+		return false;
+	}
+
+	public function handleEditorNetwork(EditorNetworkPacket $packet) : bool{
+		return false;
+	}
 }

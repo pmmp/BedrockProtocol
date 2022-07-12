@@ -15,16 +15,11 @@ declare(strict_types=1);
 namespace pocketmine\network\mcpe\protocol;
 
 use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pocketmine\network\mcpe\protocol\types\command\CommandPermissions;
 use pocketmine\network\mcpe\protocol\types\PlayerPermissions;
 
 class AdventureSettingsPacket extends DataPacket implements ClientboundPacket, ServerboundPacket{
 	public const NETWORK_ID = ProtocolInfo::ADVENTURE_SETTINGS_PACKET;
-
-	public const PERMISSION_NORMAL = 0;
-	public const PERMISSION_OPERATOR = 1;
-	public const PERMISSION_HOST = 2;
-	public const PERMISSION_AUTOMATION = 3;
-	public const PERMISSION_ADMIN = 4;
 
 	/**
 	 * This constant is used to identify flags that should be set on the second field. In a sensible world, these
@@ -54,7 +49,7 @@ class AdventureSettingsPacket extends DataPacket implements ClientboundPacket, S
 	public const DEFAULT = 0x200 | self::BITFLAG_SECOND_SET;
 
 	public int $flags = 0;
-	public int $commandPermission = self::PERMISSION_NORMAL;
+	public int $commandPermission = CommandPermissions::NORMAL;
 	public int $flags2 = -1;
 	public int $playerPermission = PlayerPermissions::MEMBER;
 	public int $customFlags = 0; //...

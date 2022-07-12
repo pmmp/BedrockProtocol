@@ -379,4 +379,12 @@ interface PacketHandlerInterface{
 	public function handleRequestPermissions(RequestPermissionsPacket $packet) : bool;
 
 	public function handleToastRequest(ToastRequestPacket $packet) : bool;
+
+	public function handleUpdateAbilities(UpdateAbilitiesPacket $packet) : bool;
+
+	public function handleUpdateAdventureSettings(UpdateAdventureSettingsPacket $packet) : bool;
+
+	public function handleDeathInfo(DeathInfoPacket $packet) : bool;
+
+	public function handleEditorNetwork(EditorNetworkPacket $packet) : bool;
 }

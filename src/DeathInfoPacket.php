@@ -18,7 +18,7 @@ use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 use function count;
 
 /**
- * Sets the message shown on the death screen instead of "You died!"
+ * Sets the message shown on the death screen underneath "You died!"
  */
 class DeathInfoPacket extends DataPacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::DEATH_INFO_PACKET;

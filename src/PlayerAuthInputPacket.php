@@ -176,7 +176,7 @@ class PlayerAuthInputPacket extends DataPacket implements ServerboundPacket{
 	}
 
 	public function hasFlag(int $flag) : bool{
-		return ($this->getInputFlags() & (1 << $flag)) !== 0;
+		return ($this->inputFlags & (1 << $flag)) !== 0;
 	}
 
 	protected function decodePayload(PacketSerializer $in) : void{

@@ -16,22 +16,26 @@ namespace pocketmine\network\mcpe\protocol\types;
 
 use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 
-final class EducationSettingsAgentCapabilities{
+final class FeatureRegistryPacketEntry{
 
-	private ?bool $canModifyBlocks;
+	public function __construct(
+		private string $featureName,
+		private string $featureJson
+	){}
 
-	public function __construct(?bool $canModifyBlocks){
-		$this->canModifyBlocks = $canModifyBlocks;
-	}
+	public function getFeatureName() : string{ return $this->featureName; }
 
-	public function getCanModifyBlocks() : ?bool{ return $this->canModifyBlocks; }
+	public function getFeatureJson() : string{ return $this->featureJson; }
 
 	public static function read(PacketSerializer $in) : self{
-		$canModifyBlocks = $in->readOptional(\Closure::fromCallable([$in, 'getBool']));
-		return new self($canModifyBlocks);
+		$featureName = $in->getString();
+		$featureJson = $in->getString();
+
+		return new self($featureName, $featureJson);
 	}
 
 	public function write(PacketSerializer $out) : void{
-		$out->writeOptional($this->canModifyBlocks, \Closure::fromCallable([$out, 'putBool']));
+		$out->putString($this->featureName);
+		$out->putString($this->featureJson);
 	}
 }

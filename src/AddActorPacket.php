@@ -98,7 +98,7 @@ class AddActorPacket extends DataPacket implements ClientboundPacket{
 			$min = $in->getLFloat();
 			$current = $in->getLFloat();
 			$max = $in->getLFloat();
-			$this->attributes[] = new Attribute($id, $min, $max, $current, $current);
+			$this->attributes[] = new Attribute($id, $min, $max, $current, $current, []);
 		}
 
 		$this->metadata = $in->getEntityMetadata();

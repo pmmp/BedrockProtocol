@@ -16,31 +16,46 @@ namespace pocketmine\network\mcpe\protocol;
 
 use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 use pocketmine\network\mcpe\protocol\types\BlockPosition;
+use pocketmine\network\mcpe\protocol\types\ChunkPosition;
+use function count;
 
 class NetworkChunkPublisherUpdatePacket extends DataPacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::NETWORK_CHUNK_PUBLISHER_UPDATE_PACKET;
 
 	public BlockPosition $blockPosition;
 	public int $radius;
+	/** @var ChunkPosition[] */
+	public array $savedChunks = [];
 
 	/**
 	 * @generate-create-func
+	 * @param ChunkPosition[] $savedChunks
 	 */
-	public static function create(BlockPosition $blockPosition, int $radius) : self{
+	public static function create(BlockPosition $blockPosition, int $radius, array $savedChunks) : self{
 		$result = new self;
 		$result->blockPosition = $blockPosition;
 		$result->radius = $radius;
+		$result->savedChunks = $savedChunks;
 		return $result;
 	}
 
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->blockPosition = $in->getSignedBlockPosition();
 		$this->radius = $in->getUnsignedVarInt();
+
+		for($i = 0, $this->savedChunks = [], $count = $in->getLInt(); $i < $count; $i++){
+			$this->savedChunks[] = ChunkPosition::read($in);
+		}
 	}
 
 	protected function encodePayload(PacketSerializer $out) : void{
 		$out->putSignedBlockPosition($this->blockPosition);
 		$out->putUnsignedVarInt($this->radius);
+
+		$out->putLInt(count($this->savedChunks));
+		foreach($this->savedChunks as $chunk){
+			$chunk->write($out);
+		}
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

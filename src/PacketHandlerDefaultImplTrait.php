@@ -761,4 +761,8 @@ trait PacketHandlerDefaultImplTrait{
 	public function handleEditorNetwork(EditorNetworkPacket $packet) : bool{
 		return false;
 	}
+
+	public function handleFeatureRegistry(FeatureRegistryPacket $packet) : bool{
+		return false;
+	}
 }

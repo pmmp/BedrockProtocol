@@ -20,13 +20,19 @@ final class Attribute{
 	private float $max;
 	private float $current;
 	private float $default;
+	/** @var AttributeModifier[] */
+	private array $modifiers;
 
-	public function __construct(string $id, float $min, float $max, float $current, float $default){
+	/**
+	 * @param AttributeModifier[] $modifiers
+	 */
+	public function __construct(string $id, float $min, float $max, float $current, float $default, array $modifiers){
 		$this->id = $id;
 		$this->min = $min;
 		$this->max = $max;
 		$this->current = $current;
 		$this->default = $default;
+		$this->modifiers = $modifiers;
 	}
 
 	public function getId() : string{
@@ -48,4 +54,9 @@ final class Attribute{
 	public function getDefault() : float{
 		return $this->default;
 	}
+
+	/**
+	 * @return AttributeModifier[]
+	 */
+	public function getModifiers() : array{ return $this->modifiers; }
 }

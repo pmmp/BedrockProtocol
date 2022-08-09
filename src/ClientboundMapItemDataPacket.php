@@ -16,6 +16,7 @@ namespace pocketmine\network\mcpe\protocol;
 
 use pocketmine\color\Color;
 use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pocketmine\network\mcpe\protocol\types\BlockPosition;
 use pocketmine\network\mcpe\protocol\types\DimensionIds;
 use pocketmine\network\mcpe\protocol\types\MapDecoration;
 use pocketmine\network\mcpe\protocol\types\MapImage;
@@ -34,6 +35,7 @@ class ClientboundMapItemDataPacket extends DataPacket implements ClientboundPack
 	public int $type;
 	public int $dimensionId = DimensionIds::OVERWORLD;
 	public bool $isLocked = false;
+	public BlockPosition $origin;
 
 	/** @var int[] */
 	public array $parentMapIds = [];
@@ -53,6 +55,7 @@ class ClientboundMapItemDataPacket extends DataPacket implements ClientboundPack
 		$this->type = $in->getUnsignedVarInt();
 		$this->dimensionId = $in->getByte();
 		$this->isLocked = $in->getBool();
+		$this->origin = $in->getSignedBlockPosition();
 
 		if(($this->type & self::BITFLAG_MAP_CREATION) !== 0){
 			$count = $in->getUnsignedVarInt();
@@ -122,6 +125,7 @@ class ClientboundMapItemDataPacket extends DataPacket implements ClientboundPack
 		$out->putUnsignedVarInt($type);
 		$out->putByte($this->dimensionId);
 		$out->putBool($this->isLocked);
+		$out->putSignedBlockPosition($this->origin);
 
 		if(($type & self::BITFLAG_MAP_CREATION) !== 0){
 			$out->putUnsignedVarInt($parentMapIdsCount);

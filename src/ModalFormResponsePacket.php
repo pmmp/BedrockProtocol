@@ -19,27 +19,44 @@ use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 class ModalFormResponsePacket extends DataPacket implements ServerboundPacket{
 	public const NETWORK_ID = ProtocolInfo::MODAL_FORM_RESPONSE_PACKET;
 
+	public const CANCEL_REASON_CLOSED = 0;
+	/** Sent if a form is sent when the player is on a loading screen */
+	public const CANCEL_REASON_USER_BUSY = 1;
+
 	public int $formId;
-	public string $formData; //json
+	public ?string $formData; //json
+	public ?int $cancelReason;
 
 	/**
 	 * @generate-create-func
 	 */
-	public static function create(int $formId, string $formData) : self{
+	private static function create(int $formId, ?string $formData, ?int $cancelReason) : self{
 		$result = new self;
 		$result->formId = $formId;
 		$result->formData = $formData;
+		$result->cancelReason = $cancelReason;
 		return $result;
+	}
+
+	public static function response(int $formId, string $formData) : self{
+		return self::create($formId, $formData, null);
+	}
+
+	public static function cancel(int $formId, int $cancelReason) : self{
+		return self::create($formId, null, $cancelReason);
 	}
 
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->formId = $in->getUnsignedVarInt();
-		$this->formData = $in->getString();
+		$this->formData = $in->readOptional(\Closure::fromCallable([$in, 'getString']));
+		$this->cancelReason = $in->readOptional(\Closure::fromCallable([$in, 'getByte']));
 	}
 
 	protected function encodePayload(PacketSerializer $out) : void{
 		$out->putUnsignedVarInt($this->formId);
-		$out->putString($this->formData);
+
+		$out->writeOptional($this->formData, \Closure::fromCallable([$out, 'putString']));
+		$out->writeOptional($this->cancelReason, \Closure::fromCallable([$out, 'putByte']));
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

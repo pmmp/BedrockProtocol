@@ -16,22 +16,26 @@ namespace pocketmine\network\mcpe\protocol\types;
 
 use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 
-final class EducationSettingsAgentCapabilities{
+final class ChunkPosition{
 
-	private ?bool $canModifyBlocks;
+	public function __construct(
+		private int $x,
+		private int $z
+	){}
 
-	public function __construct(?bool $canModifyBlocks){
-		$this->canModifyBlocks = $canModifyBlocks;
-	}
+	public function getX() : int{ return $this->x; }
 
-	public function getCanModifyBlocks() : ?bool{ return $this->canModifyBlocks; }
+	public function getZ() : int{ return $this->z; }
 
 	public static function read(PacketSerializer $in) : self{
-		$canModifyBlocks = $in->readOptional(\Closure::fromCallable([$in, 'getBool']));
-		return new self($canModifyBlocks);
+		$x = $in->getVarInt();
+		$z = $in->getVarInt();
+
+		return new self($x, $z);
 	}
 
 	public function write(PacketSerializer $out) : void{
-		$out->writeOptional($this->canModifyBlocks, \Closure::fromCallable([$out, 'putBool']));
+		$out->putVarInt($this->x);
+		$out->putVarInt($this->z);
 	}
 }

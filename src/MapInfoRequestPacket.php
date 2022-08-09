@@ -15,27 +15,43 @@ declare(strict_types=1);
 namespace pocketmine\network\mcpe\protocol;
 
 use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pocketmine\network\mcpe\protocol\types\MapInfoRequestPacketClientPixel;
+use function count;
 
 class MapInfoRequestPacket extends DataPacket implements ServerboundPacket{
 	public const NETWORK_ID = ProtocolInfo::MAP_INFO_REQUEST_PACKET;
 
 	public int $mapId;
+	/** @var MapInfoRequestPacketClientPixel[] */
+	public array $clientPixels = [];
 
 	/**
 	 * @generate-create-func
+	 * @param MapInfoRequestPacketClientPixel[] $clientPixels
 	 */
-	public static function create(int $mapId) : self{
+	public static function create(int $mapId, array $clientPixels) : self{
 		$result = new self;
 		$result->mapId = $mapId;
+		$result->clientPixels = $clientPixels;
 		return $result;
 	}
 
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->mapId = $in->getActorUniqueId();
+
+		$this->clientPixels = [];
+		for($i = 0, $count = $in->getLInt(); $i < $count; $i++){
+			$this->clientPixels[] = MapInfoRequestPacketClientPixel::read($in);
+		}
 	}
 
 	protected function encodePayload(PacketSerializer $out) : void{
 		$out->putActorUniqueId($this->mapId);
+
+		$out->putLInt(count($this->clientPixels));
+		foreach($this->clientPixels as $pixel){
+			$pixel->write($out);
+		}
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

@@ -219,6 +219,7 @@ class PacketPool{
 		$this->registerPacket(new UpdateAdventureSettingsPacket());
 		$this->registerPacket(new DeathInfoPacket());
 		$this->registerPacket(new EditorNetworkPacket());
+		$this->registerPacket(new FeatureRegistryPacket());
 	}
 
 	public function registerPacket(Packet $packet) : void{

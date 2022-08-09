@@ -387,4 +387,6 @@ interface PacketHandlerInterface{
 	public function handleDeathInfo(DeathInfoPacket $packet) : bool;
 
 	public function handleEditorNetwork(EditorNetworkPacket $packet) : bool;
+
+	public function handleFeatureRegistry(FeatureRegistryPacket $packet) : bool;
 }

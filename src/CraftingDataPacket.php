@@ -70,26 +70,13 @@ class CraftingDataPacket extends DataPacket implements ClientboundPacket{
 		for($i = 0; $i < $recipeCount; ++$i){
 			$recipeType = $in->getVarInt();
 
-			switch($recipeType){
-				case self::ENTRY_SHAPELESS:
-				case self::ENTRY_SHULKER_BOX:
-				case self::ENTRY_SHAPELESS_CHEMISTRY:
-					$this->recipesWithTypeIds[] = ShapelessRecipe::decode($recipeType, $in);
-					break;
-				case self::ENTRY_SHAPED:
-				case self::ENTRY_SHAPED_CHEMISTRY:
-					$this->recipesWithTypeIds[] = ShapedRecipe::decode($recipeType, $in);
-					break;
-				case self::ENTRY_FURNACE:
-				case self::ENTRY_FURNACE_DATA:
-					$this->recipesWithTypeIds[] = FurnaceRecipe::decode($recipeType, $in);
-					break;
-				case self::ENTRY_MULTI:
-					$this->recipesWithTypeIds[] = MultiRecipe::decode($recipeType, $in);
-					break;
-				default:
-					throw new PacketDecodeException("Unhandled recipe type $recipeType!"); //do not continue attempting to decode
-			}
+			$this->recipesWithTypeIds[] = match($recipeType){
+				self::ENTRY_SHAPELESS, self::ENTRY_SHULKER_BOX, self::ENTRY_SHAPELESS_CHEMISTRY => ShapelessRecipe::decode($recipeType, $in),
+				self::ENTRY_SHAPED, self::ENTRY_SHAPED_CHEMISTRY => ShapedRecipe::decode($recipeType, $in),
+				self::ENTRY_FURNACE, self::ENTRY_FURNACE_DATA => FurnaceRecipe::decode($recipeType, $in),
+				self::ENTRY_MULTI => MultiRecipe::decode($recipeType, $in),
+				default => throw new PacketDecodeException("Unhandled recipe type $recipeType!"),
+			};
 		}
 		for($i = 0, $count = $in->getUnsignedVarInt(); $i < $count; ++$i){
 			$inputId = $in->getVarInt();

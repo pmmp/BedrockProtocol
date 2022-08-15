@@ -57,29 +57,29 @@ final class ItemStackRequest{
 	 * @throws PacketDecodeException
 	 */
 	private static function readAction(PacketSerializer $in, int $typeId) : ItemStackRequestAction{
-		switch($typeId){
-			case TakeStackRequestAction::ID: return TakeStackRequestAction::read($in);
-			case PlaceStackRequestAction::ID: return PlaceStackRequestAction::read($in);
-			case SwapStackRequestAction::ID: return SwapStackRequestAction::read($in);
-			case DropStackRequestAction::ID: return DropStackRequestAction::read($in);
-			case DestroyStackRequestAction::ID: return DestroyStackRequestAction::read($in);
-			case CraftingConsumeInputStackRequestAction::ID: return CraftingConsumeInputStackRequestAction::read($in);
-			case CraftingMarkSecondaryResultStackRequestAction::ID: return CraftingMarkSecondaryResultStackRequestAction::read($in);
-			case PlaceIntoBundleStackRequestAction::ID: return PlaceIntoBundleStackRequestAction::read($in);
-			case TakeFromBundleStackRequestAction::ID: return TakeFromBundleStackRequestAction::read($in);
-			case LabTableCombineStackRequestAction::ID: return LabTableCombineStackRequestAction::read($in);
-			case BeaconPaymentStackRequestAction::ID: return BeaconPaymentStackRequestAction::read($in);
-			case MineBlockStackRequestAction::ID: return MineBlockStackRequestAction::read($in);
-			case CraftRecipeStackRequestAction::ID: return CraftRecipeStackRequestAction::read($in);
-			case CraftRecipeAutoStackRequestAction::ID: return CraftRecipeAutoStackRequestAction::read($in);
-			case CreativeCreateStackRequestAction::ID: return CreativeCreateStackRequestAction::read($in);
-			case CraftRecipeOptionalStackRequestAction::ID: return CraftRecipeOptionalStackRequestAction::read($in);
-			case GrindstoneStackRequestAction::ID: return GrindstoneStackRequestAction::read($in);
-			case LoomStackRequestAction::ID: return LoomStackRequestAction::read($in);
-			case DeprecatedCraftingNonImplementedStackRequestAction::ID: return DeprecatedCraftingNonImplementedStackRequestAction::read($in);
-			case DeprecatedCraftingResultsStackRequestAction::ID: return DeprecatedCraftingResultsStackRequestAction::read($in);
-		}
-		throw new PacketDecodeException("Unhandled item stack request action type $typeId");
+		return match($typeId){
+			TakeStackRequestAction::ID => TakeStackRequestAction::read($in),
+			PlaceStackRequestAction::ID => PlaceStackRequestAction::read($in),
+			SwapStackRequestAction::ID => SwapStackRequestAction::read($in),
+			DropStackRequestAction::ID => DropStackRequestAction::read($in),
+			DestroyStackRequestAction::ID => DestroyStackRequestAction::read($in),
+			CraftingConsumeInputStackRequestAction::ID => CraftingConsumeInputStackRequestAction::read($in),
+			CraftingMarkSecondaryResultStackRequestAction::ID => CraftingMarkSecondaryResultStackRequestAction::read($in),
+			PlaceIntoBundleStackRequestAction::ID => PlaceIntoBundleStackRequestAction::read($in),
+			TakeFromBundleStackRequestAction::ID => TakeFromBundleStackRequestAction::read($in),
+			LabTableCombineStackRequestAction::ID => LabTableCombineStackRequestAction::read($in),
+			BeaconPaymentStackRequestAction::ID => BeaconPaymentStackRequestAction::read($in),
+			MineBlockStackRequestAction::ID => MineBlockStackRequestAction::read($in),
+			CraftRecipeStackRequestAction::ID => CraftRecipeStackRequestAction::read($in),
+			CraftRecipeAutoStackRequestAction::ID => CraftRecipeAutoStackRequestAction::read($in),
+			CreativeCreateStackRequestAction::ID => CreativeCreateStackRequestAction::read($in),
+			CraftRecipeOptionalStackRequestAction::ID => CraftRecipeOptionalStackRequestAction::read($in),
+			GrindstoneStackRequestAction::ID => GrindstoneStackRequestAction::read($in),
+			LoomStackRequestAction::ID => LoomStackRequestAction::read($in),
+			DeprecatedCraftingNonImplementedStackRequestAction::ID => DeprecatedCraftingNonImplementedStackRequestAction::read($in),
+			DeprecatedCraftingResultsStackRequestAction::ID => DeprecatedCraftingResultsStackRequestAction::read($in),
+			default => throw new PacketDecodeException("Unhandled item stack request action type $typeId"),
+		};
 	}
 
 	public static function read(PacketSerializer $in) : self{

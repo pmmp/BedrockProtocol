@@ -413,28 +413,18 @@ class PacketSerializer extends BinaryStream{
 	}
 
 	private function readMetadataProperty(int $type) : MetadataProperty{
-		switch($type){
-			case ByteMetadataProperty::ID:
-				return ByteMetadataProperty::read($this);
-			case ShortMetadataProperty::ID:
-				return ShortMetadataProperty::read($this);
-			case IntMetadataProperty::ID:
-				return IntMetadataProperty::read($this);
-			case FloatMetadataProperty::ID:
-				return FloatMetadataProperty::read($this);
-			case StringMetadataProperty::ID:
-				return StringMetadataProperty::read($this);
-			case CompoundTagMetadataProperty::ID:
-				return CompoundTagMetadataProperty::read($this);
-			case BlockPosMetadataProperty::ID:
-				return BlockPosMetadataProperty::read($this);
-			case LongMetadataProperty::ID:
-				return LongMetadataProperty::read($this);
-			case Vec3MetadataProperty::ID:
-				return Vec3MetadataProperty::read($this);
-			default:
-				throw new PacketDecodeException("Unknown entity metadata type " . $type);
-		}
+		return match($type){
+			ByteMetadataProperty::ID => ByteMetadataProperty::read($this),
+			ShortMetadataProperty::ID => ShortMetadataProperty::read($this),
+			IntMetadataProperty::ID => IntMetadataProperty::read($this),
+			FloatMetadataProperty::ID => FloatMetadataProperty::read($this),
+			StringMetadataProperty::ID => StringMetadataProperty::read($this),
+			CompoundTagMetadataProperty::ID => CompoundTagMetadataProperty::read($this),
+			BlockPosMetadataProperty::ID => BlockPosMetadataProperty::read($this),
+			LongMetadataProperty::ID => LongMetadataProperty::read($this),
+			Vec3MetadataProperty::ID => Vec3MetadataProperty::read($this),
+			default => throw new PacketDecodeException("Unknown entity metadata type " . $type),
+		};
 	}
 
 	/**
@@ -615,13 +605,12 @@ class PacketSerializer extends BinaryStream{
 	}
 
 	private function readGameRule(int $type, bool $isPlayerModifiable) : GameRule{
-		switch($type){
-			case BoolGameRule::ID: return BoolGameRule::decode($this, $isPlayerModifiable);
-			case IntGameRule::ID: return IntGameRule::decode($this, $isPlayerModifiable);
-			case FloatGameRule::ID: return FloatGameRule::decode($this, $isPlayerModifiable);
-			default:
-				throw new PacketDecodeException("Unknown gamerule type $type");
-		}
+		return match($type){
+			BoolGameRule::ID => BoolGameRule::decode($this, $isPlayerModifiable),
+			IntGameRule::ID => IntGameRule::decode($this, $isPlayerModifiable),
+			FloatGameRule::ID => FloatGameRule::decode($this, $isPlayerModifiable),
+			default => throw new PacketDecodeException("Unknown gamerule type $type"),
+		};
 	}
 
 	/**

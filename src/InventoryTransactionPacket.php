@@ -64,25 +64,14 @@ class InventoryTransactionPacket extends DataPacket implements ClientboundPacket
 
 		$transactionType = $in->getUnsignedVarInt();
 
-		switch($transactionType){
-			case NormalTransactionData::ID:
-				$this->trData = new NormalTransactionData();
-				break;
-			case MismatchTransactionData::ID:
-				$this->trData = new MismatchTransactionData();
-				break;
-			case UseItemTransactionData::ID:
-				$this->trData = new UseItemTransactionData();
-				break;
-			case UseItemOnEntityTransactionData::ID:
-				$this->trData = new UseItemOnEntityTransactionData();
-				break;
-			case ReleaseItemTransactionData::ID:
-				$this->trData = new ReleaseItemTransactionData();
-				break;
-			default:
-				throw new PacketDecodeException("Unknown transaction type $transactionType");
-		}
+		$this->trData = match($transactionType){
+			NormalTransactionData::ID => new NormalTransactionData(),
+			MismatchTransactionData::ID => new MismatchTransactionData(),
+			UseItemTransactionData::ID => new UseItemTransactionData(),
+			UseItemOnEntityTransactionData::ID => new UseItemOnEntityTransactionData(),
+			ReleaseItemTransactionData::ID => new ReleaseItemTransactionData(),
+			default => throw new PacketDecodeException("Unknown transaction type $transactionType"),
+		};
 
 		$this->trData->decode($in);
 	}

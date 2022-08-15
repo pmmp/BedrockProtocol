@@ -34,6 +34,8 @@ class PhotoInfoRequestPacket extends DataPacket{
 		return $result;
 	}
 
+	public function getPhotoId() : int{ return $this->photoId; }
+
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->photoId = $in->getActorUniqueId();
 	}

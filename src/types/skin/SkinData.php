@@ -22,57 +22,39 @@ class SkinData{
 	public const ARM_SIZE_SLIM = "slim";
 	public const ARM_SIZE_WIDE = "wide";
 
-	private string $skinId;
-	private string $playFabId;
-	private string $resourcePatch;
-	private SkinImage $skinImage;
-	/** @var SkinAnimation[] */
-	private array $animations;
 	private SkinImage $capeImage;
-	private string $geometryData;
-	private string $geometryDataEngineVersion;
-	private string $animationData;
-	private string $capeId;
 	private string $fullSkinId;
-	private string $armSize;
-	private string $skinColor;
-	/** @var PersonaSkinPiece[] */
-	private array $personaPieces;
-	/** @var PersonaPieceTintColor[] */
-	private array $pieceTintColors;
-	private bool $isVerified;
-	private bool $persona;
-	private bool $premium;
-	private bool $personaCapeOnClassic;
-	private bool $isPrimaryUser;
 
 	/**
 	 * @param SkinAnimation[]         $animations
 	 * @param PersonaSkinPiece[]      $personaPieces
 	 * @param PersonaPieceTintColor[] $pieceTintColors
 	 */
-	public function __construct(string $skinId, string $playFabId, string $resourcePatch, SkinImage $skinImage, array $animations = [], SkinImage $capeImage = null, string $geometryData = "", string $geometryDataEngineVersion = ProtocolInfo::MINECRAFT_VERSION_NETWORK, string $animationData = "", string $capeId = "", ?string $fullSkinId = null, string $armSize = self::ARM_SIZE_WIDE, string $skinColor = "", array $personaPieces = [], array $pieceTintColors = [], bool $isVerified = true, bool $premium = false, bool $persona = false, bool $personaCapeOnClassic = false, bool $isPrimaryUser = true){
-		$this->skinId = $skinId;
-		$this->playFabId = $playFabId;
-		$this->resourcePatch = $resourcePatch;
-		$this->skinImage = $skinImage;
-		$this->animations = $animations;
+	public function __construct(
+		private string $skinId,
+		private string $playFabId,
+		private string $resourcePatch,
+		private SkinImage $skinImage,
+		private array $animations = [],
+		SkinImage $capeImage = null,
+		private string $geometryData = "",
+		private string $geometryDataEngineVersion = ProtocolInfo::MINECRAFT_VERSION_NETWORK,
+		private string $animationData = "",
+		private string $capeId = "",
+		?string $fullSkinId = null,
+		private string $armSize = self::ARM_SIZE_WIDE,
+		private string $skinColor = "",
+		private array $personaPieces = [],
+		private array $pieceTintColors = [],
+		private bool $isVerified = true,
+		private bool $premium = false,
+		private bool $persona = false,
+		private bool $personaCapeOnClassic = false,
+		private bool $isPrimaryUser = true
+	){
 		$this->capeImage = $capeImage ?? new SkinImage(0, 0, "");
-		$this->geometryData = $geometryData;
-		$this->geometryDataEngineVersion = $geometryDataEngineVersion;
-		$this->animationData = $animationData;
-		$this->capeId = $capeId;
 		//this has to be unique or the client will do stupid things
 		$this->fullSkinId = $fullSkinId ?? Uuid::uuid4()->toString();
-		$this->armSize = $armSize;
-		$this->skinColor = $skinColor;
-		$this->personaPieces = $personaPieces;
-		$this->pieceTintColors = $pieceTintColors;
-		$this->isVerified = $isVerified;
-		$this->premium = $premium;
-		$this->persona = $persona;
-		$this->personaCapeOnClassic = $personaCapeOnClassic;
-		$this->isPrimaryUser = $isPrimaryUser;
 	}
 
 	public function getSkinId() : string{

@@ -17,12 +17,9 @@ namespace pocketmine\network\mcpe\protocol\types;
 use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 
 final class EducationSettingsAgentCapabilities{
-
-	private ?bool $canModifyBlocks;
-
-	public function __construct(?bool $canModifyBlocks){
-		$this->canModifyBlocks = $canModifyBlocks;
-	}
+	public function __construct(
+		private ?bool $canModifyBlocks
+	){}
 
 	public function getCanModifyBlocks() : ?bool{ return $this->canModifyBlocks; }
 

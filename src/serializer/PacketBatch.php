@@ -20,13 +20,9 @@ use pocketmine\network\mcpe\protocol\PacketPool;
 use pocketmine\utils\BinaryDataException;
 
 class PacketBatch{
-
-	/** @var string */
-	private $buffer;
-
-	public function __construct(string $buffer){
-		$this->buffer = $buffer;
-	}
+	public function __construct(
+		private string $buffer
+	){}
 
 	/**
 	 * @return \Generator|Packet[]|null[]

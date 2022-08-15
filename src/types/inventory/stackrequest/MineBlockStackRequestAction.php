@@ -22,15 +22,11 @@ final class MineBlockStackRequestAction extends ItemStackRequestAction{
 
 	public const ID = ItemStackRequestActionType::MINE_BLOCK;
 
-	private int $hotbarSlot;
-	private int $predictedDurability;
-	private int $stackId;
-
-	public function __construct(int $hotbarSlot, int $predictedDurability, int $stackId){
-		$this->hotbarSlot = $hotbarSlot;
-		$this->predictedDurability = $predictedDurability;
-		$this->stackId = $stackId;
-	}
+	public function __construct(
+		private int $hotbarSlot,
+		private int $predictedDurability,
+		private int $stackId
+	){}
 
 	public function getHotbarSlot() : int{ return $this->hotbarSlot; }
 

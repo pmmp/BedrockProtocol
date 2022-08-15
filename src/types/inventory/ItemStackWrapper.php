@@ -17,14 +17,10 @@ namespace pocketmine\network\mcpe\protocol\types\inventory;
 use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 
 final class ItemStackWrapper{
-
-	private int $stackId;
-	private ItemStack $itemStack;
-
-	public function __construct(int $stackId, ItemStack $itemStack){
-		$this->stackId = $stackId;
-		$this->itemStack = $itemStack;
-	}
+	public function __construct(
+		private int $stackId,
+		private ItemStack $itemStack
+	){}
 
 	public static function legacy(ItemStack $itemStack) : self{
 		return new self($itemStack->getId() === 0 ? 0 : 1, $itemStack);

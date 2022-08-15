@@ -15,16 +15,11 @@ declare(strict_types=1);
 namespace pocketmine\network\mcpe\protocol\types;
 
 final class ItemTypeEntry{
-
-	private string $stringId;
-	private int $numericId;
-	private bool $componentBased;
-
-	public function __construct(string $stringId, int $numericId, bool $componentBased){
-		$this->stringId = $stringId;
-		$this->numericId = $numericId;
-		$this->componentBased = $componentBased;
-	}
+	public function __construct(
+		private string $stringId,
+		private int $numericId,
+		private bool $componentBased
+	){}
 
 	public function getStringId() : string{ return $this->stringId; }
 

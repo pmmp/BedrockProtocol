@@ -28,17 +28,13 @@ final class DeprecatedCraftingResultsStackRequestAction extends ItemStackRequest
 
 	public const ID = ItemStackRequestActionType::CRAFTING_RESULTS_DEPRECATED_ASK_TY_LAING;
 
-	/** @var ItemStack[] */
-	private array $results;
-	private int $iterations;
-
 	/**
 	 * @param ItemStack[] $results
 	 */
-	public function __construct(array $results, int $iterations){
-		$this->results = $results;
-		$this->iterations = $iterations;
-	}
+	public function __construct(
+		private array $results,
+		private int $iterations
+	){}
 
 	/** @return ItemStack[] */
 	public function getResults() : array{ return $this->results; }

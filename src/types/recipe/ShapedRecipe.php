@@ -20,22 +20,22 @@ use Ramsey\Uuid\UuidInterface;
 use function count;
 
 final class ShapedRecipe extends RecipeWithTypeId{
-
-	private string $recipeId;
-	/** @var RecipeIngredient[][] */
-	private array $input;
-	/** @var ItemStack[] */
-	private array $output;
-	private UuidInterface $uuid;
 	private string $blockName;
-	private int $priority;
-	private int $recipeNetId;
 
 	/**
 	 * @param RecipeIngredient[][] $input
 	 * @param ItemStack[]          $output
 	 */
-	public function __construct(int $typeId, string $recipeId, array $input, array $output, UuidInterface $uuid, string $blockType, int $priority, int $recipeNetId){
+	public function __construct(
+		int $typeId,
+		private string $recipeId,
+		private array $input,
+		private array $output,
+		private UuidInterface $uuid,
+		string $blockType, //TODO: rename this
+		private int $priority,
+		private int $recipeNetId
+	){
 		parent::__construct($typeId);
 		$rows = count($input);
 		if($rows < 1 or $rows > 3){
@@ -49,13 +49,7 @@ final class ShapedRecipe extends RecipeWithTypeId{
 				throw new \InvalidArgumentException("Expected each row to be $columns columns, but have " . count($row) . " in row $rowNumber");
 			}
 		}
-		$this->recipeId = $recipeId;
-		$this->input = $input;
-		$this->output = $output;
 		$this->blockName = $blockType;
-		$this->priority = $priority;
-		$this->uuid = $uuid;
-		$this->recipeNetId = $recipeNetId;
 	}
 
 	public function getRecipeId() : string{

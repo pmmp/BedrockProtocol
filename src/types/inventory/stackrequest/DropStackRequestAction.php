@@ -25,15 +25,11 @@ final class DropStackRequestAction extends ItemStackRequestAction{
 
 	public const ID = ItemStackRequestActionType::DROP;
 
-	private int $count;
-	private ItemStackRequestSlotInfo $source;
-	private bool $randomly;
-
-	public function __construct(int $count, ItemStackRequestSlotInfo $source, bool $randomly){
-		$this->count = $count;
-		$this->source = $source;
-		$this->randomly = $randomly;
-	}
+	public function __construct(
+		private int $count,
+		private ItemStackRequestSlotInfo $source,
+		private bool $randomly
+	){}
 
 	public function getCount() : int{ return $this->count; }
 

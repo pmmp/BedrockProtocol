@@ -26,11 +26,9 @@ final class CraftingMarkSecondaryResultStackRequestAction extends ItemStackReque
 
 	public const ID = ItemStackRequestActionType::CRAFTING_MARK_SECONDARY_RESULT_SLOT;
 
-	private int $craftingGridSlot;
-
-	public function __construct(int $craftingGridSlot){
-		$this->craftingGridSlot = $craftingGridSlot;
-	}
+	public function __construct(
+		private int $craftingGridSlot
+	){}
 
 	public function getCraftingGridSlot() : int{ return $this->craftingGridSlot; }
 

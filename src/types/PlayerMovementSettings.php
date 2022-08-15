@@ -17,17 +17,11 @@ namespace pocketmine\network\mcpe\protocol\types;
 use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 
 final class PlayerMovementSettings{
-
-	private int $movementType;
-	private int $rewindHistorySize;
-	private bool $serverAuthoritativeBlockBreaking;
-
-	public function __construct(int $movementType, int $rewindHistorySize, bool $serverAuthoritativeBlockBreaking){
-		$this->movementType = $movementType;
-		$this->rewindHistorySize = $rewindHistorySize;
-		//do not ask me what the F this is doing here
-		$this->serverAuthoritativeBlockBreaking = $serverAuthoritativeBlockBreaking;
-	}
+	public function __construct(
+		private int $movementType,
+		private int $rewindHistorySize,
+		private bool $serverAuthoritativeBlockBreaking
+	){}
 
 	public function getMovementType() : int{ return $this->movementType; }
 

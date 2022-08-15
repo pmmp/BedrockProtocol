@@ -17,12 +17,9 @@ namespace pocketmine\network\mcpe\protocol\types\recipe;
 use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 
 abstract class RecipeWithTypeId{
-
-	private int $typeId;
-
-	protected function __construct(int $typeId){
-		$this->typeId = $typeId;
-	}
+	protected function __construct(
+		private int $typeId
+	){}
 
 	final public function getTypeId() : int{
 		return $this->typeId;

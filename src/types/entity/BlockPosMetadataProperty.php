@@ -23,11 +23,9 @@ final class BlockPosMetadataProperty implements MetadataProperty{
 
 	public const ID = EntityMetadataTypes::POS;
 
-	private BlockPosition $value;
-
-	public function __construct(BlockPosition $value){
-		$this->value = $value;
-	}
+	public function __construct(
+		private BlockPosition $value
+	){}
 
 	public function getValue() : BlockPosition{
 		return $this->value;

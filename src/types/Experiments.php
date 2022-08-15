@@ -18,22 +18,14 @@ use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 use function count;
 
 final class Experiments{
-
-	/**
-	 * @var bool[]
-	 * @phpstan-var array<string, bool>
-	 */
-	private array $experiments;
-	private bool $hasPreviouslyUsedExperiments;
-
 	/**
 	 * @param bool[] $experiments
 	 * @phpstan-param array<string, bool> $experiments
 	 */
-	public function __construct(array $experiments, bool $hasPreviouslyUsedExperiments){
-		$this->experiments = $experiments;
-		$this->hasPreviouslyUsedExperiments = $hasPreviouslyUsedExperiments;
-	}
+	public function __construct(
+		private array $experiments,
+		private bool $hasPreviouslyUsedExperiments
+	){}
 
 	/** @return bool[] */
 	public function getExperiments() : array{ return $this->experiments; }

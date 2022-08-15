@@ -22,11 +22,9 @@ final class FloatMetadataProperty implements MetadataProperty{
 
 	public const ID = EntityMetadataTypes::FLOAT;
 
-	private float $value;
-
-	public function __construct(float $value){
-		$this->value = $value;
-	}
+	public function __construct(
+		private float $value
+	){}
 
 	public function getValue() : float{
 		return $this->value;

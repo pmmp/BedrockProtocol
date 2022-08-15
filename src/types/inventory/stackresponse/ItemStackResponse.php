@@ -24,19 +24,14 @@ final class ItemStackResponse{
 	//TODO: there are a ton more possible result types but we don't need them yet and they are wayyyyyy too many for me
 	//to waste my time on right now...
 
-	private int $result;
-	private int $requestId;
-	/** @var ItemStackResponseContainerInfo[] */
-	private array $containerInfos;
-
 	/**
 	 * @param ItemStackResponseContainerInfo[] $containerInfos
 	 */
-	public function __construct(int $result, int $requestId, array $containerInfos){
-		$this->result = $result;
-		$this->requestId = $requestId;
-		$this->containerInfos = $containerInfos;
-	}
+	public function __construct(
+		private int $result,
+		private int $requestId,
+		private array $containerInfos
+	){}
 
 	public function getResult() : int{ return $this->result; }
 

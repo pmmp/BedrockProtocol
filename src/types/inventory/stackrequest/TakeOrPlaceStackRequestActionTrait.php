@@ -17,16 +17,11 @@ namespace pocketmine\network\mcpe\protocol\types\inventory\stackrequest;
 use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 
 trait TakeOrPlaceStackRequestActionTrait{
-
-	private int $count;
-	private ItemStackRequestSlotInfo $source;
-	private ItemStackRequestSlotInfo $destination;
-
-	final public function __construct(int $count, ItemStackRequestSlotInfo $source, ItemStackRequestSlotInfo $destination){
-		$this->count = $count;
-		$this->source = $source;
-		$this->destination = $destination;
-	}
+	final public function __construct(
+		private int $count,
+		private ItemStackRequestSlotInfo $source,
+		private ItemStackRequestSlotInfo $destination
+	){}
 
 	final public function getCount() : int{ return $this->count; }
 

@@ -32,13 +32,12 @@ final class MultiRecipe extends RecipeWithTypeId{
 	public const TYPE_FIREWORKS = "00000000-0000-0000-0000-000000000002";
 	public const TYPE_MAP_LOCKING_CARTOGRAPHY = "602234E4-CAC1-4353-8BB7-B1EBFF70024B";
 
-	private UuidInterface $recipeId;
-	private int $recipeNetId;
-
-	public function __construct(int $typeId, UuidInterface $recipeId, int $recipeNetId){
+	public function __construct(
+		int $typeId,
+		private UuidInterface $recipeId,
+		private int $recipeNetId
+	){
 		parent::__construct($typeId);
-		$this->recipeId = $recipeId;
-		$this->recipeNetId = $recipeNetId;
 	}
 
 	public function getRecipeId() : UuidInterface{

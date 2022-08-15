@@ -25,11 +25,9 @@ final class CreativeCreateStackRequestAction extends ItemStackRequestAction{
 
 	public const ID = ItemStackRequestActionType::CREATIVE_CREATE;
 
-	private int $creativeItemId;
-
-	public function __construct(int $creativeItemId){
-		$this->creativeItemId = $creativeItemId;
-	}
+	public function __construct(
+		private int $creativeItemId
+	){}
 
 	public function getCreativeItemId() : int{ return $this->creativeItemId; }
 

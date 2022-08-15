@@ -18,18 +18,14 @@ use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 
 /** This is used for PlayerAuthInput packet when the flags include PERFORM_BLOCK_ACTIONS */
 final class PlayerBlockActionWithBlockInfo implements PlayerBlockAction{
-
-	private int $actionType;
-	private BlockPosition $blockPosition;
-	private int $face;
-
-	public function __construct(int $actionType, BlockPosition $blockPosition, int $face){
+	public function __construct(
+		private int $actionType,
+		private BlockPosition $blockPosition,
+		private int $face
+	){
 		if(!self::isValidActionType($actionType)){
 			throw new \InvalidArgumentException("Invalid action type for " . self::class);
 		}
-		$this->actionType = $actionType;
-		$this->blockPosition = $blockPosition;
-		$this->face = $face;
 	}
 
 	public function getActionType() : int{ return $this->actionType; }

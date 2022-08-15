@@ -15,17 +15,10 @@ declare(strict_types=1);
 namespace pocketmine\network\mcpe\protocol\types;
 
 class ChunkCacheBlob{
-
-	private int $hash;
-	private string $payload;
-
-	/**
-	 * ChunkCacheBlob constructor.
-	 */
-	public function __construct(int $hash, string $payload){
-		$this->hash = $hash;
-		$this->payload = $payload;
-	}
+	public function __construct(
+		private int $hash,
+		private string $payload
+	){}
 
 	public function getHash() : int{
 		return $this->hash;

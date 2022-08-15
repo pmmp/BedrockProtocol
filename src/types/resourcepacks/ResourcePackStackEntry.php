@@ -17,16 +17,11 @@ namespace pocketmine\network\mcpe\protocol\types\resourcepacks;
 use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 
 class ResourcePackStackEntry{
-
-	private string $packId;
-	private string $version;
-	private string $subPackName;
-
-	public function __construct(string $packId, string $version, string $subPackName){
-		$this->packId = $packId;
-		$this->version = $version;
-		$this->subPackName = $subPackName;
-	}
+	public function __construct(
+		private string $packId,
+		private string $version,
+		private string $subPackName
+	){}
 
 	public function getPackId() : string{
 		return $this->packId;

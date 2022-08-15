@@ -19,18 +19,14 @@ use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 use pocketmine\network\mcpe\protocol\types\inventory\ItemStack;
 
 final class FurnaceRecipe extends RecipeWithTypeId{
-
-	private int $inputId;
-	private ?int $inputMeta;
-	private ItemStack $result;
-	private string $blockName;
-
-	public function __construct(int $typeId, int $inputId, ?int $inputMeta, ItemStack $result, string $blockName){
+	public function __construct(
+		int $typeId,
+		private int $inputId,
+		private ?int $inputMeta,
+		private ItemStack $result,
+		private string $blockName
+	){
 		parent::__construct($typeId);
-		$this->inputId = $inputId;
-		$this->inputMeta = $inputMeta;
-		$this->result = $result;
-		$this->blockName = $blockName;
 	}
 
 	public function getInputId() : int{

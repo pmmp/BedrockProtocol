@@ -17,14 +17,11 @@ namespace pocketmine\network\mcpe\protocol\types;
 use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 
 abstract class GameRule{
+	public function __construct(
+		private bool $isPlayerModifiable
+	){}
 
-	private bool $playerModifiable;
-
-	public function __construct(bool $isPlayerModifiable){
-		$this->playerModifiable = $isPlayerModifiable;
-	}
-
-	public function isPlayerModifiable() : bool{ return $this->playerModifiable; }
+	public function isPlayerModifiable() : bool{ return $this->isPlayerModifiable; }
 
 	abstract public function getTypeId() : int;
 

@@ -17,22 +17,14 @@ namespace pocketmine\network\mcpe\protocol\types\inventory\stackresponse;
 use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 
 final class ItemStackResponseSlotInfo{
-
-	private int $slot;
-	private int $hotbarSlot;
-	private int $count;
-	private int $itemStackId;
-	private string $customName;
-	private int $durabilityCorrection;
-
-	public function __construct(int $slot, int $hotbarSlot, int $count, int $itemStackId, string $customName, int $durabilityCorrection){
-		$this->slot = $slot;
-		$this->hotbarSlot = $hotbarSlot;
-		$this->count = $count;
-		$this->itemStackId = $itemStackId;
-		$this->customName = $customName;
-		$this->durabilityCorrection = $durabilityCorrection;
-	}
+	public function __construct(
+		private int $slot,
+		private int $hotbarSlot,
+		private int $count,
+		private int $itemStackId,
+		private string $customName,
+		private int $durabilityCorrection
+	){}
 
 	public function getSlot() : int{ return $this->slot; }
 

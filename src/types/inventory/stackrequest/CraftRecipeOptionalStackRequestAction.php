@@ -28,6 +28,7 @@ final class CraftRecipeOptionalStackRequestAction extends ItemStackRequestAction
 	private int $recipeId;
 	private int $filterStringIndex;
 
+	//TODO: promote this when we can rename parameters (BC break)
 	public function __construct(int $type, int $filterStringIndex){
 		$this->recipeId = $type;
 		$this->filterStringIndex = $filterStringIndex;

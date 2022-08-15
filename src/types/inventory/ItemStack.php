@@ -21,32 +21,20 @@ use function base64_encode;
 use function count;
 
 final class ItemStack implements \JsonSerializable{
-
-	private int $id;
-	private int $meta;
-	private int $count;
-	private int $blockRuntimeId;
-	/** @var string[] */
-	private array $canPlaceOn;
-	/** @var string[] */
-	private array $canDestroy;
-	private ?CompoundTag $nbt;
-	private ?int $shieldBlockingTick;
-
 	/**
 	 * @param string[] $canPlaceOn
 	 * @param string[] $canDestroy
 	 */
-	public function __construct(int $id, int $meta, int $count, int $blockRuntimeId, ?CompoundTag $nbt, array $canPlaceOn, array $canDestroy, ?int $shieldBlockingTick = null){
-		$this->id = $id;
-		$this->meta = $meta;
-		$this->count = $count;
-		$this->blockRuntimeId = $blockRuntimeId;
-		$this->canPlaceOn = $canPlaceOn;
-		$this->canDestroy = $canDestroy;
-		$this->nbt = $nbt;
-		$this->shieldBlockingTick = $shieldBlockingTick;
-	}
+	public function __construct(
+		private int $id,
+		private int $meta,
+		private int $count,
+		private int $blockRuntimeId,
+		private ?CompoundTag $nbt,
+		private array $canPlaceOn,
+		private array $canDestroy,
+		private ?int $shieldBlockingTick = null
+	){}
 
 	public static function null() : self{
 		return new self(0, 0, 0, 0, null, [], [], null);

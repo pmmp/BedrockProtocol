@@ -25,13 +25,10 @@ final class BeaconPaymentStackRequestAction extends ItemStackRequestAction{
 
 	public const ID = ItemStackRequestActionType::BEACON_PAYMENT;
 
-	private int $primaryEffectId;
-	private int $secondaryEffectId;
-
-	public function __construct(int $primaryEffectId, int $secondaryEffectId){
-		$this->primaryEffectId = $primaryEffectId;
-		$this->secondaryEffectId = $secondaryEffectId;
-	}
+	public function __construct(
+		private int $primaryEffectId,
+		private int $secondaryEffectId
+	){}
 
 	public function getPrimaryEffectId() : int{ return $this->primaryEffectId; }
 

@@ -25,11 +25,9 @@ final class CraftRecipeStackRequestAction extends ItemStackRequestAction{
 
 	public const ID = ItemStackRequestActionType::CRAFTING_RECIPE;
 
-	private int $recipeId;
-
-	final public function __construct(int $recipeId){
-		$this->recipeId = $recipeId;
-	}
+	final public function __construct(
+		private int $recipeId
+	){}
 
 	public function getRecipeId() : int{ return $this->recipeId; }
 

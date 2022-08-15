@@ -17,14 +17,10 @@ namespace pocketmine\network\mcpe\protocol\types;
 use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 
 final class Enchant{
-
-	private int $id;
-	private int $level;
-
-	public function __construct(int $id, int $level){
-		$this->id = $id;
-		$this->level = $level;
-	}
+	public function __construct(
+		private int $id,
+		private int $level
+	){}
 
 	public function getId() : int{ return $this->id; }
 

@@ -20,15 +20,11 @@ final class SpawnSettings{
 	public const BIOME_TYPE_DEFAULT = 0;
 	public const BIOME_TYPE_USER_DEFINED = 1;
 
-	private int $biomeType;
-	private string $biomeName;
-	private int $dimension;
-
-	public function __construct(int $biomeType, string $biomeName, int $dimension){
-		$this->biomeType = $biomeType;
-		$this->biomeName = $biomeName;
-		$this->dimension = $dimension;
-	}
+	public function __construct(
+		private int $biomeType,
+		private string $biomeName,
+		private int $dimension
+	){}
 
 	public function getBiomeType() : int{
 		return $this->biomeType;

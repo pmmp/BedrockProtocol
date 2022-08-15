@@ -17,14 +17,10 @@ namespace pocketmine\network\mcpe\protocol\types;
 use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 
 final class EducationSettingsExternalLinkSettings{
-
-	private string $displayName;
-	private string $url;
-
-	public function __construct(string $url, string $displayName){
-		$this->displayName = $displayName;
-		$this->url = $url;
-	}
+	public function __construct(
+		private string $url,
+		private string $displayName
+	){}
 
 	public function getUrl() : string{ return $this->url; }
 

@@ -20,22 +20,18 @@ class CommandEnumConstraint{
 	public const REQUIRES_HOST_PERMISSIONS = 1 << 2;
 	public const REQUIRES_ALLOW_ALIASES = 1 << 3;
 
-	private CommandEnum $enum;
-	private int $valueOffset;
-	/** @var int[] */
-	private array $constraints; //TODO: find constants
-
 	/**
 	 * @param int[]       $constraints
 	 */
-	public function __construct(CommandEnum $enum, int $valueOffset, array $constraints){
+	public function __construct(
+		private CommandEnum $enum,
+		private int $valueOffset,
+		private array $constraints
+	){
 		(static function(int ...$_) : void{})(...$constraints);
 		if(!isset($enum->getValues()[$valueOffset])){
 			throw new \InvalidArgumentException("Invalid enum value offset $valueOffset");
 		}
-		$this->enum = $enum;
-		$this->valueOffset = $valueOffset;
-		$this->constraints = $constraints;
 	}
 
 	public function getEnum() : CommandEnum{

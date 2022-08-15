@@ -18,18 +18,13 @@ use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 use function count;
 
 final class ItemStackResponseContainerInfo{
-
-	private int $containerId;
-	/** @var ItemStackResponseSlotInfo[] */
-	private array $slots;
-
 	/**
 	 * @param ItemStackResponseSlotInfo[] $slots
 	 */
-	public function __construct(int $containerId, array $slots){
-		$this->containerId = $containerId;
-		$this->slots = $slots;
-	}
+	public function __construct(
+		private int $containerId,
+		private array $slots
+	){}
 
 	public function getContainerId() : int{ return $this->containerId; }
 

@@ -17,14 +17,10 @@ namespace pocketmine\network\mcpe\protocol\types\inventory\stackrequest;
 use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 
 trait DisappearStackRequestActionTrait{
-
-	private int $count;
-	private ItemStackRequestSlotInfo $source;
-
-	final public function __construct(int $count, ItemStackRequestSlotInfo $source){
-		$this->count = $count;
-		$this->source = $source;
-	}
+	final public function __construct(
+		private int $count,
+		private ItemStackRequestSlotInfo $source
+	){}
 
 	final public function getCount() : int{ return $this->count; }
 

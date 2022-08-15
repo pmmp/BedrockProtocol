@@ -20,30 +20,21 @@ use Ramsey\Uuid\UuidInterface;
 use function count;
 
 final class ShapelessRecipe extends RecipeWithTypeId{
-
-	private string $recipeId;
-	/** @var RecipeIngredient[] */
-	private array $inputs;
-	/** @var ItemStack[] */
-	private array $outputs;
-	private UuidInterface $uuid;
-	private string $blockName;
-	private int $priority;
-	private int $recipeNetId;
-
 	/**
 	 * @param RecipeIngredient[] $inputs
 	 * @param ItemStack[]        $outputs
 	 */
-	public function __construct(int $typeId, string $recipeId, array $inputs, array $outputs, UuidInterface $uuid, string $blockName, int $priority, int $recipeNetId){
+	public function __construct(
+		int $typeId,
+		private string $recipeId,
+		private array $inputs,
+		private array $outputs,
+		private UuidInterface $uuid,
+		private string $blockName,
+		private int $priority,
+		private int $recipeNetId
+	){
 		parent::__construct($typeId);
-		$this->recipeId = $recipeId;
-		$this->inputs = $inputs;
-		$this->outputs = $outputs;
-		$this->uuid = $uuid;
-		$this->blockName = $blockName;
-		$this->priority = $priority;
-		$this->recipeNetId = $recipeNetId;
 	}
 
 	public function getRecipeId() : string{

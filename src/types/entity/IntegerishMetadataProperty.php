@@ -15,14 +15,12 @@ declare(strict_types=1);
 namespace pocketmine\network\mcpe\protocol\types\entity;
 
 trait IntegerishMetadataProperty{
-
-	private int $value;
-
-	public function __construct(int $value){
+	public function __construct(
+		private int $value
+	){
 		if($value < $this->min() or $value > $this->max()){
 			throw new \InvalidArgumentException("Value is out of range " . $this->min() . " - " . $this->max());
 		}
-		$this->value = $value;
 	}
 
 	abstract protected function min() : int;

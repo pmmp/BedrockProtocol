@@ -19,12 +19,9 @@ namespace pocketmine\network\mcpe\protocol\serializer;
  * such as a dictionary of item runtime IDs to their internal string IDs.
  */
 final class PacketSerializerContext{
-
-	private ItemTypeDictionary $itemDictionary;
-
-	public function __construct(ItemTypeDictionary $itemDictionary){
-		$this->itemDictionary = $itemDictionary;
-	}
+	public function __construct(
+		private ItemTypeDictionary $itemDictionary
+	){}
 
 	public function getItemDictionary() : ItemTypeDictionary{ return $this->itemDictionary; }
 }

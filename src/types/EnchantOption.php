@@ -18,32 +18,20 @@ use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 use function count;
 
 final class EnchantOption{
-
-	private int $cost;
-	private int $slotFlags;
-	/** @var Enchant[] */
-	private array $equipActivatedEnchantments;
-	/** @var Enchant[] */
-	private array $heldActivatedEnchantments;
-	/** @var Enchant[] */
-	private array $selfActivatedEnchantments;
-	private string $name;
-	private int $optionId;
-
 	/**
 	 * @param Enchant[] $equipActivatedEnchantments
 	 * @param Enchant[] $heldActivatedEnchantments
 	 * @param Enchant[] $selfActivatedEnchantments
 	 */
-	public function __construct(int $cost, int $slotFlags, array $equipActivatedEnchantments, array $heldActivatedEnchantments, array $selfActivatedEnchantments, string $name, int $optionId){
-		$this->cost = $cost;
-		$this->slotFlags = $slotFlags;
-		$this->equipActivatedEnchantments = $equipActivatedEnchantments;
-		$this->heldActivatedEnchantments = $heldActivatedEnchantments;
-		$this->selfActivatedEnchantments = $selfActivatedEnchantments;
-		$this->name = $name;
-		$this->optionId = $optionId;
-	}
+	public function __construct(
+		private int $cost,
+		private int $slotFlags,
+		private array $equipActivatedEnchantments,
+		private array $heldActivatedEnchantments,
+		private array $selfActivatedEnchantments,
+		private string $name,
+		private int $optionId
+	){}
 
 	public function getCost() : int{ return $this->cost; }
 

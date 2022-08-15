@@ -15,18 +15,13 @@ declare(strict_types=1);
 namespace pocketmine\network\mcpe\protocol\types;
 
 final class BlockPaletteEntry{
-
-	private string $name;
-	/** @phpstan-var CacheableNbt<\pocketmine\nbt\tag\CompoundTag> */
-	private CacheableNbt $states;
-
 	/**
 	 * @phpstan-param CacheableNbt<\pocketmine\nbt\tag\CompoundTag> $states
 	 */
-	public function __construct(string $name, CacheableNbt $states){
-		$this->name = $name;
-		$this->states = $states;
-	}
+	public function __construct(
+		private string $name,
+		private CacheableNbt $states
+	){}
 
 	public function getName() : string{ return $this->name; }
 

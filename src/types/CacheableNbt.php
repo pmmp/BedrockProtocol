@@ -22,26 +22,23 @@ use pocketmine\network\mcpe\protocol\serializer\NetworkNbtSerializer;
  * @phpstan-template TTagType of Tag
  */
 final class CacheableNbt{
-
-	/** @phpstan-var TTagType */
-	private Tag $root;
 	private ?string $encodedNbt;
 
 	/**
 	 * @phpstan-param TTagType $nbtRoot
 	 */
-	public function __construct(Tag $nbtRoot){
-		$this->root = $nbtRoot;
-	}
+	public function __construct(
+		private Tag $nbtRoot
+	){}
 
 	/**
 	 * @phpstan-return TTagType
 	 */
 	public function getRoot() : Tag{
-		return $this->root;
+		return $this->nbtRoot;
 	}
 
 	public function getEncodedNbt() : string{
-		return $this->encodedNbt ?? ($this->encodedNbt = (new NetworkNbtSerializer())->write(new TreeRoot($this->root)));
+		return $this->encodedNbt ?? ($this->encodedNbt = (new NetworkNbtSerializer())->write(new TreeRoot($this->nbtRoot)));
 	}
 }

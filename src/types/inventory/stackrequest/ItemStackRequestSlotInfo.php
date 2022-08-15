@@ -17,16 +17,11 @@ namespace pocketmine\network\mcpe\protocol\types\inventory\stackrequest;
 use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 
 final class ItemStackRequestSlotInfo{
-
-	private int $containerId;
-	private int $slotId;
-	private int $stackId;
-
-	public function __construct(int $containerId, int $slotId, int $stackId){
-		$this->containerId = $containerId;
-		$this->slotId = $slotId;
-		$this->stackId = $stackId;
-	}
+	public function __construct(
+		private int $containerId,
+		private int $slotId,
+		private int $stackId
+	){}
 
 	public function getContainerId() : int{ return $this->containerId; }
 

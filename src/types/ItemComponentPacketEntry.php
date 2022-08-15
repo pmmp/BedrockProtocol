@@ -15,18 +15,13 @@ declare(strict_types=1);
 namespace pocketmine\network\mcpe\protocol\types;
 
 final class ItemComponentPacketEntry{
-
-	private string $name;
-	/** @phpstan-var CacheableNbt<\pocketmine\nbt\tag\CompoundTag>  */
-	private CacheableNbt $componentNbt;
-
 	/**
 	 * @phpstan-param CacheableNbt<\pocketmine\nbt\tag\CompoundTag> $componentNbt
 	 */
-	public function __construct(string $name, CacheableNbt $componentNbt){
-		$this->name = $name;
-		$this->componentNbt = $componentNbt;
-	}
+	public function __construct(
+		private string $name,
+		private CacheableNbt $componentNbt
+	){}
 
 	public function getName() : string{ return $this->name; }
 

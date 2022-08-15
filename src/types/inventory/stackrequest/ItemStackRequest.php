@@ -20,26 +20,16 @@ use pocketmine\utils\BinaryDataException;
 use function count;
 
 final class ItemStackRequest{
-
-	private int $requestId;
-	/** @var ItemStackRequestAction[] */
-	private array $actions;
-	/**
-	 * @var string[]
-	 * @phpstan-var list<string>
-	 */
-	private array $filterStrings;
-
 	/**
 	 * @param ItemStackRequestAction[] $actions
 	 * @param string[]                 $filterStrings
 	 * @phpstan-param list<string> $filterStrings
 	 */
-	public function __construct(int $requestId, array $actions, array $filterStrings){
-		$this->requestId = $requestId;
-		$this->actions = $actions;
-		$this->filterStrings = $filterStrings;
-	}
+	public function __construct(
+		private int $requestId,
+		private array $actions,
+		private array $filterStrings
+	){}
 
 	public function getRequestId() : int{ return $this->requestId; }
 

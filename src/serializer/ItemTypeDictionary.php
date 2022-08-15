@@ -20,11 +20,6 @@ use function array_key_exists;
 final class ItemTypeDictionary{
 
 	/**
-	 * @var ItemTypeEntry[]
-	 * @phpstan-var list<ItemTypeEntry>
-	 */
-	private array $itemTypes;
-	/**
 	 * @var string[]
 	 * @phpstan-var array<int, string>
 	 */
@@ -37,9 +32,9 @@ final class ItemTypeDictionary{
 
 	/**
 	 * @param ItemTypeEntry[] $itemTypes
+	 * @phpstan-param list<ItemTypeEntry> $itemTypes
 	 */
-	public function __construct(array $itemTypes){
-		$this->itemTypes = $itemTypes;
+	public function __construct(private array $itemTypes){
 		foreach($this->itemTypes as $type){
 			$this->stringToIntMap[$type->getStringId()] = $type->getNumericId();
 			$this->intToStringIdMap[$type->getNumericId()] = $type->getStringId();

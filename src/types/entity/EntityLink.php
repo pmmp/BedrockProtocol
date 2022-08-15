@@ -20,17 +20,11 @@ class EntityLink{
 	public const TYPE_RIDER = 1;
 	public const TYPE_PASSENGER = 2;
 
-	public int $fromActorUniqueId;
-	public int $toActorUniqueId;
-	public int $type;
-	public bool $immediate; //for dismounting on mount death
-	public bool $causedByRider;
-
-	public function __construct(int $fromActorUniqueId, int $toActorUniqueId, int $type, bool $immediate, bool $causedByRider){
-		$this->fromActorUniqueId = $fromActorUniqueId;
-		$this->toActorUniqueId = $toActorUniqueId;
-		$this->type = $type;
-		$this->immediate = $immediate;
-		$this->causedByRider = $causedByRider;
-	}
+	public function __construct(
+		public int $fromActorUniqueId,
+		public int $toActorUniqueId,
+		public int $type,
+		public bool $immediate,
+		public bool $causedByRider
+	){}
 }

@@ -25,13 +25,10 @@ final class SwapStackRequestAction extends ItemStackRequestAction{
 
 	public const ID = ItemStackRequestActionType::SWAP;
 
-	private ItemStackRequestSlotInfo $slot1;
-	private ItemStackRequestSlotInfo $slot2;
-
-	public function __construct(ItemStackRequestSlotInfo $slot1, ItemStackRequestSlotInfo $slot2){
-		$this->slot1 = $slot1;
-		$this->slot2 = $slot2;
-	}
+	public function __construct(
+		private ItemStackRequestSlotInfo $slot1,
+		private ItemStackRequestSlotInfo $slot2
+	){}
 
 	public function getSlot1() : ItemStackRequestSlotInfo{ return $this->slot1; }
 

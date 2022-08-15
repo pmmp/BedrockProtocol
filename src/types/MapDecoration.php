@@ -17,22 +17,14 @@ namespace pocketmine\network\mcpe\protocol\types;
 use pocketmine\color\Color;
 
 class MapDecoration{
-
-	private int $icon;
-	private int $rotation;
-	private int $xOffset;
-	private int $yOffset;
-	private string $label;
-	private Color $color;
-
-	public function __construct(int $icon, int $rotation, int $xOffset, int $yOffset, string $label, Color $color){
-		$this->icon = $icon;
-		$this->rotation = $rotation;
-		$this->xOffset = $xOffset;
-		$this->yOffset = $yOffset;
-		$this->label = $label;
-		$this->color = $color;
-	}
+	public function __construct(
+		private int $icon,
+		private int $rotation,
+		private int $xOffset,
+		private int $yOffset,
+		private string $label,
+		private Color $color
+	){}
 
 	public function getIcon() : int{
 		return $this->icon;

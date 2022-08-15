@@ -17,14 +17,10 @@ namespace pocketmine\network\mcpe\protocol\types\inventory;
 use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 
 final class CreativeContentEntry{
-
-	private int $entryId;
-	private ItemStack $item;
-
-	public function __construct(int $entryId, ItemStack $item){
-		$this->entryId = $entryId;
-		$this->item = $item;
-	}
+	public function __construct(
+		private int $entryId,
+		private ItemStack $item
+	){}
 
 	public function getEntryId() : int{ return $this->entryId; }
 

@@ -18,18 +18,13 @@ use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 use function count;
 
 final class InventoryTransactionChangedSlotsHack{
-
-	private int $containerId;
-	/** @var int[] */
-	private array $changedSlotIndexes;
-
 	/**
 	 * @param int[] $changedSlotIndexes
 	 */
-	public function __construct(int $containerId, array $changedSlotIndexes){
-		$this->containerId = $containerId;
-		$this->changedSlotIndexes = $changedSlotIndexes;
-	}
+	public function __construct(
+		private int $containerId,
+		private array $changedSlotIndexes
+	){}
 
 	public function getContainerId() : int{ return $this->containerId; }
 

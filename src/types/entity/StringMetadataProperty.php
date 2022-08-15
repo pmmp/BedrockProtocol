@@ -22,11 +22,9 @@ final class StringMetadataProperty implements MetadataProperty{
 
 	public const ID = EntityMetadataTypes::STRING;
 
-	private string $value;
-
-	public function __construct(string $value){
-		$this->value = $value;
-	}
+	public function __construct(
+		private string $value
+	){}
 
 	public function getValue() : string{ return $this->value; }
 

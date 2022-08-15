@@ -26,13 +26,10 @@ final class CraftRecipeAutoStackRequestAction extends ItemStackRequestAction{
 
 	public const ID = ItemStackRequestActionType::CRAFTING_RECIPE_AUTO;
 
-	private int $recipeId;
-	private int $repetitions;
-
-	final public function __construct(int $recipeId, int $repetitions){
-		$this->recipeId = $recipeId;
-		$this->repetitions = $repetitions;
-	}
+	final public function __construct(
+		private int $recipeId,
+		private int $repetitions
+	){}
 
 	public function getRecipeId() : int{ return $this->recipeId; }
 

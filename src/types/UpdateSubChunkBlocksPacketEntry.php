@@ -18,22 +18,14 @@ use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 use pocketmine\network\mcpe\protocol\UpdateBlockPacket;
 
 final class UpdateSubChunkBlocksPacketEntry{
-
-	private BlockPosition $blockPosition;
-	private int $blockRuntimeId;
-	private int $flags;
-
-	//These two fields are useless 99.9% of the time; they are here to allow this packet to provide UpdateBlockSyncedPacket functionality.
-	private int $syncedUpdateActorUniqueId;
-	private int $syncedUpdateType;
-
-	public function __construct(BlockPosition $blockPosition, int $blockRuntimeId, int $flags, int $syncedUpdateActorUniqueId, int $syncedUpdateType){
-		$this->blockPosition = $blockPosition;
-		$this->blockRuntimeId = $blockRuntimeId;
-		$this->flags = $flags;
-		$this->syncedUpdateActorUniqueId = $syncedUpdateActorUniqueId;
-		$this->syncedUpdateType = $syncedUpdateType;
-	}
+	public function __construct(
+		private BlockPosition $blockPosition,
+		private int $blockRuntimeId,
+		private int $flags,
+		//These two fields are useless 99.9% of the time; they are here to allow this packet to provide UpdateBlockSyncedPacket functionality.
+		private int $syncedUpdateActorUniqueId,
+		private int $syncedUpdateType
+	){}
 
 	public static function simple(BlockPosition $blockPosition, int $blockRuntimeId) : self{
 		return new self($blockPosition, $blockRuntimeId, UpdateBlockPacket::FLAG_NETWORK, 0, 0);

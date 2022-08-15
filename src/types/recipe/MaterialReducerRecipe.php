@@ -15,24 +15,15 @@ declare(strict_types=1);
 namespace pocketmine\network\mcpe\protocol\types\recipe;
 
 final class MaterialReducerRecipe{
-
-	private int $inputItemId;
-	private int $inputItemMeta;
-	/**
-	 * @var MaterialReducerRecipeOutput[]
-	 * @phpstan-var list<MaterialReducerRecipeOutput>
-	 */
-	private array $outputs;
-
 	/**
 	 * @param MaterialReducerRecipeOutput[] $outputs
 	 * @phpstan-param list<MaterialReducerRecipeOutput> $outputs
 	 */
-	public function __construct(int $inputItemId, int $inputItemMeta, array $outputs){
-		$this->inputItemId = $inputItemId;
-		$this->inputItemMeta = $inputItemMeta;
-		$this->outputs = $outputs;
-	}
+	public function __construct(
+		private int $inputItemId,
+		private int $inputItemMeta,
+		private array $outputs
+	){}
 
 	public function getInputItemId() : int{ return $this->inputItemId; }
 

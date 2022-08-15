@@ -17,24 +17,15 @@ namespace pocketmine\network\mcpe\protocol\types\resourcepacks;
 use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 
 class BehaviorPackInfoEntry{
-
-	private string $packId;
-	private string $version;
-	private int $sizeBytes;
-	private string $encryptionKey;
-	private string $subPackName;
-	private string $contentId;
-	private bool $hasScripts;
-
-	public function __construct(string $packId, string $version, int $sizeBytes, string $encryptionKey = "", string $subPackName = "", string $contentId = "", bool $hasScripts = false){
-		$this->packId = $packId;
-		$this->version = $version;
-		$this->sizeBytes = $sizeBytes;
-		$this->encryptionKey = $encryptionKey;
-		$this->subPackName = $subPackName;
-		$this->contentId = $contentId;
-		$this->hasScripts = $hasScripts;
-	}
+	public function __construct(
+		private string $packId,
+		private string $version,
+		private int $sizeBytes,
+		private string $encryptionKey = "",
+		private string $subPackName = "",
+		private string $contentId = "",
+		private bool $hasScripts = false
+	){}
 
 	public function getPackId() : string{
 		return $this->packId;

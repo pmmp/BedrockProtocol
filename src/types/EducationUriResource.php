@@ -17,13 +17,10 @@ namespace pocketmine\network\mcpe\protocol\types;
 use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 
 final class EducationUriResource{
-	private string $buttonName;
-	private string $linkUri;
-
-	public function __construct(string $buttonName, string $linkUri){
-		$this->buttonName = $buttonName;
-		$this->linkUri = $linkUri;
-	}
+	public function __construct(
+		private string $buttonName,
+		private string $linkUri
+	){}
 
 	public function getButtonName() : string{ return $this->buttonName; }
 

@@ -230,10 +230,6 @@ trait PacketHandlerDefaultImplTrait{
 		return false;
 	}
 
-	public function handleAdventureSettings(AdventureSettingsPacket $packet) : bool{
-		return false;
-	}
-
 	public function handleBlockActorData(BlockActorDataPacket $packet) : bool{
 		return false;
 	}
@@ -763,6 +759,22 @@ trait PacketHandlerDefaultImplTrait{
 	}
 
 	public function handleFeatureRegistry(FeatureRegistryPacket $packet) : bool{
+		return false;
+	}
+
+	public function handleServerStats(ServerStatsPacket $packet) : bool{
+		return false;
+	}
+
+	public function handleRequestNetworkSettings(RequestNetworkSettingsPacket $packet) : bool{
+		return false;
+	}
+
+	public function handleGameTestRequest(GameTestRequestPacket $packet) : bool{
+		return false;
+	}
+
+	public function handleGameTestResults(GameTestResultsPacket $packet) : bool{
 		return false;
 	}
 }

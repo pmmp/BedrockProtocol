@@ -24,15 +24,17 @@ class StructureBlockUpdatePacket extends DataPacket implements ServerboundPacket
 	public BlockPosition $blockPosition;
 	public StructureEditorData $structureEditorData;
 	public bool $isPowered;
+	public bool $waterlogged;
 
 	/**
 	 * @generate-create-func
 	 */
-	public static function create(BlockPosition $blockPosition, StructureEditorData $structureEditorData, bool $isPowered) : self{
+	public static function create(BlockPosition $blockPosition, StructureEditorData $structureEditorData, bool $isPowered, bool $waterlogged) : self{
 		$result = new self;
 		$result->blockPosition = $blockPosition;
 		$result->structureEditorData = $structureEditorData;
 		$result->isPowered = $isPowered;
+		$result->waterlogged = $waterlogged;
 		return $result;
 	}
 
@@ -40,12 +42,14 @@ class StructureBlockUpdatePacket extends DataPacket implements ServerboundPacket
 		$this->blockPosition = $in->getBlockPosition();
 		$this->structureEditorData = $in->getStructureEditorData();
 		$this->isPowered = $in->getBool();
+		$this->waterlogged = $in->getBool();
 	}
 
 	protected function encodePayload(PacketSerializer $out) : void{
 		$out->putBlockPosition($this->blockPosition);
 		$out->putStructureEditorData($this->structureEditorData);
 		$out->putBool($this->isPowered);
+		$out->putBool($this->waterlogged);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

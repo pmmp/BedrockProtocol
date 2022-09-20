@@ -12,19 +12,17 @@
 
 declare(strict_types=1);
 
-namespace pocketmine\network\mcpe\protocol\types\recipe;
+namespace pocketmine\network\mcpe\protocol\types;
 
-final class RecipeIngredient{
-	public function __construct(
-		private ?ItemDescriptor $descriptor,
-		private int $count
-	){}
+/**
+ * List of supported compression algorithms for compressing packet batches.
+ */
+final class CompressionAlgorithm{
 
-	public function getDescriptor() : ?ItemDescriptor{
-		return $this->descriptor;
+	private function __construct(){
+		//NOOP
 	}
 
-	public function getCount() : int{
-		return $this->count;
-	}
+	public const ZLIB = 0;
+	public const SNAPPY = 1;
 }

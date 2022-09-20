@@ -12,31 +12,29 @@
 
 declare(strict_types=1);
 
-namespace pocketmine\network\mcpe\protocol\types\inventory;
+namespace pocketmine\network\mcpe\protocol\types\recipe;
 
-use pocketmine\network\mcpe\protocol\InventoryTransactionPacket;
 use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 use pocketmine\network\mcpe\protocol\types\GetTypeIdFromConstTrait;
 
-class NormalTransactionData extends TransactionData{
+final class TagItemDescriptor implements ItemDescriptor{
 	use GetTypeIdFromConstTrait;
 
-	public const ID = InventoryTransactionPacket::TYPE_NORMAL;
+	public const ID = ItemDescriptorType::TAG;
 
-	protected function decodeData(PacketSerializer $stream) : void{
+	public function __construct(
+		private string $tag
+	){}
 
+	public function getTag() : string{ return $this->tag; }
+
+	public static function read(PacketSerializer $in) : self{
+		$tag = $in->getString();
+
+		return new self($tag);
 	}
 
-	protected function encodeData(PacketSerializer $stream) : void{
-
-	}
-
-	/**
-	 * @param NetworkInventoryAction[] $actions
-	 */
-	public static function new(array $actions) : self{
-		$result = new self();
-		$result->actions = $actions;
-		return $result;
+	public function write(PacketSerializer $out) : void{
+		$out->putString($this->tag);
 	}
 }

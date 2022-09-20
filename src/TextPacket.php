@@ -31,6 +31,7 @@ class TextPacket extends DataPacket implements ClientboundPacket, ServerboundPac
 	public const TYPE_ANNOUNCEMENT = 8;
 	public const TYPE_JSON_WHISPER = 9;
 	public const TYPE_JSON = 10;
+	public const TYPE_JSON_ANNOUNCEMENT = 11;
 
 	public int $type;
 	public bool $needsTranslation = false;
@@ -66,8 +67,6 @@ class TextPacket extends DataPacket implements ClientboundPacket, ServerboundPac
 
 	/**
 	 * @param string[]  $parameters
-	 *
-	 * @return TextPacket
 	 */
 	public static function translation(string $key, array $parameters = []) : self{
 		return self::baseTranslation(self::TYPE_TRANSLATION, $key, $parameters);
@@ -79,8 +78,6 @@ class TextPacket extends DataPacket implements ClientboundPacket, ServerboundPac
 
 	/**
 	 * @param string[] $parameters
-	 *
-	 * @return TextPacket
 	 */
 	public static function translatedPopup(string $key, array $parameters = []) : self{
 		return self::baseTranslation(self::TYPE_POPUP, $key, $parameters);
@@ -88,8 +85,6 @@ class TextPacket extends DataPacket implements ClientboundPacket, ServerboundPac
 
 	/**
 	 * @param string[] $parameters
-	 *
-	 * @return TextPacket
 	 */
 	public static function jukeboxPopup(string $key, array $parameters = []) : self{
 		return self::baseTranslation(self::TYPE_JUKEBOX_POPUP, $key, $parameters);
@@ -113,6 +108,7 @@ class TextPacket extends DataPacket implements ClientboundPacket, ServerboundPac
 			case self::TYPE_SYSTEM:
 			case self::TYPE_JSON_WHISPER:
 			case self::TYPE_JSON:
+			case self::TYPE_JSON_ANNOUNCEMENT:
 				$this->message = $in->getString();
 				break;
 
@@ -145,6 +141,7 @@ class TextPacket extends DataPacket implements ClientboundPacket, ServerboundPac
 			case self::TYPE_SYSTEM:
 			case self::TYPE_JSON_WHISPER:
 			case self::TYPE_JSON:
+			case self::TYPE_JSON_ANNOUNCEMENT:
 				$out->putString($this->message);
 				break;
 

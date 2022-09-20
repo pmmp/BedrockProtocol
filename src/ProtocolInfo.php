@@ -32,11 +32,11 @@ final class ProtocolInfo{
 	 */
 
 	/** Actual Minecraft: PE protocol version */
-	public const CURRENT_PROTOCOL = 545;
+	public const CURRENT_PROTOCOL = 554;
 	/** Current Minecraft PE version reported by the server. This is usually the earliest currently supported version. */
-	public const MINECRAFT_VERSION = 'v1.19.21';
+	public const MINECRAFT_VERSION = 'v1.19.30';
 	/** Version number sent to clients in ping responses. */
-	public const MINECRAFT_VERSION_NETWORK = '1.19.21';
+	public const MINECRAFT_VERSION_NETWORK = '1.19.30';
 
 	public const LOGIN_PACKET = 0x01;
 	public const PLAY_STATUS_PACKET = 0x02;
@@ -92,7 +92,7 @@ final class ProtocolInfo{
 	public const CRAFTING_DATA_PACKET = 0x34;
 	public const CRAFTING_EVENT_PACKET = 0x35;
 	public const GUI_DATA_PICK_ITEM_PACKET = 0x36;
-	public const ADVENTURE_SETTINGS_PACKET = 0x37;
+
 	public const BLOCK_ACTOR_DATA_PACKET = 0x38;
 	public const PLAYER_INPUT_PACKET = 0x39;
 	public const LEVEL_CHUNK_PACKET = 0x3a;
@@ -229,5 +229,9 @@ final class ProtocolInfo{
 	public const DEATH_INFO_PACKET = 0xbd;
 	public const EDITOR_NETWORK_PACKET = 0xbe;
 	public const FEATURE_REGISTRY_PACKET = 0xbf;
+	public const SERVER_STATS_PACKET = 0xc0;
+	public const REQUEST_NETWORK_SETTINGS_PACKET = 0xc1;
+	public const GAME_TEST_REQUEST_PACKET = 0xc2;
+	public const GAME_TEST_RESULTS_PACKET = 0xc3;
 
 }

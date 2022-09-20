@@ -14,17 +14,13 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol\types\recipe;
 
-final class RecipeIngredient{
-	public function __construct(
-		private ?ItemDescriptor $descriptor,
-		private int $count
-	){}
+use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 
-	public function getDescriptor() : ?ItemDescriptor{
-		return $this->descriptor;
-	}
+/**
+ * Describes what items are accepted in a recipe input.
+ */
+interface ItemDescriptor{
+	public function getTypeId() : int;
 
-	public function getCount() : int{
-		return $this->count;
-	}
+	public function write(PacketSerializer $out) : void;
 }

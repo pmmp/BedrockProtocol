@@ -19,6 +19,7 @@ use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 use pocketmine\network\mcpe\protocol\types\DeviceOS;
 use pocketmine\network\mcpe\protocol\types\entity\EntityLink;
 use pocketmine\network\mcpe\protocol\types\entity\MetadataProperty;
+use pocketmine\network\mcpe\protocol\types\entity\PropertySyncData;
 use pocketmine\network\mcpe\protocol\types\inventory\ItemStackWrapper;
 use Ramsey\Uuid\UuidInterface;
 use function count;
@@ -42,6 +43,7 @@ class AddPlayerPacket extends DataPacket implements ClientboundPacket{
 	 * @phpstan-var array<int, MetadataProperty>
 	 */
 	public array $metadata = [];
+	public PropertySyncData $syncedProperties;
 
 	public UpdateAbilitiesPacket $abilitiesPacket;
 
@@ -69,6 +71,7 @@ class AddPlayerPacket extends DataPacket implements ClientboundPacket{
 		ItemStackWrapper $item,
 		int $gameMode,
 		array $metadata,
+		PropertySyncData $syncedProperties,
 		UpdateAbilitiesPacket $abilitiesPacket,
 		array $links,
 		string $deviceId,
@@ -87,6 +90,7 @@ class AddPlayerPacket extends DataPacket implements ClientboundPacket{
 		$result->item = $item;
 		$result->gameMode = $gameMode;
 		$result->metadata = $metadata;
+		$result->syncedProperties = $syncedProperties;
 		$result->abilitiesPacket = $abilitiesPacket;
 		$result->links = $links;
 		$result->deviceId = $deviceId;
@@ -107,6 +111,7 @@ class AddPlayerPacket extends DataPacket implements ClientboundPacket{
 		$this->item = ItemStackWrapper::read($in);
 		$this->gameMode = $in->getVarInt();
 		$this->metadata = $in->getEntityMetadata();
+		$this->syncedProperties = PropertySyncData::read($in);
 
 		$this->abilitiesPacket = new UpdateAbilitiesPacket();
 		$this->abilitiesPacket->decodePayload($in);
@@ -133,6 +138,7 @@ class AddPlayerPacket extends DataPacket implements ClientboundPacket{
 		$this->item->write($out);
 		$out->putVarInt($this->gameMode);
 		$out->putEntityMetadata($this->metadata);
+		$this->syncedProperties->write($out);
 
 		$this->abilitiesPacket->encodePayload($out);
 

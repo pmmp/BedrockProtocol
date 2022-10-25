@@ -23,6 +23,7 @@ final class UpdateAbilitiesPacketLayer{
 	public const LAYER_BASE = 1;
 	public const LAYER_SPECTATOR = 2;
 	public const LAYER_COMMANDS = 3;
+	public const LAYER_EDITOR = 4;
 
 	public const ABILITY_BUILD = 0;
 	public const ABILITY_MINE = 1;

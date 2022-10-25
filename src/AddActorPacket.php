@@ -19,6 +19,7 @@ use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 use pocketmine\network\mcpe\protocol\types\entity\Attribute;
 use pocketmine\network\mcpe\protocol\types\entity\EntityLink;
 use pocketmine\network\mcpe\protocol\types\entity\MetadataProperty;
+use pocketmine\network\mcpe\protocol\types\entity\PropertySyncData;
 use function count;
 
 class AddActorPacket extends DataPacket implements ClientboundPacket{
@@ -41,6 +42,7 @@ class AddActorPacket extends DataPacket implements ClientboundPacket{
 	 * @phpstan-var array<int, MetadataProperty>
 	 */
 	public array $metadata = [];
+	public PropertySyncData $syncedProperties;
 	/** @var EntityLink[] */
 	public array $links = [];
 
@@ -63,6 +65,7 @@ class AddActorPacket extends DataPacket implements ClientboundPacket{
 		float $bodyYaw,
 		array $attributes,
 		array $metadata,
+		PropertySyncData $syncedProperties,
 		array $links,
 	) : self{
 		$result = new self;
@@ -77,6 +80,7 @@ class AddActorPacket extends DataPacket implements ClientboundPacket{
 		$result->bodyYaw = $bodyYaw;
 		$result->attributes = $attributes;
 		$result->metadata = $metadata;
+		$result->syncedProperties = $syncedProperties;
 		$result->links = $links;
 		return $result;
 	}
@@ -102,6 +106,8 @@ class AddActorPacket extends DataPacket implements ClientboundPacket{
 		}
 
 		$this->metadata = $in->getEntityMetadata();
+		$this->syncedProperties = PropertySyncData::read($in);
+
 		$linkCount = $in->getUnsignedVarInt();
 		for($i = 0; $i < $linkCount; ++$i){
 			$this->links[] = $in->getEntityLink();
@@ -128,6 +134,8 @@ class AddActorPacket extends DataPacket implements ClientboundPacket{
 		}
 
 		$out->putEntityMetadata($this->metadata);
+		$this->syncedProperties->write($out);
+
 		$out->putUnsignedVarInt(count($this->links));
 		foreach($this->links as $link){
 			$out->putEntityLink($link);

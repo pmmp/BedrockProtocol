@@ -32,7 +32,6 @@ final class SubChunkPacketEntryCommon{
 
 	public function getTerrainData() : string{ return $this->terrainData; }
 
-	/** @return SubChunkPacketHeightMapInfo|null */
 	public function getHeightMap() : ?SubChunkPacketHeightMapInfo{ return $this->heightMap; }
 
 	public static function read(PacketSerializer $in, bool $cacheEnabled) : self{

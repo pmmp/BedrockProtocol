@@ -28,7 +28,8 @@ final class ItemStackRequest{
 	public function __construct(
 		private int $requestId,
 		private array $actions,
-		private array $filterStrings
+		private array $filterStrings,
+		private int $filterStringCause
 	){}
 
 	public function getRequestId() : int{ return $this->requestId; }
@@ -41,6 +42,8 @@ final class ItemStackRequest{
 	 * @phpstan-return list<string>
 	 */
 	public function getFilterStrings() : array{ return $this->filterStrings; }
+
+	public function getFilterStringCause() : int{ return $this->filterStringCause; }
 
 	/**
 	 * @throws BinaryDataException
@@ -83,7 +86,8 @@ final class ItemStackRequest{
 		for($i = 0, $len = $in->getUnsignedVarInt(); $i < $len; ++$i){
 			$filterStrings[] = $in->getString();
 		}
-		return new self($requestId, $actions, $filterStrings);
+		$filterStringCause = $in->getLInt();
+		return new self($requestId, $actions, $filterStrings, $filterStringCause);
 	}
 
 	public function write(PacketSerializer $out) : void{
@@ -97,5 +101,6 @@ final class ItemStackRequest{
 		foreach($this->filterStrings as $string){
 			$out->putString($string);
 		}
+		$out->putLInt($this->filterStringCause);
 	}
 }

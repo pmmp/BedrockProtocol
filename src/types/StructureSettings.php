@@ -21,6 +21,7 @@ class StructureSettings{
 	public string $paletteName;
 	public bool $ignoreEntities;
 	public bool $ignoreBlocks;
+	public bool $allowNonTickingChunks;
 	public BlockPosition $dimensions;
 	public BlockPosition $offset;
 	public int $lastTouchedByPlayerID;

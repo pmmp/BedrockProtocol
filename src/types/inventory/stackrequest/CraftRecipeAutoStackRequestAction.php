@@ -17,6 +17,7 @@ namespace pocketmine\network\mcpe\protocol\types\inventory\stackrequest;
 use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 use pocketmine\network\mcpe\protocol\types\GetTypeIdFromConstTrait;
 use pocketmine\network\mcpe\protocol\types\recipe\RecipeIngredient;
+use function count;
 
 /**
  * Tells that the current transaction crafted the specified recipe, using the recipe book. This is effectively the same

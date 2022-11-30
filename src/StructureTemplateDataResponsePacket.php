@@ -23,6 +23,7 @@ class StructureTemplateDataResponsePacket extends DataPacket implements Clientbo
 	public const TYPE_FAILURE = 0;
 	public const TYPE_EXPORT = 1;
 	public const TYPE_QUERY = 2;
+	public const TYPE_IMPORT = 3;
 
 	public string $structureTemplateName;
 	/** @phpstan-var CacheableNbt<\pocketmine\nbt\tag\CompoundTag> */

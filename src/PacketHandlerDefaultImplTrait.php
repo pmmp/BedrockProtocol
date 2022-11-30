@@ -777,4 +777,8 @@ trait PacketHandlerDefaultImplTrait{
 	public function handleGameTestResults(GameTestResultsPacket $packet) : bool{
 		return false;
 	}
+
+	public function handleUpdateClientInputLocks(UpdateClientInputLocksPacket $packet) : bool{
+		return false;
+	}
 }

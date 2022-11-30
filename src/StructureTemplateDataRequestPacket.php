@@ -24,6 +24,7 @@ class StructureTemplateDataRequestPacket extends DataPacket implements Serverbou
 	public const TYPE_EXPORT_FROM_SAVE_MODE = 1;
 	public const TYPE_EXPORT_FROM_LOAD_MODE = 2;
 	public const TYPE_QUERY_SAVED_STRUCTURE = 3;
+	public const TYPE_IMPORT = 4;
 
 	public string $structureTemplateName;
 	public BlockPosition $structureBlockPosition;

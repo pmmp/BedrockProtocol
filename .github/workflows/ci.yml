@@ -11,7 +11,7 @@ jobs:
         php: ['8.0', '8.1']
     name: Tests (PHP ${{ matrix.php }})
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Setup PHP
         uses: shivammathur/setup-php@2.9.0
@@ -42,7 +42,7 @@ jobs:
     needs: codestyle #to avoid false positives
     name: Generated Code consistency checks
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Setup PHP
         uses: shivammathur/setup-php@2.9.0
@@ -73,7 +73,7 @@ jobs:
     if: "!contains(github.event.head_commit.message, '[ci skip]')"
     name: Code Style checks
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Setup PHP
         uses: shivammathur/setup-php@2.9.0

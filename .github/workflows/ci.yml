@@ -21,7 +21,7 @@ jobs:
           tools: php-cs-fixer:3
 
       - name: Load Composer package cache
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: "~/.cache/composer"
           key: "php-${{ matrix.php }}-composer-${{ hashFiles('**/composer.json') }}"
@@ -52,7 +52,7 @@ jobs:
           tools: php-cs-fixer:3
 
       - name: Load Composer package cache
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: "~/.cache/composer"
           key: "php-${{ matrix.php }}-composer-${{ hashFiles('**/composer.json') }}"

@@ -8,7 +8,7 @@ jobs:
     if: "!contains(github.event.head_commit.message, '[ci skip]')"
     strategy:
       matrix:
-        php: ['8.0', '8.1']
+        php: ['8.0', '8.1', '8.2']
     name: Tests (PHP ${{ matrix.php }})
     steps:
       - uses: actions/checkout@v3
@@ -47,7 +47,7 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@2.22.0
         with:
-          php-version: 8.0
+          php-version: 8.1
           ini-values: xdebug.max_nesting_level=3000
           tools: php-cs-fixer:3
 
@@ -78,7 +78,7 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@2.22.0
         with:
-          php-version: 8.0
+          php-version: 8.1
           ini-values: xdebug.max_nesting_level=3000
           tools: php-cs-fixer:3
 

@@ -42,6 +42,7 @@ final class EntityMetadataProperties{
 	public const EXPERIENCE_VALUE = 15; //int (xp orb)
 	public const MINECART_DISPLAY_BLOCK = 16; //int (id | (data << 16))
 	public const HORSE_FLAGS = 16; //int
+	public const FIREWORK_ITEM = 16; //compoundtag
 	/* 16 (byte) used by wither skull */
 	public const MINECART_DISPLAY_OFFSET = 17; //int
 	public const SHOOTER_ID = 17; //long (used by arrows)

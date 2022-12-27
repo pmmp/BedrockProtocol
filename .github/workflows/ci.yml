@@ -19,6 +19,8 @@ jobs:
           php-version: ${{ matrix.php }}
           ini-values: xdebug.max_nesting_level=3000
           tools: php-cs-fixer:3
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Load Composer package cache
         uses: actions/cache@v3

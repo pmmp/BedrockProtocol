@@ -139,4 +139,8 @@ final class EntityMetadataProperties{
 	public const AMBIENT_SOUND_INTERVAL_MIN = 108; //float
 	public const AMBIENT_SOUND_INTERVAL_RANGE = 109; //float
 	public const AMBIENT_SOUND_EVENT = 110; //string
+
+	public const PLAYER_DEATH_POSITION = 128; //blockpos
+	public const PLAYER_DEATH_DIMENSION = 129; //int
+	public const PLAYER_HAS_DIED = 130; //byte
 }

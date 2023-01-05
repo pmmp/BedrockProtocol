@@ -18,9 +18,6 @@ jobs:
         with:
           php-version: ${{ matrix.php }}
           ini-values: xdebug.max_nesting_level=3000
-          tools: php-cs-fixer:3
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Load Composer package cache
         uses: actions/cache@v3
@@ -52,6 +49,8 @@ jobs:
           php-version: 8.1
           ini-values: xdebug.max_nesting_level=3000
           tools: php-cs-fixer:3
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Load Composer package cache
         uses: actions/cache@v3
@@ -83,6 +82,8 @@ jobs:
           php-version: 8.1
           ini-values: xdebug.max_nesting_level=3000
           tools: php-cs-fixer:3
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Run PHP-CS-Fixer
         run: php-cs-fixer fix --dry-run --diff

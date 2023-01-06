@@ -16,10 +16,17 @@ namespace pocketmine\network\mcpe\protocol\types\inventory\stackrequest;
 
 use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 use pocketmine\network\mcpe\protocol\types\GetTypeIdFromConstTrait;
+use pocketmine\network\mcpe\protocol\types\inventory\ContainerUIIds;
+use pocketmine\network\mcpe\protocol\types\inventory\UIInventorySlotOffset;
 
 /**
- * I have no clear idea what this does. It seems to be the client hinting to the server "hey, put a secondary output in
- * X crafting grid slot". This is used for things like buckets.
+ * This action precedes a "take" or "place" action involving the "created item" magic slot. It indicates that the
+ * "created item" output slot now contains output N of a previously specified crafting recipe.
+ * This is only used with crafting recipes that have multiple outputs. For recipes with single outputs, it's assumed
+ * that the content of the "created item" slot is the only output.
+ *
+ * @see ContainerUIIds::CREATED_OUTPUT
+ * @see UIInventorySlotOffset::CREATED_ITEM_OUTPUT
  */
 final class CraftingMarkSecondaryResultStackRequestAction extends ItemStackRequestAction{
 	use GetTypeIdFromConstTrait;

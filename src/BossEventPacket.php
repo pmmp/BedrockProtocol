@@ -20,23 +20,23 @@ use pocketmine\network\mcpe\protocol\types\BossBarColor;
 class BossEventPacket extends DataPacket implements ClientboundPacket, ServerboundPacket{
 	public const NETWORK_ID = ProtocolInfo::BOSS_EVENT_PACKET;
 
-	/* S2C: Shows the boss-bar to the player. */
+	/** S2C: Shows the boss-bar to the player. */
 	public const TYPE_SHOW = 0;
-	/* C2S: Registers a player to a boss fight. */
+	/** C2S: Registers a player to a boss fight. */
 	public const TYPE_REGISTER_PLAYER = 1;
-	/* S2C: Removes the boss-bar from the client. */
+	/** S2C: Removes the boss-bar from the client. */
 	public const TYPE_HIDE = 2;
-	/* C2S: Unregisters a player from a boss fight. */
+	/** C2S: Unregisters a player from a boss fight. */
 	public const TYPE_UNREGISTER_PLAYER = 3;
-	/* S2C: Sets the bar percentage. */
+	/** S2C: Sets the bar percentage. */
 	public const TYPE_HEALTH_PERCENT = 4;
-	/* S2C: Sets title of the bar. */
+	/** S2C: Sets title of the bar. */
 	public const TYPE_TITLE = 5;
-	/* S2C: Not sure on this. Includes color and overlay fields, plus an unknown short. TODO: check this */
-	public const TYPE_UNKNOWN_6 = 6;
-	/* S2C: Not implemented :( Intended to alter bar appearance, but these currently produce no effect on client-side whatsoever. */
+	/** S2C: Updates misc properties of the bar and environment. */
+	public const TYPE_PROPERTIES = 6;
+	/** S2C: Updates boss-bar colour and overlay texture. */
 	public const TYPE_TEXTURE = 7;
-	/* C2S: Client asking the server to resend all boss data. */
+	/** C2S: Client asking the server to resend all boss data. */
 	public const TYPE_QUERY = 8;
 
 	public int $bossActorUniqueId;
@@ -45,7 +45,7 @@ class BossEventPacket extends DataPacket implements ClientboundPacket, Serverbou
 	public int $playerActorUniqueId;
 	public float $healthPercent;
 	public string $title;
-	public int $unknownShort;
+	public bool $darkenScreen;
 	public int $color;
 	public int $overlay;
 
@@ -56,13 +56,13 @@ class BossEventPacket extends DataPacket implements ClientboundPacket, Serverbou
 		return $result;
 	}
 
-	public static function show(int $bossActorUniqueId, string $title, float $healthPercent, int $unknownShort = 0, int $color = BossBarColor::PURPLE) : self{
+	public static function show(int $bossActorUniqueId, string $title, float $healthPercent, bool $darkenScreen = false, int $color = BossBarColor::PURPLE, int $overlay = 0) : self{
 		$result = self::base($bossActorUniqueId, self::TYPE_SHOW);
 		$result->title = $title;
 		$result->healthPercent = $healthPercent;
-		$result->unknownShort = $unknownShort;
+		$result->darkenScreen = $darkenScreen;
 		$result->color = $color;
-		$result->overlay = 0;
+		$result->overlay = $overlay;
 		return $result;
 	}
 
@@ -94,11 +94,11 @@ class BossEventPacket extends DataPacket implements ClientboundPacket, Serverbou
 		return $result;
 	}
 
-	public static function unknown6(int $bossActorUniqueId, int $unknownShort, int $color = BossBarColor::PURPLE) : self{
-		$result = self::base($bossActorUniqueId, self::TYPE_UNKNOWN_6);
-		$result->unknownShort = $unknownShort;
+	public static function properties(int $bossActorUniqueId, bool $darkenScreen, int $color = BossBarColor::PURPLE, int $overlay = 0) : self{
+		$result = self::base($bossActorUniqueId, self::TYPE_PROPERTIES);
+		$result->darkenScreen = $darkenScreen;
 		$result->color = $color;
-		$result->overlay = 0;
+		$result->overlay = $overlay;
 		return $result;
 	}
 
@@ -122,8 +122,12 @@ class BossEventPacket extends DataPacket implements ClientboundPacket, Serverbou
 				$this->title = $in->getString();
 				$this->healthPercent = $in->getLFloat();
 			/** @noinspection PhpMissingBreakStatementInspection */
-			case self::TYPE_UNKNOWN_6:
-				$this->unknownShort = $in->getLShort();
+			case self::TYPE_PROPERTIES:
+				$this->darkenScreen = match($raw = $in->getLShort()){
+					0 => false,
+					1 => true,
+					default => throw new PacketDecodeException("Invalid darkenScreen value $raw"),
+				};
 			case self::TYPE_TEXTURE:
 				$this->color = $in->getUnsignedVarInt();
 				$this->overlay = $in->getUnsignedVarInt();
@@ -153,8 +157,8 @@ class BossEventPacket extends DataPacket implements ClientboundPacket, Serverbou
 				$out->putString($this->title);
 				$out->putLFloat($this->healthPercent);
 			/** @noinspection PhpMissingBreakStatementInspection */
-			case self::TYPE_UNKNOWN_6:
-				$out->putLShort($this->unknownShort);
+			case self::TYPE_PROPERTIES:
+				$out->putLShort($this->darkenScreen ? 1 : 0);
 			case self::TYPE_TEXTURE:
 				$out->putUnsignedVarInt($this->color);
 				$out->putUnsignedVarInt($this->overlay);

@@ -40,6 +40,10 @@ final class ItemStack implements \JsonSerializable{
 		return new self(0, 0, 0, 0, null, [], [], null);
 	}
 
+	public function isNull() : bool{
+		return $this->id === 0;
+	}
+
 	public function getId() : int{
 		return $this->id;
 	}

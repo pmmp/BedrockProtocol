@@ -77,10 +77,13 @@ final class ItemStack implements \JsonSerializable{
 	}
 
 	public function equals(ItemStack $itemStack) : bool{
+		return $this->equalsWithoutCount($itemStack) && $this->count === $itemStack->count;
+	}
+
+	public function equalsWithoutCount(ItemStack $itemStack) : bool{
 		return
 			$this->id === $itemStack->id &&
 			$this->meta === $itemStack->meta &&
-			$this->count === $itemStack->count &&
 			$this->blockRuntimeId === $itemStack->blockRuntimeId &&
 			$this->canPlaceOn === $itemStack->canPlaceOn &&
 			$this->canDestroy === $itemStack->canDestroy &&

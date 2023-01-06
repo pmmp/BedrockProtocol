@@ -57,7 +57,7 @@ final class ItemStackRequest{
 			DropStackRequestAction::ID => DropStackRequestAction::read($in),
 			DestroyStackRequestAction::ID => DestroyStackRequestAction::read($in),
 			CraftingConsumeInputStackRequestAction::ID => CraftingConsumeInputStackRequestAction::read($in),
-			CraftingMarkSecondaryResultStackRequestAction::ID => CraftingMarkSecondaryResultStackRequestAction::read($in),
+			CraftingCreateSpecificResultStackRequestAction::ID => CraftingCreateSpecificResultStackRequestAction::read($in),
 			PlaceIntoBundleStackRequestAction::ID => PlaceIntoBundleStackRequestAction::read($in),
 			TakeFromBundleStackRequestAction::ID => TakeFromBundleStackRequestAction::read($in),
 			LabTableCombineStackRequestAction::ID => LabTableCombineStackRequestAction::read($in),

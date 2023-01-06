@@ -28,16 +28,16 @@ use pocketmine\network\mcpe\protocol\types\inventory\UIInventorySlotOffset;
  * @see ContainerUIIds::CREATED_OUTPUT
  * @see UIInventorySlotOffset::CREATED_ITEM_OUTPUT
  */
-final class CraftingMarkSecondaryResultStackRequestAction extends ItemStackRequestAction{
+final class CraftingCreateSpecificResultStackRequestAction extends ItemStackRequestAction{
 	use GetTypeIdFromConstTrait;
 
-	public const ID = ItemStackRequestActionType::CRAFTING_MARK_SECONDARY_RESULT_SLOT;
+	public const ID = ItemStackRequestActionType::CRAFTING_CREATE_SPECIFIC_RESULT;
 
 	public function __construct(
-		private int $craftingGridSlot
+		private int $resultIndex
 	){}
 
-	public function getCraftingGridSlot() : int{ return $this->craftingGridSlot; }
+	public function getResultIndex() : int{ return $this->resultIndex; }
 
 	public static function read(PacketSerializer $in) : self{
 		$slot = $in->getByte();
@@ -45,6 +45,6 @@ final class CraftingMarkSecondaryResultStackRequestAction extends ItemStackReque
 	}
 
 	public function write(PacketSerializer $out) : void{
-		$out->putByte($this->craftingGridSlot);
+		$out->putByte($this->resultIndex);
 	}
 }

@@ -34,13 +34,13 @@ final class EntityMetadataProperties{
 	public const AIR = 7; //short
 	public const POTION_COLOR = 8; //int (ARGB!)
 	public const POTION_AMBIENT = 9; //byte
-	/* 10 (byte) */
+	public const JUMP_DURATION = 10; //byte
 	public const HURT_TIME = 11; //int (minecart/boat)
 	public const HURT_DIRECTION = 12; //int (minecart/boat)
 	public const PADDLE_TIME_LEFT = 13; //float
 	public const PADDLE_TIME_RIGHT = 14; //float
 	public const EXPERIENCE_VALUE = 15; //int (xp orb)
-	public const MINECART_DISPLAY_BLOCK = 16; //int (id | (data << 16))
+	public const MINECART_DISPLAY_BLOCK = 16; //int (block runtime ID)
 	public const HORSE_FLAGS = 16; //int
 	public const FIREWORK_ITEM = 16; //compoundtag
 	/* 16 (byte) used by wither skull */
@@ -48,8 +48,9 @@ final class EntityMetadataProperties{
 	public const SHOOTER_ID = 17; //long (used by arrows)
 	public const MINECART_HAS_DISPLAY = 18; //byte (must be 1 for minecart to show block inside)
 	public const HORSE_TYPE = 19; //byte
-	/* 20 (unknown)
-	 * 21 (unknown) */
+	public const CREEPER_SWELL = 19; //int
+	public const CREEPER_SWELL_PREVIOUS = 20; //int
+	public const CREEPER_SWELL_DIRECTION = 21; //byte
 	public const CHARGE_AMOUNT = 22; //int8, used for ghasts and also crossbow charging
 	public const ENDERMAN_HELD_ITEM_ID = 23; //short
 	public const ENTITY_AGE = 24; //short
@@ -60,10 +61,10 @@ final class EntityMetadataProperties{
 	public const FIREBALL_POWER_X = 29; //float
 	public const FIREBALL_POWER_Y = 30;
 	public const FIREBALL_POWER_Z = 31;
-	/* 32 (unknown)
-	 * 33 (float) fishing bobber
-	 * 34 (float) fishing bobber
-	 * 35 (float) fishing bobber */
+	/* 32 (unknown) */
+	public const FISH_X = 33; //float
+	public const FISH_Z = 34; //float
+	public const FISH_ANGLE = 35; //float
 	public const POTION_AUX_VALUE = 36; //short
 	public const LEAD_HOLDER_EID = 37; //long
 	public const SCALE = 38; //float
@@ -80,7 +81,7 @@ final class EntityMetadataProperties{
 	public const WITHER_TARGET_1 = 49; //long
 	public const WITHER_TARGET_2 = 50; //long
 	public const WITHER_TARGET_3 = 51; //long
-	/* 52 (short) */
+	public const WITHER_AERIAL_ATTACK = 52; //short
 	public const BOUNDING_BOX_WIDTH = 53; //float
 	public const BOUNDING_BOX_HEIGHT = 54; //float
 	public const FUSE_LENGTH = 55; //int
@@ -92,37 +93,37 @@ final class EntityMetadataProperties{
 	public const AREA_EFFECT_CLOUD_RADIUS = 61; //float
 	public const AREA_EFFECT_CLOUD_WAITING = 62; //int
 	public const AREA_EFFECT_CLOUD_PARTICLE_ID = 63; //int
-	/* 64 (int) shulker-related */
+	public const SHULKER_PEEK_ID = 64; //int
 	public const SHULKER_ATTACH_FACE = 65; //byte
-	/* 66 (short) shulker-related */
+	public const SHULKER_ATTACHED = 66; //byte (TODO: check this - comment said it was a short)
 	public const SHULKER_ATTACH_POS = 67; //block coords
 	public const TRADING_PLAYER_EID = 68; //long
-
-	/* 70 (byte) command-block */
+	public const CAREER = 69; //int
+	public const HAS_COMMAND_BLOCK = 70; //byte
 	public const COMMAND_BLOCK_COMMAND = 71; //string
 	public const COMMAND_BLOCK_LAST_OUTPUT = 72; //string
 	public const COMMAND_BLOCK_TRACK_OUTPUT = 73; //byte
 	public const CONTROLLING_RIDER_SEAT_NUMBER = 74; //byte
 	public const STRENGTH = 75; //int
 	public const MAX_STRENGTH = 76; //int
-	/* 77 (int) */
+	public const EVOKER_SPELL_CASTING_COLOR = 77; //int
 	public const LIMITED_LIFE = 78;
 	public const ARMOR_STAND_POSE_INDEX = 79; //int
 	public const ENDER_CRYSTAL_TIME_OFFSET = 80; //int
 	public const ALWAYS_SHOW_NAMETAG = 81; //byte: -1 = default, 0 = only when looked at, 1 = always
 	public const COLOR_2 = 82; //byte
-	/* 83 (unknown) */
+	public const NAME_AUTHOR = 83; //string
 	public const SCORE_TAG = 84; //string
 	public const BALLOON_ATTACHED_ENTITY = 85; //int64, entity unique ID of owner
 	public const PUFFERFISH_SIZE = 86; //byte
 	public const BOAT_BUBBLE_TIME = 87; //int (time in bubble column)
 	public const PLAYER_AGENT_EID = 88; //long
-	/* 89 (float) related to panda sitting
-	 * 90 (float) related to panda sitting */
+	public const SITTING_AMOUNT = 89; //float
+	public const SITTING_AMOUNT_PREVIOUS = 90; //float
 	public const EAT_COUNTER = 91; //int (used by pandas)
 	public const FLAGS2 = 92; //long (extended data flags)
-	/* 93 (float) related to panda lying down
-	 * 94 (float) related to panda lying down */
+	public const LAYING_AMOUNT = 93; //float (used by pandas)
+	public const LAYING_AMOUNT_PREVIOUS = 94; //float (used by pandas)
 	public const AREA_EFFECT_CLOUD_DURATION = 95; //int
 	public const AREA_EFFECT_CLOUD_SPAWN_TIME = 96; //int
 	public const AREA_EFFECT_CLOUD_RADIUS_PER_TICK = 97; //float, usually negative
@@ -133,13 +134,28 @@ final class EntityMetadataProperties{
 	public const MAX_TRADE_TIER = 102; //int
 	public const TRADE_XP = 103; //int
 	public const SKIN_ID = 104; //int ???
-	/* 105 (int) related to wither */
+	public const SPAWNING_FRAMES = 105; //int - related to wither
 	public const COMMAND_BLOCK_TICK_DELAY = 106; //int
 	public const COMMAND_BLOCK_EXECUTE_ON_FIRST_TICK = 107; //byte
 	public const AMBIENT_SOUND_INTERVAL_MIN = 108; //float
 	public const AMBIENT_SOUND_INTERVAL_RANGE = 109; //float
 	public const AMBIENT_SOUND_EVENT = 110; //string
-
+	public const FALL_DAMAGE_MULTIPLIER = 111; //float
+	public const NAME_RAW_TEXT = 112; //string
+	public const CAN_RIDE_TARGET = 113; //byte
+	public const LOW_TIER_CURED_TRADE_DISCOUNT = 114; //int
+	public const HIGH_TIER_CURED_TRADE_DISCOUNT = 115; //int
+	public const NEARBY_CURED_TRADE_DISCOUNT = 116; //int
+	public const NEARBY_CURED_DISCOUNT_TIME_STAMP = 117; //int
+	public const HITBOX = 118; //compound
+	public const IS_BUOYANT = 119; //byte
+	public const FREEZING_EFFECT_STRENGTH = 120; //float
+	public const BUOYANCY_DATA = 121; //string
+	public const GOAT_HORN_COUNT = 122; //int
+	public const BASE_RUNTIME_ID = 123; //string
+	public const MOVEMENT_SOUND_DISTANCE_OFFSET = 124;
+	public const HEARTBEAT_INTERVAL_TICKS = 125; //int
+	public const HEARTBEAT_LEVEL_SOUND_EVENT = 126; //int
 	public const PLAYER_DEATH_POSITION = 127; //blockpos
 	public const PLAYER_DEATH_DIMENSION = 128; //int
 	public const PLAYER_HAS_DIED = 129; //byte

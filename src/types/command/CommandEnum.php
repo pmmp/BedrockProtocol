@@ -21,7 +21,8 @@ class CommandEnum{
 	 */
 	public function __construct(
 		private string $enumName,
-		private array $enumValues
+		private array $enumValues,
+		private bool $isSoft = false
 	){}
 
 	public function getName() : string{
@@ -34,5 +35,9 @@ class CommandEnum{
 	 */
 	public function getValues() : array{
 		return $this->enumValues;
+	}
+
+	public function isSoft() : bool{
+		return $this->isSoft;
 	}
 }

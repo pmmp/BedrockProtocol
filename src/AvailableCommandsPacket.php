@@ -158,7 +158,7 @@ class AvailableCommandsPacket extends DataPacket implements ClientboundPacket{
 		foreach($this->commandData as $datum){
 			foreach($datum->getOverloads() as $overload){
 				foreach($overload as $parameter){
-					if($parameter->paramType & self::ARG_FLAG_SOFT_ENUM !== 0){
+					if(($parameter->paramType & self::ARG_FLAG_SOFT_ENUM) !== 0){
 						$index = $parameter->paramType & 0xffff;
 						$parameter->enum = $this->softEnums[$index] ?? null;
 						if($parameter->enum === null){
@@ -355,8 +355,9 @@ class AvailableCommandsPacket extends DataPacket implements ClientboundPacket{
 	}
 
 	/**
-	 * @param int[]       $enumIndexes string enum name -> int index
-	 * @param int[]       $postfixIndexes
+	 * @param int[] $enumIndexes string enum name -> int index
+	 * @param int[] $softEnumIndexes
+	 * @param int[] $postfixIndexes
 	 */
 	protected function putCommandData(CommandData $data, array $enumIndexes, array $softEnumIndexes, array $postfixIndexes, PacketSerializer $out) : void{
 		$out->putString($data->name);

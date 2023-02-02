@@ -162,6 +162,26 @@ class AvailableCommandsPacket extends DataPacket implements ClientboundPacket{
 	}
 
 	/**
+	 * Command data is decoded without referencing to any soft enums, as they are decoded afterwards.
+	 * So we need to separately add soft enums to the command data
+	 */
+	protected function initSoftEnumsInCommandData() : void{
+		foreach($this->commandData as $datum){
+			foreach($datum->getOverloads() as $overload){
+				foreach($overload as $parameter){
+					if(($parameter->paramType & self::ARG_FLAG_SOFT_ENUM) !== 0){
+						$index = $parameter->paramType & 0xffff;
+						$parameter->enum = $this->softEnums[$index] ?? null;
+						if($parameter->enum === null){
+							throw new PacketDecodeException("deserializing $datum->name parameter $parameter->paramName: expected soft enum at $index, but got none");
+						}
+					}
+				}
+			}
+		}
+	}
+
+	/**
 	 * @param string[] $enumValueList
 	 *
 	 * @throws PacketDecodeException
@@ -383,26 +403,6 @@ class AvailableCommandsPacket extends DataPacket implements ClientboundPacket{
 				$out->putLInt($type);
 				$out->putBool($parameter->isOptional);
 				$out->putByte($parameter->flags);
-			}
-		}
-	}
-
-	/**
-	 * Command data is decoded without referencing to any soft enums, as they are decoded afterwards.
-	 * So we need to separately add soft enums to the command data
-	 */
-	protected function initSoftEnumsInCommandData() : void{
-		foreach($this->commandData as $datum){
-			foreach($datum->getOverloads() as $overload){
-				foreach($overload as $parameter){
-					if(($parameter->paramType & self::ARG_FLAG_SOFT_ENUM) !== 0){
-						$index = $parameter->paramType & 0xffff;
-						$parameter->enum = $this->softEnums[$index] ?? null;
-						if($parameter->enum === null){
-							throw new PacketDecodeException("deserializing $datum->name parameter $parameter->paramName: expected soft enum at $index, but got none");
-						}
-					}
-				}
 			}
 		}
 	}

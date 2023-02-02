@@ -16,7 +16,9 @@ namespace pocketmine\network\mcpe\protocol\types\command;
 
 class CommandEnum{
 	/**
-	 * @param string[] $enumValues
+	 * @param string[]             $enumValues
+	 * @param bool                 $isSoft Whether the enum is dynamic, i.e. can be updated during the game session
+	 *
 	 * @phpstan-param list<string> $enumValues
 	 */
 	public function __construct(
@@ -37,6 +39,9 @@ class CommandEnum{
 		return $this->enumValues;
 	}
 
+	/**
+	 * @return bool Whether the enum is dynamic, i.e. can be updated during the game session
+	 */
 	public function isSoft() : bool{
 		return $this->isSoft;
 	}

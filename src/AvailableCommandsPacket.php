@@ -76,6 +76,8 @@ class AvailableCommandsPacket extends DataPacket implements ClientboundPacket{
 	/** This is used for /xp <level: int>L. It can only be applied to integer parameters. */
 	public const ARG_FLAG_POSTFIX = 0x1000000;
 
+	public const ARG_FLAG_SOFT_ENUM = 0x4000000;
+
 	public const HARDCODED_ENUM_NAMES = [
 		"CommandName" => true
 	];
@@ -152,8 +154,30 @@ class AvailableCommandsPacket extends DataPacket implements ClientboundPacket{
 			$this->softEnums[] = $this->getSoftEnum($in);
 		}
 
+		$this->initSoftEnumsInCommandData();
+
 		for($i = 0, $count = $in->getUnsignedVarInt(); $i < $count; ++$i){
 			$this->enumConstraints[] = $this->getEnumConstraint($enums, $enumValues, $in);
+		}
+	}
+
+	/**
+	 * Command data is decoded without referencing to any soft enums, as they are decoded afterwards.
+	 * So we need to separately add soft enums to the command data
+	 */
+	protected function initSoftEnumsInCommandData() : void{
+		foreach($this->commandData as $datum){
+			foreach($datum->getOverloads() as $overload){
+				foreach($overload as $parameter){
+					if(($parameter->paramType & self::ARG_FLAG_SOFT_ENUM) !== 0){
+						$index = $parameter->paramType & 0xffff;
+						$parameter->enum = $this->softEnums[$index] ?? null;
+						if($parameter->enum === null){
+							throw new PacketDecodeException("deserializing $datum->name parameter $parameter->paramName: expected soft enum at $index, but got none");
+						}
+					}
+				}
+			}
 		}
 	}
 
@@ -193,7 +217,7 @@ class AvailableCommandsPacket extends DataPacket implements ClientboundPacket{
 			$enumValues[] = $in->getString();
 		}
 
-		return new CommandEnum($enumName, $enumValues);
+		return new CommandEnum($enumName, $enumValues, true);
 	}
 
 	/**
@@ -338,10 +362,11 @@ class AvailableCommandsPacket extends DataPacket implements ClientboundPacket{
 	}
 
 	/**
-	 * @param int[]       $enumIndexes string enum name -> int index
-	 * @param int[]       $postfixIndexes
+	 * @param int[] $enumIndexes string enum name -> int index
+	 * @param int[] $softEnumIndexes
+	 * @param int[] $postfixIndexes
 	 */
-	protected function putCommandData(CommandData $data, array $enumIndexes, array $postfixIndexes, PacketSerializer $out) : void{
+	protected function putCommandData(CommandData $data, array $enumIndexes, array $softEnumIndexes, array $postfixIndexes, PacketSerializer $out) : void{
 		$out->putString($data->name);
 		$out->putString($data->description);
 		$out->putLShort($data->flags);
@@ -361,7 +386,11 @@ class AvailableCommandsPacket extends DataPacket implements ClientboundPacket{
 				$out->putString($parameter->paramName);
 
 				if($parameter->enum !== null){
-					$type = self::ARG_FLAG_ENUM | self::ARG_FLAG_VALID | ($enumIndexes[$parameter->enum->getName()] ?? -1);
+					if($parameter->enum->isSoft()){
+						$type = self::ARG_FLAG_SOFT_ENUM | self::ARG_FLAG_VALID | ($softEnumIndexes[$parameter->enum->getName()] ?? -1);
+					}else{
+						$type = self::ARG_FLAG_ENUM | self::ARG_FLAG_VALID | ($enumIndexes[$parameter->enum->getName()] ?? -1);
+					}
 				}elseif($parameter->postfix !== null){
 					if(!isset($postfixIndexes[$parameter->postfix])){
 						throw new \LogicException("Postfix '$parameter->postfix' not in postfixes array");
@@ -385,18 +414,36 @@ class AvailableCommandsPacket extends DataPacket implements ClientboundPacket{
 		$postfixIndexes = [];
 		/** @var int[] $enumIndexes */
 		$enumIndexes = [];
+		/** @var int[] $softEnumIndexes */
+		$softEnumIndexes = [];
 		/** @var CommandEnum[] $enums */
 		$enums = [];
+		/** @var CommandEnum[] $softEnums */
+		$softEnums = [];
 
-		$addEnumFn = static function(CommandEnum $enum) use (&$enums, &$enumIndexes, &$enumValueIndexes) : void{
-			if(!isset($enumIndexes[$enum->getName()])){
-				$enums[$enumIndexes[$enum->getName()] = count($enumIndexes)] = $enum;
-			}
+		$addEnumFn = static function(CommandEnum $enum) use (
+			&$enums, &$softEnums, &$enumIndexes, &$softEnumIndexes, &$enumValueIndexes
+		) : void{
 			foreach($enum->getValues() as $str){
 				$enumValueIndexes[$str] = $enumValueIndexes[$str] ?? count($enumValueIndexes); //latest index
 			}
+
+			$enumName = $enum->getName();
+
+			if($enum->isSoft()){
+				if(!isset($softEnumIndexes[$enumName])){
+					$softEnums[$softEnumIndexes[$enumName] = count($softEnumIndexes)] = $enum;
+				}
+			}else{
+				if(!isset($enumIndexes[$enumName])){
+					$enums[$enumIndexes[$enumName] = count($enumIndexes)] = $enum;
+				}
+			}
 		};
 		foreach($this->hardcodedEnums as $enum){
+			$addEnumFn($enum);
+		}
+		foreach($this->softEnums as $enum){
 			$addEnumFn($enum);
 		}
 		foreach($this->commandData as $commandData){
@@ -435,11 +482,11 @@ class AvailableCommandsPacket extends DataPacket implements ClientboundPacket{
 
 		$out->putUnsignedVarInt(count($this->commandData));
 		foreach($this->commandData as $data){
-			$this->putCommandData($data, $enumIndexes, $postfixIndexes, $out);
+			$this->putCommandData($data, $enumIndexes, $softEnumIndexes, $postfixIndexes, $out);
 		}
 
-		$out->putUnsignedVarInt(count($this->softEnums));
-		foreach($this->softEnums as $enum){
+		$out->putUnsignedVarInt(count($softEnums));
+		foreach($softEnums as $enum){
 			$this->putSoftEnum($enum, $out);
 		}
 

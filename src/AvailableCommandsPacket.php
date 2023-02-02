@@ -154,8 +154,6 @@ class AvailableCommandsPacket extends DataPacket implements ClientboundPacket{
 			$this->softEnums[] = $this->getSoftEnum($in);
 		}
 
-		// Command data was decoded without referencing to any soft enums, as they were decoded afterwards.
-		// So now we need to add soft enums to the command data
 		$this->initSoftEnumsInCommandData();
 
 		for($i = 0, $count = $in->getUnsignedVarInt(); $i < $count; ++$i){
@@ -389,6 +387,10 @@ class AvailableCommandsPacket extends DataPacket implements ClientboundPacket{
 		}
 	}
 
+	/**
+	 * Command data is decoded without referencing to any soft enums, as they are decoded afterwards.
+	 * So we need to separately add soft enums to the command data
+	 */
 	protected function initSoftEnumsInCommandData() : void{
 		foreach($this->commandData as $datum){
 			foreach($datum->getOverloads() as $overload){

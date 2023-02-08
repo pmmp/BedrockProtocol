@@ -49,6 +49,7 @@ final class PlayerAction{
 	public const CONTINUE_DESTROY_BLOCK = 27;
 	public const START_ITEM_USE_ON = 28;
 	public const STOP_ITEM_USE_ON = 29;
+	public const HANDLED_TELEPORT = 30;
 
 	//Backwards compatibility (blame @dktapps)
 	public const CRACK_BREAK = 18;

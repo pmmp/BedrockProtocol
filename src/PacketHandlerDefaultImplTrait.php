@@ -781,4 +781,8 @@ trait PacketHandlerDefaultImplTrait{
 	public function handleUpdateClientInputLocks(UpdateClientInputLocksPacket $packet) : bool{
 		return false;
 	}
+
+	public function handleClientCheatAbility(ClientCheatAbilityPacket $packet) : bool{
+		return false;
+	}
 }

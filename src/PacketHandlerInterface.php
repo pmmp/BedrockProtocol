@@ -397,4 +397,6 @@ interface PacketHandlerInterface{
 	public function handleGameTestResults(GameTestResultsPacket $packet) : bool;
 
 	public function handleUpdateClientInputLocks(UpdateClientInputLocksPacket $packet) : bool;
+
+	public function handleClientCheatAbility(ClientCheatAbilityPacket $packet) : bool;
 }

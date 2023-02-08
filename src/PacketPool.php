@@ -223,6 +223,7 @@ class PacketPool{
 		$this->registerPacket(new GameTestRequestPacket());
 		$this->registerPacket(new GameTestResultsPacket());
 		$this->registerPacket(new UpdateClientInputLocksPacket());
+		$this->registerPacket(new ClientCheatAbilityPacket());
 	}
 
 	public function registerPacket(Packet $packet) : void{

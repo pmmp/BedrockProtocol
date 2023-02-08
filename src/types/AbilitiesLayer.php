@@ -16,8 +16,9 @@ namespace pocketmine\network\mcpe\protocol\types;
 
 use pocketmine\network\mcpe\protocol\PacketDecodeException;
 use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use function array_fill;
 
-final class UpdateAbilitiesPacketLayer{
+final class AbilitiesLayer{
 
 	public const LAYER_CACHE = 0;
 	public const LAYER_BASE = 1;

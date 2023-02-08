@@ -448,6 +448,10 @@ final class LevelSoundEvent{
 	public const TRAPDOOR_CLOSE = 455;
 	public const FENCE_GATE_OPEN = 456;
 	public const FENCE_GATE_CLOSE = 457;
+	public const INSERT = 458;
+	public const PICKUP = 459;
+	public const INSERT_ENCHANTED = 460;
+	public const PICKUP_ENCHANTED = 461;
 
 	//The following aliases are kept for backwards compatibility only
 	public const SCULK_SENSOR_POWER_ON = self::POWER_ON_SCULK_SENSOR;

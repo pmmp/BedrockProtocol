@@ -17,12 +17,8 @@ namespace pocketmine\network\mcpe\protocol;
 use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 use pocketmine\network\mcpe\protocol\types\AbilitiesData;
 
-/**
- * Updates player abilities and permissions, such as command permissions, flying/noclip, fly speed, walk speed etc.
- * Abilities may be layered in order to combine different ability sets into a resulting set.
- */
-class UpdateAbilitiesPacket extends DataPacket implements ClientboundPacket{
-	public const NETWORK_ID = ProtocolInfo::UPDATE_ABILITIES_PACKET;
+class ClientCheatAbilityPacket extends DataPacket implements ServerboundPacket{
+	public const NETWORK_ID = ProtocolInfo::CLIENT_CHEAT_ABILITY_PACKET;
 
 	private AbilitiesData $data;
 
@@ -46,6 +42,6 @@ class UpdateAbilitiesPacket extends DataPacket implements ClientboundPacket{
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{
-		return $handler->handleUpdateAbilities($this);
+		return $handler->handleClientCheatAbility($this);
 	}
 }

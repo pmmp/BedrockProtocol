@@ -89,4 +89,5 @@ final class PlayerAuthInputFlags{
 	public const PERFORM_ITEM_INTERACTION = 34;
 	public const PERFORM_BLOCK_ACTIONS = 35;
 	public const PERFORM_ITEM_STACK_REQUEST = 36;
+	public const HANDLED_TELEPORT = 37;
 }

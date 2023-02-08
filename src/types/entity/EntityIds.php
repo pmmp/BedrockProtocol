@@ -122,6 +122,7 @@ final class EntityIds{
 	public const THROWN_TRIDENT = "minecraft:thrown_trident";
 	public const TNT = "minecraft:tnt";
 	public const TNT_MINECART = "minecraft:tnt_minecart";
+	public const TRADER_LLAMA = "minecraft:trader_llama";
 	public const TRIPOD_CAMERA = "minecraft:tripod_camera";
 	public const TROPICALFISH = "minecraft:tropicalfish";
 	public const TURTLE = "minecraft:turtle";

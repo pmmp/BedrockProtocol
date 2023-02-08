@@ -28,11 +28,12 @@ class CommandRequestPacket extends DataPacket implements ServerboundPacket{
 	/**
 	 * @generate-create-func
 	 */
-	public static function create(string $command, CommandOriginData $originData, bool $isInternal) : self{
+	public static function create(string $command, CommandOriginData $originData, bool $isInternal, int $version) : self{
 		$result = new self;
 		$result->command = $command;
 		$result->originData = $originData;
 		$result->isInternal = $isInternal;
+		$result->version = $version;
 		return $result;
 	}
 

@@ -17,7 +17,7 @@ namespace pocketmine\network\mcpe\protocol;
 use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 use pocketmine\network\mcpe\protocol\types\entity\EntityLink;
 
-class SetActorLinkPacket extends DataPacket implements ClientboundPacket{
+class SetActorLinkPacket extends DataPacket implements ClientboundPacket, ServerboundPacket{
 	public const NETWORK_ID = ProtocolInfo::SET_ACTOR_LINK_PACKET;
 
 	public EntityLink $link;

@@ -18,6 +18,7 @@ use pocketmine\network\mcpe\protocol\Packet;
 use pocketmine\network\mcpe\protocol\PacketDecodeException;
 use pocketmine\network\mcpe\protocol\PacketPool;
 use pocketmine\utils\BinaryDataException;
+use pocketmine\utils\BinaryStream;
 
 class PacketBatch{
 	public function __construct(
@@ -53,6 +54,18 @@ class PacketBatch{
 			$subSerializer = PacketSerializer::encoder($context);
 			$packet->encode($subSerializer);
 			$serializer->putString($subSerializer->getBuffer());
+		}
+		return new self($serializer->getBuffer());
+	}
+
+	/**
+	 * Constructs an encoded packet batch from the given list of pre-encoded packet buffers.
+	 */
+	public static function fromRawPackets(string ...$packets) : self{
+		$serializer = new BinaryStream();
+		foreach($packets as $packet){
+			$serializer->putUnsignedVarInt(strlen($packet));
+			$serializer->put($packet);
 		}
 		return new self($serializer->getBuffer());
 	}

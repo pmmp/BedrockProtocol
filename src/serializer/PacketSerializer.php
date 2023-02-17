@@ -161,6 +161,7 @@ class PacketSerializer extends BinaryStream{
 		$persona = $this->getBool();
 		$capeOnClassic = $this->getBool();
 		$isPrimaryUser = $this->getBool();
+		$override = $this->getBool();
 
 		return new SkinData(
 			$skinId,
@@ -183,6 +184,7 @@ class PacketSerializer extends BinaryStream{
 			$persona,
 			$capeOnClassic,
 			$isPrimaryUser,
+			$override,
 		);
 	}
 
@@ -226,6 +228,7 @@ class PacketSerializer extends BinaryStream{
 		$this->putBool($skin->isPersona());
 		$this->putBool($skin->isPersonaCapeOnClassic());
 		$this->putBool($skin->isPrimaryUser());
+		$this->putBool($skin->isOverride());
 	}
 
 	private function getSkinImage() : SkinImage{

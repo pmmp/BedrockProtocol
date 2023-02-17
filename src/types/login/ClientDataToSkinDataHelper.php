@@ -78,6 +78,7 @@ final class ClientDataToSkinDataHelper{
 			$clientData->PersonaSkin,
 			$clientData->CapeOnClassicSkin,
 			true, //assume this is true? there's no field for it ...
+			$clientData->OverrideSkin ?? true,
 		);
 	}
 }

@@ -73,6 +73,8 @@ final class ClientData{
 	/** @required */
 	public string $LanguageCode;
 
+	public bool $OverrideSkin;
+
 	/**
 	 * @var ClientDataPersonaSkinPiece[]
 	 * @required

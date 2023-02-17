@@ -50,7 +50,8 @@ class SkinData{
 		private bool $premium = false,
 		private bool $persona = false,
 		private bool $personaCapeOnClassic = false,
-		private bool $isPrimaryUser = true
+		private bool $isPrimaryUser = true,
+		private bool $override = true
 	){
 		$this->capeImage = $capeImage ?? new SkinImage(0, 0, "");
 		//this has to be unique or the client will do stupid things
@@ -135,6 +136,8 @@ class SkinData{
 	}
 
 	public function isPrimaryUser() : bool{ return $this->isPrimaryUser; }
+
+	public function isOverride() : bool{ return $this->override; }
 
 	public function isVerified() : bool{
 		return $this->isVerified;

@@ -105,7 +105,7 @@ class PacketBatch{
 		$c = 0;
 		try{
 			foreach(self::decodeRaw($stream) as $raw){
-				if($c++ > $max){
+				if(++$c > $max){
 					throw new PacketDecodeException("Reached limit of $max packets in a single batch");
 				}
 				yield $c => [$packetPool->getPacket($raw), $raw];

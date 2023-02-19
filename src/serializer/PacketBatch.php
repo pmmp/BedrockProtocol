@@ -121,7 +121,7 @@ class PacketBatch{
 	 */
 	public static function fromPackets(PacketSerializerContext $context, Packet ...$packets) : self{
 		$stream = new BinaryStream();
-		self::encodePackets($stream, $context, ...$packets);
+		self::encodePackets($stream, $context, $packets);
 		return new self($stream->getBuffer());
 	}
 

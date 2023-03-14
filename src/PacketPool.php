@@ -31,7 +31,7 @@ class PacketPool{
 	protected \SplFixedArray $pool;
 
 	public function __construct(){
-		$this->pool = new \SplFixedArray(256);
+		$this->pool = new \SplFixedArray(512);
 
 		$this->registerPacket(new LoginPacket());
 		$this->registerPacket(new PlayStatusPacket());
@@ -224,6 +224,9 @@ class PacketPool{
 		$this->registerPacket(new GameTestResultsPacket());
 		$this->registerPacket(new UpdateClientInputLocksPacket());
 		$this->registerPacket(new ClientCheatAbilityPacket());
+		$this->registerPacket(new CameraPresetsPacket());
+		$this->registerPacket(new UnlockedRecipesPacket());
+		$this->registerPacket(new CameraInstructionPacket());
 	}
 
 	public function registerPacket(Packet $packet) : void{

@@ -49,6 +49,8 @@ class PlayerAuthInputPacket extends DataPacket implements ServerboundPacket{
 	private ?ItemStackRequest $itemStackRequest = null;
 	/** @var PlayerBlockAction[]|null */
 	private ?array $blockActions = null;
+	private float $analogMoveVecX;
+	private float $analogMoveVecZ;
 
 	/**
 	 * @param int                      $inputFlags @see PlayerAuthInputFlags
@@ -58,7 +60,26 @@ class PlayerAuthInputPacket extends DataPacket implements ServerboundPacket{
 	 * @param Vector3|null             $vrGazeDirection only used when PlayMode::VR
 	 * @param PlayerBlockAction[]|null $blockActions Blocks that the client has interacted with
 	 */
-	public static function create(Vector3 $position, float $pitch, float $yaw, float $headYaw, float $moveVecX, float $moveVecZ, int $inputFlags, int $inputMode, int $playMode, int $interactionMode, ?Vector3 $vrGazeDirection, int $tick, Vector3 $delta, ?ItemInteractionData $itemInteractionData, ?ItemStackRequest $itemStackRequest, ?array $blockActions) : self{
+	public static function create(
+		Vector3 $position,
+		float $pitch,
+		float $yaw,
+		float $headYaw,
+		float $moveVecX,
+		float $moveVecZ,
+		int $inputFlags,
+		int $inputMode,
+		int $playMode,
+		int $interactionMode,
+		?Vector3 $vrGazeDirection,
+		int $tick,
+		Vector3 $delta,
+		?ItemInteractionData $itemInteractionData,
+		?ItemStackRequest $itemStackRequest,
+		?array $blockActions,
+		float $analogMoveVecX,
+		float $analogMoveVecZ
+	) : self{
 		if($playMode === PlayMode::VR and $vrGazeDirection === null){
 			//yuck, can we get a properly written packet just once? ...
 			throw new \InvalidArgumentException("Gaze direction must be provided for VR play mode");
@@ -93,6 +114,8 @@ class PlayerAuthInputPacket extends DataPacket implements ServerboundPacket{
 		$result->itemInteractionData = $itemInteractionData;
 		$result->itemStackRequest = $itemStackRequest;
 		$result->blockActions = $blockActions;
+		$result->analogMoveVecX = $analogMoveVecX;
+		$result->analogMoveVecZ = $analogMoveVecZ;
 		return $result;
 	}
 
@@ -175,6 +198,10 @@ class PlayerAuthInputPacket extends DataPacket implements ServerboundPacket{
 		return $this->blockActions;
 	}
 
+	public function getAnalogMoveVecX() : float{ return $this->analogMoveVecX; }
+
+	public function getAnalogMoveVecZ() : float{ return $this->analogMoveVecZ; }
+
 	public function hasFlag(int $flag) : bool{
 		return ($this->inputFlags & (1 << $flag)) !== 0;
 	}
@@ -213,6 +240,8 @@ class PlayerAuthInputPacket extends DataPacket implements ServerboundPacket{
 				};
 			}
 		}
+		$this->analogMoveVecX = $in->getLFloat();
+		$this->analogMoveVecZ = $in->getLFloat();
 	}
 
 	protected function encodePayload(PacketSerializer $out) : void{
@@ -245,6 +274,8 @@ class PlayerAuthInputPacket extends DataPacket implements ServerboundPacket{
 				$blockAction->write($out);
 			}
 		}
+		$out->putLFloat($this->analogMoveVecX);
+		$out->putLFloat($this->analogMoveVecZ);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

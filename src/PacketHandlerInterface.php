@@ -399,4 +399,10 @@ interface PacketHandlerInterface{
 	public function handleUpdateClientInputLocks(UpdateClientInputLocksPacket $packet) : bool;
 
 	public function handleClientCheatAbility(ClientCheatAbilityPacket $packet) : bool;
+
+	public function handleCameraPresets(CameraPresetsPacket $packet) : bool;
+
+	public function handleUnlockedRecipes(UnlockedRecipesPacket $packet) : bool;
+
+	public function handleCameraInstruction(CameraInstructionPacket $packet) : bool;
 }

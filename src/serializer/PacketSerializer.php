@@ -40,6 +40,7 @@ use pocketmine\network\mcpe\protocol\types\FloatGameRule;
 use pocketmine\network\mcpe\protocol\types\GameRule;
 use pocketmine\network\mcpe\protocol\types\IntGameRule;
 use pocketmine\network\mcpe\protocol\types\inventory\ItemStack;
+use pocketmine\network\mcpe\protocol\types\recipe\ComplexAliasItemDescriptor;
 use pocketmine\network\mcpe\protocol\types\recipe\IntIdMetaItemDescriptor;
 use pocketmine\network\mcpe\protocol\types\recipe\ItemDescriptorType;
 use pocketmine\network\mcpe\protocol\types\recipe\MolangItemDescriptor;
@@ -384,6 +385,7 @@ class PacketSerializer extends BinaryStream{
 			ItemDescriptorType::STRING_ID_META => StringIdMetaItemDescriptor::read($this),
 			ItemDescriptorType::TAG => TagItemDescriptor::read($this),
 			ItemDescriptorType::MOLANG => MolangItemDescriptor::read($this),
+			ItemDescriptorType::COMPLEX_ALIAS => ComplexAliasItemDescriptor::read($this),
 			default => null
 		};
 		$count = $this->getVarInt();

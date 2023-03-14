@@ -20,4 +20,5 @@ final class ItemDescriptorType{
 	public const MOLANG = 2;
 	public const TAG = 3;
 	public const STRING_ID_META = 4;
+	public const COMPLEX_ALIAS = 5;
 }

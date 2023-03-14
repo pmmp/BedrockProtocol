@@ -129,4 +129,8 @@ final class EntityMetadataFlags{
 	public const SONIC_BOOM = 107;
 	public const HAS_DASH_COOLDOWN = 108;
 	public const PUSH_TOWARDS_CLOSEST_SPACE = 109;
+	public const SCENTING = 110;
+	public const RISING = 111;
+	public const HAPPY = 112;
+	public const SEARCHING = 113;
 }

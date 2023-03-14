@@ -785,4 +785,16 @@ trait PacketHandlerDefaultImplTrait{
 	public function handleClientCheatAbility(ClientCheatAbilityPacket $packet) : bool{
 		return false;
 	}
+
+	public function handleCameraPresets(CameraPresetsPacket $packet) : bool{
+		return false;
+	}
+
+	public function handleUnlockedRecipes(UnlockedRecipesPacket $packet) : bool{
+		return false;
+	}
+
+	public function handleCameraInstruction(CameraInstructionPacket $packet) : bool{
+		return false;
+	}
 }

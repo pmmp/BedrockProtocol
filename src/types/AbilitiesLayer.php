@@ -43,8 +43,9 @@ final class AbilitiesLayer{
 	public const ABILITY_MUTED = 15;
 	public const ABILITY_WORLD_BUILDER = 16;
 	public const ABILITY_NO_CLIP = 17;
+	public const ABILITY_PRIVILEGED_BUILDER = 18;
 
-	public const NUMBER_OF_ABILITIES = 18;
+	public const NUMBER_OF_ABILITIES = 19;
 
 	/**
 	 * @param bool[] $boolAbilities

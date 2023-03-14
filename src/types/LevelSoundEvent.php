@@ -452,6 +452,10 @@ final class LevelSoundEvent{
 	public const PICKUP = 459;
 	public const INSERT_ENCHANTED = 460;
 	public const PICKUP_ENCHANTED = 461;
+	public const BRUSH = 462;
+	public const BRUSH_COMPLETED = 463;
+	public const SHATTER_POT = 464;
+	public const BREAK_POT = 465;
 
 	//The following aliases are kept for backwards compatibility only
 	public const SCULK_SENSOR_POWER_ON = self::POWER_ON_SCULK_SENSOR;

@@ -37,6 +37,7 @@ final class EntityIds{
 	public const BEE = "minecraft:bee";
 	public const BLAZE = "minecraft:blaze";
 	public const BOAT = "minecraft:boat";
+	public const CAMEL = "minecraft:camel";
 	public const CAT = "minecraft:cat";
 	public const CAVE_SPIDER = "minecraft:cave_spider";
 	public const CHEST_BOAT = "minecraft:chest_boat";

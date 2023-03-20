@@ -30,8 +30,12 @@ final class ItemStackResponse{
 	public function __construct(
 		private int $result,
 		private int $requestId,
-		private array $containerInfos
-	){}
+		private array $containerInfos = []
+	){
+		if($this->result !== self::RESULT_OK && count($this->containerInfos) !== 0){
+			throw new \InvalidArgumentException("Container infos must be empty if rejecting the request");
+		}
+	}
 
 	public function getResult() : int{ return $this->result; }
 
@@ -44,8 +48,10 @@ final class ItemStackResponse{
 		$result = $in->getByte();
 		$requestId = $in->readGenericTypeNetworkId();
 		$containerInfos = [];
-		for($i = 0, $len = $in->getUnsignedVarInt(); $i < $len; ++$i){
-			$containerInfos[] = ItemStackResponseContainerInfo::read($in);
+		if($result === self::RESULT_OK){
+			for($i = 0, $len = $in->getUnsignedVarInt(); $i < $len; ++$i){
+				$containerInfos[] = ItemStackResponseContainerInfo::read($in);
+			}
 		}
 		return new self($result, $requestId, $containerInfos);
 	}
@@ -53,9 +59,11 @@ final class ItemStackResponse{
 	public function write(PacketSerializer $out) : void{
 		$out->putByte($this->result);
 		$out->writeGenericTypeNetworkId($this->requestId);
-		$out->putUnsignedVarInt(count($this->containerInfos));
-		foreach($this->containerInfos as $containerInfo){
-			$containerInfo->write($out);
+		if($this->result === self::RESULT_OK){
+			$out->putUnsignedVarInt(count($this->containerInfos));
+			foreach($this->containerInfos as $containerInfo){
+				$containerInfo->write($out);
+			}
 		}
 	}
 }

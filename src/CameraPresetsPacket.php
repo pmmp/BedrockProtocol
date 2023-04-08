@@ -18,7 +18,7 @@ use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 use pocketmine\network\mcpe\protocol\types\CacheableNbt;
 
-class CameraPresetsPacket extends DataPacket{
+class CameraPresetsPacket extends DataPacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::CAMERA_PRESETS_PACKET;
 
 	/** @phpstan-var CacheableNbt<CompoundTag> */

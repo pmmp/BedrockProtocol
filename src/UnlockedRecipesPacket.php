@@ -17,7 +17,7 @@ namespace pocketmine\network\mcpe\protocol;
 use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 use function count;
 
-class UnlockedRecipesPacket extends DataPacket{
+class UnlockedRecipesPacket extends DataPacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::UNLOCKED_RECIPES_PACKET;
 
 	private bool $newRecipes;

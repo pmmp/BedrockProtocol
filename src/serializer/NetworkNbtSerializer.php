@@ -15,6 +15,7 @@ declare(strict_types=1);
 namespace pocketmine\network\mcpe\protocol\serializer;
 
 use pocketmine\nbt\BaseNbtSerializer;
+use pocketmine\nbt\NbtDataException;
 use function count;
 use function strlen;
 
@@ -75,6 +76,9 @@ class NetworkNbtSerializer extends BaseNbtSerializer{
 
 	public function readIntArray() : array{
 		$len = $this->readInt(); //varint
+		if($len < 0){
+			throw new NbtDataException("Array length cannot be less than zero ($len < 0)");
+		}
 		$ret = [];
 		for($i = 0; $i < $len; ++$i){
 			$ret[] = $this->readInt(); //varint

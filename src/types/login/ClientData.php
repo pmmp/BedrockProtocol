@@ -47,6 +47,9 @@ final class ClientData{
 	public int $ClientRandomId;
 
 	/** @required */
+	public bool $CompatibleWithClientSideChunkGen;
+
+	/** @required */
 	public int $CurrentInputMode;
 
 	/** @required */

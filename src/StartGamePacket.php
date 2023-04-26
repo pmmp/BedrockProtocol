@@ -54,6 +54,7 @@ class StartGamePacket extends DataPacket implements ClientboundPacket{
 	public string $serverSoftwareVersion;
 	public UuidInterface $worldTemplateId; //why is this here twice ??? mojang
 	public bool $enableClientSideChunkGeneration;
+	public bool $blockNetworkIdsAreHashes = false; //new in 1.19.80, possibly useful for multi version
 
 	/**
 	 * @var BlockPaletteEntry[]
@@ -103,6 +104,7 @@ class StartGamePacket extends DataPacket implements ClientboundPacket{
 		string $serverSoftwareVersion,
 		UuidInterface $worldTemplateId,
 		bool $enableClientSideChunkGeneration,
+		bool $blockNetworkIdsAreHashes,
 		array $blockPalette,
 		int $blockPaletteChecksum,
 		array $itemTable,
@@ -128,6 +130,7 @@ class StartGamePacket extends DataPacket implements ClientboundPacket{
 		$result->serverSoftwareVersion = $serverSoftwareVersion;
 		$result->worldTemplateId = $worldTemplateId;
 		$result->enableClientSideChunkGeneration = $enableClientSideChunkGeneration;
+		$result->blockNetworkIdsAreHashes = $blockNetworkIdsAreHashes;
 		$result->blockPalette = $blockPalette;
 		$result->blockPaletteChecksum = $blockPaletteChecksum;
 		$result->itemTable = $itemTable;
@@ -178,6 +181,7 @@ class StartGamePacket extends DataPacket implements ClientboundPacket{
 		$this->blockPaletteChecksum = $in->getLLong();
 		$this->worldTemplateId = $in->getUUID();
 		$this->enableClientSideChunkGeneration = $in->getBool();
+		$this->blockNetworkIdsAreHashes = $in->getBool();
 	}
 
 	protected function encodePayload(PacketSerializer $out) : void{
@@ -221,6 +225,7 @@ class StartGamePacket extends DataPacket implements ClientboundPacket{
 		$out->putLLong($this->blockPaletteChecksum);
 		$out->putUUID($this->worldTemplateId);
 		$out->putBool($this->enableClientSideChunkGeneration);
+		$out->putBool($this->blockNetworkIdsAreHashes);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

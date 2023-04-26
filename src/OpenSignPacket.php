@@ -15,36 +15,42 @@ declare(strict_types=1);
 namespace pocketmine\network\mcpe\protocol;
 
 use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pocketmine\network\mcpe\protocol\types\BlockPosition;
 
 /**
- * TODO: this one has no handlers, so I have no idea which direction it should be sent
- * It doesn't appear to be used at all right now... this is just here to keep the scraper happy
+ * Sent by the server to open the sign GUI for a sign.
  */
-class PhotoInfoRequestPacket extends DataPacket{
-	public const NETWORK_ID = ProtocolInfo::PHOTO_INFO_REQUEST_PACKET;
+class OpenSignPacket extends DataPacket implements ClientboundPacket{
+	public const NETWORK_ID = ProtocolInfo::OPEN_SIGN_PACKET;
 
-	private int $photoId;
+	private BlockPosition $blockPosition;
+	private bool $front;
 
 	/**
 	 * @generate-create-func
 	 */
-	public static function create(int $photoId) : self{
+	public static function create(BlockPosition $blockPosition, bool $front) : self{
 		$result = new self;
-		$result->photoId = $photoId;
+		$result->blockPosition = $blockPosition;
+		$result->front = $front;
 		return $result;
 	}
 
-	public function getPhotoId() : int{ return $this->photoId; }
+	public function getBlockPosition() : BlockPosition{ return $this->blockPosition; }
+
+	public function isFront() : bool{ return $this->front; }
 
 	protected function decodePayload(PacketSerializer $in) : void{
-		$this->photoId = $in->getActorUniqueId();
+		$this->blockPosition = $in->getSignedBlockPosition();
+		$this->front = $in->getBool();
 	}
 
 	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putActorUniqueId($this->photoId);
+		$out->putSignedBlockPosition($this->blockPosition);
+		$out->putBool($this->front);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{
-		return $handler->handlePhotoInfoRequest($this);
+		return $handler->handleOpenSign($this);
 	}
 }

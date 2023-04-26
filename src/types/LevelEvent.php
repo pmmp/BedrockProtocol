@@ -129,10 +129,16 @@ final class LevelEvent{
 	public const BLOCK_START_BREAK = 3600;
 	public const BLOCK_STOP_BREAK = 3601;
 	public const BLOCK_BREAK_SPEED = 3602;
-	public const PLAYERS_SLEEPING = 3603;
+	public const PARTICLE_PUNCH_BLOCK_DOWN = 3603;
+	public const PARTICLE_PUNCH_BLOCK_UP = 3604;
+	public const PARTICLE_PUNCH_BLOCK_NORTH = 3605;
+	public const PARTICLE_PUNCH_BLOCK_SOUTH = 3606;
+	public const PARTICLE_PUNCH_BLOCK_WEST = 3607;
+	public const PARTICLE_PUNCH_BLOCK_EAST = 3608;
 
 	public const SET_DATA = 4000;
 
+	public const PLAYERS_SLEEPING = 9800;
 	public const NUMBER_OF_SLEEPING_PLAYERS = 9801;
 
 	public const ADD_PARTICLE_MASK = 0x4000;

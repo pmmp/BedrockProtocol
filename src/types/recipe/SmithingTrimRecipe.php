@@ -15,9 +15,8 @@ declare(strict_types=1);
 namespace pocketmine\network\mcpe\protocol\types\recipe;
 
 use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
-use pocketmine\network\mcpe\protocol\types\inventory\ItemStack;
 
-final class SmithingTransformRecipe extends RecipeWithTypeId{
+final class SmithingTrimRecipe extends RecipeWithTypeId{
 
 	public function __construct(
 		int $typeId,
@@ -25,7 +24,6 @@ final class SmithingTransformRecipe extends RecipeWithTypeId{
 		private RecipeIngredient $template,
 		private RecipeIngredient $input,
 		private RecipeIngredient $addition,
-		private ItemStack $output,
 		private string $blockName,
 		private int $recipeNetId
 	){
@@ -40,8 +38,6 @@ final class SmithingTransformRecipe extends RecipeWithTypeId{
 
 	public function getAddition() : RecipeIngredient{ return $this->addition; }
 
-	public function getOutput() : ItemStack{ return $this->output; }
-
 	public function getBlockName() : string{ return $this->blockName; }
 
 	public function getRecipeNetId() : int{ return $this->recipeNetId; }
@@ -51,7 +47,6 @@ final class SmithingTransformRecipe extends RecipeWithTypeId{
 		$template = $in->getRecipeIngredient();
 		$input = $in->getRecipeIngredient();
 		$addition = $in->getRecipeIngredient();
-		$output = $in->getItemStackWithoutStackId();
 		$blockName = $in->getString();
 		$recipeNetId = $in->readGenericTypeNetworkId();
 
@@ -61,7 +56,6 @@ final class SmithingTransformRecipe extends RecipeWithTypeId{
 			$template,
 			$input,
 			$addition,
-			$output,
 			$blockName,
 			$recipeNetId
 		);
@@ -72,7 +66,6 @@ final class SmithingTransformRecipe extends RecipeWithTypeId{
 		$out->putRecipeIngredient($this->template);
 		$out->putRecipeIngredient($this->input);
 		$out->putRecipeIngredient($this->addition);
-		$out->putItemStackWithoutStackId($this->output);
 		$out->putString($this->blockName);
 		$out->writeGenericTypeNetworkId($this->recipeNetId);
 	}

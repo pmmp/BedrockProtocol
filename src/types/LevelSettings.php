@@ -29,6 +29,8 @@ final class LevelSettings{
 	public BlockPosition $spawnPosition;
 	public bool $hasAchievementsDisabled = true;
 	public bool $isEditorMode = false;
+	public bool $createdInEditorMode = false;
+	public bool $exportedFromEditorMode = false;
 	public int $time = -1;
 	public int $eduEditionOffer = EducationEditionOffer::NONE;
 	public bool $hasEduFeaturesEnabled = false;
@@ -98,6 +100,8 @@ final class LevelSettings{
 		$this->spawnPosition = $in->getBlockPosition();
 		$this->hasAchievementsDisabled = $in->getBool();
 		$this->isEditorMode = $in->getBool();
+		$this->createdInEditorMode = $in->getBool();
+		$this->exportedFromEditorMode = $in->getBool();
 		$this->time = $in->getVarInt();
 		$this->eduEditionOffer = $in->getVarInt();
 		$this->hasEduFeaturesEnabled = $in->getBool();
@@ -146,6 +150,8 @@ final class LevelSettings{
 		$out->putBlockPosition($this->spawnPosition);
 		$out->putBool($this->hasAchievementsDisabled);
 		$out->putBool($this->isEditorMode);
+		$out->putBool($this->createdInEditorMode);
+		$out->putBool($this->exportedFromEditorMode);
 		$out->putVarInt($this->time);
 		$out->putVarInt($this->eduEditionOffer);
 		$out->putBool($this->hasEduFeaturesEnabled);

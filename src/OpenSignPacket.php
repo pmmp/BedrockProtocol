@@ -41,12 +41,12 @@ class OpenSignPacket extends DataPacket implements ClientboundPacket{
 	public function isFront() : bool{ return $this->front; }
 
 	protected function decodePayload(PacketSerializer $in) : void{
-		$this->blockPosition = $in->getSignedBlockPosition();
+		$this->blockPosition = $in->getBlockPosition();
 		$this->front = $in->getBool();
 	}
 
 	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putSignedBlockPosition($this->blockPosition);
+		$out->putBlockPosition($this->blockPosition);
 		$out->putBool($this->front);
 	}
 

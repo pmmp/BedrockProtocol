@@ -19,4 +19,5 @@ final class JwtHeader{
 	public string $alg;
 	/** @required */
 	public string $x5u;
+	public string $x5t;
 }

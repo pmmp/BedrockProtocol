@@ -33,6 +33,9 @@ class LevelChunkPacket extends DataPacket implements ClientboundPacket{
 	 */
 	private const CLIENT_REQUEST_TRUNCATED_COLUMN_FAKE_COUNT = Limits::UINT32_MAX - 1;
 
+	//this appears large enough for a world height of 1024 blocks - it may need to be increased in the future
+	private const MAX_BLOB_HASHES = 64;
+
 	private ChunkPosition $chunkPosition;
 	private int $subChunkCount;
 	private bool $clientSubChunkRequestsEnabled;
@@ -97,7 +100,11 @@ class LevelChunkPacket extends DataPacket implements ClientboundPacket{
 		$cacheEnabled = $in->getBool();
 		if($cacheEnabled){
 			$this->usedBlobHashes = [];
-			for($i = 0, $count = $in->getUnsignedVarInt(); $i < $count; ++$i){
+			$count = $in->getUnsignedVarInt();
+			if($count > self::MAX_BLOB_HASHES){
+				throw new PacketDecodeException("Expected at most " . self::MAX_BLOB_HASHES . " blob hashes, got " . $count);
+			}
+			for($i = 0; $i < $count; ++$i){
 				$this->usedBlobHashes[] = $in->getLLong();
 			}
 		}

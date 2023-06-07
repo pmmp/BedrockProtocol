@@ -15,11 +15,16 @@ declare(strict_types=1);
 namespace pocketmine\network\mcpe\protocol\types;
 
 use pocketmine\color\Color;
+use pocketmine\network\mcpe\protocol\PacketDecodeException;
 use pocketmine\utils\Binary;
+use pocketmine\utils\BinaryDataException;
 use pocketmine\utils\BinaryStream;
 use function count;
 
 final class MapImage{
+	//these limits are enforced in the protocol in 1.20.0
+	public const MAX_HEIGHT = 128;
+	public const MAX_WIDTH = 128;
 
 	private int $width;
 	private int $height;
@@ -45,6 +50,12 @@ final class MapImage{
 		}
 		if($rowLength === null){
 			throw new \InvalidArgumentException("No pixels provided");
+		}
+		if($rowLength > self::MAX_WIDTH){
+			throw new \InvalidArgumentException("Image width must be at most " . self::MAX_WIDTH . " pixels wide");
+		}
+		if(count($pixels) > self::MAX_HEIGHT){
+			throw new \InvalidArgumentException("Image height must be at most " . self::MAX_HEIGHT . " pixels tall");
 		}
 		$this->height = count($pixels);
 		$this->width = $rowLength;
@@ -76,7 +87,17 @@ final class MapImage{
 		$output->put($this->encodedPixelCache);
 	}
 
+	/**
+	 * @throws PacketDecodeException
+	 * @throws BinaryDataException
+	 */
 	public static function decode(BinaryStream $input, int $height, int $width) : self{
+		if($width > self::MAX_WIDTH){
+			throw new PacketDecodeException("Image width must be at most " . self::MAX_WIDTH . " pixels wide");
+		}
+		if($height > self::MAX_HEIGHT){
+			throw new PacketDecodeException("Image height must be at most " . self::MAX_HEIGHT . " pixels tall");
+		}
 		$pixels = [];
 
 		for($y = 0; $y < $height; ++$y){

@@ -27,6 +27,8 @@ class NetworkChunkPublisherUpdatePacket extends DataPacket implements Clientboun
 	/** @var ChunkPosition[] */
 	public array $savedChunks = [];
 
+	public const MAX_SAVED_CHUNKS = 9216;
+
 	/**
 	 * @generate-create-func
 	 * @param ChunkPosition[] $savedChunks
@@ -43,7 +45,11 @@ class NetworkChunkPublisherUpdatePacket extends DataPacket implements Clientboun
 		$this->blockPosition = $in->getSignedBlockPosition();
 		$this->radius = $in->getUnsignedVarInt();
 
-		for($i = 0, $this->savedChunks = [], $count = $in->getLInt(); $i < $count; $i++){
+		$count = $in->getLInt();
+		if($count > self::MAX_SAVED_CHUNKS){
+			throw new PacketDecodeException("Expected at most " . self::MAX_SAVED_CHUNKS . " saved chunks, got " . $count);
+		}
+		for($i = 0, $this->savedChunks = []; $i < $count; $i++){
 			$this->savedChunks[] = ChunkPosition::read($in);
 		}
 	}

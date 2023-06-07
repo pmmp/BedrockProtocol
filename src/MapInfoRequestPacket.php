@@ -15,6 +15,7 @@ declare(strict_types=1);
 namespace pocketmine\network\mcpe\protocol;
 
 use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pocketmine\network\mcpe\protocol\types\MapImage;
 use pocketmine\network\mcpe\protocol\types\MapInfoRequestPacketClientPixel;
 use function count;
 
@@ -40,7 +41,11 @@ class MapInfoRequestPacket extends DataPacket implements ServerboundPacket{
 		$this->mapId = $in->getActorUniqueId();
 
 		$this->clientPixels = [];
-		for($i = 0, $count = $in->getLInt(); $i < $count; $i++){
+		$count = $in->getLInt();
+		if($count > MapImage::MAX_HEIGHT * MapImage::MAX_WIDTH){
+			throw new PacketDecodeException("Too many pixels");
+		}
+		for($i = 0; $i < $count; $i++){
 			$this->clientPixels[] = MapInfoRequestPacketClientPixel::read($in);
 		}
 	}

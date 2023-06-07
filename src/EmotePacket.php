@@ -24,15 +24,19 @@ class EmotePacket extends DataPacket implements ClientboundPacket, ServerboundPa
 
 	private int $actorRuntimeId;
 	private string $emoteId;
+	private string $xboxUserId;
+	private string $platformChatId;
 	private int $flags;
 
 	/**
 	 * @generate-create-func
 	 */
-	public static function create(int $actorRuntimeId, string $emoteId, int $flags) : self{
+	public static function create(int $actorRuntimeId, string $emoteId, string $xboxUserId, string $platformChatId, int $flags) : self{
 		$result = new self;
 		$result->actorRuntimeId = $actorRuntimeId;
 		$result->emoteId = $emoteId;
+		$result->xboxUserId = $xboxUserId;
+		$result->platformChatId = $platformChatId;
 		$result->flags = $flags;
 		return $result;
 	}
@@ -45,6 +49,10 @@ class EmotePacket extends DataPacket implements ClientboundPacket, ServerboundPa
 		return $this->emoteId;
 	}
 
+	public function getXboxUserId() : string{ return $this->xboxUserId; }
+
+	public function getPlatformChatId() : string{ return $this->platformChatId; }
+
 	public function getFlags() : int{
 		return $this->flags;
 	}
@@ -52,12 +60,16 @@ class EmotePacket extends DataPacket implements ClientboundPacket, ServerboundPa
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->actorRuntimeId = $in->getActorRuntimeId();
 		$this->emoteId = $in->getString();
+		$this->xboxUserId = $in->getString();
+		$this->platformChatId = $in->getString();
 		$this->flags = $in->getByte();
 	}
 
 	protected function encodePayload(PacketSerializer $out) : void{
 		$out->putActorRuntimeId($this->actorRuntimeId);
 		$out->putString($this->emoteId);
+		$out->putString($this->xboxUserId);
+		$out->putString($this->platformChatId);
 		$out->putByte($this->flags);
 	}
 

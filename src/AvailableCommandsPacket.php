@@ -408,18 +408,38 @@ class AvailableCommandsPacket extends DataPacket implements ClientboundPacket{
 	}
 
 	protected function encodePayload(PacketSerializer $out) : void{
-		/** @var int[] $enumValueIndexes */
+		/**
+		 * @var int[] $enumValueIndexes
+		 * @phpstan-var array<string, int> $enumValueIndexes
+		 */
 		$enumValueIndexes = [];
-		/** @var int[] $postfixIndexes */
+		/**
+		 * @var int[] $postfixIndexes
+		 * @phpstan-var array<string, int> $postfixIndexes
+		 */
 		$postfixIndexes = [];
-		/** @var int[] $enumIndexes */
-		$enumIndexes = [];
-		/** @var int[] $softEnumIndexes */
-		$softEnumIndexes = [];
-		/** @var CommandEnum[] $enums */
+
+		/**
+		 * @var CommandEnum[] $enums
+		 * @phpstan-var array<string, CommandEnum> $enums
+		 */
 		$enums = [];
-		/** @var CommandEnum[] $softEnums */
+		/**
+		 * @var int[] $enumIndexes
+		 * @phpstan-var array<string, int> $enumIndexes
+		 */
+		$enumIndexes = [];
+
+		/**
+		 * @var CommandEnum[] $softEnums
+		 * @phpstan-var array<string, CommandEnum> $softEnums
+		 */
 		$softEnums = [];
+		/**
+		 * @var int[] $softEnumIndexes
+		 * @phpstan-var array<string, int> $softEnumIndexes
+		 */
+		$softEnumIndexes = [];
 
 		$addEnumFn = static function(CommandEnum $enum) use (
 			&$enums, &$softEnums, &$enumIndexes, &$softEnumIndexes, &$enumValueIndexes

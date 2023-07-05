@@ -444,10 +444,6 @@ class AvailableCommandsPacket extends DataPacket implements ClientboundPacket{
 		$addEnumFn = static function(CommandEnum $enum) use (
 			&$enums, &$softEnums, &$enumIndexes, &$softEnumIndexes, &$enumValueIndexes
 		) : void{
-			foreach($enum->getValues() as $str){
-				$enumValueIndexes[$str] = $enumValueIndexes[$str] ?? count($enumValueIndexes); //latest index
-			}
-
 			$enumName = $enum->getName();
 
 			if($enum->isSoft()){
@@ -455,6 +451,9 @@ class AvailableCommandsPacket extends DataPacket implements ClientboundPacket{
 					$softEnums[$softEnumIndexes[$enumName] = count($softEnumIndexes)] = $enum;
 				}
 			}else{
+				foreach($enum->getValues() as $str){
+					$enumValueIndexes[$str] = $enumValueIndexes[$str] ?? count($enumValueIndexes); //latest index
+				}
 				if(!isset($enumIndexes[$enumName])){
 					$enums[$enumIndexes[$enumName] = count($enumIndexes)] = $enum;
 				}

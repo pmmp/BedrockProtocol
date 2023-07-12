@@ -91,4 +91,9 @@ final class PlayerAuthInputFlags{
 	public const PERFORM_ITEM_STACK_REQUEST = 36;
 	public const HANDLED_TELEPORT = 37;
 	public const EMOTING = 38;
+	/** Left-clicking the air. In vanilla, this generates an ATTACK_NODAMAGE sound and does nothing else. */
+	public const MISSED_SWING = 39;
+	public const START_CRAWLING = 40;
+	public const STOP_CRAWLING = 41;
+
 }

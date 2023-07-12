@@ -16,8 +16,8 @@ namespace pocketmine\network\mcpe\protocol;
 
 use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 
-class EventPacket extends DataPacket implements ClientboundPacket{
-	public const NETWORK_ID = ProtocolInfo::EVENT_PACKET;
+class LegacyTelemetryEventPacket extends DataPacket implements ClientboundPacket{
+	public const NETWORK_ID = ProtocolInfo::LEGACY_TELEMETRY_EVENT_PACKET;
 
 	public const TYPE_ACHIEVEMENT_AWARDED = 0;
 	public const TYPE_ENTITY_INTERACT = 1;
@@ -66,6 +66,6 @@ class EventPacket extends DataPacket implements ClientboundPacket{
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{
-		return $handler->handleEvent($this);
+		return $handler->handleLegacyTelemetryEvent($this);
 	}
 }

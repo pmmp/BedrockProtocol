@@ -266,7 +266,7 @@ trait PacketHandlerDefaultImplTrait{
 		return false;
 	}
 
-	public function handleEvent(EventPacket $packet) : bool{
+	public function handleLegacyTelemetryEvent(LegacyTelemetryEventPacket $packet) : bool{
 		return false;
 	}
 
@@ -467,10 +467,6 @@ trait PacketHandlerDefaultImplTrait{
 	}
 
 	public function handleNetworkStackLatency(NetworkStackLatencyPacket $packet) : bool{
-		return false;
-	}
-
-	public function handleScriptCustomEvent(ScriptCustomEventPacket $packet) : bool{
 		return false;
 	}
 
@@ -778,10 +774,6 @@ trait PacketHandlerDefaultImplTrait{
 		return false;
 	}
 
-	public function handleClientCheatAbility(ClientCheatAbilityPacket $packet) : bool{
-		return false;
-	}
-
 	public function handleCameraPresets(CameraPresetsPacket $packet) : bool{
 		return false;
 	}
@@ -803,6 +795,10 @@ trait PacketHandlerDefaultImplTrait{
 	}
 
 	public function handleOpenSign(OpenSignPacket $packet) : bool{
+		return false;
+	}
+
+	public function handleAgentAnimation(AgentAnimationPacket $packet) : bool{
 		return false;
 	}
 }

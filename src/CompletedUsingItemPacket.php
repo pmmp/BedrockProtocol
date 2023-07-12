@@ -35,6 +35,7 @@ class CompletedUsingItemPacket extends DataPacket implements ClientboundPacket{
 	public const ACTION_RETRIEVED = 12;
 	public const ACTION_DYED = 13;
 	public const ACTION_TRADED = 14;
+	public const ACTION_BRUSHING_COMPLETED = 15;
 
 	public int $itemId;
 	public int $action;

@@ -35,6 +35,10 @@ class RequestNetworkSettingsPacket extends DataPacket implements ServerboundPack
 		return $result;
 	}
 
+	public function canBeSentBeforeLogin() : bool{
+		return true;
+	}
+
 	public function getProtocolVersion() : int{ return $this->protocolVersion; }
 
 	protected function decodePayload(PacketSerializer $in) : void{

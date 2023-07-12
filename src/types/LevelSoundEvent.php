@@ -456,6 +456,10 @@ final class LevelSoundEvent{
 	public const BRUSH_COMPLETED = 463;
 	public const SHATTER_POT = 464;
 	public const BREAK_POT = 465;
+	public const BLOCK_SNIFFER_EGG_CRACK = 466;
+	public const BLOCK_SNIFFER_EGG_HATCH = 467;
+	public const BLOCK_SIGN_WAXED_INTERACT_FAIL = 468;
+	public const RECORD_RELIC = 469;
 
 	//The following aliases are kept for backwards compatibility only
 	public const SCULK_SENSOR_POWER_ON = self::POWER_ON_SCULK_SENSOR;

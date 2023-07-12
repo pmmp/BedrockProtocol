@@ -56,6 +56,7 @@ class UpdateSubChunkBlocksPacket extends DataPacket implements ClientboundPacket
 		for($i = 0, $count = $in->getUnsignedVarInt(); $i < $count; ++$i){
 			$this->layer0Updates[] = UpdateSubChunkBlocksPacketEntry::read($in);
 		}
+		$this->layer1Updates = [];
 		for($i = 0, $count = $in->getUnsignedVarInt(); $i < $count; ++$i){
 			$this->layer1Updates[] = UpdateSubChunkBlocksPacketEntry::read($in);
 		}

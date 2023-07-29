@@ -60,8 +60,6 @@ class AvailableCommandsPacket extends DataPacket implements ClientboundPacket{
 	public const ARG_TYPE_INT_POSITION = 52;
 	public const ARG_TYPE_POSITION = 53;
 
-	public const ARG_TYPE_MESSAGE = 55;
-
 	public const ARG_TYPE_RAWTEXT = 58;
 
 	public const ARG_TYPE_JSON = 62;

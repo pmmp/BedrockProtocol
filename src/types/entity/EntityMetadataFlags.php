@@ -133,4 +133,5 @@ final class EntityMetadataFlags{
 	public const RISING = 111;
 	public const HAPPY = 112;
 	public const SEARCHING = 113;
+	public const CRAWLING = 114;
 }

@@ -16,7 +16,8 @@ namespace pocketmine\network\mcpe\protocol\types\command;
 
 class CommandData{
 	/**
-	 * @param CommandParameter[][] $overloads
+	 * @param CommandOverload[] $overloads
+	 * @param ChainedSubCommandData[] $chainedSubCommandData
 	 */
 	public function __construct(
 		public string $name,
@@ -24,13 +25,11 @@ class CommandData{
 		public int $flags,
 		public int $permission,
 		public ?CommandEnum $aliases,
-		public array $overloads
+		public array $overloads,
+		public array $chainedSubCommandData
 	){
-		(function(array ...$overloads) : void{
-			foreach($overloads as $overload){
-				(function(CommandParameter ...$parameters) : void{})(...$overload);
-			}
-		})(...$overloads);
+		(function(CommandOverload ...$overloads) : void{})(...$overloads);
+		(function(ChainedSubCommandData ...$chainedSubCommandData) : void{})(...$chainedSubCommandData);
 	}
 
 	public function getName() : string{
@@ -54,9 +53,16 @@ class CommandData{
 	}
 
 	/**
-	 * @return CommandParameter[][]
+	 * @return CommandOverload[]
 	 */
 	public function getOverloads() : array{
 		return $this->overloads;
+	}
+
+	/**
+	 * @return ChainedSubCommandData[]
+	 */
+	public function getChainedSubCommandData() : array{
+		return $this->chainedSubCommandData;
 	}
 }

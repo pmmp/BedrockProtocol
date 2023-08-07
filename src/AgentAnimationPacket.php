@@ -15,33 +15,41 @@ declare(strict_types=1);
 namespace pocketmine\network\mcpe\protocol;
 
 use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
-use pocketmine\network\mcpe\protocol\types\AbilitiesData;
 
-class ClientCheatAbilityPacket extends DataPacket implements ServerboundPacket{
-	public const NETWORK_ID = ProtocolInfo::CLIENT_CHEAT_ABILITY_PACKET;
+class AgentAnimationPacket extends DataPacket{
+	public const NETWORK_ID = ProtocolInfo::AGENT_ANIMATION_PACKET;
 
-	private AbilitiesData $data;
+	public const TYPE_ARM_SWING = 0;
+	public const TYPE_SHRUG = 1;
+
+	private int $animationType;
+	private int $actorRuntimeId;
 
 	/**
 	 * @generate-create-func
 	 */
-	public static function create(AbilitiesData $data) : self{
+	public static function create(int $animationType, int $actorRuntimeId) : self{
 		$result = new self;
-		$result->data = $data;
+		$result->animationType = $animationType;
+		$result->actorRuntimeId = $actorRuntimeId;
 		return $result;
 	}
 
-	public function getData() : AbilitiesData{ return $this->data; }
+	public function getAnimationType() : int{ return $this->animationType; }
+
+	public function getActorRuntimeId() : int{ return $this->actorRuntimeId; }
 
 	protected function decodePayload(PacketSerializer $in) : void{
-		$this->data = AbilitiesData::decode($in);
+		$this->animationType = $in->getByte();
+		$this->actorRuntimeId = $in->getActorRuntimeId();
 	}
 
 	protected function encodePayload(PacketSerializer $out) : void{
-		$this->data->encode($out);
+		$out->putByte($this->animationType);
+		$out->putActorRuntimeId($this->actorRuntimeId);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{
-		return $handler->handleClientCheatAbility($this);
+		return $handler->handleAgentAnimation($this);
 	}
 }

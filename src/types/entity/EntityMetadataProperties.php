@@ -159,4 +159,5 @@ final class EntityMetadataProperties{
 	public const PLAYER_DEATH_POSITION = 127; //blockpos
 	public const PLAYER_DEATH_DIMENSION = 128; //int
 	public const PLAYER_HAS_DIED = 129; //byte
+	public const COLLISION_BOX = 130; //compound
 }

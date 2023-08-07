@@ -50,6 +50,9 @@ final class PlayerAction{
 	public const START_ITEM_USE_ON = 28;
 	public const STOP_ITEM_USE_ON = 29;
 	public const HANDLED_TELEPORT = 30;
+	public const MISSED_SWING = 31;
+	public const START_CRAWLING = 32;
+	public const STOP_CRAWLING = 33;
 
 	//Backwards compatibility (blame @dktapps)
 	public const CRACK_BREAK = 18;

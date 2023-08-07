@@ -112,6 +112,7 @@ final class EntityIds{
 	public const SKELETON_HORSE = "minecraft:skeleton_horse";
 	public const SLIME = "minecraft:slime";
 	public const SMALL_FIREBALL = "minecraft:small_fireball";
+	public const SNIFFER = "minecraft:sniffer";
 	public const SNOW_GOLEM = "minecraft:snow_golem";
 	public const SNOWBALL = "minecraft:snowball";
 	public const SPIDER = "minecraft:spider";

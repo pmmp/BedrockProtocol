@@ -12,23 +12,21 @@
 
 declare(strict_types=1);
 
-namespace pocketmine\network\mcpe\protocol\types\login;
+namespace pocketmine\network\mcpe\protocol\types\command;
 
-/**
- * Model class for LoginPacket JSON data for JsonMapper
- */
-final class AuthenticationData{
+use pocketmine\network\mcpe\protocol\AvailableCommandsPacket;
 
-	/** @required */
-	public string $displayName;
+final class ChainedSubCommandValue{
 
-	/** @required */
-	public string $identity;
+	public function __construct(
+		private string $name,
+		private int $type
+	){}
 
-	public string $sandboxId = "RETAIL"; //TODO: what are the other possible values?
+	public function getName() : string{ return $this->name; }
 
-	public string $titleId = ""; //TODO: find out what this is for
-
-	/** @required */
-	public string $XUID;
+	/**
+	 * @see AvailableCommandsPacket::ARG_TYPE_*
+	 */
+	public function getType() : int{ return $this->type; }
 }

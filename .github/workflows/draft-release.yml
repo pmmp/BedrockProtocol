@@ -22,7 +22,7 @@ jobs:
           echo ::set-output name=TAG::$VERSION
 
       - name: Create draft release
-        uses: ncipollo/release-action@v1.12.0
+        uses: ncipollo/release-action@v1.13.0
         with:
           commit: ${{ github.sha }}
           draft: true

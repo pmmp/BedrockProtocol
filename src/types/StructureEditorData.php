@@ -28,5 +28,5 @@ class StructureEditorData{
 	public bool $showBoundingBox;
 	public int $structureBlockType;
 	public StructureSettings $structureSettings;
-	public int $structureRedstoneSaveMove;
+	public int $structureRedstoneSaveMode;
 }

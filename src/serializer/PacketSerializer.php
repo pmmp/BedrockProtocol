@@ -765,7 +765,7 @@ class PacketSerializer extends BinaryStream{
 
 		$result->structureBlockType = $this->getVarInt();
 		$result->structureSettings = $this->getStructureSettings();
-		$result->structureRedstoneSaveMove = $this->getVarInt();
+		$result->structureRedstoneSaveMode = $this->getVarInt();
 
 		return $result;
 	}
@@ -779,7 +779,7 @@ class PacketSerializer extends BinaryStream{
 
 		$this->putVarInt($structureEditorData->structureBlockType);
 		$this->putStructureSettings($structureEditorData->structureSettings);
-		$this->putVarInt($structureEditorData->structureRedstoneSaveMove);
+		$this->putVarInt($structureEditorData->structureRedstoneSaveMode);
 	}
 
 	public function getNbtRoot() : TreeRoot{

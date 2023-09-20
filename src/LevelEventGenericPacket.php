@@ -14,21 +14,22 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
+use pocketmine\nbt\NBT;
+use pocketmine\nbt\NbtDataException;
+use pocketmine\nbt\tag\Tag;
+use pocketmine\network\mcpe\protocol\serializer\NetworkNbtSerializer;
 use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
-use pocketmine\network\mcpe\protocol\types\CacheableNbt;
 
 class LevelEventGenericPacket extends DataPacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::LEVEL_EVENT_GENERIC_PACKET;
 
 	private int $eventId;
-	/** @phpstan-var CacheableNbt<\pocketmine\nbt\tag\CompoundTag> */
-	private CacheableNbt $eventData;
+	private Tag $eventData;
 
 	/**
 	 * @generate-create-func
-	 * @phpstan-param CacheableNbt<\pocketmine\nbt\tag\CompoundTag> $eventData
 	 */
-	public static function create(int $eventId, CacheableNbt $eventData) : self{
+	public static function create(int $eventId, Tag $eventData) : self{
 		$result = new self;
 		$result->eventId = $eventId;
 		$result->eventData = $eventData;
@@ -39,21 +40,24 @@ class LevelEventGenericPacket extends DataPacket implements ClientboundPacket{
 		return $this->eventId;
 	}
 
-	/**
-	 * @phpstan-return CacheableNbt<\pocketmine\nbt\tag\CompoundTag>
-	 */
-	public function getEventData() : CacheableNbt{
+	public function getEventData() : Tag{
 		return $this->eventData;
 	}
 
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->eventId = $in->getVarInt();
-		$this->eventData = new CacheableNbt($in->getNbtCompoundRoot());
+		$offset = $in->getOffset();
+		try{
+			$this->eventData = (new NetworkNbtSerializer())->readHeadless($in->getBuffer(), NBT::TAG_Compound, $offset);
+		}catch(NbtDataException $e){
+			throw PacketDecodeException::wrap($e);
+		}
+		$in->setOffset($offset);
 	}
 
 	protected function encodePayload(PacketSerializer $out) : void{
 		$out->putVarInt($this->eventId);
-		$out->put($this->eventData->getEncodedNbt());
+		$out->put((new NetworkNbtSerializer())->writeHeadless($this->eventData));
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

@@ -20,7 +20,6 @@ final class CameraSetInstructionEase{
 
 	/**
 	 * @see CameraSetInstructionEaseType
-	 * @phpstan-param CameraSetInstructionEaseType::* $type
 	 */
 	public function __construct(
 		private int $type,
@@ -29,7 +28,6 @@ final class CameraSetInstructionEase{
 
 	/**
 	 * @see CameraSetInstructionEaseType
-	 * @phpstan-return CameraSetInstructionEaseType::*
 	 */
 	public function getType() : int{ return $this->type; }
 

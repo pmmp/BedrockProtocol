@@ -228,6 +228,7 @@ class PacketPool{
 		$this->registerPacket(new TrimDataPacket());
 		$this->registerPacket(new OpenSignPacket());
 		$this->registerPacket(new AgentAnimationPacket());
+		$this->registerPacket(new RefreshEntitlementsPacket());
 	}
 
 	public function registerPacket(Packet $packet) : void{

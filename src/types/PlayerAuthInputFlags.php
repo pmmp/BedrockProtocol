@@ -95,5 +95,7 @@ final class PlayerAuthInputFlags{
 	public const MISSED_SWING = 39;
 	public const START_CRAWLING = 40;
 	public const STOP_CRAWLING = 41;
+	public const START_FLYING = 42;
+	public const STOP_FLYING = 43;
 
 }

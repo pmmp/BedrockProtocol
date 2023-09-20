@@ -407,4 +407,6 @@ interface PacketHandlerInterface{
 	public function handleOpenSign(OpenSignPacket $packet) : bool;
 
 	public function handleAgentAnimation(AgentAnimationPacket $packet) : bool;
+
+	public function handleRefreshEntitlements(RefreshEntitlementsPacket $packet) : bool;
 }

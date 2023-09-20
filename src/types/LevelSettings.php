@@ -28,7 +28,7 @@ final class LevelSettings{
 	public int $difficulty;
 	public BlockPosition $spawnPosition;
 	public bool $hasAchievementsDisabled = true;
-	public bool $isEditorMode = false;
+	public int $editorWorldType = EditorWorldType::NON_EDITOR;
 	public bool $createdInEditorMode = false;
 	public bool $exportedFromEditorMode = false;
 	public int $time = -1;
@@ -99,7 +99,7 @@ final class LevelSettings{
 		$this->difficulty = $in->getVarInt();
 		$this->spawnPosition = $in->getBlockPosition();
 		$this->hasAchievementsDisabled = $in->getBool();
-		$this->isEditorMode = $in->getBool();
+		$this->editorWorldType = $in->getVarInt();
 		$this->createdInEditorMode = $in->getBool();
 		$this->exportedFromEditorMode = $in->getBool();
 		$this->time = $in->getVarInt();
@@ -149,7 +149,7 @@ final class LevelSettings{
 		$out->putVarInt($this->difficulty);
 		$out->putBlockPosition($this->spawnPosition);
 		$out->putBool($this->hasAchievementsDisabled);
-		$out->putBool($this->isEditorMode);
+		$out->putVarInt($this->editorWorldType);
 		$out->putBool($this->createdInEditorMode);
 		$out->putBool($this->exportedFromEditorMode);
 		$out->putVarInt($this->time);

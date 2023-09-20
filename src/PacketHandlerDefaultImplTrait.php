@@ -801,4 +801,8 @@ trait PacketHandlerDefaultImplTrait{
 	public function handleAgentAnimation(AgentAnimationPacket $packet) : bool{
 		return false;
 	}
+
+	public function handleRefreshEntitlements(RefreshEntitlementsPacket $packet) : bool{
+		return false;
+	}
 }

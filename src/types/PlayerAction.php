@@ -53,6 +53,8 @@ final class PlayerAction{
 	public const MISSED_SWING = 31;
 	public const START_CRAWLING = 32;
 	public const STOP_CRAWLING = 33;
+	public const START_FLYING = 34;
+	public const STOP_FLYING = 35;
 
 	//Backwards compatibility (blame @dktapps)
 	public const CRACK_BREAK = 18;

@@ -25,9 +25,9 @@ final class AuthenticationData{
 	/** @required */
 	public string $identity;
 
-	public string $sandboxId = "RETAIL"; //TODO: what are the other possible values?
+	public ?string $sandboxId = "RETAIL"; //TODO: what are the other possible values?
 
-	public string $titleId = ""; //TODO: find out what this is for
+	public ?string $titleId = ""; //TODO: find out what this is for
 
 	/** @required */
 	public string $XUID;

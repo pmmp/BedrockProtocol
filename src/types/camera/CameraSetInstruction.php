@@ -28,7 +28,7 @@ final class CameraSetInstruction{
 		private ?bool $default
 	){}
 
-	public function getPreset(): int { return $this->preset; }
+	public function getPreset() : int { return $this->preset; }
 
 	public function getEase() : ?CameraSetInstructionEase{ return $this->ease; }
 
@@ -38,7 +38,7 @@ final class CameraSetInstruction{
 
 	public function getFacingPosition() : ?Vector3{ return $this->facingPosition; }
 
-	public function getDefault(): ?bool { return $this->default; }
+	public function getDefault() : ?bool { return $this->default; }
 
 	public static function read(PacketSerializer $in) : self{
 		$preset = $in->getLInt();

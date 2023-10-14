@@ -20,11 +20,15 @@ use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 final class CameraSetInstruction{
 
 	public function __construct(
+		private int $preset,
 		private ?CameraSetInstructionEase $ease,
 		private ?Vector3 $cameraPosition,
 		private ?CameraSetInstructionRotation $rotation,
-		private ?Vector3 $facingPosition
+		private ?Vector3 $facingPosition,
+		private ?bool $default
 	){}
+
+	public function getPreset() : int{ return $this->preset; }
 
 	public function getEase() : ?CameraSetInstructionEase{ return $this->ease; }
 
@@ -34,24 +38,32 @@ final class CameraSetInstruction{
 
 	public function getFacingPosition() : ?Vector3{ return $this->facingPosition; }
 
+	public function getDefault() : ?bool{ return $this->default; }
+
 	public static function read(PacketSerializer $in) : self{
+		$preset = $in->getLInt();
 		$ease = $in->readOptional(fn() => CameraSetInstructionEase::read($in));
 		$cameraPosition = $in->readOptional(fn() => $in->getVector3());
 		$rotation = $in->readOptional(fn() => CameraSetInstructionRotation::read($in));
 		$facingPosition = $in->readOptional(fn() => $in->getVector3());
+		$default = $in->readOptional(fn() => $in->getBool());
 
 		return new self(
+			$preset,
 			$ease,
 			$cameraPosition,
 			$rotation,
-			$facingPosition
+			$facingPosition,
+			$default
 		);
 	}
 
 	public function write(PacketSerializer $out) : void{
+		$out->putLInt($this->preset);
 		$out->writeOptional($this->ease, fn(CameraSetInstructionEase $v) => $v->write($out));
 		$out->writeOptional($this->cameraPosition, fn(Vector3 $v) => $out->putVector3($v));
 		$out->writeOptional($this->rotation, fn(CameraSetInstructionRotation $v) => $v->write($out));
 		$out->writeOptional($this->facingPosition, fn(Vector3 $v) => $out->putVector3($v));
+		$out->writeOptional($this->default, fn(bool $v) => $out->putBool($v));
 	}
 }

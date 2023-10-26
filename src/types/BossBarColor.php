@@ -22,6 +22,7 @@ class BossBarColor{
 	public const GREEN = 3;
 	public const YELLOW = 4;
 	public const PURPLE = 5;
-	public const WHITE = 6;
+	public const REBECCA_PURPLE = 6;
+	public const WHITE = 7;
 
 }

@@ -55,6 +55,7 @@ final class PlayerAction{
 	public const STOP_CRAWLING = 33;
 	public const START_FLYING = 34;
 	public const STOP_FLYING = 35;
+	public const ACK_ACTOR_DATA = 36;
 
 	//Backwards compatibility (blame @dktapps)
 	public const CRACK_BREAK = 18;

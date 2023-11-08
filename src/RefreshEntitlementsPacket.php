@@ -16,7 +16,7 @@ namespace pocketmine\network\mcpe\protocol;
 
 use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 
-class RefreshEntitlementsPacket extends DataPacket{
+class RefreshEntitlementsPacket extends DataPacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::REFRESH_ENTITLEMENTS_PACKET;
 
 	/**

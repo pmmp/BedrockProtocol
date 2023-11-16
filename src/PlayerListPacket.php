@@ -59,9 +59,9 @@ class PlayerListPacket extends DataPacket implements ClientboundPacket{
 		for($i = 0; $i < $count; ++$i){
 			$entry = new PlayerListEntry();
 
-			if($this->type === self::TYPE_ADD){
-				$entry->uuid = $in->getUUID();
-				$entry->actorUniqueId = $in->getActorUniqueId();
+            $entry->uuid = $in->getUUID();
+            if($this->type === self::TYPE_ADD){
+                $entry->actorUniqueId = $in->getActorUniqueId();
 				$entry->username = $in->getString();
 				$entry->xboxUserId = $in->getString();
 				$entry->platformChatId = $in->getString();
@@ -69,11 +69,9 @@ class PlayerListPacket extends DataPacket implements ClientboundPacket{
 				$entry->skinData = $in->getSkin();
 				$entry->isTeacher = $in->getBool();
 				$entry->isHost = $in->getBool();
-			}else{
-				$entry->uuid = $in->getUUID();
 			}
 
-			$this->entries[$i] = $entry;
+            $this->entries[$i] = $entry;
 		}
 		if($this->type === self::TYPE_ADD){
 			for($i = 0; $i < $count; ++$i){
@@ -86,9 +84,9 @@ class PlayerListPacket extends DataPacket implements ClientboundPacket{
 		$out->putByte($this->type);
 		$out->putUnsignedVarInt(count($this->entries));
 		foreach($this->entries as $entry){
-			if($this->type === self::TYPE_ADD){
-				$out->putUUID($entry->uuid);
-				$out->putActorUniqueId($entry->actorUniqueId);
+            $out->putUUID($entry->uuid);
+            if($this->type === self::TYPE_ADD){
+                $out->putActorUniqueId($entry->actorUniqueId);
 				$out->putString($entry->username);
 				$out->putString($entry->xboxUserId);
 				$out->putString($entry->platformChatId);
@@ -96,10 +94,8 @@ class PlayerListPacket extends DataPacket implements ClientboundPacket{
 				$out->putSkin($entry->skinData);
 				$out->putBool($entry->isTeacher);
 				$out->putBool($entry->isHost);
-			}else{
-				$out->putUUID($entry->uuid);
 			}
-		}
+        }
 		if($this->type === self::TYPE_ADD){
 			foreach($this->entries as $entry){
 				$out->putBool($entry->skinData->isVerified());

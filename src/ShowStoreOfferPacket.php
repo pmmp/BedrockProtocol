@@ -26,10 +26,10 @@ class ShowStoreOfferPacket extends DataPacket implements ClientboundPacket{
 	/**
 	 * @generate-create-func
 	 */
-	public static function create(string $offerId, bool $showAll) : self{
+	public static function create(string $offerId, ShowStoreOfferRedirectType $redirectType) : self{
 		$result = new self;
 		$result->offerId = $offerId;
-		$result->showAll = $showAll;
+		$result->redirectType = $redirectType;
 		return $result;
 	}
 

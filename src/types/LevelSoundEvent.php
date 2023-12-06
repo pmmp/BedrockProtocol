@@ -467,6 +467,16 @@ final class LevelSoundEvent{
 	public const MOB_HOGLIN_CONVERTED_TO_ZOMBIFIED = 474;
 	public const AMBIENT_UNDERWATER_ENTER = 475;
 	public const AMBIENT_UNDERWATER_EXIT = 476;
+	public const BOTTLE_FILL = 477;
+	public const BOTTLE_EMPTY = 478;
+	public const CRAFTER_CRAFT = 479;
+	public const CRAFTER_FAIL = 480;
+	public const BLOCK_DECORATED_POT_INSERT = 481;
+	public const BLOCK_DECORATED_POT_INSERT_FAIL = 482;
+	public const CRAFTER_DISABLE_SLOT = 483;
+
+	public const BLOCK_COPPER_BULB_TURN_ON = 490;
+	public const BLOCK_COPPER_BULB_TURN_OFF = 491;
 
 	//The following aliases are kept for backwards compatibility only
 	public const SCULK_SENSOR_POWER_ON = self::POWER_ON_SCULK_SENSOR;

@@ -15,12 +15,13 @@ declare(strict_types=1);
 namespace pocketmine\network\mcpe\protocol;
 
 use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pocketmine\network\mcpe\protocol\types\ShowStoreOfferRedirectType;
 
 class ShowStoreOfferPacket extends DataPacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::SHOW_STORE_OFFER_PACKET;
 
 	public string $offerId;
-	public bool $showAll;
+	public ShowStoreOfferRedirectType $redirectType;
 
 	/**
 	 * @generate-create-func
@@ -34,12 +35,12 @@ class ShowStoreOfferPacket extends DataPacket implements ClientboundPacket{
 
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->offerId = $in->getString();
-		$this->showAll = $in->getBool();
+		$this->redirectType = ShowStoreOfferRedirectType::fromPacket($in->getByte());
 	}
 
 	protected function encodePayload(PacketSerializer $out) : void{
 		$out->putString($this->offerId);
-		$out->putBool($this->showAll);
+		$out->putByte($this->redirectType->value);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

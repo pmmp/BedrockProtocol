@@ -100,5 +100,11 @@ final class ParticleIds{
 	public const SPORE_BLOSSOM_AMBIENT = 79;
 	public const WAX = 80;
 	public const ELECTRIC_SPARK = 81;
-
+	public const SHRIEK = 82;
+	public const SCULK_SOUL = 83;
+	public const SONIC_EXPLOSION = 84;
+	public const BRUSH_DUST = 85;
+	public const CHERRY_LEAVES = 86;
+	public const DUST_PLUME = 87;
+	public const WHITE_SMOKE = 88;
 }

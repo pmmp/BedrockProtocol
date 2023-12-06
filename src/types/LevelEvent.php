@@ -101,6 +101,8 @@ final class LevelEvent{
 	public const PARTICLE_SCULK_SHRIEK = 2035;
 	public const PARTICLE_SCULK_CATALYST_BLOOM = 2036;
 
+	public const PARTICLE_DUST_PLUME = 2040;
+
 	public const START_RAIN = 3001;
 	public const START_THUNDER = 3002;
 	public const STOP_RAIN = 3003;
@@ -135,6 +137,7 @@ final class LevelEvent{
 	public const PARTICLE_PUNCH_BLOCK_SOUTH = 3606;
 	public const PARTICLE_PUNCH_BLOCK_WEST = 3607;
 	public const PARTICLE_PUNCH_BLOCK_EAST = 3608;
+	public const PARTICLE_SHOOT_WHITE_SMOKE = 3609;
 
 	public const SET_DATA = 4000;
 

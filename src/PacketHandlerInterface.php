@@ -118,8 +118,6 @@ interface PacketHandlerInterface{
 
 	public function handleCraftingData(CraftingDataPacket $packet) : bool;
 
-	public function handleCraftingEvent(CraftingEventPacket $packet) : bool;
-
 	public function handleGuiDataPickItem(GuiDataPickItemPacket $packet) : bool;
 
 	public function handleBlockActorData(BlockActorDataPacket $packet) : bool;
@@ -409,4 +407,8 @@ interface PacketHandlerInterface{
 	public function handleAgentAnimation(AgentAnimationPacket $packet) : bool;
 
 	public function handleRefreshEntitlements(RefreshEntitlementsPacket $packet) : bool;
+
+	public function handlePlayerToggleCrafterSlotRequest(PlayerToggleCrafterSlotRequestPacket $packet) : bool;
+
+	public function handleSetPlayerInventoryOptions(SetPlayerInventoryOptionsPacket $packet) : bool;
 }

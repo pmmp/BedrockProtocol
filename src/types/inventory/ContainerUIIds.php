@@ -82,4 +82,5 @@ final class ContainerUIIds{
 	public const CURSOR = 59;
 	public const CREATED_OUTPUT = 60;
 	public const SMITHING_TABLE_TEMPLATE = 61;
+	public const CRAFTER = 62;
 }

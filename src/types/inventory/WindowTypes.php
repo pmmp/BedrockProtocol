@@ -57,5 +57,7 @@ final class WindowTypes{
 	public const HUD = 31;
 	public const JIGSAW_EDITOR = 32;
 	public const SMITHING_TABLE = 33;
-
+	public const CHEST_BOAT = 34;
+	public const DECORATED_POT = 35;
+	public const CRAFTER = 36;
 }

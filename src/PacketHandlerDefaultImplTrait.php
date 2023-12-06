@@ -222,10 +222,6 @@ trait PacketHandlerDefaultImplTrait{
 		return false;
 	}
 
-	public function handleCraftingEvent(CraftingEventPacket $packet) : bool{
-		return false;
-	}
-
 	public function handleGuiDataPickItem(GuiDataPickItemPacket $packet) : bool{
 		return false;
 	}
@@ -803,6 +799,14 @@ trait PacketHandlerDefaultImplTrait{
 	}
 
 	public function handleRefreshEntitlements(RefreshEntitlementsPacket $packet) : bool{
+		return false;
+	}
+
+	public function handlePlayerToggleCrafterSlotRequest(PlayerToggleCrafterSlotRequestPacket $packet) : bool{
+		return false;
+	}
+
+	public function handleSetPlayerInventoryOptions(SetPlayerInventoryOptionsPacket $packet) : bool{
 		return false;
 	}
 }

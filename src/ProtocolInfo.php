@@ -32,11 +32,11 @@ final class ProtocolInfo{
 	 */
 
 	/** Actual Minecraft: PE protocol version */
-	public const CURRENT_PROTOCOL = 622;
+	public const CURRENT_PROTOCOL = 630;
 	/** Current Minecraft PE version reported by the server. This is usually the earliest currently supported version. */
-	public const MINECRAFT_VERSION = 'v1.20.40';
+	public const MINECRAFT_VERSION = 'v1.20.50';
 	/** Version number sent to clients in ping responses. */
-	public const MINECRAFT_VERSION_NETWORK = '1.20.40';
+	public const MINECRAFT_VERSION_NETWORK = '1.20.50';
 
 	public const LOGIN_PACKET = 0x01;
 	public const PLAY_STATUS_PACKET = 0x02;
@@ -90,7 +90,7 @@ final class ProtocolInfo{
 	public const INVENTORY_SLOT_PACKET = 0x32;
 	public const CONTAINER_SET_DATA_PACKET = 0x33;
 	public const CRAFTING_DATA_PACKET = 0x34;
-	public const CRAFTING_EVENT_PACKET = 0x35;
+
 	public const GUI_DATA_PICK_ITEM_PACKET = 0x36;
 
 	public const BLOCK_ACTOR_DATA_PACKET = 0x38;
@@ -243,5 +243,7 @@ final class ProtocolInfo{
 	public const OPEN_SIGN_PACKET = 0x12f;
 	public const AGENT_ANIMATION_PACKET = 0x130;
 	public const REFRESH_ENTITLEMENTS_PACKET = 0x131;
+	public const PLAYER_TOGGLE_CRAFTER_SLOT_REQUEST_PACKET = 0x132;
+	public const SET_PLAYER_INVENTORY_OPTIONS_PACKET = 0x133;
 
 }

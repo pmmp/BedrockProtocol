@@ -27,7 +27,7 @@ final class CameraFadeInstruction{
 
 	public function getTime() : ?Time{ return $this->time; }
 
-	public function getColor() : ?CameraFadeInstructionColor{ return $this->color; }
+	public function getColor() : ?Color{ return $this->color; }
 
 	public static function read(PacketSerializer $in) : self{
 		$time = $in->readOptional(fn() => Time::read($in));

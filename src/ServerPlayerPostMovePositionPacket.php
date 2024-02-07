@@ -14,35 +14,34 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
+use pocketmine\math\Vector3;
 use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 
-class RemoveEntityPacket extends DataPacket implements ClientboundPacket{
-	public const NETWORK_ID = ProtocolInfo::REMOVE_ENTITY_PACKET;
+class ServerPlayerPostMovePositionPacket extends DataPacket implements ClientboundPacket{
+	public const NETWORK_ID = ProtocolInfo::SERVER_PLAYER_POST_MOVE_POSITION_PACKET;
 
-	private int $entityNetId;
+	private Vector3 $position;
 
 	/**
 	 * @generate-create-func
 	 */
-	public static function create(int $entityNetId) : self{
+	public static function create(Vector3 $position) : self{
 		$result = new self;
-		$result->entityNetId = $entityNetId;
+		$result->position = $position;
 		return $result;
 	}
 
-	public function getEntityNetId() : int{
-		return $this->entityNetId;
-	}
+	public function getPosition() : Vector3{ return $this->position; }
 
 	protected function decodePayload(PacketSerializer $in) : void{
-		$this->entityNetId = $in->getUnsignedVarInt();
+		$this->position = $in->getVector3();
 	}
 
 	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putUnsignedVarInt($this->entityNetId);
+		$out->putVector3($this->position);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{
-		return $handler->handleRemoveEntity($this);
+		return $handler->handleServerPlayerPostMovePosition($this);
 	}
 }

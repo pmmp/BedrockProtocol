@@ -48,6 +48,8 @@ interface PacketHandlerInterface{
 
 	public function handleAddItemActor(AddItemActorPacket $packet) : bool;
 
+	public function handleServerPlayerPostMovePosition(ServerPlayerPostMovePositionPacket $packet) : bool;
+
 	public function handleTakeItemActor(TakeItemActorPacket $packet) : bool;
 
 	public function handleMoveActorAbsolute(MoveActorAbsolutePacket $packet) : bool;
@@ -256,10 +258,6 @@ interface PacketHandlerInterface{
 
 	public function handleLecternUpdate(LecternUpdatePacket $packet) : bool;
 
-	public function handleAddEntity(AddEntityPacket $packet) : bool;
-
-	public function handleRemoveEntity(RemoveEntityPacket $packet) : bool;
-
 	public function handleClientCacheStatus(ClientCacheStatusPacket $packet) : bool;
 
 	public function handleOnScreenTextureAnimation(OnScreenTextureAnimationPacket $packet) : bool;
@@ -411,4 +409,6 @@ interface PacketHandlerInterface{
 	public function handlePlayerToggleCrafterSlotRequest(PlayerToggleCrafterSlotRequestPacket $packet) : bool;
 
 	public function handleSetPlayerInventoryOptions(SetPlayerInventoryOptionsPacket $packet) : bool;
+
+	public function handleSetHud(SetHudPacket $packet) : bool;
 }

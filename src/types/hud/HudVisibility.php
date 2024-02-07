@@ -12,19 +12,13 @@
 
 declare(strict_types=1);
 
-namespace pocketmine\network\mcpe\protocol\types;
+namespace pocketmine\network\mcpe\protocol\types\hud;
 
-/**
- * List of supported compression algorithms for compressing packet batches.
- */
-final class CompressionAlgorithm{
+use pocketmine\network\mcpe\protocol\types\PacketIntEnumTrait;
 
-	private function __construct(){
-		//NOOP
-	}
+enum HudVisibility : int{
+	use PacketIntEnumTrait;
 
-	public const ZLIB = 0;
-	public const SNAPPY = 1;
-
-	public const NONE = 255;
+	case HIDE = 0;
+	case RESET = 1;
 }

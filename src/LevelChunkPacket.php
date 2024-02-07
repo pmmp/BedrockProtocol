@@ -16,6 +16,7 @@ namespace pocketmine\network\mcpe\protocol;
 
 use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 use pocketmine\network\mcpe\protocol\types\ChunkPosition;
+use pocketmine\network\mcpe\protocol\types\DimensionIds;
 use pocketmine\utils\Limits;
 use function count;
 use const PHP_INT_MAX;
@@ -37,6 +38,8 @@ class LevelChunkPacket extends DataPacket implements ClientboundPacket{
 	private const MAX_BLOB_HASHES = 64;
 
 	private ChunkPosition $chunkPosition;
+	/** @phpstan-var DimensionIds::* */
+	private int $dimensionId;
 	private int $subChunkCount;
 	private bool $clientSubChunkRequestsEnabled;
 	/** @var int[]|null */
@@ -46,10 +49,12 @@ class LevelChunkPacket extends DataPacket implements ClientboundPacket{
 	/**
 	 * @generate-create-func
 	 * @param int[] $usedBlobHashes
+	 * @phpstan-param DimensionIds::* $dimensionId
 	 */
-	public static function create(ChunkPosition $chunkPosition, int $subChunkCount, bool $clientSubChunkRequestsEnabled, ?array $usedBlobHashes, string $extraPayload) : self{
+	public static function create(ChunkPosition $chunkPosition, int $dimensionId, int $subChunkCount, bool $clientSubChunkRequestsEnabled, ?array $usedBlobHashes, string $extraPayload) : self{
 		$result = new self;
 		$result->chunkPosition = $chunkPosition;
+		$result->dimensionId = $dimensionId;
 		$result->subChunkCount = $subChunkCount;
 		$result->clientSubChunkRequestsEnabled = $clientSubChunkRequestsEnabled;
 		$result->usedBlobHashes = $usedBlobHashes;
@@ -58,6 +63,8 @@ class LevelChunkPacket extends DataPacket implements ClientboundPacket{
 	}
 
 	public function getChunkPosition() : ChunkPosition{ return $this->chunkPosition; }
+
+	public function getDimensionId() : int{ return $this->dimensionId; }
 
 	public function getSubChunkCount() : int{
 		return $this->subChunkCount;
@@ -84,6 +91,7 @@ class LevelChunkPacket extends DataPacket implements ClientboundPacket{
 
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->chunkPosition = ChunkPosition::read($in);
+		$this->dimensionId = $in->getVarInt();
 
 		$subChunkCountButNotReally = $in->getUnsignedVarInt();
 		if($subChunkCountButNotReally === self::CLIENT_REQUEST_FULL_COLUMN_FAKE_COUNT){
@@ -113,6 +121,7 @@ class LevelChunkPacket extends DataPacket implements ClientboundPacket{
 
 	protected function encodePayload(PacketSerializer $out) : void{
 		$this->chunkPosition->write($out);
+		$out->putVarInt($this->dimensionId);
 
 		if($this->clientSubChunkRequestsEnabled){
 			if($this->subChunkCount === PHP_INT_MAX){

@@ -32,11 +32,11 @@ final class ProtocolInfo{
 	 */
 
 	/** Actual Minecraft: PE protocol version */
-	public const CURRENT_PROTOCOL = 630;
+	public const CURRENT_PROTOCOL = 649;
 	/** Current Minecraft PE version reported by the server. This is usually the earliest currently supported version. */
-	public const MINECRAFT_VERSION = 'v1.20.50';
+	public const MINECRAFT_VERSION = 'v1.20.60';
 	/** Version number sent to clients in ping responses. */
-	public const MINECRAFT_VERSION_NETWORK = '1.20.50';
+	public const MINECRAFT_VERSION_NETWORK = '1.20.60';
 
 	public const LOGIN_PACKET = 0x01;
 	public const PLAY_STATUS_PACKET = 0x02;
@@ -53,7 +53,7 @@ final class ProtocolInfo{
 	public const ADD_ACTOR_PACKET = 0x0d;
 	public const REMOVE_ACTOR_PACKET = 0x0e;
 	public const ADD_ITEM_ACTOR_PACKET = 0x0f;
-
+	public const SERVER_PLAYER_POST_MOVE_POSITION_PACKET = 0x10;
 	public const TAKE_ITEM_ACTOR_PACKET = 0x11;
 	public const MOVE_ACTOR_ABSOLUTE_PACKET = 0x12;
 	public const MOVE_PLAYER_PACKET = 0x13;
@@ -163,8 +163,6 @@ final class ProtocolInfo{
 	public const LEVEL_EVENT_GENERIC_PACKET = 0x7c;
 	public const LECTERN_UPDATE_PACKET = 0x7d;
 
-	public const ADD_ENTITY_PACKET = 0x7f;
-	public const REMOVE_ENTITY_PACKET = 0x80;
 	public const CLIENT_CACHE_STATUS_PACKET = 0x81;
 	public const ON_SCREEN_TEXTURE_ANIMATION_PACKET = 0x82;
 	public const MAP_CREATE_LOCKED_COPY_PACKET = 0x83;
@@ -245,5 +243,6 @@ final class ProtocolInfo{
 	public const REFRESH_ENTITLEMENTS_PACKET = 0x131;
 	public const PLAYER_TOGGLE_CRAFTER_SLOT_REQUEST_PACKET = 0x132;
 	public const SET_PLAYER_INVENTORY_OPTIONS_PACKET = 0x133;
+	public const SET_HUD_PACKET = 0x134;
 
 }

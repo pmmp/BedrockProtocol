@@ -48,6 +48,7 @@ class PacketPool{
 		$this->registerPacket(new AddActorPacket());
 		$this->registerPacket(new RemoveActorPacket());
 		$this->registerPacket(new AddItemActorPacket());
+		$this->registerPacket(new ServerPlayerPostMovePositionPacket());
 		$this->registerPacket(new TakeItemActorPacket());
 		$this->registerPacket(new MoveActorAbsolutePacket());
 		$this->registerPacket(new MovePlayerPacket());
@@ -152,8 +153,6 @@ class PacketPool{
 		$this->registerPacket(new LevelSoundEventPacket());
 		$this->registerPacket(new LevelEventGenericPacket());
 		$this->registerPacket(new LecternUpdatePacket());
-		$this->registerPacket(new AddEntityPacket());
-		$this->registerPacket(new RemoveEntityPacket());
 		$this->registerPacket(new ClientCacheStatusPacket());
 		$this->registerPacket(new OnScreenTextureAnimationPacket());
 		$this->registerPacket(new MapCreateLockedCopyPacket());
@@ -230,6 +229,7 @@ class PacketPool{
 		$this->registerPacket(new RefreshEntitlementsPacket());
 		$this->registerPacket(new PlayerToggleCrafterSlotRequestPacket());
 		$this->registerPacket(new SetPlayerInventoryOptionsPacket());
+		$this->registerPacket(new SetHudPacket());
 	}
 
 	public function registerPacket(Packet $packet) : void{

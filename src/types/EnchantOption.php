@@ -80,7 +80,7 @@ final class EnchantOption{
 		$selfActivatedEnchants = self::readEnchantList($in);
 
 		$name = $in->getString();
-		$optionId = $in->readGenericTypeNetworkId();
+		$optionId = $in->readRecipeNetId();
 
 		return new self($cost, $slotFlags, $equipActivatedEnchants, $heldActivatedEnchants, $selfActivatedEnchants, $name, $optionId);
 	}
@@ -94,6 +94,6 @@ final class EnchantOption{
 		self::writeEnchantList($out, $this->selfActivatedEnchantments);
 
 		$out->putString($this->name);
-		$out->writeGenericTypeNetworkId($this->optionId);
+		$out->writeRecipeNetId($this->optionId);
 	}
 }

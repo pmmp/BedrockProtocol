@@ -46,7 +46,7 @@ final class ItemStackResponse{
 
 	public static function read(PacketSerializer $in) : self{
 		$result = $in->getByte();
-		$requestId = $in->readGenericTypeNetworkId();
+		$requestId = $in->readItemStackRequestId();
 		$containerInfos = [];
 		if($result === self::RESULT_OK){
 			for($i = 0, $len = $in->getUnsignedVarInt(); $i < $len; ++$i){
@@ -58,7 +58,7 @@ final class ItemStackResponse{
 
 	public function write(PacketSerializer $out) : void{
 		$out->putByte($this->result);
-		$out->writeGenericTypeNetworkId($this->requestId);
+		$out->writeItemStackRequestId($this->requestId);
 		if($this->result === self::RESULT_OK){
 			$out->putUnsignedVarInt(count($this->containerInfos));
 			foreach($this->containerInfos as $containerInfo){

@@ -42,7 +42,7 @@ final class ItemStackResponseSlotInfo{
 		$slot = $in->getByte();
 		$hotbarSlot = $in->getByte();
 		$count = $in->getByte();
-		$itemStackId = $in->readGenericTypeNetworkId();
+		$itemStackId = $in->readServerItemStackId();
 		$customName = $in->getString();
 		$durabilityCorrection = $in->getVarInt();
 		return new self($slot, $hotbarSlot, $count, $itemStackId, $customName, $durabilityCorrection);
@@ -52,7 +52,7 @@ final class ItemStackResponseSlotInfo{
 		$out->putByte($this->slot);
 		$out->putByte($this->hotbarSlot);
 		$out->putByte($this->count);
-		$out->writeGenericTypeNetworkId($this->itemStackId);
+		$out->writeServerItemStackId($this->itemStackId);
 		$out->putString($this->customName);
 		$out->putVarInt($this->durabilityCorrection);
 	}

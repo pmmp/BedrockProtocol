@@ -801,11 +801,61 @@ class PacketSerializer extends BinaryStream{
 		}
 	}
 
-	public function readGenericTypeNetworkId() : int{
+	public function readRecipeNetId() : int{
+		return $this->getUnsignedVarInt();
+	}
+
+	public function writeRecipeNetId(int $id) : void{
+		$this->putUnsignedVarInt($id);
+	}
+
+	public function readCreativeItemNetId() : int{
+		return $this->getUnsignedVarInt();
+	}
+
+	public function writeCreativeItemNetId(int $id) : void{
+		$this->putUnsignedVarInt($id);
+	}
+
+	/**
+	 * This is a union of ItemStackRequestId, LegacyItemStackRequestId, and ServerItemStackId, used in serverbound
+	 * packets to allow the client to refer to server known items, or items which may have been modified by a previous
+	 * as-yet unacknowledged request from the client.
+	 */
+	public function readItemStackNetIdVariant() : int{
 		return $this->getVarInt();
 	}
 
-	public function writeGenericTypeNetworkId(int $id) : void{
+	/**
+	 * This is a union of ItemStackRequestId, LegacyItemStackRequestId, and ServerItemStackId, used in serverbound
+	 * packets to allow the client to refer to server known items, or items which may have been modified by a previous
+	 * as-yet unacknowledged request from the client.
+	 */
+	public function writeItemStackNetIdVariant(int $id) : void{
+		$this->putVarInt($id);
+	}
+
+	public function readItemStackRequestId() : int{
+		return $this->getVarInt();
+	}
+
+	public function writeItemStackRequestId(int $id) : void{
+		$this->putVarInt($id);
+	}
+
+	public function readLegacyItemStackRequestId() : int{
+		return $this->getVarInt();
+	}
+
+	public function writeLegacyItemStackRequestId(int $id) : void{
+		$this->putVarInt($id);
+	}
+
+	public function readServerItemStackId() : int{
+		return $this->getVarInt();
+	}
+
+	public function writeServerItemStackId(int $id) : void{
 		$this->putVarInt($id);
 	}
 

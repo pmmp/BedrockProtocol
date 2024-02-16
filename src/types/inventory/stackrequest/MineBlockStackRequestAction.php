@@ -37,13 +37,13 @@ final class MineBlockStackRequestAction extends ItemStackRequestAction{
 	public static function read(PacketSerializer $in) : self{
 		$hotbarSlot = $in->getVarInt();
 		$predictedDurability = $in->getVarInt();
-		$stackId = $in->readGenericTypeNetworkId();
+		$stackId = $in->readItemStackNetIdVariant();
 		return new self($hotbarSlot, $predictedDurability, $stackId);
 	}
 
 	public function write(PacketSerializer $out) : void{
 		$out->putVarInt($this->hotbarSlot);
 		$out->putVarInt($this->predictedDurability);
-		$out->writeGenericTypeNetworkId($this->stackId);
+		$out->writeItemStackNetIdVariant($this->stackId);
 	}
 }

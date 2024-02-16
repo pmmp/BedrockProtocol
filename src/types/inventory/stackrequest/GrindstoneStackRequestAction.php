@@ -36,14 +36,14 @@ final class GrindstoneStackRequestAction extends ItemStackRequestAction{
 	public function getRepairCost() : int{ return $this->repairCost; }
 
 	public static function read(PacketSerializer $in) : self{
-		$recipeId = $in->readGenericTypeNetworkId();
+		$recipeId = $in->readRecipeNetId();
 		$repairCost = $in->getVarInt(); //WHY!!!!
 
 		return new self($recipeId, $repairCost);
 	}
 
 	public function write(PacketSerializer $out) : void{
-		$out->writeGenericTypeNetworkId($this->recipeId);
+		$out->writeRecipeNetId($this->recipeId);
 		$out->putVarInt($this->repairCost);
 	}
 }

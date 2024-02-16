@@ -53,7 +53,7 @@ final class SmithingTransformRecipe extends RecipeWithTypeId{
 		$addition = $in->getRecipeIngredient();
 		$output = $in->getItemStackWithoutStackId();
 		$blockName = $in->getString();
-		$recipeNetId = $in->readGenericTypeNetworkId();
+		$recipeNetId = $in->readRecipeNetId();
 
 		return new self(
 			$typeId,
@@ -74,6 +74,6 @@ final class SmithingTransformRecipe extends RecipeWithTypeId{
 		$out->putRecipeIngredient($this->addition);
 		$out->putItemStackWithoutStackId($this->output);
 		$out->putString($this->blockName);
-		$out->writeGenericTypeNetworkId($this->recipeNetId);
+		$out->writeRecipeNetId($this->recipeNetId);
 	}
 }

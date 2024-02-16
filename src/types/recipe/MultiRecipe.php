@@ -50,12 +50,12 @@ final class MultiRecipe extends RecipeWithTypeId{
 
 	public static function decode(int $typeId, PacketSerializer $in) : self{
 		$uuid = $in->getUUID();
-		$recipeNetId = $in->readGenericTypeNetworkId();
+		$recipeNetId = $in->readRecipeNetId();
 		return new self($typeId, $uuid, $recipeNetId);
 	}
 
 	public function encode(PacketSerializer $out) : void{
 		$out->putUUID($this->recipeId);
-		$out->writeGenericTypeNetworkId($this->recipeNetId);
+		$out->writeRecipeNetId($this->recipeNetId);
 	}
 }

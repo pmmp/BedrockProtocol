@@ -39,13 +39,13 @@ final class CraftRecipeOptionalStackRequestAction extends ItemStackRequestAction
 	public function getFilterStringIndex() : int{ return $this->filterStringIndex; }
 
 	public static function read(PacketSerializer $in) : self{
-		$recipeId = $in->readGenericTypeNetworkId();
+		$recipeId = $in->readRecipeNetId();
 		$filterStringIndex = $in->getLInt();
 		return new self($recipeId, $filterStringIndex);
 	}
 
 	public function write(PacketSerializer $out) : void{
-		$out->writeGenericTypeNetworkId($this->recipeId);
+		$out->writeRecipeNetId($this->recipeId);
 		$out->putLInt($this->filterStringIndex);
 	}
 }

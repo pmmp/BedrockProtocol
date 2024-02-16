@@ -54,7 +54,7 @@ class InventoryTransactionPacket extends DataPacket implements ClientboundPacket
 	}
 
 	protected function decodePayload(PacketSerializer $in) : void{
-		$this->requestId = $in->readGenericTypeNetworkId();
+		$this->requestId = $in->readLegacyItemStackRequestId();
 		$this->requestChangedSlots = [];
 		if($this->requestId !== 0){
 			for($i = 0, $len = $in->getUnsignedVarInt(); $i < $len; ++$i){
@@ -77,7 +77,7 @@ class InventoryTransactionPacket extends DataPacket implements ClientboundPacket
 	}
 
 	protected function encodePayload(PacketSerializer $out) : void{
-		$out->writeGenericTypeNetworkId($this->requestId);
+		$out->writeLegacyItemStackRequestId($this->requestId);
 		if($this->requestId !== 0){
 			$out->putUnsignedVarInt(count($this->requestChangedSlots));
 			foreach($this->requestChangedSlots as $changedSlots){

@@ -35,7 +35,7 @@ final class ItemStackWrapper{
 		$stack = $in->getItemStack(function(PacketSerializer $in) use (&$stackId) : void{
 			$hasNetId = $in->getBool();
 			if($hasNetId){
-				$stackId = $in->readGenericTypeNetworkId();
+				$stackId = $in->readServerItemStackId();
 			}
 		});
 		return new self($stackId, $stack);
@@ -45,7 +45,7 @@ final class ItemStackWrapper{
 		$out->putItemStack($this->itemStack, function(PacketSerializer $out) : void{
 			$out->putBool($this->stackId !== 0);
 			if($this->stackId !== 0){
-				$out->writeGenericTypeNetworkId($this->stackId);
+				$out->writeServerItemStackId($this->stackId);
 			}
 		});
 	}

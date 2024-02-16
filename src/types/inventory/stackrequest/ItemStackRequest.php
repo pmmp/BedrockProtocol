@@ -76,7 +76,7 @@ final class ItemStackRequest{
 	}
 
 	public static function read(PacketSerializer $in) : self{
-		$requestId = $in->readGenericTypeNetworkId();
+		$requestId = $in->readItemStackRequestId();
 		$actions = [];
 		for($i = 0, $len = $in->getUnsignedVarInt(); $i < $len; ++$i){
 			$typeId = $in->getByte();
@@ -91,7 +91,7 @@ final class ItemStackRequest{
 	}
 
 	public function write(PacketSerializer $out) : void{
-		$out->writeGenericTypeNetworkId($this->requestId);
+		$out->writeItemStackRequestId($this->requestId);
 		$out->putUnsignedVarInt(count($this->actions));
 		foreach($this->actions as $action){
 			$out->putByte($action->getTypeId());

@@ -821,6 +821,11 @@ class PacketSerializer extends BinaryStream{
 	 * This is a union of ItemStackRequestId, LegacyItemStackRequestId, and ServerItemStackId, used in serverbound
 	 * packets to allow the client to refer to server known items, or items which may have been modified by a previous
 	 * as-yet unacknowledged request from the client.
+	 *
+	 * - Server itemstack ID is positive
+	 * - InventoryTransaction "legacy" request ID is negative and even
+	 * - ItemStackRequest request ID is negative and odd
+	 * - 0 refers to an empty itemstack (air)
 	 */
 	public function readItemStackNetIdVariant() : int{
 		return $this->getVarInt();

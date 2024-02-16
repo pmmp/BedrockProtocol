@@ -24,11 +24,11 @@ final class EducationSettingsAgentCapabilities{
 	public function getCanModifyBlocks() : ?bool{ return $this->canModifyBlocks; }
 
 	public static function read(PacketSerializer $in) : self{
-		$canModifyBlocks = $in->readOptional(\Closure::fromCallable([$in, 'getBool']));
+		$canModifyBlocks = $in->readOptional($in->getBool(...));
 		return new self($canModifyBlocks);
 	}
 
 	public function write(PacketSerializer $out) : void{
-		$out->writeOptional($this->canModifyBlocks, \Closure::fromCallable([$out, 'putBool']));
+		$out->writeOptional($this->canModifyBlocks, $out->putBool(...));
 	}
 }

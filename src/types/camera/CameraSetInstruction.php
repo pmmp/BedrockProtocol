@@ -43,10 +43,10 @@ final class CameraSetInstruction{
 	public static function read(PacketSerializer $in) : self{
 		$preset = $in->getLInt();
 		$ease = $in->readOptional(fn() => CameraSetInstructionEase::read($in));
-		$cameraPosition = $in->readOptional(fn() => $in->getVector3());
+		$cameraPosition = $in->readOptional($in->getVector3(...));
 		$rotation = $in->readOptional(fn() => CameraSetInstructionRotation::read($in));
-		$facingPosition = $in->readOptional(fn() => $in->getVector3());
-		$default = $in->readOptional(fn() => $in->getBool());
+		$facingPosition = $in->readOptional($in->getVector3(...));
+		$default = $in->readOptional($in->getBool(...));
 
 		return new self(
 			$preset,
@@ -61,9 +61,9 @@ final class CameraSetInstruction{
 	public function write(PacketSerializer $out) : void{
 		$out->putLInt($this->preset);
 		$out->writeOptional($this->ease, fn(CameraSetInstructionEase $v) => $v->write($out));
-		$out->writeOptional($this->cameraPosition, fn(Vector3 $v) => $out->putVector3($v));
+		$out->writeOptional($this->cameraPosition, $out->putVector3(...));
 		$out->writeOptional($this->rotation, fn(CameraSetInstructionRotation $v) => $v->write($out));
-		$out->writeOptional($this->facingPosition, fn(Vector3 $v) => $out->putVector3($v));
-		$out->writeOptional($this->default, fn(bool $v) => $out->putBool($v));
+		$out->writeOptional($this->facingPosition, $out->putVector3(...));
+		$out->writeOptional($this->default, $out->putBool(...));
 	}
 }

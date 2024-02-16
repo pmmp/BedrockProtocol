@@ -53,13 +53,13 @@ final class CameraPreset{
 	public static function read(PacketSerializer $in) : self{
 		$name = $in->getString();
 		$parent = $in->getString();
-		$xPosition = $in->readOptional(fn() => $in->getLFloat());
-		$yPosition = $in->readOptional(fn() => $in->getLFloat());
-		$zPosition = $in->readOptional(fn() => $in->getLFloat());
-		$pitch = $in->readOptional(fn() => $in->getLFloat());
-		$yaw = $in->readOptional(fn() => $in->getLFloat());
-		$audioListenerType = $in->readOptional(fn() => $in->getByte());
-		$playerEffects = $in->readOptional(fn() => $in->getBool());
+		$xPosition = $in->readOptional($in->getLFloat(...));
+		$yPosition = $in->readOptional($in->getLFloat(...));
+		$zPosition = $in->readOptional($in->getLFloat(...));
+		$pitch = $in->readOptional($in->getLFloat(...));
+		$yaw = $in->readOptional($in->getLFloat(...));
+		$audioListenerType = $in->readOptional($in->getByte(...));
+		$playerEffects = $in->readOptional($in->getBool(...));
 
 		return new self(
 			$name,
@@ -77,12 +77,12 @@ final class CameraPreset{
 	public function write(PacketSerializer $out) : void{
 		$out->putString($this->name);
 		$out->putString($this->parent);
-		$out->writeOptional($this->xPosition, fn(float $v) => $out->putLFloat($v));
-		$out->writeOptional($this->yPosition, fn(float $v) => $out->putLFloat($v));
-		$out->writeOptional($this->zPosition, fn(float $v) => $out->putLFloat($v));
-		$out->writeOptional($this->pitch, fn(float $v) => $out->putLFloat($v));
-		$out->writeOptional($this->yaw, fn(float $v) => $out->putLFloat($v));
-		$out->writeOptional($this->audioListenerType, fn(int $v) => $out->putByte($v));
-		$out->writeOptional($this->playerEffects, fn(bool $v) => $out->putBool($v));
+		$out->writeOptional($this->xPosition, $out->putLFloat(...));
+		$out->writeOptional($this->yPosition, $out->putLFloat(...));
+		$out->writeOptional($this->zPosition, $out->putLFloat(...));
+		$out->writeOptional($this->pitch, $out->putLFloat(...));
+		$out->writeOptional($this->yaw, $out->putLFloat(...));
+		$out->writeOptional($this->audioListenerType, $out->putByte(...));
+		$out->writeOptional($this->playerEffects, $out->putBool(...));
 	}
 }

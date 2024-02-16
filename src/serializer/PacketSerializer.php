@@ -280,86 +280,97 @@ class PacketSerializer extends BinaryStream{
 		return true;
 	}
 
+	/**
+	 * @return CompoundTag[]|string[][]|int[]|null[]
+	 *
+	 * @phpstan-return array{?CompoundTag, string[], string[], ?int}
+	 */
+	private function deserializeItemStackExtraData(int $id) : array{
+		$nbtLen = $this->getLShort();
+
+		/** @var CompoundTag|null $compound */
+		$compound = null;
+		if($nbtLen === 0xffff){
+			$nbtDataVersion = $this->getByte();
+			if($nbtDataVersion !== 1){
+				throw new PacketDecodeException("Unexpected NBT data version $nbtDataVersion");
+			}
+			$offset = $this->getOffset();
+			try{
+				$compound = (new LittleEndianNbtSerializer())->read($this->getBuffer(), $offset, 512)->mustGetCompoundTag();
+			}catch(NbtDataException $e){
+				throw PacketDecodeException::wrap($e, "Failed decoding NBT root");
+			}finally{
+				$this->setOffset($offset);
+			}
+		}elseif($nbtLen !== 0){
+			throw new PacketDecodeException("Unexpected fake NBT length $nbtLen");
+		}
+
+		$canPlaceOn = [];
+		for($i = 0, $canPlaceOnCount = $this->getLInt(); $i < $canPlaceOnCount; ++$i){
+			$canPlaceOn[] = $this->get($this->getLShort());
+		}
+
+		$canDestroy = [];
+		for($i = 0, $canDestroyCount = $this->getLInt(); $i < $canDestroyCount; ++$i){
+			$canDestroy[] = $this->get($this->getLShort());
+		}
+
+		$shieldBlockingTick = null;
+		if($id === $this->shieldItemRuntimeId){
+			$shieldBlockingTick = $this->getLLong();
+		}
+
+		if(!$this->feof()){
+			throw new PacketDecodeException("Unexpected trailing extradata for network item $id");
+		}
+
+		return [$compound, $canPlaceOn, $canDestroy, $shieldBlockingTick];
+	}
+
+	private function serializeItemStackExtraData(ItemStack $itemStack) : void{
+		$nbt = $itemStack->getNbt();
+		if($nbt !== null){
+			$this->putLShort(0xffff);
+			$this->putByte(1); //TODO: NBT data version (?)
+			$this->put((new LittleEndianNbtSerializer())->write(new TreeRoot($nbt)));
+		}else{
+			$this->putLShort(0);
+		}
+
+		$this->putLInt(count($itemStack->getCanPlaceOn()));
+		foreach($itemStack->getCanPlaceOn() as $entry){
+			$this->putLShort(strlen($entry));
+			$this->put($entry);
+		}
+		$this->putLInt(count($itemStack->getCanDestroy()));
+		foreach($itemStack->getCanDestroy() as $entry){
+			$this->putLShort(strlen($entry));
+			$this->put($entry);
+		}
+
+		$blockingTick = $itemStack->getShieldBlockingTick();
+		if($itemStack->getId() === $this->shieldItemRuntimeId){
+			$this->putLLong($blockingTick ?? 0);
+		}
+	}
+
 	private function getItemStackFooter(int $id, int $meta, int $count) : ItemStack{
 		$blockRuntimeId = $this->getVarInt();
-		$extraData = self::decoder($this->getString(), 0, $this->context);
-		return (static function() use ($extraData, $id, $meta, $count, $blockRuntimeId) : ItemStack{
-			$nbtLen = $extraData->getLShort();
 
-			/** @var CompoundTag|null $compound */
-			$compound = null;
-			if($nbtLen === 0xffff){
-				$nbtDataVersion = $extraData->getByte();
-				if($nbtDataVersion !== 1){
-					throw new PacketDecodeException("Unexpected NBT data version $nbtDataVersion");
-				}
-				$offset = $extraData->getOffset();
-				try{
-					$compound = (new LittleEndianNbtSerializer())->read($extraData->getBuffer(), $offset, 512)->mustGetCompoundTag();
-				}catch(NbtDataException $e){
-					throw PacketDecodeException::wrap($e, "Failed decoding NBT root");
-				}finally{
-					$extraData->setOffset($offset);
-				}
-			}elseif($nbtLen !== 0){
-				throw new PacketDecodeException("Unexpected fake NBT length $nbtLen");
-			}
+		$extraDataReader = self::decoder($this->getString(), 0, $this->context);
+		[$nbt, $canPlaceOn, $canDestroy, $shieldBlockingTick] = $extraDataReader->deserializeItemStackExtraData($id);
 
-			$canPlaceOn = [];
-			for($i = 0, $canPlaceOnCount = $extraData->getLInt(); $i < $canPlaceOnCount; ++$i){
-				$canPlaceOn[] = $extraData->get($extraData->getLShort());
-			}
-
-			$canDestroy = [];
-			for($i = 0, $canDestroyCount = $extraData->getLInt(); $i < $canDestroyCount; ++$i){
-				$canDestroy[] = $extraData->get($extraData->getLShort());
-			}
-
-			$shieldBlockingTick = null;
-			if($id === $extraData->shieldItemRuntimeId){
-				$shieldBlockingTick = $extraData->getLLong();
-			}
-
-			if(!$extraData->feof()){
-				throw new PacketDecodeException("Unexpected trailing extradata for network item $id");
-			}
-
-			return new ItemStack($id, $meta, $count, $blockRuntimeId, $compound, $canPlaceOn, $canDestroy, $shieldBlockingTick);
-		})();
+		return new ItemStack($id, $meta, $count, $blockRuntimeId, $nbt, $canPlaceOn, $canDestroy, $shieldBlockingTick);
 	}
 
 	private function putItemStackFooter(ItemStack $itemStack) : void{
 		$this->putVarInt($itemStack->getBlockRuntimeId());
-		$context = $this->context;
-		$this->putString((static function() use ($itemStack, $context) : string{
-			$extraData = PacketSerializer::encoder($context);
 
-			$nbt = $itemStack->getNbt();
-			if($nbt !== null){
-				$extraData->putLShort(0xffff);
-				$extraData->putByte(1); //TODO: NBT data version (?)
-				$extraData->put((new LittleEndianNbtSerializer())->write(new TreeRoot($nbt)));
-			}else{
-				$extraData->putLShort(0);
-			}
-
-			$extraData->putLInt(count($itemStack->getCanPlaceOn()));
-			foreach($itemStack->getCanPlaceOn() as $entry){
-				$extraData->putLShort(strlen($entry));
-				$extraData->put($entry);
-			}
-			$extraData->putLInt(count($itemStack->getCanDestroy()));
-			foreach($itemStack->getCanDestroy() as $entry){
-				$extraData->putLShort(strlen($entry));
-				$extraData->put($entry);
-			}
-
-			$blockingTick = $itemStack->getShieldBlockingTick();
-			if($itemStack->getId() === $extraData->shieldItemRuntimeId){
-				$extraData->putLLong($blockingTick ?? 0);
-			}
-			return $extraData->getBuffer();
-		})());
+		$extraDataWriter = self::encoder($this->context);
+		$extraDataWriter->serializeItemStackExtraData($itemStack);
+		$this->putString($extraDataWriter->getBuffer());
 	}
 
 	/**

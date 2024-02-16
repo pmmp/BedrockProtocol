@@ -40,6 +40,7 @@ use pocketmine\network\mcpe\protocol\types\FloatGameRule;
 use pocketmine\network\mcpe\protocol\types\GameRule;
 use pocketmine\network\mcpe\protocol\types\IntGameRule;
 use pocketmine\network\mcpe\protocol\types\inventory\ItemStack;
+use pocketmine\network\mcpe\protocol\types\inventory\ItemStackWrapper;
 use pocketmine\network\mcpe\protocol\types\recipe\ComplexAliasItemDescriptor;
 use pocketmine\network\mcpe\protocol\types\recipe\IntIdMetaItemDescriptor;
 use pocketmine\network\mcpe\protocol\types\recipe\ItemDescriptorType;
@@ -250,38 +251,36 @@ class PacketSerializer extends BinaryStream{
 	}
 
 	/**
+	 * @return int[]
+	 * @phpstan-return array{0: int, 1: int, 2: int}
 	 * @throws PacketDecodeException
-	 * @throws BinaryDataException
 	 */
-	public function getItemStackWithoutStackId() : ItemStack{
-		return $this->getItemStack(function() : void{
-			//NOOP
-		});
-	}
-
-	public function putItemStackWithoutStackId(ItemStack $item) : void{
-		$this->putItemStack($item, function() : void{
-			//NOOP
-		});
-	}
-
-	/**
-	 * @phpstan-param \Closure(PacketSerializer) : void $readExtraCrapInTheMiddle
-	 *
-	 * @throws PacketDecodeException
-	 * @throws BinaryDataException
-	 */
-	public function getItemStack(\Closure $readExtraCrapInTheMiddle) : ItemStack{
+	private function getItemStackHeader() : array{
 		$id = $this->getVarInt();
 		if($id === 0){
-			return ItemStack::null();
+			return [0, 0, 0];
 		}
 
 		$count = $this->getLShort();
 		$meta = $this->getUnsignedVarInt();
 
-		$readExtraCrapInTheMiddle($this);
+		return [$id, $count, $meta];
+	}
 
+	private function putItemStackHeader(ItemStack $itemStack) : bool{
+		if($itemStack->getId() === 0){
+			$this->putVarInt(0);
+			return false;
+		}
+
+		$this->putVarInt($itemStack->getId());
+		$this->putLShort($itemStack->getCount());
+		$this->putUnsignedVarInt($itemStack->getMeta());
+
+		return true;
+	}
+
+	private function getItemStackFooter(int $id, int $meta, int $count) : ItemStack{
 		$blockRuntimeId = $this->getVarInt();
 		$extraData = self::decoder($this->getString(), 0, $this->context);
 		return (static function() use ($extraData, $id, $meta, $count, $blockRuntimeId) : ItemStack{
@@ -329,28 +328,13 @@ class PacketSerializer extends BinaryStream{
 		})();
 	}
 
-	/**
-	 * @phpstan-param \Closure(PacketSerializer) : void $writeExtraCrapInTheMiddle
-	 */
-	public function putItemStack(ItemStack $item, \Closure $writeExtraCrapInTheMiddle) : void{
-		if($item->getId() === 0){
-			$this->putVarInt(0);
-
-			return;
-		}
-
-		$this->putVarInt($item->getId());
-		$this->putLShort($item->getCount());
-		$this->putUnsignedVarInt($item->getMeta());
-
-		$writeExtraCrapInTheMiddle($this);
-
-		$this->putVarInt($item->getBlockRuntimeId());
+	private function putItemStackFooter(ItemStack $itemStack) : void{
+		$this->putVarInt($itemStack->getBlockRuntimeId());
 		$context = $this->context;
-		$this->putString((static function() use ($item, $context) : string{
+		$this->putString((static function() use ($itemStack, $context) : string{
 			$extraData = PacketSerializer::encoder($context);
 
-			$nbt = $item->getNbt();
+			$nbt = $itemStack->getNbt();
 			if($nbt !== null){
 				$extraData->putLShort(0xffff);
 				$extraData->putByte(1); //TODO: NBT data version (?)
@@ -359,23 +343,80 @@ class PacketSerializer extends BinaryStream{
 				$extraData->putLShort(0);
 			}
 
-			$extraData->putLInt(count($item->getCanPlaceOn()));
-			foreach($item->getCanPlaceOn() as $entry){
+			$extraData->putLInt(count($itemStack->getCanPlaceOn()));
+			foreach($itemStack->getCanPlaceOn() as $entry){
 				$extraData->putLShort(strlen($entry));
 				$extraData->put($entry);
 			}
-			$extraData->putLInt(count($item->getCanDestroy()));
-			foreach($item->getCanDestroy() as $entry){
+			$extraData->putLInt(count($itemStack->getCanDestroy()));
+			foreach($itemStack->getCanDestroy() as $entry){
 				$extraData->putLShort(strlen($entry));
 				$extraData->put($entry);
 			}
 
-			$blockingTick = $item->getShieldBlockingTick();
-			if($item->getId() === $extraData->shieldItemRuntimeId){
+			$blockingTick = $itemStack->getShieldBlockingTick();
+			if($itemStack->getId() === $extraData->shieldItemRuntimeId){
 				$extraData->putLLong($blockingTick ?? 0);
 			}
 			return $extraData->getBuffer();
 		})());
+	}
+
+	/**
+	 * @throws PacketDecodeException
+	 * @throws BinaryDataException
+	 */
+	public function getItemStackWithoutStackId() : ItemStack{
+		[$id, $count, $meta] = $this->getItemStackHeader();
+
+		return $id !== 0 ? $this->getItemStackFooter($id, $count, $meta) : ItemStack::null();
+
+	}
+
+	public function putItemStackWithoutStackId(ItemStack $itemStack) : void{
+		if($this->putItemStackHeader($itemStack)){
+			$this->putItemStackFooter($itemStack);
+		}
+	}
+
+	public function getItemStackWrapper() : ItemStackWrapper{
+		[$id, $count, $meta] = $this->getItemStackHeader();
+		if($id === 0){
+			return new ItemStackWrapper(0, ItemStack::null());
+		}
+
+		$hasNetId = $this->getBool();
+		$stackId = $hasNetId ? $this->readServerItemStackId() : 0;
+
+		$itemStack = $this->getItemStackFooter($id, $meta, $count);
+
+		return new ItemStackWrapper($stackId, $itemStack);
+	}
+
+	public function putItemStackWrapper(ItemStackWrapper $itemStackWrapper) : void{
+		$itemStack = $itemStackWrapper->getItemStack();
+		if($this->putItemStackHeader($itemStack)){
+			$hasNetId = $itemStackWrapper->getStackId() !== 0;
+			$this->putBool($hasNetId);
+			if($hasNetId){
+				$this->writeServerItemStackId($itemStackWrapper->getStackId());
+			}
+
+			$this->putItemStackFooter($itemStack);
+		}
+	}
+
+	/**
+	 * @phpstan-param \Closure(PacketSerializer) : void $writeExtraCrapInTheMiddle
+	 */
+	public function putItemStack(ItemStack $item, \Closure $writeExtraCrapInTheMiddle) : void{
+		if(!$this->putItemStackHeader($item)){
+			return;
+		}
+
+		$writeExtraCrapInTheMiddle($this);
+
+		$this->putItemStackFooter($item);
 	}
 
 	public function getRecipeIngredient() : RecipeIngredient{

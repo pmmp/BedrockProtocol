@@ -108,7 +108,7 @@ class AddPlayerPacket extends DataPacket implements ClientboundPacket{
 		$this->pitch = $in->getLFloat();
 		$this->yaw = $in->getLFloat();
 		$this->headYaw = $in->getLFloat();
-		$this->item = ItemStackWrapper::read($in);
+		$this->item = $in->getItemStackWrapper();
 		$this->gameMode = $in->getVarInt();
 		$this->metadata = $in->getEntityMetadata();
 		$this->syncedProperties = PropertySyncData::read($in);
@@ -135,7 +135,7 @@ class AddPlayerPacket extends DataPacket implements ClientboundPacket{
 		$out->putLFloat($this->pitch);
 		$out->putLFloat($this->yaw);
 		$out->putLFloat($this->headYaw);
-		$this->item->write($out);
+		$out->putItemStackWrapper($this->item);
 		$out->putVarInt($this->gameMode);
 		$out->putEntityMetadata($this->metadata);
 		$this->syncedProperties->write($out);

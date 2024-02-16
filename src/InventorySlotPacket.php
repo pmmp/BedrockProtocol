@@ -38,13 +38,13 @@ class InventorySlotPacket extends DataPacket implements ClientboundPacket{
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->windowId = $in->getUnsignedVarInt();
 		$this->inventorySlot = $in->getUnsignedVarInt();
-		$this->item = ItemStackWrapper::read($in);
+		$this->item = $in->getItemStackWrapper();
 	}
 
 	protected function encodePayload(PacketSerializer $out) : void{
 		$out->putUnsignedVarInt($this->windowId);
 		$out->putUnsignedVarInt($this->inventorySlot);
-		$this->item->write($out);
+		$out->putItemStackWrapper($this->item);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

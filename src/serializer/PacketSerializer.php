@@ -369,7 +369,7 @@ class PacketSerializer extends BinaryStream{
 	public function getItemStackWithoutStackId() : ItemStack{
 		[$id, $count, $meta] = $this->getItemStackHeader();
 
-		return $id !== 0 ? $this->getItemStackFooter($id, $count, $meta) : ItemStack::null();
+		return $id !== 0 ? $this->getItemStackFooter($id, $meta, $count) : ItemStack::null();
 
 	}
 

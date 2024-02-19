@@ -20,7 +20,7 @@ class DisconnectPacket extends DataPacket implements ClientboundPacket, Serverbo
 	public const NETWORK_ID = ProtocolInfo::DISCONNECT_PACKET;
 
 	public int $reason; //TODO: add constants / enum
-	public ?string $message;
+	public ?string $message = null;
 
 	/**
 	 * @generate-create-func

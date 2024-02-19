@@ -20,7 +20,7 @@ class DisconnectPacket extends DataPacket implements ClientboundPacket, Serverbo
 	public const NETWORK_ID = ProtocolInfo::DISCONNECT_PACKET;
 
 	public int $reason; //TODO: add constants / enum
-	public ?string $message = null;
+	public ?string $message;
 
 	/**
 	 * @generate-create-func
@@ -39,9 +39,7 @@ class DisconnectPacket extends DataPacket implements ClientboundPacket, Serverbo
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->reason = $in->getVarInt();
 		$hideDisconnectionScreen = $in->getBool();
-		if(!$hideDisconnectionScreen){
-			$this->message = $in->getString();
-		}
+		$this->message = $hideDisconnectionScreen ? null : $in->getString();
 	}
 
 	protected function encodePayload(PacketSerializer $out) : void{

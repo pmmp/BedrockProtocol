@@ -39,9 +39,7 @@ class DisconnectPacket extends DataPacket implements ClientboundPacket, Serverbo
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->reason = $in->getVarInt();
 		$hideDisconnectionScreen = $in->getBool();
-		if(!$hideDisconnectionScreen){
-			$this->message = $in->getString();
-		}
+		$this->message = $hideDisconnectionScreen ? null : $in->getString();
 	}
 
 	protected function encodePayload(PacketSerializer $out) : void{

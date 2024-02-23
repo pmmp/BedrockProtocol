@@ -5,7 +5,6 @@
     "require": {
         "php": "^8.1",
         "ext-json": "*",
-        "netresearch/jsonmapper": "^4.0",
         "pocketmine/binaryutils": "^0.2.0",
         "pocketmine/color": "^0.2.0 || ^0.3.0",
         "pocketmine/math": "^0.3.0 || ^0.4.0 || ^1.0.0",

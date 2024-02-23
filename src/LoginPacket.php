@@ -17,10 +17,11 @@ namespace pocketmine\network\mcpe\protocol;
 use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 use pocketmine\network\mcpe\protocol\types\login\JwtChain;
 use pocketmine\utils\BinaryStream;
-use function is_object;
+use function count;
+use function is_array;
+use function is_string;
 use function json_decode;
 use function json_encode;
-use function json_last_error_msg;
 use function strlen;
 use const JSON_THROW_ON_ERROR;
 
@@ -60,20 +61,29 @@ class LoginPacket extends DataPacket implements ServerboundPacket{
 			//this is inconsistent with many other methods, but we can't do anything about that for now
 			throw new PacketDecodeException("Length of chain data JSON must be positive");
 		}
-		$chainDataJson = json_decode($connRequestReader->get($chainDataJsonLength));
-		if(!is_object($chainDataJson)){
-			throw new PacketDecodeException("Failed decoding chain data JSON: " . json_last_error_msg());
-		}
-		$mapper = new \JsonMapper;
-		$mapper->bExceptionOnMissingData = true;
-		$mapper->bExceptionOnUndefinedProperty = true;
 		try{
-			$chainData = $mapper->map($chainDataJson, new JwtChain);
-		}catch(\JsonMapper_Exception $e){
-			throw PacketDecodeException::wrap($e);
+			$chainDataJson = json_decode($connRequestReader->get($chainDataJsonLength), associative: true, flags: JSON_THROW_ON_ERROR);
+		}catch(\JsonException $e){
+			throw new PacketDecodeException("Failed decoding chain data JSON: " . $e->getMessage());
 		}
+		if(!is_array($chainDataJson) || count($chainDataJson) !== 1 || !isset($chainDataJson["chain"])){
+			throw new PacketDecodeException("Chain data must be a JSON object containing only the 'chain' element");
+		}
+		if(!is_array($chainDataJson["chain"])){
+			throw new PacketDecodeException("Chain data 'chain' element must be a list of strings");
+		}
+		$jwts = [];
+		foreach($chainDataJson["chain"] as $jwt){
+			if(!is_string($jwt)){
+				throw new PacketDecodeException("Chain data 'chain' must contain only strings");
+			}
+			$jwts[] = $jwt;
+		}
+		//TODO: this pointless JwtChain model is here for BC - get rid of it next chance we get
+		$wrapper = new JwtChain;
+		$wrapper->chain = $jwts;
+		$this->chainDataJwt = $wrapper;
 
-		$this->chainDataJwt = $chainData;
 		$clientDataJwtLength = $connRequestReader->getLInt();
 		if($clientDataJwtLength <= 0){
 			//technically this is always positive; the problem results because getLInt() is implicitly signed

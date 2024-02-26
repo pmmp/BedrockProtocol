@@ -417,19 +417,6 @@ class PacketSerializer extends BinaryStream{
 		}
 	}
 
-	/**
-	 * @phpstan-param \Closure(PacketSerializer) : void $writeExtraCrapInTheMiddle
-	 */
-	public function putItemStack(ItemStack $item, \Closure $writeExtraCrapInTheMiddle) : void{
-		if(!$this->putItemStackHeader($item)){
-			return;
-		}
-
-		$writeExtraCrapInTheMiddle($this);
-
-		$this->putItemStackFooter($item);
-	}
-
 	public function getRecipeIngredient() : RecipeIngredient{
 		$descriptorType = $this->getByte();
 		$descriptor = match($descriptorType){

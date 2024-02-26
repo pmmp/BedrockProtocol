@@ -15,7 +15,6 @@ declare(strict_types=1);
 namespace pocketmine\network\mcpe\protocol\serializer;
 
 use pocketmine\math\Vector3;
-use pocketmine\nbt\LittleEndianNbtSerializer;
 use pocketmine\nbt\NbtDataException;
 use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\nbt\TreeRoot;
@@ -40,7 +39,6 @@ use pocketmine\network\mcpe\protocol\types\FloatGameRule;
 use pocketmine\network\mcpe\protocol\types\GameRule;
 use pocketmine\network\mcpe\protocol\types\IntGameRule;
 use pocketmine\network\mcpe\protocol\types\inventory\ItemStack;
-use pocketmine\network\mcpe\protocol\types\inventory\ItemStackExtraData;
 use pocketmine\network\mcpe\protocol\types\inventory\ItemStackWrapper;
 use pocketmine\network\mcpe\protocol\types\recipe\ComplexAliasItemDescriptor;
 use pocketmine\network\mcpe\protocol\types\recipe\IntIdMetaItemDescriptor;
@@ -67,22 +65,17 @@ use function strrev;
 use function substr;
 
 class PacketSerializer extends BinaryStream{
-
-	private int $shieldItemRuntimeId;
-	private PacketSerializerContext $context;
-
-	protected function __construct(PacketSerializerContext $context, string $buffer = "", int $offset = 0){
+	protected function __construct(string $buffer = "", int $offset = 0){
+		//overridden to change visibility
 		parent::__construct($buffer, $offset);
-		$this->context = $context;
-		$this->shieldItemRuntimeId = $context->getItemDictionary()->fromStringId("minecraft:shield");
 	}
 
-	public static function encoder(PacketSerializerContext $context) : self{
-		return new self($context);
+	public static function encoder() : self{
+		return new self();
 	}
 
-	public static function decoder(string $buffer, int $offset, PacketSerializerContext $context) : self{
-		return new self($context, $buffer, $offset);
+	public static function decoder(string $buffer, int $offset) : self{
+		return new self($buffer, $offset);
 	}
 
 	/**
@@ -279,77 +272,6 @@ class PacketSerializer extends BinaryStream{
 		$this->putUnsignedVarInt($itemStack->getMeta());
 
 		return true;
-	}
-
-	public function getItemStackExtraData(int $id) : ItemStackExtraData{
-		$nbtLen = $this->getLShort();
-
-		/** @var CompoundTag|null $compound */
-		$compound = null;
-		if($nbtLen === 0xffff){
-			$nbtDataVersion = $this->getByte();
-			if($nbtDataVersion !== 1){
-				throw new PacketDecodeException("Unexpected NBT data version $nbtDataVersion");
-			}
-			$offset = $this->getOffset();
-			try{
-				$compound = (new LittleEndianNbtSerializer())->read($this->getBuffer(), $offset, 512)->mustGetCompoundTag();
-			}catch(NbtDataException $e){
-				throw PacketDecodeException::wrap($e, "Failed decoding NBT root");
-			}finally{
-				$this->setOffset($offset);
-			}
-		}elseif($nbtLen !== 0){
-			throw new PacketDecodeException("Unexpected fake NBT length $nbtLen");
-		}
-
-		$canPlaceOn = [];
-		for($i = 0, $canPlaceOnCount = $this->getLInt(); $i < $canPlaceOnCount; ++$i){
-			$canPlaceOn[] = $this->get($this->getLShort());
-		}
-
-		$canDestroy = [];
-		for($i = 0, $canDestroyCount = $this->getLInt(); $i < $canDestroyCount; ++$i){
-			$canDestroy[] = $this->get($this->getLShort());
-		}
-
-		$shieldBlockingTick = null;
-		if($id === $this->shieldItemRuntimeId){
-			$shieldBlockingTick = $this->getLLong();
-		}
-
-		if(!$this->feof()){
-			throw new PacketDecodeException("Unexpected trailing extradata for network item $id");
-		}
-
-		return new ItemStackExtraData($compound, $canPlaceOn, $canDestroy, $shieldBlockingTick);
-	}
-
-	public function putItemStackExtraData(int $id, ItemStackExtraData $extraData) : void{
-		$nbt = $extraData->getNbt();
-		if($nbt !== null){
-			$this->putLShort(0xffff);
-			$this->putByte(1); //TODO: NBT data version (?)
-			$this->put((new LittleEndianNbtSerializer())->write(new TreeRoot($nbt)));
-		}else{
-			$this->putLShort(0);
-		}
-
-		$this->putLInt(count($extraData->getCanPlaceOn()));
-		foreach($extraData->getCanPlaceOn() as $entry){
-			$this->putLShort(strlen($entry));
-			$this->put($entry);
-		}
-		$this->putLInt(count($extraData->getCanDestroy()));
-		foreach($extraData->getCanDestroy() as $entry){
-			$this->putLShort(strlen($entry));
-			$this->put($entry);
-		}
-
-		$blockingTick = $extraData->getShieldBlockingTick();
-		if($id === $this->shieldItemRuntimeId){
-			$this->putLLong($blockingTick ?? 0);
-		}
 	}
 
 	private function getItemStackFooter(int $id, int $meta, int $count) : ItemStack{

@@ -14,13 +14,12 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol\types\inventory;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 use function base64_encode;
 
 final class ItemStack implements \JsonSerializable{
 	/**
-	 * @param string $rawExtraData Serialized ItemStackExtraData as encoded by PacketSerializer::putItemStackExtraData()
-	 * @see PacketSerializer::putItemStackExtraData()
+	 * @param string $rawExtraData Serialized ItemStackExtraData (use ItemStackExtraData->write())
+	 * @see ItemStackExtraData::write()
 	 */
 	public function __construct(
 		private int $id,
@@ -53,9 +52,11 @@ final class ItemStack implements \JsonSerializable{
 	public function getBlockRuntimeId() : int{ return $this->blockRuntimeId; }
 
 	/**
-	 * Decode this into ItemStackExtraData using PacketSerializer::getItemStackExtraData()
-	 * It's provided in raw form to avoid unnecessary decoding when the data is not needed.
-	 * @see PacketSerializer::getItemStackExtraData()
+	 * Decode this into ItemStackExtraData using ItemStackExtraData::read() (or ItemStackExtraDataShield::read() if this
+	 * data is for a shield item)
+	 * This isn't automatically decoded because it's usually not needed and is sometimes expensive to decode.
+	 * @see ItemStackExtraData::read()
+	 * @see ItemStackExtraDataShield::read()
 	 */
 	public function getRawExtraData() : string{ return $this->rawExtraData; }
 

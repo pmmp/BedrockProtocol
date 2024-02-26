@@ -21,6 +21,11 @@ parameters:
 			path: ../../../src/SetScoreboardIdentityPacket.php
 
 		-
+			message: "#^Property pocketmine\\\\network\\\\mcpe\\\\protocol\\\\serializer\\\\PacketSerializer\\:\\:\\$context is never read, only written\\.$#"
+			count: 1
+			path: ../../../src/serializer/PacketSerializer.php
+
+		-
 			message: "#^Parameter \\#1 \\$v of method pocketmine\\\\utils\\\\BinaryStream\\:\\:putVarInt\\(\\) expects int, int\\|null given\\.$#"
 			count: 1
 			path: ../../../src/types/recipe/FurnaceRecipe.php

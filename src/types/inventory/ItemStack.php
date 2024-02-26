@@ -14,30 +14,24 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol\types\inventory;
 
-use pocketmine\nbt\tag\CompoundTag;
-use pocketmine\nbt\TreeRoot;
-use pocketmine\network\mcpe\protocol\serializer\NetworkNbtSerializer;
+use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 use function base64_encode;
-use function count;
 
 final class ItemStack implements \JsonSerializable{
 	/**
-	 * @param string[] $canPlaceOn
-	 * @param string[] $canDestroy
+	 * @param string $rawExtraData Serialized ItemStackExtraData as encoded by PacketSerializer::putItemStackExtraData()
+	 * @see PacketSerializer::putItemStackExtraData()
 	 */
 	public function __construct(
 		private int $id,
 		private int $meta,
 		private int $count,
 		private int $blockRuntimeId,
-		private ?CompoundTag $nbt,
-		private array $canPlaceOn,
-		private array $canDestroy,
-		private ?int $shieldBlockingTick = null
+		private string $rawExtraData,
 	){}
 
 	public static function null() : self{
-		return new self(0, 0, 0, 0, null, [], [], null);
+		return new self(0, 0, 0, 0, "");
 	}
 
 	public function isNull() : bool{
@@ -59,26 +53,11 @@ final class ItemStack implements \JsonSerializable{
 	public function getBlockRuntimeId() : int{ return $this->blockRuntimeId; }
 
 	/**
-	 * @return string[]
+	 * Decode this into ItemStackExtraData using PacketSerializer::getItemStackExtraData()
+	 * It's provided in raw form to avoid unnecessary decoding when the data is not needed.
+	 * @see PacketSerializer::getItemStackExtraData()
 	 */
-	public function getCanPlaceOn() : array{
-		return $this->canPlaceOn;
-	}
-
-	/**
-	 * @return string[]
-	 */
-	public function getCanDestroy() : array{
-		return $this->canDestroy;
-	}
-
-	public function getNbt() : ?CompoundTag{
-		return $this->nbt;
-	}
-
-	public function getShieldBlockingTick() : ?int{
-		return $this->shieldBlockingTick;
-	}
+	public function getRawExtraData() : string{ return $this->rawExtraData; }
 
 	public function equals(ItemStack $itemStack) : bool{
 		return $this->equalsWithoutCount($itemStack) && $this->count === $itemStack->count;
@@ -89,34 +68,17 @@ final class ItemStack implements \JsonSerializable{
 			$this->id === $itemStack->id &&
 			$this->meta === $itemStack->meta &&
 			$this->blockRuntimeId === $itemStack->blockRuntimeId &&
-			$this->canPlaceOn === $itemStack->canPlaceOn &&
-			$this->canDestroy === $itemStack->canDestroy &&
-			$this->shieldBlockingTick === $itemStack->shieldBlockingTick && (
-				$this->nbt === $itemStack->nbt || //this covers null === null and fast object identity
-				($this->nbt !== null && $itemStack->nbt !== null && $this->nbt->equals($itemStack->nbt))
-			);
+			$this->rawExtraData === $itemStack->rawExtraData;
 	}
 
 	/** @return mixed[] */
 	public function jsonSerialize() : array{
-		$result = [
+		return [
 			"id" => $this->id,
 			"meta" => $this->meta,
 			"count" => $this->count,
 			"blockRuntimeId" => $this->blockRuntimeId,
+			"rawExtraData" => base64_encode($this->rawExtraData),
 		];
-		if(count($this->canPlaceOn) > 0){
-			$result["canPlaceOn"] = $this->canPlaceOn;
-		}
-		if(count($this->canDestroy) > 0){
-			$result["canDestroy"] = $this->canDestroy;
-		}
-		if($this->shieldBlockingTick !== null){
-			$result["shieldBlockingTick"] = $this->shieldBlockingTick;
-		}
-		if($this->nbt !== null){
-			$result["nbt"] = base64_encode((new NetworkNbtSerializer())->write(new TreeRoot($this->nbt)));
-		}
-		return $result;
 	}
 }

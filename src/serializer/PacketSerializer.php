@@ -40,6 +40,7 @@ use pocketmine\network\mcpe\protocol\types\FloatGameRule;
 use pocketmine\network\mcpe\protocol\types\GameRule;
 use pocketmine\network\mcpe\protocol\types\IntGameRule;
 use pocketmine\network\mcpe\protocol\types\inventory\ItemStack;
+use pocketmine\network\mcpe\protocol\types\inventory\ItemStackExtraData;
 use pocketmine\network\mcpe\protocol\types\inventory\ItemStackWrapper;
 use pocketmine\network\mcpe\protocol\types\recipe\ComplexAliasItemDescriptor;
 use pocketmine\network\mcpe\protocol\types\recipe\IntIdMetaItemDescriptor;
@@ -280,12 +281,7 @@ class PacketSerializer extends BinaryStream{
 		return true;
 	}
 
-	/**
-	 * @return CompoundTag[]|string[][]|int[]|null[]
-	 *
-	 * @phpstan-return array{?CompoundTag, string[], string[], ?int}
-	 */
-	private function deserializeItemStackExtraData(int $id) : array{
+	public function getItemStackExtraData(int $id) : ItemStackExtraData{
 		$nbtLen = $this->getLShort();
 
 		/** @var CompoundTag|null $compound */
@@ -326,11 +322,11 @@ class PacketSerializer extends BinaryStream{
 			throw new PacketDecodeException("Unexpected trailing extradata for network item $id");
 		}
 
-		return [$compound, $canPlaceOn, $canDestroy, $shieldBlockingTick];
+		return new ItemStackExtraData($compound, $canPlaceOn, $canDestroy, $shieldBlockingTick);
 	}
 
-	private function serializeItemStackExtraData(ItemStack $itemStack) : void{
-		$nbt = $itemStack->getNbt();
+	public function putItemStackExtraData(int $id, ItemStackExtraData $extraData) : void{
+		$nbt = $extraData->getNbt();
 		if($nbt !== null){
 			$this->putLShort(0xffff);
 			$this->putByte(1); //TODO: NBT data version (?)
@@ -339,38 +335,33 @@ class PacketSerializer extends BinaryStream{
 			$this->putLShort(0);
 		}
 
-		$this->putLInt(count($itemStack->getCanPlaceOn()));
-		foreach($itemStack->getCanPlaceOn() as $entry){
+		$this->putLInt(count($extraData->getCanPlaceOn()));
+		foreach($extraData->getCanPlaceOn() as $entry){
 			$this->putLShort(strlen($entry));
 			$this->put($entry);
 		}
-		$this->putLInt(count($itemStack->getCanDestroy()));
-		foreach($itemStack->getCanDestroy() as $entry){
+		$this->putLInt(count($extraData->getCanDestroy()));
+		foreach($extraData->getCanDestroy() as $entry){
 			$this->putLShort(strlen($entry));
 			$this->put($entry);
 		}
 
-		$blockingTick = $itemStack->getShieldBlockingTick();
-		if($itemStack->getId() === $this->shieldItemRuntimeId){
+		$blockingTick = $extraData->getShieldBlockingTick();
+		if($id === $this->shieldItemRuntimeId){
 			$this->putLLong($blockingTick ?? 0);
 		}
 	}
 
 	private function getItemStackFooter(int $id, int $meta, int $count) : ItemStack{
 		$blockRuntimeId = $this->getVarInt();
+		$rawExtraData = $this->getString();
 
-		$extraDataReader = self::decoder($this->getString(), 0, $this->context);
-		[$nbt, $canPlaceOn, $canDestroy, $shieldBlockingTick] = $extraDataReader->deserializeItemStackExtraData($id);
-
-		return new ItemStack($id, $meta, $count, $blockRuntimeId, $nbt, $canPlaceOn, $canDestroy, $shieldBlockingTick);
+		return new ItemStack($id, $meta, $count, $blockRuntimeId, $rawExtraData);
 	}
 
 	private function putItemStackFooter(ItemStack $itemStack) : void{
 		$this->putVarInt($itemStack->getBlockRuntimeId());
-
-		$extraDataWriter = self::encoder($this->context);
-		$extraDataWriter->serializeItemStackExtraData($itemStack);
-		$this->putString($extraDataWriter->getBuffer());
+		$this->putString($itemStack->getRawExtraData());
 	}
 
 	/**

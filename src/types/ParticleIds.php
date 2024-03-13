@@ -36,7 +36,7 @@ final class ParticleIds{
 	public const SNOWBALL_POOF = 15;
 	public const HUGE_EXPLODE = 16;
 	public const HUGE_EXPLODE_SEED = 17;
-	public const WIND_EXPLOSION = 18;
+	public const BREEZE_WIND_EXPLOSION = 18;
 	public const MOB_FLAME = 19;
 	public const HEART = 20;
 	public const TERRAIN = 21;
@@ -108,4 +108,6 @@ final class ParticleIds{
 	public const CHERRY_LEAVES = 87;
 	public const DUST_PLUME = 88;
 	public const WHITE_SMOKE = 89;
+	public const VAULT_CONNECTION = 90;
+	public const WIND_EXPLOSION = 91;
 }

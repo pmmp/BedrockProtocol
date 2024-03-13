@@ -99,5 +99,7 @@ final class PlayerAuthInputFlags{
 	public const STOP_FLYING = 43;
 	public const ACK_ACTOR_DATA = 44;
 	public const IN_CLIENT_PREDICTED_VEHICLE = 45;
+	public const PADDLING_LEFT = 46;
+	public const PADDLING_RIGHT = 47;
 
 }

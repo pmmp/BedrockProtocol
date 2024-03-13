@@ -474,9 +474,32 @@ final class LevelSoundEvent{
 	public const BLOCK_DECORATED_POT_INSERT = 481;
 	public const BLOCK_DECORATED_POT_INSERT_FAIL = 482;
 	public const CRAFTER_DISABLE_SLOT = 483;
-
+	public const TRIAL_SPAWNER_OPEN_SHUTTER = 484;
+	public const TRIAL_SPAWNER_EJECT_ITEM = 485;
+	public const TRIAL_SPAWNER_DETECT_PLAYER = 486;
+	public const TRIAL_SPAWNER_SPAWN_MOB = 487;
+	public const TRIAL_SPAWNER_CLOSE_SHUTTER = 488;
+	public const TRIAL_SPAWNER_AMBIENT = 489;
 	public const BLOCK_COPPER_BULB_TURN_ON = 490;
 	public const BLOCK_COPPER_BULB_TURN_OFF = 491;
+	public const AMBIENT_IN_AIR = 492;
+	public const BREEZE_WIND_CHARGE_BURST = 493;
+	public const IMITATE_BREEZE = 494;
+	public const MOB_ARMADILLO_BRUSH = 495;
+	public const MOB_ARMADILLO_SCUTE_DROP = 496;
+	public const ARMOR_EQUIP_WOLF = 497;
+	public const ARMOR_UNEQUIP_WOLF = 498;
+	public const REFLECT = 499;
+	public const VAULT_OPEN_SHUTTER = 500;
+	public const VAULT_CLOSE_SHUTTER = 501;
+	public const VAULT_EJECT_ITEM = 502;
+	public const VAULT_INSERT_ITEM = 503;
+	public const VAULT_INSERT_ITEM_FAIL = 504;
+	public const VAULT_AMBIENT = 505;
+	public const VAULT_ACTIVATE = 506;
+	public const VAULT_DEACTIVATE = 507;
+	public const HURT_REDUCED = 508;
+	public const WIND_CHARGE_BURST = 509;
 
 	//The following aliases are kept for backwards compatibility only
 	public const SCULK_SENSOR_POWER_ON = self::POWER_ON_SCULK_SENSOR;

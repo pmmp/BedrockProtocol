@@ -100,7 +100,6 @@ class PacketPool{
 		$this->registerPacket(new MapInfoRequestPacket());
 		$this->registerPacket(new RequestChunkRadiusPacket());
 		$this->registerPacket(new ChunkRadiusUpdatedPacket());
-		$this->registerPacket(new ItemFrameDropItemPacket());
 		$this->registerPacket(new GameRulesChangedPacket());
 		$this->registerPacket(new CameraPacket());
 		$this->registerPacket(new BossEventPacket());

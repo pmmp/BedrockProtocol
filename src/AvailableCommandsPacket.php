@@ -54,21 +54,21 @@ class AvailableCommandsPacket extends DataPacket implements ClientboundPacket{
 
 	public const ARG_TYPE_FULL_INTEGER_RANGE = 23;
 
-	public const ARG_TYPE_EQUIPMENT_SLOT = 43;
-	public const ARG_TYPE_STRING = 44;
+	public const ARG_TYPE_EQUIPMENT_SLOT = 47;
+	public const ARG_TYPE_STRING = 48;
 
-	public const ARG_TYPE_INT_POSITION = 52;
-	public const ARG_TYPE_POSITION = 53;
+	public const ARG_TYPE_INT_POSITION = 64;
+	public const ARG_TYPE_POSITION = 65;
 
-	public const ARG_TYPE_MESSAGE = 55;
+	public const ARG_TYPE_MESSAGE = 67;
 
-	public const ARG_TYPE_RAWTEXT = 58;
+	public const ARG_TYPE_RAWTEXT = 70;
 
-	public const ARG_TYPE_JSON = 62;
+	public const ARG_TYPE_JSON = 74;
 
-	public const ARG_TYPE_BLOCK_STATES = 71;
+	public const ARG_TYPE_BLOCK_STATES = 84;
 
-	public const ARG_TYPE_COMMAND = 74;
+	public const ARG_TYPE_COMMAND = 87;
 
 	/**
 	 * Enums are a little different: they are composed as follows:

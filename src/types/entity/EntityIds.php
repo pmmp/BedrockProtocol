@@ -37,6 +37,9 @@ final class EntityIds{
 	public const BEE = "minecraft:bee";
 	public const BLAZE = "minecraft:blaze";
 	public const BOAT = "minecraft:boat";
+	public const BOGGED = "minecraft:bogged";
+	public const BREEZE = "minecraft:breeze";
+	public const BREEZE_WIND_CHARGE_PROJECTILE = "minecraft:breeze_wind_charge_projectile";
 	public const CAMEL = "minecraft:camel";
 	public const CAT = "minecraft:cat";
 	public const CAVE_SPIDER = "minecraft:cave_spider";
@@ -134,6 +137,7 @@ final class EntityIds{
 	public const VINDICATOR = "minecraft:vindicator";
 	public const WANDERING_TRADER = "minecraft:wandering_trader";
 	public const WARDEN = "minecraft:warden";
+	public const WIND_CHARGE_PROJECTILE = "minecraft:wind_charge_projectile";
 	public const WITCH = "minecraft:witch";
 	public const WITHER = "minecraft:wither";
 	public const WITHER_SKELETON = "minecraft:wither_skeleton";

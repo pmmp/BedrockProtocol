@@ -1,29 +1,19 @@
 <?php
 
 /*
+ * This file is part of BedrockProtocol.
+ * Copyright (C) 2014-2022 PocketMine Team <https://github.com/pmmp/BedrockProtocol>
  *
- *  ____            _        _   __  __ _                  __  __ ____
- * |  _ \ ___   ___| | _____| |_|  \/  (_)_ __   ___      |  \/  |  _ \
- * | |_) / _ \ / __| |/ / _ \ __| |\/| | | '_ \ / _ \_____| |\/| | |_) |
- * |  __/ (_) | (__|   <  __/ |_| |  | | | | | |  __/_____| |  | |  __/
- * |_|   \___/ \___|_|\_\___|\__|_|  |_|_|_| |_|\___|     |_|  |_|_|
- *
- * This program is free software: you can redistribute it and/or modify
+ * BedrockProtocol is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *
- * @author PocketMine Team
- * @link http://www.pocketmine.net/
- *
- *
-*/
+ */
 
 declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol\tools\generate_create_static_methods;
 
-use pocketmine\network\mcpe\protocol\Packet;
 use function array_map;
 use function array_slice;
 use function basename;
@@ -33,9 +23,12 @@ use function dirname;
 use function file_get_contents;
 use function file_put_contents;
 use function implode;
+use function max;
 use function preg_match;
 use function preg_split;
+use function str_pad;
 use function str_repeat;
+use function strlen;
 use function substr;
 use function trim;
 
@@ -119,7 +112,6 @@ function generateCreateFunction(\ReflectionClass $reflect, int $indentLevel, int
 	return array_map(fn(string $line) => str_repeat("\t", $indentLevel) . $line, $lines);
 }
 
-
 foreach(new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator(dirname(__DIR__) . '/src', \FilesystemIterator::SKIP_DOTS | \FilesystemIterator::CURRENT_AS_PATHNAME)) as $file){
 	if(substr($file, -4) !== ".php"){
 		continue;
@@ -162,4 +154,3 @@ foreach(new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator(dirname(_
 	file_put_contents($file, implode("\n", $beforeLines) . "\n" . implode("\n", generateCreateFunction($reflect, 1, $createReflect->getModifiers())) . "\n" . implode("\n", $afterLines));
 	echo "successfully patched class\n";
 }
-

@@ -1,27 +1,30 @@
 <?php
 
 /*
+ * This file is part of BedrockProtocol.
+ * Copyright (C) 2014-2022 PocketMine Team <https://github.com/pmmp/BedrockProtocol>
  *
- *  ____            _        _   __  __ _                  __  __ ____
- * |  _ \ ___   ___| | _____| |_|  \/  (_)_ __   ___      |  \/  |  _ \
- * | |_) / _ \ / __| |/ / _ \ __| |\/| | | '_ \ / _ \_____| |\/| | |_) |
- * |  __/ (_) | (__|   <  __/ |_| |  | | | | | |  __/_____| |  | |  __/
- * |_|   \___/ \___|_|\_\___|\__|_|  |_|_|_| |_|\___|     |_|  |_|_|
- *
- * This program is free software: you can redistribute it and/or modify
+ * BedrockProtocol is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *
- * @author PocketMine Team
- * @link http://www.pocketmine.net/
- *
- *
  */
 
 declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol\tools\generate_entity_ids;
+
+use function count;
+use function dirname;
+use function explode;
+use function fclose;
+use function file_get_contents;
+use function fopen;
+use function fwrite;
+use function is_array;
+use function json_decode;
+use function ksort;
+use function strtoupper;
 
 if(count($argv) !== 2){
 	fwrite(STDERR, "Required arguments: path to entity ID mapping file\n");

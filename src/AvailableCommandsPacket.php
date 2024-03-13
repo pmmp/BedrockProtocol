@@ -22,6 +22,7 @@ use pocketmine\network\mcpe\protocol\types\command\CommandEnum;
 use pocketmine\network\mcpe\protocol\types\command\CommandEnumConstraint;
 use pocketmine\network\mcpe\protocol\types\command\CommandOverload;
 use pocketmine\network\mcpe\protocol\types\command\CommandParameter;
+use pocketmine\network\mcpe\protocol\types\command\CommandParameterTypes as ArgTypes;
 use pocketmine\utils\BinaryDataException;
 use function array_search;
 use function count;
@@ -40,35 +41,35 @@ class AvailableCommandsPacket extends DataPacket implements ClientboundPacket{
 	 * Basic parameter types. These must be combined with the ARG_FLAG_VALID constant.
 	 * ARG_FLAG_VALID | (type const)
 	 */
-	public const ARG_TYPE_INT = 1;
-	public const ARG_TYPE_FLOAT = 3;
-	public const ARG_TYPE_VALUE = 4;
-	public const ARG_TYPE_WILDCARD_INT = 5;
-	public const ARG_TYPE_OPERATOR = 6;
-	public const ARG_TYPE_COMPARE_OPERATOR = 7;
-	public const ARG_TYPE_TARGET = 8;
+	public const ARG_TYPE_INT = ArgTypes::INT;
+	public const ARG_TYPE_FLOAT = ArgTypes::VAL;
+	public const ARG_TYPE_VALUE = ArgTypes::RVAL;
+	public const ARG_TYPE_WILDCARD_INT = ArgTypes::WILDCARDINT;
+	public const ARG_TYPE_OPERATOR = ArgTypes::OPERATOR;
+	public const ARG_TYPE_COMPARE_OPERATOR = ArgTypes::COMPAREOPERATOR;
+	public const ARG_TYPE_TARGET = ArgTypes::SELECTION;
 
-	public const ARG_TYPE_WILDCARD_TARGET = 10;
+	public const ARG_TYPE_WILDCARD_TARGET = ArgTypes::WILDCARDSELECTION;
 
-	public const ARG_TYPE_FILEPATH = 17;
+	public const ARG_TYPE_FILEPATH = ArgTypes::PATHCOMMAND;
 
-	public const ARG_TYPE_FULL_INTEGER_RANGE = 23;
+	public const ARG_TYPE_FULL_INTEGER_RANGE = ArgTypes::FULLINTEGERRANGE;
 
-	public const ARG_TYPE_EQUIPMENT_SLOT = 47;
-	public const ARG_TYPE_STRING = 48;
+	public const ARG_TYPE_EQUIPMENT_SLOT = ArgTypes::EQUIPMENTSLOTENUM;
+	public const ARG_TYPE_STRING = ArgTypes::ID;
 
-	public const ARG_TYPE_INT_POSITION = 64;
-	public const ARG_TYPE_POSITION = 65;
+	public const ARG_TYPE_INT_POSITION = ArgTypes::POSITION;
+	public const ARG_TYPE_POSITION = ArgTypes::POSITION_FLOAT;
 
-	public const ARG_TYPE_MESSAGE = 67;
+	public const ARG_TYPE_MESSAGE = ArgTypes::MESSAGE_ROOT;
 
-	public const ARG_TYPE_RAWTEXT = 70;
+	public const ARG_TYPE_RAWTEXT = ArgTypes::RAWTEXT;
 
-	public const ARG_TYPE_JSON = 74;
+	public const ARG_TYPE_JSON = ArgTypes::JSON_OBJECT;
 
-	public const ARG_TYPE_BLOCK_STATES = 84;
+	public const ARG_TYPE_BLOCK_STATES = ArgTypes::BLOCK_STATE_ARRAY;
 
-	public const ARG_TYPE_COMMAND = 87;
+	public const ARG_TYPE_COMMAND = ArgTypes::SLASHCOMMAND;
 
 	/**
 	 * Enums are a little different: they are composed as follows:

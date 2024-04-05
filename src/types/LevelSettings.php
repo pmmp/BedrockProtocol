@@ -25,6 +25,7 @@ final class LevelSettings{
 	public SpawnSettings $spawnSettings;
 	public int $generator = GeneratorType::OVERWORLD;
 	public int $worldGamemode;
+	public bool $hardcore = false;
 	public int $difficulty;
 	public BlockPosition $spawnPosition;
 	public bool $hasAchievementsDisabled = true;
@@ -96,6 +97,7 @@ final class LevelSettings{
 		$this->spawnSettings = SpawnSettings::read($in);
 		$this->generator = $in->getVarInt();
 		$this->worldGamemode = $in->getVarInt();
+		$this->hardcore = $in->getBool();
 		$this->difficulty = $in->getVarInt();
 		$this->spawnPosition = $in->getBlockPosition();
 		$this->hasAchievementsDisabled = $in->getBool();
@@ -146,6 +148,7 @@ final class LevelSettings{
 		$this->spawnSettings->write($out);
 		$out->putVarInt($this->generator);
 		$out->putVarInt($this->worldGamemode);
+		$out->putBool($this->hardcore);
 		$out->putVarInt($this->difficulty);
 		$out->putBlockPosition($this->spawnPosition);
 		$out->putBool($this->hasAchievementsDisabled);

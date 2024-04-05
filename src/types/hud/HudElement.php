@@ -30,4 +30,6 @@ enum HudElement : int{
 	case FOOD = 8;
 	case AIR_BUBBLES = 9;
 	case HORSE_HEALTH = 10;
+	case STATUS_EFFECTS = 11;
+	case ITEM_TEXT = 12;
 }

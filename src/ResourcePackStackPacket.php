@@ -29,19 +29,21 @@ class ResourcePackStackPacket extends DataPacket implements ClientboundPacket{
 	public bool $mustAccept = false;
 	public string $baseGameVersion = ProtocolInfo::MINECRAFT_VERSION_NETWORK;
 	public Experiments $experiments;
+	public bool $useVanillaEditorPacks;
 
 	/**
 	 * @generate-create-func
 	 * @param ResourcePackStackEntry[] $resourcePackStack
 	 * @param ResourcePackStackEntry[] $behaviorPackStack
 	 */
-	public static function create(array $resourcePackStack, array $behaviorPackStack, bool $mustAccept, string $baseGameVersion, Experiments $experiments) : self{
+	public static function create(array $resourcePackStack, array $behaviorPackStack, bool $mustAccept, string $baseGameVersion, Experiments $experiments, bool $useVanillaEditorPacks) : self{
 		$result = new self;
 		$result->resourcePackStack = $resourcePackStack;
 		$result->behaviorPackStack = $behaviorPackStack;
 		$result->mustAccept = $mustAccept;
 		$result->baseGameVersion = $baseGameVersion;
 		$result->experiments = $experiments;
+		$result->useVanillaEditorPacks = $useVanillaEditorPacks;
 		return $result;
 	}
 
@@ -59,6 +61,7 @@ class ResourcePackStackPacket extends DataPacket implements ClientboundPacket{
 
 		$this->baseGameVersion = $in->getString();
 		$this->experiments = Experiments::read($in);
+		$this->useVanillaEditorPacks = $in->getBool();
 	}
 
 	protected function encodePayload(PacketSerializer $out) : void{
@@ -76,6 +79,7 @@ class ResourcePackStackPacket extends DataPacket implements ClientboundPacket{
 
 		$out->putString($this->baseGameVersion);
 		$this->experiments->write($out);
+		$out->putBool($this->useVanillaEditorPacks);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

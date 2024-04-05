@@ -630,10 +630,6 @@ trait PacketHandlerDefaultImplTrait{
 		return false;
 	}
 
-	public function handleFilterText(FilterTextPacket $packet) : bool{
-		return false;
-	}
-
 	public function handleClientboundDebugRenderer(ClientboundDebugRendererPacket $packet) : bool{
 		return false;
 	}

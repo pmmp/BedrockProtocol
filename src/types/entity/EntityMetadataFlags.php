@@ -137,4 +137,5 @@ final class EntityMetadataFlags{
 	public const TIMER_FLAG_1 = 115;
 	public const TIMER_FLAG_2 = 116;
 	public const TIMER_FLAG_3 = 117;
+	public const BODY_ROTATION_BLOCKED = 118;
 }

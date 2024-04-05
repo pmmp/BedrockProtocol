@@ -23,14 +23,16 @@ class UpdatePlayerGameTypePacket extends DataPacket implements ClientboundPacket
 	/** @see GameMode */
 	private int $gameMode;
 	private int $playerActorUniqueId;
+	private int $tick;
 
 	/**
 	 * @generate-create-func
 	 */
-	public static function create(int $gameMode, int $playerActorUniqueId) : self{
+	public static function create(int $gameMode, int $playerActorUniqueId, int $tick) : self{
 		$result = new self;
 		$result->gameMode = $gameMode;
 		$result->playerActorUniqueId = $playerActorUniqueId;
+		$result->tick = $tick;
 		return $result;
 	}
 
@@ -38,14 +40,18 @@ class UpdatePlayerGameTypePacket extends DataPacket implements ClientboundPacket
 
 	public function getPlayerActorUniqueId() : int{ return $this->playerActorUniqueId; }
 
+	public function getTick() : int{ return $this->tick; }
+
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->gameMode = $in->getVarInt();
 		$this->playerActorUniqueId = $in->getActorUniqueId();
+		$this->tick = $in->getUnsignedVarInt();
 	}
 
 	protected function encodePayload(PacketSerializer $out) : void{
 		$out->putVarInt($this->gameMode);
 		$out->putActorUniqueId($this->playerActorUniqueId);
+		$out->putUnsignedVarInt($this->tick);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

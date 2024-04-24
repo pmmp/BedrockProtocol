@@ -37,13 +37,15 @@ class ResourcePackStackPacket extends DataPacket implements ClientboundPacket{
 	 * @param ResourcePackStackEntry[] $resourcePackStack
 	 * @param ResourcePackStackEntry[] $behaviorPackStack
 	 */
-	public static function create(array $resourcePackStack, array $behaviorPackStack, bool $mustAccept, string $baseGameVersion, Experiments $experiments) : self{
+	public static function create(array $resourcePackStack, array $behaviorPackStack, bool $mustAccept, string $baseGameVersion, Experiments $experiments, bool $experimentsPreviouslyToggled, bool $hasEditorPacks) : self{
 		$result = new self;
 		$result->resourcePackStack = $resourcePackStack;
 		$result->behaviorPackStack = $behaviorPackStack;
 		$result->mustAccept = $mustAccept;
 		$result->baseGameVersion = $baseGameVersion;
 		$result->experiments = $experiments;
+		$result->experimentsPreviouslyToggled = $experimentsPreviouslyToggled;
+		$result->hasEditorPacks = $hasEditorPacks;
 		return $result;
 	}
 

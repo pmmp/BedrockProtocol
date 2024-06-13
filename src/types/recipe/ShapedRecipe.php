@@ -35,6 +35,7 @@ final class ShapedRecipe extends RecipeWithTypeId{
 		string $blockType, //TODO: rename this
 		private int $priority,
 		private bool $symmetric,
+		private RecipeUnlockingRequirement $unlockingRequirement,
 		private int $recipeNetId
 	){
 		parent::__construct($typeId);
@@ -93,6 +94,8 @@ final class ShapedRecipe extends RecipeWithTypeId{
 
 	public function isSymmetric() : bool{ return $this->symmetric; }
 
+	public function getUnlockingRequirement() : RecipeUnlockingRequirement{ return $this->unlockingRequirement; }
+
 	public function getRecipeNetId() : int{
 		return $this->recipeNetId;
 	}
@@ -116,10 +119,11 @@ final class ShapedRecipe extends RecipeWithTypeId{
 		$block = $in->getString();
 		$priority = $in->getVarInt();
 		$symmetric = $in->getBool();
+		$unlockingRequirement = RecipeUnlockingRequirement::read($in);
 
 		$recipeNetId = $in->readRecipeNetId();
 
-		return new self($recipeType, $recipeId, $input, $output, $uuid, $block, $priority, $symmetric, $recipeNetId);
+		return new self($recipeType, $recipeId, $input, $output, $uuid, $block, $priority, $symmetric, $unlockingRequirement, $recipeNetId);
 	}
 
 	public function encode(PacketSerializer $out) : void{
@@ -141,6 +145,7 @@ final class ShapedRecipe extends RecipeWithTypeId{
 		$out->putString($this->blockName);
 		$out->putVarInt($this->priority);
 		$out->putBool($this->symmetric);
+		$this->unlockingRequirement->write($out);
 
 		$out->writeRecipeNetId($this->recipeNetId);
 	}

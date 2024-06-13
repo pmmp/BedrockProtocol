@@ -42,5 +42,5 @@ final class CommandParameterTypes{
 	public const RAWTEXT = 70; // text
 	public const JSON_OBJECT = 74; // json
 	public const BLOCK_STATE_ARRAY = 84; // block states
-	public const SLASHCOMMAND = 87; // command
+	public const CODEBUILDERARGS = 87; // command
 }

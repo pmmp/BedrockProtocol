@@ -41,6 +41,7 @@ class TextPacket extends DataPacket implements ClientboundPacket, ServerboundPac
 	public array $parameters = [];
 	public string $xboxUserId = "";
 	public string $platformChatId = "";
+	public string $filteredMessage = "";
 
 	private static function messageOnly(int $type, string $message) : self{
 		$result = new self;
@@ -125,6 +126,7 @@ class TextPacket extends DataPacket implements ClientboundPacket, ServerboundPac
 
 		$this->xboxUserId = $in->getString();
 		$this->platformChatId = $in->getString();
+		$this->filteredMessage = $in->getString();
 	}
 
 	protected function encodePayload(PacketSerializer $out) : void{
@@ -158,6 +160,7 @@ class TextPacket extends DataPacket implements ClientboundPacket, ServerboundPac
 
 		$out->putString($this->xboxUserId);
 		$out->putString($this->platformChatId);
+		$out->putString($this->filteredMessage);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

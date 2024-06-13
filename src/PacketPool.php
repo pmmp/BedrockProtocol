@@ -55,7 +55,6 @@ class PacketPool{
 		$this->registerPacket(new PassengerJumpPacket());
 		$this->registerPacket(new UpdateBlockPacket());
 		$this->registerPacket(new AddPaintingPacket());
-		$this->registerPacket(new TickSyncPacket());
 		$this->registerPacket(new LevelSoundEventPacketV1());
 		$this->registerPacket(new LevelEventPacket());
 		$this->registerPacket(new BlockEventPacket());
@@ -228,6 +227,7 @@ class PacketPool{
 		$this->registerPacket(new PlayerToggleCrafterSlotRequestPacket());
 		$this->registerPacket(new SetPlayerInventoryOptionsPacket());
 		$this->registerPacket(new SetHudPacket());
+		$this->registerPacket(new AwardAchievementPacket());
 	}
 
 	public function registerPacket(Packet $packet) : void{

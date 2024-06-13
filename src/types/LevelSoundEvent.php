@@ -505,8 +505,20 @@ final class LevelSoundEvent{
 	public const ARMOR_REPAIR_WOLF = 513;
 	public const MACE_SMASH_AIR = 514;
 	public const MACE_SMASH_GROUND = 515;
-
+	public const TRIAL_SPAWNER_CHARGE_ACTIVATE = 516;
+	public const TRIAL_SPAWNER_AMBIENT_OMINOUS = 517;
+	public const OMINOUS_ITEM_SPAWNER_SPAWN_ITEM = 518;
+	public const OMINOUS_BOTTLE_END_USE = 519;
 	public const MACE_HEAVY_SMASH_GROUND = 520;
+	public const OMINOUS_ITEM_SPAWNER_SPAWN_ITEM_BEGIN = 521;
+
+	public const APPLY_EFFECT_BAD_OMEN = 523;
+	public const APPLY_EFFECT_RAID_OMEN = 524;
+	public const APPLY_EFFECT_TRIAL_OMEN = 525;
+	public const OMINOUS_ITEM_SPAWNER_ABOUT_TO_SPAWN_ITEM = 526;
+	public const RECORD_CREATOR = 527;
+	public const RECORD_CREATOR_MUSIC_BOX = 528;
+	public const RECORD_PRECIPICE = 529;
 
 	//The following aliases are kept for backwards compatibility only
 	public const SCULK_SENSOR_POWER_ON = self::POWER_ON_SCULK_SENSOR;

@@ -92,6 +92,7 @@ final class EntityIds{
 	public const MULE = "minecraft:mule";
 	public const NPC = "minecraft:npc";
 	public const OCELOT = "minecraft:ocelot";
+	public const OMINOUS_ITEM_SPAWNER = "minecraft:ominous_item_spawner";
 	public const PAINTING = "minecraft:painting";
 	public const PANDA = "minecraft:panda";
 	public const PARROT = "minecraft:parrot";

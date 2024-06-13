@@ -71,6 +71,7 @@ class CraftingDataPacket extends DataPacket implements ClientboundPacket{
 
 	protected function decodePayload(PacketSerializer $in) : void{
 		$recipeCount = $in->getUnsignedVarInt();
+		$previousType = "none";
 		for($i = 0; $i < $recipeCount; ++$i){
 			$recipeType = $in->getVarInt();
 
@@ -81,8 +82,9 @@ class CraftingDataPacket extends DataPacket implements ClientboundPacket{
 				self::ENTRY_MULTI => MultiRecipe::decode($recipeType, $in),
 				self::ENTRY_SMITHING_TRANSFORM => SmithingTransformRecipe::decode($recipeType, $in),
 				self::ENTRY_SMITHING_TRIM => SmithingTrimRecipe::decode($recipeType, $in),
-				default => throw new PacketDecodeException("Unhandled recipe type $recipeType!"),
+				default => throw new PacketDecodeException("Unhandled recipe type $recipeType (previous was $previousType)"),
 			};
+			$previousType = $recipeType;
 		}
 		for($i = 0, $count = $in->getUnsignedVarInt(); $i < $count; ++$i){
 			$inputId = $in->getVarInt();

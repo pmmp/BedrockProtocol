@@ -69,7 +69,7 @@ class AvailableCommandsPacket extends DataPacket implements ClientboundPacket{
 
 	public const ARG_TYPE_BLOCK_STATES = ArgTypes::BLOCK_STATE_ARRAY;
 
-	public const ARG_TYPE_COMMAND = ArgTypes::SLASHCOMMAND;
+	public const ARG_TYPE_COMMAND = ArgTypes::CODEBUILDERARGS;
 
 	/**
 	 * Enums are a little different: they are composed as follows:

@@ -32,6 +32,7 @@ final class ShapelessRecipe extends RecipeWithTypeId{
 		private UuidInterface $uuid,
 		private string $blockName,
 		private int $priority,
+		private RecipeUnlockingRequirement $unlockingRequirement,
 		private int $recipeNetId
 	){
 		parent::__construct($typeId);
@@ -67,6 +68,8 @@ final class ShapelessRecipe extends RecipeWithTypeId{
 		return $this->priority;
 	}
 
+	public function getUnlockingRequirement() : RecipeUnlockingRequirement{ return $this->unlockingRequirement; }
+
 	public function getRecipeNetId() : int{
 		return $this->recipeNetId;
 	}
@@ -84,9 +87,11 @@ final class ShapelessRecipe extends RecipeWithTypeId{
 		$uuid = $in->getUUID();
 		$block = $in->getString();
 		$priority = $in->getVarInt();
+		$unlockingRequirement = RecipeUnlockingRequirement::read($in);
+
 		$recipeNetId = $in->readRecipeNetId();
 
-		return new self($recipeType, $recipeId, $input, $output, $uuid, $block, $priority, $recipeNetId);
+		return new self($recipeType, $recipeId, $input, $output, $uuid, $block, $priority, $unlockingRequirement, $recipeNetId);
 	}
 
 	public function encode(PacketSerializer $out) : void{
@@ -104,6 +109,8 @@ final class ShapelessRecipe extends RecipeWithTypeId{
 		$out->putUUID($this->uuid);
 		$out->putString($this->blockName);
 		$out->putVarInt($this->priority);
+		$this->unlockingRequirement->write($out);
+
 		$out->writeRecipeNetId($this->recipeNetId);
 	}
 }

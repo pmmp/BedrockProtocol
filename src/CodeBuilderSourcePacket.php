@@ -21,16 +21,16 @@ class CodeBuilderSourcePacket extends DataPacket implements ServerboundPacket{
 
 	private int $operation;
 	private int $category;
-	private string $value;
+	private int $codeStatus;
 
 	/**
 	 * @generate-create-func
 	 */
-	public static function create(int $operation, int $category, string $value) : self{
+	public static function create(int $operation, int $category, int $codeStatus) : self{
 		$result = new self;
 		$result->operation = $operation;
 		$result->category = $category;
-		$result->value = $value;
+		$result->codeStatus = $codeStatus;
 		return $result;
 	}
 
@@ -38,18 +38,18 @@ class CodeBuilderSourcePacket extends DataPacket implements ServerboundPacket{
 
 	public function getCategory() : int{ return $this->category; }
 
-	public function getValue() : string{ return $this->value; }
+	public function getCodeStatus() : int{ return $this->codeStatus; }
 
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->operation = $in->getByte();
 		$this->category = $in->getByte();
-		$this->value = $in->getString();
+		$this->codeStatus = $in->getByte();
 	}
 
 	protected function encodePayload(PacketSerializer $out) : void{
 		$out->putByte($this->operation);
 		$out->putByte($this->category);
-		$out->putString($this->value);
+		$out->putByte($this->codeStatus);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

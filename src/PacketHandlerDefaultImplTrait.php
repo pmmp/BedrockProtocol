@@ -110,10 +110,6 @@ trait PacketHandlerDefaultImplTrait{
 		return false;
 	}
 
-	public function handleTickSync(TickSyncPacket $packet) : bool{
-		return false;
-	}
-
 	public function handleLevelSoundEventPacketV1(LevelSoundEventPacketV1 $packet) : bool{
 		return false;
 	}
@@ -799,6 +795,10 @@ trait PacketHandlerDefaultImplTrait{
 	}
 
 	public function handleSetHud(SetHudPacket $packet) : bool{
+		return false;
+	}
+
+	public function handleAwardAchievement(AwardAchievementPacket $packet) : bool{
 		return false;
 	}
 }

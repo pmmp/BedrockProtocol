@@ -111,4 +111,5 @@ final class ParticleIds{
 	public const VAULT_CONNECTION = 90;
 	public const WIND_EXPLOSION = 91;
 	public const WOLF_ARMOR_CRACK = 92;
+	public const OMINOUS_ITEM_SPAWNER = 93;
 }

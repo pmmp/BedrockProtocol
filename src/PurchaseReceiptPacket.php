@@ -35,6 +35,11 @@ class PurchaseReceiptPacket extends DataPacket implements ServerboundPacket{
 
 	protected function decodePayload(PacketSerializer $in) : void{
 		$count = $in->getUnsignedVarInt();
+
+		if($count > 50) {
+			throw new PacketDecodeException("Too many entries");
+		}
+
 		for($i = 0; $i < $count; ++$i){
 			$this->entries[] = $in->getString();
 		}

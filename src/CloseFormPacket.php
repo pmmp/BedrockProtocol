@@ -27,11 +27,11 @@ class CloseFormPacket extends DataPacket implements ClientboundPacket{
 	}
 
 	protected function decodePayload(PacketSerializer $in) : void{
-
+		//No payload
 	}
 
 	protected function encodePayload(PacketSerializer $out) : void{
-
+		//No payload
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

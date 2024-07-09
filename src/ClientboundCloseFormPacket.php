@@ -16,8 +16,8 @@ namespace pocketmine\network\mcpe\protocol;
 
 use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 
-class CloseFormPacket extends DataPacket implements ClientboundPacket{
-	public const NETWORK_ID = ProtocolInfo::CLOSE_FORM_PACKET;
+class ClientboundCloseFormPacket extends DataPacket implements ClientboundPacket{
+	public const NETWORK_ID = ProtocolInfo::CLIENTBOUND_CLOSE_FORM_PACKET;
 
 	/**
 	 * @generate-create-func

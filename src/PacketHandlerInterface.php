@@ -407,4 +407,6 @@ interface PacketHandlerInterface{
 	public function handleSetHud(SetHudPacket $packet) : bool;
 
 	public function handleAwardAchievement(AwardAchievementPacket $packet) : bool;
+
+	public function handleCloseForm(CloseFormPacket $packet) : bool;
 }

@@ -801,4 +801,8 @@ trait PacketHandlerDefaultImplTrait{
 	public function handleAwardAchievement(AwardAchievementPacket $packet) : bool{
 		return false;
 	}
+
+	public function handleCloseForm(CloseFormPacket $packet) : bool{
+		return false;
+	}
 }

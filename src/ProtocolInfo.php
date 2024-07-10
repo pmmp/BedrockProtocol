@@ -245,6 +245,6 @@ final class ProtocolInfo{
 	public const SET_PLAYER_INVENTORY_OPTIONS_PACKET = 0x133;
 	public const SET_HUD_PACKET = 0x134;
 	public const AWARD_ACHIEVEMENT_PACKET = 0x135;
-	public const CLOSE_FORM_PACKET = 0x136;
+	public const CLIENTBOUND_CLOSE_FORM_PACKET = 0x136;
 
 }

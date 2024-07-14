@@ -14,7 +14,7 @@ Assuming you've decrypted and decompressed a Minecraft packet successfully, you'
 With this library, that's currently done using `PacketBatch`, like so:
 
 ```php
-foreach(PacketBatchUtils::decodePackets(new BinaryStream($payload), $protocolContext, PacketPool::getInstance()) as $packetObject){
+foreach(PacketBatch::decodePackets(new BinaryStream($payload), PacketPool::getInstance()) as $packetObject){
     var_dump($packetObject); //tada
 }
 ```
@@ -25,7 +25,7 @@ This is easy:
 ```php
 /** @var Packet[] $packets */
 $stream = new BinaryStream();
-PacketBatchUtils::encodePackets($stream, $protocolContext, $packets);
+PacketBatch::encodePackets($stream, $packets);
 $batchPayload = $stream->getBuffer();
 ```
 

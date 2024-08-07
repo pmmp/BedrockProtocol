@@ -160,5 +160,5 @@ final class EntityMetadataProperties{
 	public const PLAYER_DEATH_DIMENSION = 128; //int
 	public const PLAYER_HAS_DIED = 129; //byte
 	public const COLLISION_BOX = 130; //compound
-	public const VISIBLE_MOB_EFFECTS = 131; //int64 (bytes array of effect ids)
+	public const VISIBLE_MOB_EFFECTS = 131; //long (first 8 visible effects packed, 6 bits for effectId + 1 bit for ambient indicator)
 }

@@ -59,8 +59,8 @@ class PlayerListPacket extends DataPacket implements ClientboundPacket{
 		for($i = 0; $i < $count; ++$i){
 			$entry = new PlayerListEntry();
 
+			$entry->uuid = $in->getUUID();
 			if($this->type === self::TYPE_ADD){
-				$entry->uuid = $in->getUUID();
 				$entry->actorUniqueId = $in->getActorUniqueId();
 				$entry->username = $in->getString();
 				$entry->xboxUserId = $in->getString();
@@ -70,8 +70,6 @@ class PlayerListPacket extends DataPacket implements ClientboundPacket{
 				$entry->isTeacher = $in->getBool();
 				$entry->isHost = $in->getBool();
 				$entry->isSubClient = $in->getBool();
-			}else{
-				$entry->uuid = $in->getUUID();
 			}
 
 			$this->entries[$i] = $entry;
@@ -87,8 +85,8 @@ class PlayerListPacket extends DataPacket implements ClientboundPacket{
 		$out->putByte($this->type);
 		$out->putUnsignedVarInt(count($this->entries));
 		foreach($this->entries as $entry){
+			$out->putUUID($entry->uuid);
 			if($this->type === self::TYPE_ADD){
-				$out->putUUID($entry->uuid);
 				$out->putActorUniqueId($entry->actorUniqueId);
 				$out->putString($entry->username);
 				$out->putString($entry->xboxUserId);
@@ -98,8 +96,6 @@ class PlayerListPacket extends DataPacket implements ClientboundPacket{
 				$out->putBool($entry->isTeacher);
 				$out->putBool($entry->isHost);
 				$out->putBool($entry->isSubClient);
-			}else{
-				$out->putUUID($entry->uuid);
 			}
 		}
 		if($this->type === self::TYPE_ADD){

@@ -54,14 +54,13 @@ class SubChunkPacket extends DataPacket implements ClientboundPacket{
 		$this->baseSubChunkPosition = SubChunkPosition::read($in);
 
 		$count = $in->getLInt();
+		$entries = [];
 		if($cacheEnabled){
-			$entries = [];
 			for($i = 0; $i < $count; $i++){
 				$entries[] = EntryWithBlobHash::read($in);
 			}
 			$this->entries = new ListWithBlobHashes($entries);
 		}else{
-			$entries = [];
 			for($i = 0; $i < $count; $i++){
 				$entries[] = EntryWithoutBlobHash::read($in);
 			}

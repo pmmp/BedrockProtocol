@@ -75,7 +75,7 @@ class CorrectPlayerMovePredictionPacket extends DataPacket implements Clientboun
 		$out->putVector3($this->delta);
 		if($this->predictionType === self::PREDICTION_TYPE_VEHICLE) {
 			if($this->vehicleRotation == null) { // this should never be the case
-				throw new \InvalidArgumentException("CorrectPlayerMovePredictionPackets with type VEHICLE require a vehicleRotation to be provided");
+				throw new \LogicException("CorrectPlayerMovePredictionPackets with type VEHICLE require a vehicleRotation to be provided");
 			}
 
 			$out->putFloat($this->vehicleRotation->getX());

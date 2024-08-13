@@ -31,9 +31,6 @@ class CorrectPlayerMovePredictionPacket extends DataPacket implements Clientboun
 	private int $predictionType;
 	private ?Vector2 $vehicleRotation;
 
-	/**
-	 * @generate-create-func
-	 */
 	public static function create(Vector3 $position, Vector3 $delta, bool $onGround, int $tick, int $predictionType, ?Vector2 $vehicleRotation) : self{
 		$result = new self;
 		$result->position = $position;
@@ -41,6 +38,11 @@ class CorrectPlayerMovePredictionPacket extends DataPacket implements Clientboun
 		$result->onGround = $onGround;
 		$result->tick = $tick;
 		$result->predictionType = $predictionType;
+
+		if($predictionType === self::PREDICTION_TYPE_VEHICLE && $vehicleRotation == null) {
+			throw new \LogicException("CorrectPlayerMovePredictionPackets with type VEHICLE require a vehicleRotation to be provided");
+		}
+
 		$result->vehicleRotation = $vehicleRotation;
 		return $result;
 	}

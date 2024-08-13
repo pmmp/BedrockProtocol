@@ -14,31 +14,38 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
+use pocketmine\math\Vector2;
 use pocketmine\math\Vector3;
 use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 
 class CorrectPlayerMovePredictionPacket extends DataPacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::CORRECT_PLAYER_MOVE_PREDICTION_PACKET;
 
-	public const PREDICTION_TYPE_VEHICLE = 0;
-	public const PREDICTION_TYPE_PLAYER = 1;
+	public const PREDICTION_TYPE_PLAYER = 0;
+	public const PREDICTION_TYPE_VEHICLE = 1;
 
 	private Vector3 $position;
 	private Vector3 $delta;
 	private bool $onGround;
 	private int $tick;
 	private int $predictionType;
+	private ?Vector2 $rotation;
 
 	/**
 	 * @generate-create-func
 	 */
-	public static function create(Vector3 $position, Vector3 $delta, bool $onGround, int $tick, int $predictionType) : self{
+	public static function create(Vector3 $position, Vector3 $delta, bool $onGround, int $tick, int $predictionType, ?Vector2 $rotation) : self{
 		$result = new self;
 		$result->position = $position;
 		$result->delta = $delta;
 		$result->onGround = $onGround;
 		$result->tick = $tick;
 		$result->predictionType = $predictionType;
+
+		if($predictionType === self::PREDICTION_TYPE_VEHICLE && $rotation == null) {
+			throw new \InvalidArgumentException("CorrectPlayerMovePredictionPackets with type VEHICLE require a rotation to be provided");
+		}
+
 		return $result;
 	}
 
@@ -52,20 +59,29 @@ class CorrectPlayerMovePredictionPacket extends DataPacket implements Clientboun
 
 	public function getPredictionType() : int{ return $this->predictionType; }
 
+    public function getRotation() : ?Vector2{ return $this->rotation; }
+
 	protected function decodePayload(PacketSerializer $in) : void{
+		$this->predictionType = $in->getByte();
 		$this->position = $in->getVector3();
 		$this->delta = $in->getVector3();
+		if($this->predictionType === self::PREDICTION_TYPE_VEHICLE) {
+			$this->rotation = new Vector2($in->getFloat(), $in->getFloat());
+		}
 		$this->onGround = $in->getBool();
 		$this->tick = $in->getUnsignedVarLong();
-		$this->predictionType = $in->getByte();
 	}
 
 	protected function encodePayload(PacketSerializer $out) : void{
+		$out->putByte($this->predictionType);
 		$out->putVector3($this->position);
 		$out->putVector3($this->delta);
+		if($this->predictionType === self::PREDICTION_TYPE_VEHICLE) {
+			$out->putFloat($this->rotation->getX());
+			$out->putFloat($this->rotation->getY());
+		}
 		$out->putBool($this->onGround);
 		$out->putUnsignedVarLong($this->tick);
-		$out->putByte($this->predictionType);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

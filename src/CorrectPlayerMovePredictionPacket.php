@@ -76,7 +76,7 @@ class CorrectPlayerMovePredictionPacket extends DataPacket implements Clientboun
 		$out->putByte($this->predictionType);
 		$out->putVector3($this->position);
 		$out->putVector3($this->delta);
-		if($this->predictionType === self::PREDICTION_TYPE_VEHICLE) {
+		if($this->predictionType === self::PREDICTION_TYPE_VEHICLE && $this->vehicleRotation != null) {
 			$out->putFloat($this->vehicleRotation->getX());
 			$out->putFloat($this->vehicleRotation->getY());
 		}

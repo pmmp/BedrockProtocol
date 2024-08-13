@@ -42,7 +42,6 @@ class CorrectPlayerMovePredictionPacket extends DataPacket implements Clientboun
 		$result->tick = $tick;
 		$result->predictionType = $predictionType;
 		$result->vehicleRotation = $vehicleRotation;
-
 		return $result;
 	}
 

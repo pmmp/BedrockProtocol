@@ -41,10 +41,7 @@ class CorrectPlayerMovePredictionPacket extends DataPacket implements Clientboun
 		$result->onGround = $onGround;
 		$result->tick = $tick;
 		$result->predictionType = $predictionType;
-
-		if($predictionType === self::PREDICTION_TYPE_VEHICLE && $vehicleRotation == null) {
-			throw new \InvalidArgumentException("CorrectPlayerMovePredictionPackets with type VEHICLE require a vehicleRotation to be provided");
-		}
+		$result->vehicleRotation = $vehicleRotation;
 
 		return $result;
 	}

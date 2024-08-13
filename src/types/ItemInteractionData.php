@@ -16,6 +16,7 @@ namespace pocketmine\network\mcpe\protocol\types;
 
 use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 use pocketmine\network\mcpe\protocol\types\inventory\InventoryTransactionChangedSlotsHack;
+use pocketmine\network\mcpe\protocol\types\inventory\PredictedResult;
 use pocketmine\network\mcpe\protocol\types\inventory\UseItemTransactionData;
 use function count;
 
@@ -26,7 +27,8 @@ final class ItemInteractionData{
 	public function __construct(
 		private int $requestId,
 		private array $requestChangedSlots,
-		private UseItemTransactionData $transactionData
+		private UseItemTransactionData $transactionData,
+		private PredictedResult $clientInteractPrediction
 	){}
 
 	public function getRequestId() : int{
@@ -44,6 +46,8 @@ final class ItemInteractionData{
 		return $this->transactionData;
 	}
 
+	public function getClientInteractPrediction() : PredictedResult{ return $this->clientInteractPrediction; }
+
 	public static function read(PacketSerializer $in) : self{
 		$requestId = $in->getVarInt();
 		$requestChangedSlots = [];
@@ -55,7 +59,8 @@ final class ItemInteractionData{
 		}
 		$transactionData = new UseItemTransactionData();
 		$transactionData->decode($in);
-		return new ItemInteractionData($requestId, $requestChangedSlots, $transactionData);
+		$clientInteractPrediction = PredictedResult::fromPacket($in->getUnsignedVarInt());
+		return new ItemInteractionData($requestId, $requestChangedSlots, $transactionData, $clientInteractPrediction);
 	}
 
 	public function write(PacketSerializer $out) : void{
@@ -67,5 +72,6 @@ final class ItemInteractionData{
 			}
 		}
 		$this->transactionData->encode($out);
+		$out->putUnsignedVarInt($this->clientInteractPrediction->value);
 	}
 }

@@ -27,17 +27,19 @@ class MobArmorEquipmentPacket extends DataPacket implements ClientboundPacket, S
 	public ItemStackWrapper $chest;
 	public ItemStackWrapper $legs;
 	public ItemStackWrapper $feet;
+	public ItemStackWrapper $body;
 
 	/**
 	 * @generate-create-func
 	 */
-	public static function create(int $actorRuntimeId, ItemStackWrapper $head, ItemStackWrapper $chest, ItemStackWrapper $legs, ItemStackWrapper $feet) : self{
+	public static function create(int $actorRuntimeId, ItemStackWrapper $head, ItemStackWrapper $chest, ItemStackWrapper $legs, ItemStackWrapper $feet, ItemStackWrapper $body) : self{
 		$result = new self;
 		$result->actorRuntimeId = $actorRuntimeId;
 		$result->head = $head;
 		$result->chest = $chest;
 		$result->legs = $legs;
 		$result->feet = $feet;
+		$result->body = $body;
 		return $result;
 	}
 
@@ -47,6 +49,7 @@ class MobArmorEquipmentPacket extends DataPacket implements ClientboundPacket, S
 		$this->chest = $in->getItemStackWrapper();
 		$this->legs = $in->getItemStackWrapper();
 		$this->feet = $in->getItemStackWrapper();
+		$this->body = $in->getItemStackWrapper();
 	}
 
 	protected function encodePayload(PacketSerializer $out) : void{
@@ -55,6 +58,7 @@ class MobArmorEquipmentPacket extends DataPacket implements ClientboundPacket, S
 		$out->putItemStackWrapper($this->chest);
 		$out->putItemStackWrapper($this->legs);
 		$out->putItemStackWrapper($this->feet);
+		$out->putItemStackWrapper($this->body);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

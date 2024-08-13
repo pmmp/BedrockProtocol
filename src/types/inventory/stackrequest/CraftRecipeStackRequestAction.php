@@ -26,17 +26,22 @@ final class CraftRecipeStackRequestAction extends ItemStackRequestAction{
 	public const ID = ItemStackRequestActionType::CRAFTING_RECIPE;
 
 	final public function __construct(
-		private int $recipeId
+		private int $recipeId,
+		private int $repetitions
 	){}
 
 	public function getRecipeId() : int{ return $this->recipeId; }
 
+	public function getRepetitions() : int { return $this->repetitions; }
+
 	public static function read(PacketSerializer $in) : self{
 		$recipeId = $in->readRecipeNetId();
-		return new self($recipeId);
+		$repetitions = $in->getByte();
+		return new self($recipeId, $repetitions);
 	}
 
 	public function write(PacketSerializer $out) : void{
 		$out->writeRecipeNetId($this->recipeId);
+		$out->putByte($this->repetitions);
 	}
 }

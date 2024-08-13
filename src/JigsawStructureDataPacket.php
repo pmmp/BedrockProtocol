@@ -17,43 +17,34 @@ namespace pocketmine\network\mcpe\protocol;
 use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 use pocketmine\network\mcpe\protocol\types\CacheableNbt;
 
-/**
- * Unclear purpose, not used in vanilla Bedrock. Seems to be related to a new Minecraft "editor" edition or mode.
- */
-class EditorNetworkPacket extends DataPacket implements ClientboundPacket, ServerboundPacket{
-	public const NETWORK_ID = ProtocolInfo::EDITOR_NETWORK_PACKET;
+class JigsawStructureDataPacket extends DataPacket implements ClientboundPacket{
+	public const NETWORK_ID = ProtocolInfo::JIGSAW_STRUCTURE_DATA_PACKET;
 
-	private bool $isRouteToManager;
 	/** @phpstan-var CacheableNbt<\pocketmine\nbt\tag\CompoundTag> */
-	private CacheableNbt $payload;
+	private CacheableNbt $nbt;
 
 	/**
 	 * @generate-create-func
-	 * @phpstan-param CacheableNbt<\pocketmine\nbt\tag\CompoundTag> $payload
+	 * @phpstan-param CacheableNbt<\pocketmine\nbt\tag\CompoundTag> $nbt
 	 */
-	public static function create(bool $isRouteToManager, CacheableNbt $payload) : self{
+	public static function create(CacheableNbt $nbt) : self{
 		$result = new self;
-		$result->isRouteToManager = $isRouteToManager;
-		$result->payload = $payload;
+		$result->nbt = $nbt;
 		return $result;
 	}
 
 	/** @phpstan-return CacheableNbt<\pocketmine\nbt\tag\CompoundTag> */
-	public function getPayload() : CacheableNbt{ return $this->payload; }
-
-	public function isRouteToManager() : bool{ return $this->isRouteToManager; }
+	public function getNbt() : CacheableNbt{ return $this->nbt; }
 
 	protected function decodePayload(PacketSerializer $in) : void{
-		$this->isRouteToManager = $in->getBool();
-		$this->payload = new CacheableNbt($in->getNbtCompoundRoot());
+		$this->nbt = new CacheableNbt($in->getNbtCompoundRoot());
 	}
 
 	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putBool($this->isRouteToManager);
-		$out->put($this->payload->getEncodedNbt());
+		$out->put($this->nbt->getEncodedNbt());
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{
-		return $handler->handleEditorNetwork($this);
+		return $handler->handleJigsawStructureData($this);
 	}
 }

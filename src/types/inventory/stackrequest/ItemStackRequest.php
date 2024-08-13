@@ -58,8 +58,6 @@ final class ItemStackRequest{
 			DestroyStackRequestAction::ID => DestroyStackRequestAction::read($in),
 			CraftingConsumeInputStackRequestAction::ID => CraftingConsumeInputStackRequestAction::read($in),
 			CraftingCreateSpecificResultStackRequestAction::ID => CraftingCreateSpecificResultStackRequestAction::read($in),
-			PlaceIntoBundleStackRequestAction::ID => PlaceIntoBundleStackRequestAction::read($in),
-			TakeFromBundleStackRequestAction::ID => TakeFromBundleStackRequestAction::read($in),
 			LabTableCombineStackRequestAction::ID => LabTableCombineStackRequestAction::read($in),
 			BeaconPaymentStackRequestAction::ID => BeaconPaymentStackRequestAction::read($in),
 			MineBlockStackRequestAction::ID => MineBlockStackRequestAction::read($in),

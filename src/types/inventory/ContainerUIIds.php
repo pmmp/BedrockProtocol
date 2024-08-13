@@ -83,4 +83,5 @@ final class ContainerUIIds{
 	public const CREATED_OUTPUT = 60;
 	public const SMITHING_TABLE_TEMPLATE = 61;
 	public const CRAFTER = 62;
+	public const DYNAMIC = 63;
 }

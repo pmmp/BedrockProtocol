@@ -26,17 +26,22 @@ final class CreativeCreateStackRequestAction extends ItemStackRequestAction{
 	public const ID = ItemStackRequestActionType::CREATIVE_CREATE;
 
 	public function __construct(
-		private int $creativeItemId
+		private int $creativeItemId,
+		private int $repetitions
 	){}
 
 	public function getCreativeItemId() : int{ return $this->creativeItemId; }
 
+	public function getRepetitions() : int { return $this->repetitions; }
+
 	public static function read(PacketSerializer $in) : self{
 		$creativeItemId = $in->readCreativeItemNetId();
-		return new self($creativeItemId);
+		$repetitions = $in->getByte();
+		return new self($creativeItemId, $repetitions);
 	}
 
 	public function write(PacketSerializer $out) : void{
 		$out->writeCreativeItemNetId($this->creativeItemId);
+		$out->putByte($this->repetitions);
 	}
 }

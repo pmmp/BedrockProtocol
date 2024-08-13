@@ -12,16 +12,14 @@
 
 declare(strict_types=1);
 
-namespace pocketmine\network\mcpe\protocol\types\inventory\stackrequest;
+namespace pocketmine\network\mcpe\protocol\types\hud;
 
-use pocketmine\network\mcpe\protocol\types\GetTypeIdFromConstTrait;
+use pocketmine\network\mcpe\protocol\types\PacketIntEnumTrait;
 
-/**
- * Take an item out of a bundle.
- */
-final class TakeFromBundleStackRequestAction extends ItemStackRequestAction{
-	use GetTypeIdFromConstTrait;
-	use TakeOrPlaceStackRequestActionTrait;
+enum ServerboundLoadingScreenPacketType : int{
+	use PacketIntEnumTrait;
 
-	public const ID = ItemStackRequestActionType::TAKE_FROM_BUNDLE;
+	case UNKNOWN = 0;
+	case START_LOADING_SCREEN = 1;
+	case STOP_LOADING_SCREEN = 2;
 }

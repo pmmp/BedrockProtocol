@@ -14,6 +14,7 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol\types\camera;
 
+use pocketmine\math\Vector2;
 use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 
 final class CameraPreset{
@@ -28,6 +29,8 @@ final class CameraPreset{
 		private ?float $zPosition,
 		private ?float $pitch,
 		private ?float $yaw,
+		private ?Vector2 $viewOffset,
+		private ?float $radius,
 		private ?int $audioListenerType,
 		private ?bool $playerEffects
 	){}
@@ -46,6 +49,10 @@ final class CameraPreset{
 
 	public function getYaw() : ?float{ return $this->yaw; }
 
+	public function getViewOffset() : ?Vector2{ return $this->viewOffset; }
+
+	public function getRadius() : ?float{ return $this->radius; }
+
 	public function getAudioListenerType() : ?int{ return $this->audioListenerType; }
 
 	public function getPlayerEffects() : ?bool{ return $this->playerEffects; }
@@ -58,6 +65,8 @@ final class CameraPreset{
 		$zPosition = $in->readOptional($in->getLFloat(...));
 		$pitch = $in->readOptional($in->getLFloat(...));
 		$yaw = $in->readOptional($in->getLFloat(...));
+		$viewOffset = $in->readOptional($in->getVector2(...));
+		$radius = $in->readOptional($in->getLFloat(...));
 		$audioListenerType = $in->readOptional($in->getByte(...));
 		$playerEffects = $in->readOptional($in->getBool(...));
 
@@ -69,6 +78,8 @@ final class CameraPreset{
 			$zPosition,
 			$pitch,
 			$yaw,
+			$viewOffset,
+			$radius,
 			$audioListenerType,
 			$playerEffects
 		);
@@ -82,6 +93,8 @@ final class CameraPreset{
 		$out->writeOptional($this->zPosition, $out->putLFloat(...));
 		$out->writeOptional($this->pitch, $out->putLFloat(...));
 		$out->writeOptional($this->yaw, $out->putLFloat(...));
+		$out->writeOptional($this->viewOffset, $out->putVector2(...));
+		$out->writeOptional($this->radius, $out->putLFloat(...));
 		$out->writeOptional($this->audioListenerType, $out->putByte(...));
 		$out->writeOptional($this->playerEffects, $out->putBool(...));
 	}

@@ -54,6 +54,54 @@ class PlayerAuthInputPacket extends DataPacket implements ServerboundPacket{
 	private float $analogMoveVecZ;
 
 	/**
+	 * @generate-create-func
+	 * @param PlayerBlockAction[] $blockActions
+	 */
+	private static function internalCreate(
+		Vector3 $position,
+		float $pitch,
+		float $yaw,
+		float $headYaw,
+		float $moveVecX,
+		float $moveVecZ,
+		int $inputFlags,
+		int $inputMode,
+		int $playMode,
+		int $interactionMode,
+		?Vector3 $vrGazeDirection,
+		int $tick,
+		Vector3 $delta,
+		?ItemInteractionData $itemInteractionData,
+		?ItemStackRequest $itemStackRequest,
+		?array $blockActions,
+		?PlayerAuthInputVehicleInfo $vehicleInfo,
+		float $analogMoveVecX,
+		float $analogMoveVecZ,
+	) : self{
+		$result = new self;
+		$result->position = $position;
+		$result->pitch = $pitch;
+		$result->yaw = $yaw;
+		$result->headYaw = $headYaw;
+		$result->moveVecX = $moveVecX;
+		$result->moveVecZ = $moveVecZ;
+		$result->inputFlags = $inputFlags;
+		$result->inputMode = $inputMode;
+		$result->playMode = $playMode;
+		$result->interactionMode = $interactionMode;
+		$result->vrGazeDirection = $vrGazeDirection;
+		$result->tick = $tick;
+		$result->delta = $delta;
+		$result->itemInteractionData = $itemInteractionData;
+		$result->itemStackRequest = $itemStackRequest;
+		$result->blockActions = $blockActions;
+		$result->vehicleInfo = $vehicleInfo;
+		$result->analogMoveVecX = $analogMoveVecX;
+		$result->analogMoveVecZ = $analogMoveVecZ;
+		return $result;
+	}
+
+	/**
 	 * @param int                      $inputFlags @see PlayerAuthInputFlags
 	 * @param int                      $inputMode @see InputMode
 	 * @param int                      $playMode @see PlayMode
@@ -86,43 +134,42 @@ class PlayerAuthInputPacket extends DataPacket implements ServerboundPacket{
 			//yuck, can we get a properly written packet just once? ...
 			throw new \InvalidArgumentException("Gaze direction must be provided for VR play mode");
 		}
-		$result = new self;
-		$result->position = $position->asVector3();
-		$result->pitch = $pitch;
-		$result->yaw = $yaw;
-		$result->headYaw = $headYaw;
-		$result->moveVecX = $moveVecX;
-		$result->moveVecZ = $moveVecZ;
 
-		$result->inputFlags = $inputFlags & ~((1 << PlayerAuthInputFlags::PERFORM_ITEM_STACK_REQUEST) | (1 << PlayerAuthInputFlags::PERFORM_ITEM_INTERACTION) | (1 << PlayerAuthInputFlags::PERFORM_BLOCK_ACTIONS));
+		$realInputFlags = $inputFlags & ~((1 << PlayerAuthInputFlags::PERFORM_ITEM_STACK_REQUEST) | (1 << PlayerAuthInputFlags::PERFORM_ITEM_INTERACTION) | (1 << PlayerAuthInputFlags::PERFORM_BLOCK_ACTIONS));
 		if($itemStackRequest !== null){
-			$result->inputFlags |= 1 << PlayerAuthInputFlags::PERFORM_ITEM_STACK_REQUEST;
+			$realInputFlags |= 1 << PlayerAuthInputFlags::PERFORM_ITEM_STACK_REQUEST;
 		}
 		if($itemInteractionData !== null){
-			$result->inputFlags |= 1 << PlayerAuthInputFlags::PERFORM_ITEM_INTERACTION;
+			$realInputFlags |= 1 << PlayerAuthInputFlags::PERFORM_ITEM_INTERACTION;
 		}
 		if($blockActions !== null){
-			$result->inputFlags |= 1 << PlayerAuthInputFlags::PERFORM_BLOCK_ACTIONS;
+			$realInputFlags |= 1 << PlayerAuthInputFlags::PERFORM_BLOCK_ACTIONS;
 		}
 		if($vehicleInfo !== null){
-			$result->inputFlags |= 1 << PlayerAuthInputFlags::IN_CLIENT_PREDICTED_VEHICLE;
+			$realInputFlags |= 1 << PlayerAuthInputFlags::IN_CLIENT_PREDICTED_VEHICLE;
 		}
 
-		$result->inputMode = $inputMode;
-		$result->playMode = $playMode;
-		$result->interactionMode = $interactionMode;
-		if($vrGazeDirection !== null){
-			$result->vrGazeDirection = $vrGazeDirection->asVector3();
-		}
-		$result->tick = $tick;
-		$result->delta = $delta;
-		$result->itemInteractionData = $itemInteractionData;
-		$result->itemStackRequest = $itemStackRequest;
-		$result->blockActions = $blockActions;
-		$result->vehicleInfo = $vehicleInfo;
-		$result->analogMoveVecX = $analogMoveVecX;
-		$result->analogMoveVecZ = $analogMoveVecZ;
-		return $result;
+		return self::internalCreate(
+			$position,
+			$pitch,
+			$yaw,
+			$headYaw,
+			$moveVecX,
+			$moveVecZ,
+			$realInputFlags,
+			$inputMode,
+			$playMode,
+			$interactionMode,
+			$vrGazeDirection?->asVector3(),
+			$tick,
+			$delta,
+			$itemInteractionData,
+			$itemStackRequest,
+			$blockActions,
+			$vehicleInfo,
+			$analogMoveVecX,
+			$analogMoveVecZ
+		);
 	}
 
 	public function getPosition() : Vector3{

@@ -34,7 +34,7 @@ use function trim;
 
 require dirname(__DIR__) . '/vendor/autoload.php';
 
-function generateCreateFunction(\ReflectionClass $reflect, int $indentLevel, int $modifiers) : array{
+function generateCreateFunction(\ReflectionClass $reflect, int $indentLevel, int $modifiers, string $methodName) : array{
 	$properties = [];
 	$paramTags = [];
 	$longestParamType = 0;
@@ -73,7 +73,7 @@ function generateCreateFunction(\ReflectionClass $reflect, int $indentLevel, int
 		($modifiers & \ReflectionMethod::IS_PROTECTED) !== 0 => "protected",
 		default => throw new \InvalidArgumentException("Visibility must be a ReflectionMethod visibility constant")
 	};
-	$funcStart = "$visibilityStr static function create(";
+	$funcStart = "$visibilityStr static function $methodName(";
 	$funcEnd = ") : self{";
 	$params = [];
 	foreach($properties as $name => $reflectProperty){
@@ -130,27 +130,34 @@ foreach(new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator(dirname(_
 		continue;
 	}
 	$reflect = new \ReflectionClass($className);
-	echo "Found class " . $reflect->getName() . ": ";
-	if(!$reflect->hasMethod("create")){
-		echo "skipped: no create() found\n";
-		continue;
-	}
-	$createReflect = $reflect->getMethod("create");
-	if($createReflect->getDeclaringClass()->getName() !== $reflect->getName()){
-		echo "skipped: create() declared by parent class\n";
-		continue;
+	$newContents = $contents;
+	$modified = [];
+	foreach($reflect->getMethods(\ReflectionMethod::IS_STATIC) as $method){
+		if($method->getDeclaringClass()->getName() !== $reflect->getName() || $method->isAbstract()){
+			continue;
+		}
+
+		$docComment = $method->getDocComment();
+		if($docComment === false || preg_match('/@generate-create-func\s/', $docComment) !== 1){
+			continue;
+		}
+
+		$lines = preg_split("/(*ANYCRLF)\n/", $newContents);
+		$docCommentLines = preg_split("/(*ANYCRLF)\n/", $docComment);
+		$beforeLines = array_slice($lines, 0, $method->getStartLine() - 1 - count($docCommentLines));
+		$afterLines = array_slice($lines, $method->getEndLine());
+		$newContents = implode("\n", $beforeLines) . "\n" . implode("\n", generateCreateFunction($reflect, 1, $method->getModifiers(), $method->getName())) . "\n" . implode("\n", $afterLines);
+
+		$modified[] = $method->getName();
 	}
 
-	$docComment = $createReflect->getDocComment();
-	if($docComment === false || preg_match('/@generate-create-func\s/', $docComment) !== 1){
-		echo "skipped: @generate-create-func not found in create() doc comment\n";
-		continue;
+	$shortName = substr($reflect->getName(), strlen("pocketmine\\network\\mcpe\\protocol\\"));
+	if($newContents !== $contents){
+		file_put_contents($file, $newContents);
+		echo "Successfully patched class $shortName: " . implode(", ", $modified) . "\n";
+	}elseif(count($modified) > 0){
+		echo "Already up to date class $shortName: " . implode(", ", $modified) . "\n";
+	}else{
+		echo "No functions found with @generate-create-func tag in class $shortName\n";
 	}
-
-	$lines = preg_split("/(*ANYCRLF)\n/", $contents);
-	$docCommentLines = preg_split("/(*ANYCRLF)\n/", $docComment);
-	$beforeLines = array_slice($lines, 0, $createReflect->getStartLine() - 1 - count($docCommentLines));
-	$afterLines = array_slice($lines, $createReflect->getEndLine());
-	file_put_contents($file, implode("\n", $beforeLines) . "\n" . implode("\n", generateCreateFunction($reflect, 1, $createReflect->getModifiers())) . "\n" . implode("\n", $afterLines));
-	echo "successfully patched class\n";
 }

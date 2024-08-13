@@ -59,7 +59,7 @@ class CorrectPlayerMovePredictionPacket extends DataPacket implements Clientboun
 
 	public function getPredictionType() : int{ return $this->predictionType; }
 
-    public function getVehicleRotation() : ?Vector2{ return $this->vehicleRotation; }
+	public function getVehicleRotation() : ?Vector2{ return $this->vehicleRotation; }
 
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->predictionType = $in->getByte();
@@ -76,7 +76,11 @@ class CorrectPlayerMovePredictionPacket extends DataPacket implements Clientboun
 		$out->putByte($this->predictionType);
 		$out->putVector3($this->position);
 		$out->putVector3($this->delta);
-		if($this->predictionType === self::PREDICTION_TYPE_VEHICLE && $this->vehicleRotation != null) {
+		if($this->predictionType === self::PREDICTION_TYPE_VEHICLE) {
+			if($this->vehicleRotation == null) { // this should never be the case
+				throw new \InvalidArgumentException("CorrectPlayerMovePredictionPackets with type VEHICLE require a vehicleRotation to be provided");
+			}
+
 			$out->putFloat($this->vehicleRotation->getX());
 			$out->putFloat($this->vehicleRotation->getY());
 		}

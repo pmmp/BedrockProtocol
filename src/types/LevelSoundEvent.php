@@ -178,7 +178,7 @@ final class LevelSoundEvent{
 	public const IMITATE_EVOCATION_ILLAGER = 152;
 	public const IMITATE_GHAST = 153;
 	public const IMITATE_HUSK = 154;
-	public const IMITATE_ILLUSION_ILLAGER = 155;
+
 	public const IMITATE_MAGMA_CUBE = 156;
 	public const IMITATE_POLAR_BEAR = 157;
 	public const IMITATE_SHULKER = 158;

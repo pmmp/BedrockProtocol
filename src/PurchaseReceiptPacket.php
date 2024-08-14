@@ -14,7 +14,9 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
+use pocketmine\network\mcpe\JwtUtils;
 use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pocketmine\network\mcpe\protocol\types\login\JwtChain;
 use function count;
 
 class PurchaseReceiptPacket extends DataPacket implements ServerboundPacket{
@@ -35,8 +37,32 @@ class PurchaseReceiptPacket extends DataPacket implements ServerboundPacket{
 
 	protected function decodePayload(PacketSerializer $in) : void{
 		$count = $in->getUnsignedVarInt();
-		for($i = 0; $i < $count; ++$i){
-			$this->entries[] = $in->getString();
+		if($count > 1) {
+			throw new PacketDecodeException("There should be a maximum of one jwt");
+		}
+
+		for($i = 0; $i < $count; ++$i) {
+			[, $data, ] = JwtUtils::parse($in->getString());
+			if(!isset($data["sub"])) {
+				throw new PacketDecodeException("JWT payload must contain 'sub'");
+			}
+			if(!isset($data["tid"])) {
+				throw new PacketDecodeException("JWT payload must contain 'tid'");
+			}
+			if(!isset($data["xuid"])) {
+				throw new PacketDecodeException("JWT payload must contain 'xuid'");
+			}
+			if(!isset($data["entitlements"])) {
+				throw new PacketDecodeException("JWT payload must contain 'entitlements'");
+			}
+
+			try {
+				json_decode($data["entitlements"], false, flags: JSON_THROW_ON_ERROR);
+			} catch(\Exception $exception) {
+				throw new PacketDecodeException($exception->getMessage());
+			}
+
+			$this->entries[] = $data["entitlements"];
 		}
 	}
 

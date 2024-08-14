@@ -38,6 +38,7 @@ class UseItemTransactionData extends TransactionData{
 	private Vector3 $playerPosition;
 	private Vector3 $clickPosition;
 	private int $blockRuntimeId;
+	private PredictedResult $clientInteractPrediction;
 
 	public function getActionType() : int{
 		return $this->actionType;
@@ -73,6 +74,8 @@ class UseItemTransactionData extends TransactionData{
 		return $this->blockRuntimeId;
 	}
 
+	public function getClientInteractPrediction() : PredictedResult{ return $this->clientInteractPrediction; }
+
 	protected function decodeData(PacketSerializer $stream) : void{
 		$this->actionType = $stream->getUnsignedVarInt();
 		$this->triggerType = TriggerType::fromPacket($stream->getUnsignedVarInt());
@@ -83,6 +86,7 @@ class UseItemTransactionData extends TransactionData{
 		$this->playerPosition = $stream->getVector3();
 		$this->clickPosition = $stream->getVector3();
 		$this->blockRuntimeId = $stream->getUnsignedVarInt();
+		$this->clientInteractPrediction = PredictedResult::fromPacket($stream->getUnsignedVarInt());
 	}
 
 	protected function encodeData(PacketSerializer $stream) : void{
@@ -95,12 +99,13 @@ class UseItemTransactionData extends TransactionData{
 		$stream->putVector3($this->playerPosition);
 		$stream->putVector3($this->clickPosition);
 		$stream->putUnsignedVarInt($this->blockRuntimeId);
+		$stream->putUnsignedVarInt($this->clientInteractPrediction->value);
 	}
 
 	/**
 	 * @param NetworkInventoryAction[] $actions
 	 */
-	public static function new(array $actions, int $actionType, TriggerType $triggerType, BlockPosition $blockPosition, int $face, int $hotbarSlot, ItemStackWrapper $itemInHand, Vector3 $playerPosition, Vector3 $clickPosition, int $blockRuntimeId) : self{
+	public static function new(array $actions, int $actionType, TriggerType $triggerType, BlockPosition $blockPosition, int $face, int $hotbarSlot, ItemStackWrapper $itemInHand, Vector3 $playerPosition, Vector3 $clickPosition, int $blockRuntimeId, PredictedResult $clientInteractPrediction) : self{
 		$result = new self;
 		$result->actions = $actions;
 		$result->actionType = $actionType;
@@ -112,6 +117,7 @@ class UseItemTransactionData extends TransactionData{
 		$result->playerPosition = $playerPosition;
 		$result->clickPosition = $clickPosition;
 		$result->blockRuntimeId = $blockRuntimeId;
+		$result->clientInteractPrediction = $clientInteractPrediction;
 		return $result;
 	}
 }

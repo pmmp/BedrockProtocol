@@ -32,7 +32,7 @@ final class CraftRecipeStackRequestAction extends ItemStackRequestAction{
 
 	public function getRecipeId() : int{ return $this->recipeId; }
 
-	public function getRepetitions() : int { return $this->repetitions; }
+	public function getRepetitions() : int{ return $this->repetitions; }
 
 	public static function read(PacketSerializer $in) : self{
 		$recipeId = $in->readRecipeNetId();

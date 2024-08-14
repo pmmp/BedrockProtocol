@@ -32,7 +32,7 @@ final class CreativeCreateStackRequestAction extends ItemStackRequestAction{
 
 	public function getCreativeItemId() : int{ return $this->creativeItemId; }
 
-	public function getRepetitions() : int { return $this->repetitions; }
+	public function getRepetitions() : int{ return $this->repetitions; }
 
 	public static function read(PacketSerializer $in) : self{
 		$creativeItemId = $in->readCreativeItemNetId();

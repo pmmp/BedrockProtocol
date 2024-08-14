@@ -16,7 +16,6 @@ namespace pocketmine\network\mcpe\protocol\types;
 
 use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 use pocketmine\network\mcpe\protocol\types\inventory\InventoryTransactionChangedSlotsHack;
-use pocketmine\network\mcpe\protocol\types\inventory\PredictedResult;
 use pocketmine\network\mcpe\protocol\types\inventory\UseItemTransactionData;
 use function count;
 

@@ -24,6 +24,7 @@ final class AbilitiesLayer{
 	public const LAYER_SPECTATOR = 2;
 	public const LAYER_COMMANDS = 3;
 	public const LAYER_EDITOR = 4;
+	public const LAYER_LOADING_SCREEN = 5;
 
 	public const ABILITY_BUILD = 0;
 	public const ABILITY_MINE = 1;

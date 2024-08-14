@@ -12,20 +12,13 @@
 
 declare(strict_types=1);
 
-namespace pocketmine\network\mcpe\protocol\types\entity;
+namespace pocketmine\network\mcpe\protocol\types\inventory;
 
-class EntityLink{
+use pocketmine\network\mcpe\protocol\types\PacketIntEnumTrait;
 
-	public const TYPE_REMOVE = 0;
-	public const TYPE_RIDER = 1;
-	public const TYPE_PASSENGER = 2;
+enum PredictedResult : int{
+	use PacketIntEnumTrait;
 
-	public function __construct(
-		public int $fromActorUniqueId,
-		public int $toActorUniqueId,
-		public int $type,
-		public bool $immediate,
-		public bool $causedByRider,
-		public float $vehicleAngularVelocity
-	){}
+	case FAILURE = 0;
+	case SUCCESS = 1;
 }

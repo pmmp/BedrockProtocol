@@ -229,6 +229,10 @@ class PacketPool{
 		$this->registerPacket(new SetHudPacket());
 		$this->registerPacket(new AwardAchievementPacket());
 		$this->registerPacket(new ClientboundCloseFormPacket());
+		$this->registerPacket(new ServerboundLoadingScreenPacket());
+		$this->registerPacket(new JigsawStructureDataPacket());
+		$this->registerPacket(new CurrentStructureFeaturePacket());
+		$this->registerPacket(new ServerboundDiagnosticsPacket());
 	}
 
 	public function registerPacket(Packet $packet) : void{

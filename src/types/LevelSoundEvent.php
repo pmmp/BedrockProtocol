@@ -178,7 +178,7 @@ final class LevelSoundEvent{
 	public const IMITATE_EVOCATION_ILLAGER = 152;
 	public const IMITATE_GHAST = 153;
 	public const IMITATE_HUSK = 154;
-	public const IMITATE_ILLUSION_ILLAGER = 155;
+
 	public const IMITATE_MAGMA_CUBE = 156;
 	public const IMITATE_POLAR_BEAR = 157;
 	public const IMITATE_SHULKER = 158;
@@ -499,7 +499,7 @@ final class LevelSoundEvent{
 	public const VAULT_DEACTIVATE = 507;
 	public const HURT_REDUCED = 508;
 	public const WIND_CHARGE_BURST = 509;
-
+	public const IMITATE_BOGGED = 510;
 	public const ARMOR_CRACK_WOLF = 511;
 	public const ARMOR_BREAK_WOLF = 512;
 	public const ARMOR_REPAIR_WOLF = 513;
@@ -519,6 +519,7 @@ final class LevelSoundEvent{
 	public const RECORD_CREATOR = 527;
 	public const RECORD_CREATOR_MUSIC_BOX = 528;
 	public const RECORD_PRECIPICE = 529;
+	public const VAULT_REJECT_REWARDED_PLAYER = 530;
 
 	//The following aliases are kept for backwards compatibility only
 	public const SCULK_SENSOR_POWER_ON = self::POWER_ON_SCULK_SENSOR;

@@ -24,7 +24,8 @@ class BehaviorPackInfoEntry{
 		private string $encryptionKey = "",
 		private string $subPackName = "",
 		private string $contentId = "",
-		private bool $hasScripts = false
+		private bool $hasScripts = false,
+		private bool $isAddonPack = false
 	){}
 
 	public function getPackId() : string{
@@ -55,6 +56,8 @@ class BehaviorPackInfoEntry{
 		return $this->hasScripts;
 	}
 
+	public function isAddonPack() : bool{ return $this->isAddonPack; }
+
 	public function write(PacketSerializer $out) : void{
 		$out->putString($this->packId);
 		$out->putString($this->version);
@@ -63,6 +66,7 @@ class BehaviorPackInfoEntry{
 		$out->putString($this->subPackName);
 		$out->putString($this->contentId);
 		$out->putBool($this->hasScripts);
+		$out->putBool($this->isAddonPack);
 	}
 
 	public static function read(PacketSerializer $in) : self{
@@ -73,6 +77,7 @@ class BehaviorPackInfoEntry{
 		$subPackName = $in->getString();
 		$contentId = $in->getString();
 		$hasScripts = $in->getBool();
-		return new self($uuid, $version, $sizeBytes, $encryptionKey, $subPackName, $contentId, $hasScripts);
+		$isAddonPack = $in->getBool();
+		return new self($uuid, $version, $sizeBytes, $encryptionKey, $subPackName, $contentId, $hasScripts, $isAddonPack);
 	}
 }

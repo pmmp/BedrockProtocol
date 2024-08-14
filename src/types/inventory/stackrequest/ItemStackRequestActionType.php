@@ -27,8 +27,6 @@ final class ItemStackRequestActionType{
 	public const DESTROY = 4;
 	public const CRAFTING_CONSUME_INPUT = 5;
 	public const CRAFTING_CREATE_SPECIFIC_RESULT = 6;
-	public const PLACE_INTO_BUNDLE = 7;
-	public const TAKE_FROM_BUNDLE = 8;
 	public const LAB_TABLE_COMBINE = 9;
 	public const BEACON_PAYMENT = 10;
 	public const MINE_BLOCK = 11;

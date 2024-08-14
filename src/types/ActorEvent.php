@@ -67,7 +67,7 @@ final class ActorEvent{
 	public const REMOVE_LEASH = 63; //data 1 = cut leash
 	public const CARAVAN_UPDATED = 64;
 	public const CONSUME_TOTEM = 65;
-	public const PLAYER_CHECK_TREASURE_HUNTER_ACHIEVEMENT = 66; //mojang...
+	public const DEPRECATED_UPDATE_STRUCTURE_FEATURE = 66; //mojang...
 	public const ENTITY_SPAWN = 67; //used for MinecraftEventing stuff, not needed
 	public const DRAGON_PUKE = 68; //they call this puke particles
 	public const ITEM_ENTITY_MERGE = 69;

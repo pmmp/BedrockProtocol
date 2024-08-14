@@ -23,27 +23,31 @@ class InventorySlotPacket extends DataPacket implements ClientboundPacket{
 	public int $windowId;
 	public int $inventorySlot;
 	public ItemStackWrapper $item;
+	public int $dynamicContainerId;
 
 	/**
 	 * @generate-create-func
 	 */
-	public static function create(int $windowId, int $inventorySlot, ItemStackWrapper $item) : self{
+	public static function create(int $windowId, int $inventorySlot, ItemStackWrapper $item, int $dynamicContainerId) : self{
 		$result = new self;
 		$result->windowId = $windowId;
 		$result->inventorySlot = $inventorySlot;
 		$result->item = $item;
+		$result->dynamicContainerId = $dynamicContainerId;
 		return $result;
 	}
 
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->windowId = $in->getUnsignedVarInt();
 		$this->inventorySlot = $in->getUnsignedVarInt();
+		$this->dynamicContainerId = $in->getUnsignedVarInt();
 		$this->item = $in->getItemStackWrapper();
 	}
 
 	protected function encodePayload(PacketSerializer $out) : void{
 		$out->putUnsignedVarInt($this->windowId);
 		$out->putUnsignedVarInt($this->inventorySlot);
+		$out->putUnsignedVarInt($this->dynamicContainerId);
 		$out->putItemStackWrapper($this->item);
 	}
 

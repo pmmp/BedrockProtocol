@@ -34,8 +34,8 @@ final class CraftRecipeAutoStackRequestAction extends ItemStackRequestAction{
 	 */
 	final public function __construct(
 		private int $recipeId,
-		private int $repetitions2,
 		private int $repetitions,
+		private int $repetitions2,
 		private array $ingredients
 	){}
 
@@ -53,19 +53,19 @@ final class CraftRecipeAutoStackRequestAction extends ItemStackRequestAction{
 
 	public static function read(PacketSerializer $in) : self{
 		$recipeId = $in->readRecipeNetId();
-		$repetitions2 = $in->getByte();
 		$repetitions = $in->getByte();
+		$repetitions2 = $in->getByte(); //repetitions property is sent twice, mojang...
 		$ingredients = [];
 		for($i = 0, $count = $in->getByte(); $i < $count; ++$i){
 			$ingredients[] = $in->getRecipeIngredient();
 		}
-		return new self($recipeId, $repetitions2, $repetitions, $ingredients);
+		return new self($recipeId, $repetitions, $repetitions2, $ingredients);
 	}
 
 	public function write(PacketSerializer $out) : void{
 		$out->writeRecipeNetId($this->recipeId);
-		$out->putByte($this->repetitions2);
 		$out->putByte($this->repetitions);
+		$out->putByte($this->repetitions2);
 		$out->putByte(count($this->ingredients));
 		foreach($this->ingredients as $ingredient){
 			$out->putRecipeIngredient($ingredient);

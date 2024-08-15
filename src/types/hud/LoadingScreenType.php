@@ -16,7 +16,7 @@ namespace pocketmine\network\mcpe\protocol\types\hud;
 
 use pocketmine\network\mcpe\protocol\types\PacketIntEnumTrait;
 
-enum ServerboundLoadingScreenPacketType : int{
+enum LoadingScreenType : int{
 	use PacketIntEnumTrait;
 
 	case UNKNOWN = 0;

@@ -35,7 +35,15 @@ class CorrectPlayerMovePredictionPacket extends DataPacket implements Clientboun
 	/**
 	 * @generate-create-func
 	 */
-	private static function internalCreate(Vector3 $position, Vector3 $delta, bool $onGround, int $tick, int $predictionType, ?Vector2 $vehicleRotation, ?float $vehicleAngularVelocity) : self{
+	private static function internalCreate(
+		Vector3 $position,
+		Vector3 $delta,
+		bool $onGround,
+		int $tick,
+		int $predictionType,
+		?Vector2 $vehicleRotation,
+		?float $vehicleAngularVelocity,
+	) : self{
 		$result = new self;
 		$result->position = $position;
 		$result->delta = $delta;

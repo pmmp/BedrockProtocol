@@ -33,6 +33,10 @@ class UpdateClientInputLocksPacket extends DataPacket implements ClientboundPack
 		return $result;
 	}
 
+	public function getFlags() : int{ return $this->flags; }
+
+	public function getPosition() : Vector3{ return $this->position; }
+
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->flags = $in->getUnsignedVarInt();
 		$this->position = $in->getVector3();

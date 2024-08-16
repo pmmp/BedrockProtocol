@@ -37,6 +37,8 @@ class ChangeDimensionPacket extends DataPacket implements ClientboundPacket{
 		return $result;
 	}
 
+	public function getLoadingScreenId() : ?int{ return $this->loadingScreenId; }
+
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->dimension = $in->getVarInt();
 		$this->position = $in->getVector3();

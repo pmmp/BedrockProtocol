@@ -42,7 +42,7 @@ final class PlayerAction{
 	public const SET_ENCHANTMENT_SEED = 20; //no longer used
 	public const START_SWIMMING = 21;
 	public const STOP_SWIMMING = 22;
-	public const START_SPIN_ATTACK = 23;
+	public const START_SPIN_ATTACK = 23; //no longer used
 	public const STOP_SPIN_ATTACK = 24;
 	public const INTERACT_BLOCK = 25;
 	public const PREDICT_DESTROY_BLOCK = 26;

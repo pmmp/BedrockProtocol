@@ -15,6 +15,7 @@ declare(strict_types=1);
 namespace pocketmine\network\mcpe\protocol\types\camera;
 
 use pocketmine\math\Vector2;
+use pocketmine\math\Vector3;
 use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 
 final class CameraPreset{
@@ -29,7 +30,10 @@ final class CameraPreset{
 		private ?float $zPosition,
 		private ?float $pitch,
 		private ?float $yaw,
+		private ?float $rotationSpeed,
+		private ?bool $snapToTarget,
 		private ?Vector2 $viewOffset,
+		private ?Vector3 $entityOffset,
 		private ?float $radius,
 		private ?int $audioListenerType,
 		private ?bool $playerEffects
@@ -49,7 +53,13 @@ final class CameraPreset{
 
 	public function getYaw() : ?float{ return $this->yaw; }
 
+	public function getRotationSpeed() : ?float { return $this->rotationSpeed; }
+
+	public function getSnapToTarget() : ?bool { return $this->snapToTarget; }
+
 	public function getViewOffset() : ?Vector2{ return $this->viewOffset; }
+
+	public function getEntityOffset() : ?Vector3{ return $this->entityOffset; }
 
 	public function getRadius() : ?float{ return $this->radius; }
 
@@ -65,7 +75,10 @@ final class CameraPreset{
 		$zPosition = $in->readOptional($in->getLFloat(...));
 		$pitch = $in->readOptional($in->getLFloat(...));
 		$yaw = $in->readOptional($in->getLFloat(...));
+		$rotationSpeed = $in->readOptional($in->getLFloat(...));
+		$snapToTarget = $in->readOptional($in->getBool(...));
 		$viewOffset = $in->readOptional($in->getVector2(...));
+		$entityOffset = $in->readOptional($in->getVector3(...));
 		$radius = $in->readOptional($in->getLFloat(...));
 		$audioListenerType = $in->readOptional($in->getByte(...));
 		$playerEffects = $in->readOptional($in->getBool(...));
@@ -78,7 +91,10 @@ final class CameraPreset{
 			$zPosition,
 			$pitch,
 			$yaw,
+			$rotationSpeed,
+			$snapToTarget,
 			$viewOffset,
+			$entityOffset,
 			$radius,
 			$audioListenerType,
 			$playerEffects
@@ -93,7 +109,10 @@ final class CameraPreset{
 		$out->writeOptional($this->zPosition, $out->putLFloat(...));
 		$out->writeOptional($this->pitch, $out->putLFloat(...));
 		$out->writeOptional($this->yaw, $out->putLFloat(...));
+		$out->writeOptional($this->rotationSpeed, $out->putLFloat(...));
+		$out->writeOptional($this->snapToTarget, $out->putBool(...));
 		$out->writeOptional($this->viewOffset, $out->putVector2(...));
+		$out->writeOptional($this->entityOffset, $out->putVector3(...));
 		$out->writeOptional($this->radius, $out->putLFloat(...));
 		$out->writeOptional($this->audioListenerType, $out->putByte(...));
 		$out->writeOptional($this->playerEffects, $out->putBool(...));

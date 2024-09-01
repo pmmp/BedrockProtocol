@@ -24,6 +24,7 @@ class EmotePacket extends DataPacket implements ClientboundPacket, ServerboundPa
 
 	private int $actorRuntimeId;
 	private string $emoteId;
+	private int $emoteLengthTicks;
 	private string $xboxUserId;
 	private string $platformChatId;
 	private int $flags;
@@ -31,10 +32,11 @@ class EmotePacket extends DataPacket implements ClientboundPacket, ServerboundPa
 	/**
 	 * @generate-create-func
 	 */
-	public static function create(int $actorRuntimeId, string $emoteId, string $xboxUserId, string $platformChatId, int $flags) : self{
+	public static function create(int $actorRuntimeId, string $emoteId, int $emoteLengthTicks, string $xboxUserId, string $platformChatId, int $flags) : self{
 		$result = new self;
 		$result->actorRuntimeId = $actorRuntimeId;
 		$result->emoteId = $emoteId;
+		$result->emoteLengthTicks = $emoteLengthTicks;
 		$result->xboxUserId = $xboxUserId;
 		$result->platformChatId = $platformChatId;
 		$result->flags = $flags;
@@ -49,6 +51,8 @@ class EmotePacket extends DataPacket implements ClientboundPacket, ServerboundPa
 		return $this->emoteId;
 	}
 
+	public function getEmoteLengthTicks() : int{ return $this->emoteLengthTicks; }
+
 	public function getXboxUserId() : string{ return $this->xboxUserId; }
 
 	public function getPlatformChatId() : string{ return $this->platformChatId; }
@@ -60,6 +64,7 @@ class EmotePacket extends DataPacket implements ClientboundPacket, ServerboundPa
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->actorRuntimeId = $in->getActorRuntimeId();
 		$this->emoteId = $in->getString();
+		$this->emoteLengthTicks = $in->getUnsignedVarInt();
 		$this->xboxUserId = $in->getString();
 		$this->platformChatId = $in->getString();
 		$this->flags = $in->getByte();
@@ -68,6 +73,7 @@ class EmotePacket extends DataPacket implements ClientboundPacket, ServerboundPa
 	protected function encodePayload(PacketSerializer $out) : void{
 		$out->putActorRuntimeId($this->actorRuntimeId);
 		$out->putString($this->emoteId);
+		$out->putUnsignedVarInt($this->emoteLengthTicks);
 		$out->putString($this->xboxUserId);
 		$out->putString($this->platformChatId);
 		$out->putByte($this->flags);

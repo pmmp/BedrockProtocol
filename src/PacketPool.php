@@ -233,6 +233,8 @@ class PacketPool{
 		$this->registerPacket(new JigsawStructureDataPacket());
 		$this->registerPacket(new CurrentStructureFeaturePacket());
 		$this->registerPacket(new ServerboundDiagnosticsPacket());
+		$this->registerPacket(new CameraAimAssistPacket());
+		$this->registerPacket(new ContainerRegistryCleanupPacket());
 	}
 
 	public function registerPacket(Packet $packet) : void{

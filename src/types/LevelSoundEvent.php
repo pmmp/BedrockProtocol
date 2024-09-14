@@ -329,7 +329,7 @@ final class LevelSoundEvent{
 	public const AMBIENT_WARPED_FOREST_MOOD = 303;
 	public const AMBIENT_SOULSAND_VALLEY_MOOD = 304;
 	public const AMBIENT_NETHER_WASTES_MOOD = 305;
-	public const RESPAWN_ANCHOR_BASALT_DELTAS_MOOD = 306;
+	public const AMBIENT_BASALT_DELTAS_MOOD = 306;
 	public const AMBIENT_CRIMSON_FOREST_MOOD = 307;
 	public const RESPAWN_ANCHOR_CHARGE = 308;
 	public const RESPAWN_ANCHOR_DEPLETE = 309;
@@ -520,6 +520,9 @@ final class LevelSoundEvent{
 	public const RECORD_CREATOR_MUSIC_BOX = 528;
 	public const RECORD_PRECIPICE = 529;
 	public const VAULT_REJECT_REWARDED_PLAYER = 530;
+	public const IMITATE_DROWNED = 531;
+
+	public const BUNDLE_INSERT_FAIL = 533;
 
 	//The following aliases are kept for backwards compatibility only
 	public const SCULK_SENSOR_POWER_ON = self::POWER_ON_SCULK_SENSOR;

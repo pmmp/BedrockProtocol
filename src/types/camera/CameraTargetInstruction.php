@@ -21,24 +21,24 @@ final class CameraTargetInstruction{
 
 	public function __construct(
 		private ?Vector3 $targetCenterOffset,
-		private int $actorUniqueId
+		private int $targetActorUniqueId //This is a little-endian long, NOT a var-long. (WTF Mojang)
 	){}
 
 	public function getTargetCenterOffset() : ?Vector3{ return $this->targetCenterOffset; }
 
-	public function getActorUniqueId() : int{ return $this->actorUniqueId; }
+	public function getTargetActorUniqueId() : int{ return $this->targetActorUniqueId; }
 
 	public static function read(PacketSerializer $in) : self{
 		$targetCenterOffset = $in->readOptional(fn() => $in->getVector3());
-		$actorUniqueId = $in->getActorUniqueId();
+		$targetActorUniqueId = $in->getLLong(); //WHY IS THIS NON-STANDARD?
 		return new self(
 			$targetCenterOffset,
-			$actorUniqueId
+			$targetActorUniqueId
 		);
 	}
 
 	public function write(PacketSerializer $out) : void{
 		$out->writeOptional($this->targetCenterOffset, fn(Vector3 $v) => $out->putVector3($v));
-		$out->putActorUniqueId($this->actorUniqueId);
+		$out->putLLong($this->targetActorUniqueId);
 	}
 }

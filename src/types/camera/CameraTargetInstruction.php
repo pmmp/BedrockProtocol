@@ -30,7 +30,7 @@ final class CameraTargetInstruction{
 
 	public static function read(PacketSerializer $in) : self{
 		$targetCenterOffset = $in->readOptional(fn() => $in->getVector3());
-		$actorUniqueId = $in->getLLong();
+		$actorUniqueId = $in->getLLong(); //why be consistent mojang ?????
 		return new self(
 			$targetCenterOffset,
 			$actorUniqueId

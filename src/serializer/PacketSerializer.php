@@ -23,8 +23,6 @@ use pocketmine\network\mcpe\protocol\PacketDecodeException;
 use pocketmine\network\mcpe\protocol\types\BlockPosition;
 use pocketmine\network\mcpe\protocol\types\BoolGameRule;
 use pocketmine\network\mcpe\protocol\types\command\CommandOriginData;
-use pocketmine\network\mcpe\protocol\types\entity\Attribute;
-use pocketmine\network\mcpe\protocol\types\entity\AttributeModifier;
 use pocketmine\network\mcpe\protocol\types\entity\BlockPosMetadataProperty;
 use pocketmine\network\mcpe\protocol\types\entity\ByteMetadataProperty;
 use pocketmine\network\mcpe\protocol\types\entity\CompoundTagMetadataProperty;
@@ -405,53 +403,6 @@ class PacketSerializer extends BinaryStream{
 			$this->putUnsignedVarInt($key);
 			$this->putUnsignedVarInt($d->getTypeId());
 			$d->write($this);
-		}
-	}
-
-	/**
-	 * Reads a list of Attributes from the stream.
-	 * @return Attribute[]
-	 *
-	 * @throws BinaryDataException
-	 */
-	public function getAttributeList() : array{
-		$list = [];
-		$count = $this->getUnsignedVarInt();
-
-		for($i = 0; $i < $count; ++$i){
-			$min = $this->getLFloat();
-			$max = $this->getLFloat();
-			$current = $this->getLFloat();
-			$default = $this->getLFloat();
-			$id = $this->getString();
-
-			$modifiers = [];
-			for($j = 0, $modifierCount = $this->getUnsignedVarInt(); $j < $modifierCount; $j++){
-				$modifiers[] = AttributeModifier::read($this);
-			}
-
-			$list[] = new Attribute($id, $min, $max, $current, $default, $modifiers);
-		}
-
-		return $list;
-	}
-
-	/**
-	 * Writes a list of Attributes to the packet buffer using the standard format.
-	 */
-	public function putAttributeList(Attribute ...$attributes) : void{
-		$this->putUnsignedVarInt(count($attributes));
-		foreach($attributes as $attribute){
-			$this->putLFloat($attribute->getMin());
-			$this->putLFloat($attribute->getMax());
-			$this->putLFloat($attribute->getCurrent());
-			$this->putLFloat($attribute->getDefault());
-			$this->putString($attribute->getId());
-
-			$this->putUnsignedVarInt(count($attribute->getModifiers()));
-			foreach($attribute->getModifiers() as $modifier){
-				$modifier->write($this);
-			}
 		}
 	}
 

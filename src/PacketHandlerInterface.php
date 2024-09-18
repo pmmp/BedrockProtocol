@@ -417,4 +417,8 @@ interface PacketHandlerInterface{
 	public function handleCurrentStructureFeature(CurrentStructureFeaturePacket $packet) : bool;
 
 	public function handleServerboundDiagnostics(ServerboundDiagnosticsPacket $packet) : bool;
+
+	public function handleCameraAimAssist(CameraAimAssistPacket $packet) : bool;
+
+	public function handleContainerRegistryCleanup(ContainerRegistryCleanupPacket $packet) : bool;
 }

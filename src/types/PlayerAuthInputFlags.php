@@ -101,5 +101,10 @@ final class PlayerAuthInputFlags{
 	public const IN_CLIENT_PREDICTED_VEHICLE = 45;
 	public const PADDLING_LEFT = 46;
 	public const PADDLING_RIGHT = 47;
+	public const BLOCK_BREAKING_DELAY_ENABLED = 48;
+	public const HORIZONTAL_COLLISION = 49;
+	public const VERTICAL_COLLISION = 50;
+	public const DOWN_LEFT = 51;
+	public const DOWN_RIGHT = 52;
 
 }

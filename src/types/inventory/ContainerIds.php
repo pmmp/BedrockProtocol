@@ -30,5 +30,7 @@ final class ContainerIds{
 	public const HOTBAR = 122;
 	public const FIXED_INVENTORY = 123;
 	public const UI = 124;
+	public const CONTAINER_ID_REGISTRY = 125;
+	public const CONTAINER_ID_REGISTRY_INVENTORY = 126;
 
 }

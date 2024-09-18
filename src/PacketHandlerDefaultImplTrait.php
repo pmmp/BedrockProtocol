@@ -821,4 +821,12 @@ trait PacketHandlerDefaultImplTrait{
 	public function handleServerboundDiagnostics(ServerboundDiagnosticsPacket $packet) : bool{
 		return false;
 	}
+
+	public function handleCameraAimAssist(CameraAimAssistPacket $packet) : bool{
+		return false;
+	}
+
+	public function handleContainerRegistryCleanup(ContainerRegistryCleanupPacket $packet) : bool{
+		return false;
+	}
 }

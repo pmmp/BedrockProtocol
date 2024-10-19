@@ -106,5 +106,10 @@ final class PlayerAuthInputFlags{
 	public const VERTICAL_COLLISION = 50;
 	public const DOWN_LEFT = 51;
 	public const DOWN_RIGHT = 52;
+	public const START_USING_ITEM = 53;
+	public const IS_CAMERA_RELATIVE_MOVEMENT_ENABLED = 54;
+	public const IS_ROT_CONTROLLED_BY_MOVE_DIRECTION = 55;
+	public const START_SPIN_ATTACK = 56;
+	public const STOP_SPIN_ATTACK = 57;
 
 }

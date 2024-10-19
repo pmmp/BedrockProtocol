@@ -36,7 +36,7 @@ class CraftingDataPacket extends DataPacket implements ClientboundPacket{
 	public const ENTRY_FURNACE = 2;
 	public const ENTRY_FURNACE_DATA = 3;
 	public const ENTRY_MULTI = 4;
-	public const ENTRY_SHULKER_BOX = 5;
+	public const ENTRY_USER_DATA_SHAPELESS = 5;
 	public const ENTRY_SHAPELESS_CHEMISTRY = 6;
 	public const ENTRY_SHAPED_CHEMISTRY = 7;
 	public const ENTRY_SMITHING_TRANSFORM = 8;
@@ -76,7 +76,7 @@ class CraftingDataPacket extends DataPacket implements ClientboundPacket{
 			$recipeType = $in->getVarInt();
 
 			$this->recipesWithTypeIds[] = match($recipeType){
-				self::ENTRY_SHAPELESS, self::ENTRY_SHULKER_BOX, self::ENTRY_SHAPELESS_CHEMISTRY => ShapelessRecipe::decode($recipeType, $in),
+				self::ENTRY_SHAPELESS, self::ENTRY_USER_DATA_SHAPELESS, self::ENTRY_SHAPELESS_CHEMISTRY => ShapelessRecipe::decode($recipeType, $in),
 				self::ENTRY_SHAPED, self::ENTRY_SHAPED_CHEMISTRY => ShapedRecipe::decode($recipeType, $in),
 				self::ENTRY_FURNACE, self::ENTRY_FURNACE_DATA => FurnaceRecipe::decode($recipeType, $in),
 				self::ENTRY_MULTI => MultiRecipe::decode($recipeType, $in),

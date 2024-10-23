@@ -235,6 +235,8 @@ class PacketPool{
 		$this->registerPacket(new ServerboundDiagnosticsPacket());
 		$this->registerPacket(new CameraAimAssistPacket());
 		$this->registerPacket(new ContainerRegistryCleanupPacket());
+		$this->registerPacket(new MovementEffectPacket());
+		$this->registerPacket(new SetMovementAuthorityPacket());
 	}
 
 	public function registerPacket(Packet $packet) : void{

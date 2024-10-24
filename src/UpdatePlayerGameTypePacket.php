@@ -45,13 +45,13 @@ class UpdatePlayerGameTypePacket extends DataPacket implements ClientboundPacket
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->gameMode = $in->getVarInt();
 		$this->playerActorUniqueId = $in->getActorUniqueId();
-		$this->tick = $in->getUnsignedVarInt();
+		$this->tick = $in->getUnsignedVarLong();
 	}
 
 	protected function encodePayload(PacketSerializer $out) : void{
 		$out->putVarInt($this->gameMode);
 		$out->putActorUniqueId($this->playerActorUniqueId);
-		$out->putUnsignedVarInt($this->tick);
+		$out->putUnsignedVarLong($this->tick);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

@@ -26,18 +26,18 @@ class InventoryContentPacket extends DataPacket implements ClientboundPacket{
 	/** @var ItemStackWrapper[] */
 	public array $items = [];
 	public FullContainerName $containerName;
-	public int $dynamicContainerSize;
+	public ItemStackWrapper $storage;
 
 	/**
 	 * @generate-create-func
 	 * @param ItemStackWrapper[] $items
 	 */
-	public static function create(int $windowId, array $items, FullContainerName $containerName, int $dynamicContainerSize) : self{
+	public static function create(int $windowId, array $items, FullContainerName $containerName, ItemStackWrapper $storage) : self{
 		$result = new self;
 		$result->windowId = $windowId;
 		$result->items = $items;
 		$result->containerName = $containerName;
-		$result->dynamicContainerSize = $dynamicContainerSize;
+		$result->storage = $storage;
 		return $result;
 	}
 
@@ -48,7 +48,7 @@ class InventoryContentPacket extends DataPacket implements ClientboundPacket{
 			$this->items[] = $in->getItemStackWrapper();
 		}
 		$this->containerName = FullContainerName::read($in);
-		$this->dynamicContainerSize = $in->getUnsignedVarInt();
+		$this->storage = $in->getItemStackWrapper();
 	}
 
 	protected function encodePayload(PacketSerializer $out) : void{
@@ -58,7 +58,7 @@ class InventoryContentPacket extends DataPacket implements ClientboundPacket{
 			$out->putItemStackWrapper($item);
 		}
 		$this->containerName->write($out);
-		$out->putUnsignedVarInt($this->dynamicContainerSize);
+		$out->putItemStackWrapper($this->storage);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

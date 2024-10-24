@@ -14,9 +14,9 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol\types;
 
-final class PlayerMovementType{
+enum MovementEffectType : int{
+	use PacketIntEnumTrait;
 
-	public const LEGACY = 0; //MovePlayerPacket
-	public const SERVER_AUTHORITATIVE_V1 = 1; //PlayerAuthInputPacket
-	public const SERVER_AUTHORITATIVE_V2_REWIND = 2; //PlayerAuthInputPacket + movement replay (used for server authoritative knockback)
+	case INVALID = -1;
+	case GLIDE_BOOST = 0;
 }

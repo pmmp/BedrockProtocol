@@ -27,6 +27,7 @@ final class CameraSetInstruction{
 		private ?CameraSetInstructionRotation $rotation,
 		private ?Vector3 $facingPosition,
 		private ?Vector2 $viewOffset,
+		private ?Vector3 $entityOffset,
 		private ?bool $default
 	){}
 
@@ -42,6 +43,8 @@ final class CameraSetInstruction{
 
 	public function getViewOffset() : ?Vector2{ return $this->viewOffset; }
 
+	public function getEntityOffset() : ?Vector3{ return $this->entityOffset; }
+
 	public function getDefault() : ?bool{ return $this->default; }
 
 	public static function read(PacketSerializer $in) : self{
@@ -51,6 +54,7 @@ final class CameraSetInstruction{
 		$rotation = $in->readOptional(fn() => CameraSetInstructionRotation::read($in));
 		$facingPosition = $in->readOptional($in->getVector3(...));
 		$viewOffset = $in->readOptional($in->getVector2(...));
+		$entityOffset = $in->readOptional($in->getVector3(...));
 		$default = $in->readOptional($in->getBool(...));
 
 		return new self(
@@ -60,6 +64,7 @@ final class CameraSetInstruction{
 			$rotation,
 			$facingPosition,
 			$viewOffset,
+			$entityOffset,
 			$default
 		);
 	}
@@ -71,6 +76,7 @@ final class CameraSetInstruction{
 		$out->writeOptional($this->rotation, fn(CameraSetInstructionRotation $v) => $v->write($out));
 		$out->writeOptional($this->facingPosition, $out->putVector3(...));
 		$out->writeOptional($this->viewOffset, $out->putVector2(...));
+		$out->writeOptional($this->entityOffset, $out->putVector3(...));
 		$out->writeOptional($this->default, $out->putBool(...));
 	}
 }

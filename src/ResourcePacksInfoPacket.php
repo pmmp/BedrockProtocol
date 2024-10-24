@@ -26,25 +26,17 @@ class ResourcePacksInfoPacket extends DataPacket implements ClientboundPacket{
 	public bool $mustAccept = false; //if true, forces client to choose between accepting packs or being disconnected
 	public bool $hasAddons = false;
 	public bool $hasScripts = false; //if true, causes disconnect for any platform that doesn't support scripts yet
-	/**
-	 * @var string[]
-	 * @phpstan-var array<string, string>
-	 */
-	public array $cdnUrls = [];
 
 	/**
 	 * @generate-create-func
 	 * @param ResourcePackInfoEntry[] $resourcePackEntries
-	 * @param string[]                $cdnUrls
-	 * @phpstan-param array<string, string> $cdnUrls
 	 */
-	public static function create(array $resourcePackEntries, bool $mustAccept, bool $hasAddons, bool $hasScripts, array $cdnUrls) : self{
+	public static function create(array $resourcePackEntries, bool $mustAccept, bool $hasAddons, bool $hasScripts) : self{
 		$result = new self;
 		$result->resourcePackEntries = $resourcePackEntries;
 		$result->mustAccept = $mustAccept;
 		$result->hasAddons = $hasAddons;
 		$result->hasScripts = $hasScripts;
-		$result->cdnUrls = $cdnUrls;
 		return $result;
 	}
 
@@ -57,13 +49,6 @@ class ResourcePacksInfoPacket extends DataPacket implements ClientboundPacket{
 		while($resourcePackCount-- > 0){
 			$this->resourcePackEntries[] = ResourcePackInfoEntry::read($in);
 		}
-
-		$this->cdnUrls = [];
-		for($i = 0, $count = $in->getUnsignedVarInt(); $i < $count; $i++){
-			$packId = $in->getString();
-			$cdnUrl = $in->getString();
-			$this->cdnUrls[$packId] = $cdnUrl;
-		}
 	}
 
 	protected function encodePayload(PacketSerializer $out) : void{
@@ -73,11 +58,6 @@ class ResourcePacksInfoPacket extends DataPacket implements ClientboundPacket{
 		$out->putLShort(count($this->resourcePackEntries));
 		foreach($this->resourcePackEntries as $entry){
 			$entry->write($out);
-		}
-		$out->putUnsignedVarInt(count($this->cdnUrls));
-		foreach($this->cdnUrls as $packId => $cdnUrl){
-			$out->putString($packId);
-			$out->putString($cdnUrl);
 		}
 	}
 

@@ -421,4 +421,8 @@ interface PacketHandlerInterface{
 	public function handleCameraAimAssist(CameraAimAssistPacket $packet) : bool;
 
 	public function handleContainerRegistryCleanup(ContainerRegistryCleanupPacket $packet) : bool;
+
+	public function handleMovementEffect(MovementEffectPacket $packet) : bool;
+
+	public function handleSetMovementAuthority(SetMovementAuthorityPacket $packet) : bool;
 }

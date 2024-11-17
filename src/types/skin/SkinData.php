@@ -36,7 +36,7 @@ class SkinData{
 		private string $resourcePatch,
 		private SkinImage $skinImage,
 		private array $animations = [],
-		SkinImage $capeImage = null,
+		?SkinImage $capeImage = null,
 		private string $geometryData = "",
 		private string $geometryDataEngineVersion = ProtocolInfo::MINECRAFT_VERSION_NETWORK,
 		private string $animationData = "",

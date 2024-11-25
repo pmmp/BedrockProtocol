@@ -22,6 +22,7 @@ use pocketmine\network\mcpe\protocol\types\camera\CameraAimAssistTargetMode;
 class CameraAimAssistPacket extends DataPacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::CAMERA_AIM_ASSIST_PACKET;
 
+	private string $presetId;
 	private Vector2 $viewAngle;
 	private float $distance;
 	private CameraAimAssistTargetMode $targetMode;
@@ -30,14 +31,17 @@ class CameraAimAssistPacket extends DataPacket implements ClientboundPacket{
 	/**
 	 * @generate-create-func
 	 */
-	public static function create(Vector2 $viewAngle, float $distance, CameraAimAssistTargetMode $targetMode, CameraAimAssistActionType $actionType) : self{
+	public static function create(string $presetId, Vector2 $viewAngle, float $distance, CameraAimAssistTargetMode $targetMode, CameraAimAssistActionType $actionType) : self{
 		$result = new self;
+		$result->presetId = $presetId;
 		$result->viewAngle = $viewAngle;
 		$result->distance = $distance;
 		$result->targetMode = $targetMode;
 		$result->actionType = $actionType;
 		return $result;
 	}
+
+	public function getPresetId() : string{ return $this->presetId; }
 
 	public function getViewAngle() : Vector2{ return $this->viewAngle; }
 
@@ -48,6 +52,7 @@ class CameraAimAssistPacket extends DataPacket implements ClientboundPacket{
 	public function getActionType() : CameraAimAssistActionType{ return $this->actionType; }
 
 	protected function decodePayload(PacketSerializer $in) : void{
+		$this->presetId = $in->getString();
 		$this->viewAngle = $in->getVector2();
 		$this->distance = $in->getLFloat();
 		$this->targetMode = CameraAimAssistTargetMode::fromPacket($in->getByte());
@@ -55,6 +60,7 @@ class CameraAimAssistPacket extends DataPacket implements ClientboundPacket{
 	}
 
 	protected function encodePayload(PacketSerializer $out) : void{
+		$out->putString($this->presetId);
 		$out->putVector2($this->viewAngle);
 		$out->putLFloat($this->distance);
 		$out->putByte($this->targetMode->value);

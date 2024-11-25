@@ -35,12 +35,14 @@ final class CameraPreset{
 		private ?Vector2 $horizontalRotationLimit,
 		private ?Vector2 $verticalRotationLimit,
 		private ?bool $continueTargeting,
+		private ?float $blockListeningRadius,
 		private ?Vector2 $viewOffset,
 		private ?Vector3 $entityOffset,
 		private ?float $radius,
 		private ?int $audioListenerType,
 		private ?bool $playerEffects,
-		private ?bool $alignTargetAndCameraForward
+		private ?bool $alignTargetAndCameraForward,
+		private ?bool $aimAssist,
 	){}
 
 	public function getName() : string{ return $this->name; }
@@ -67,6 +69,8 @@ final class CameraPreset{
 
 	public function getContinueTargeting() : ?bool{ return $this->continueTargeting; }
 
+	public function getBlockListeningRadius() : ?float{ return $this->blockListeningRadius; }
+
 	public function getViewOffset() : ?Vector2{ return $this->viewOffset; }
 
 	public function getEntityOffset() : ?Vector3{ return $this->entityOffset; }
@@ -78,6 +82,8 @@ final class CameraPreset{
 	public function getPlayerEffects() : ?bool{ return $this->playerEffects; }
 
 	public function getAlignTargetAndCameraForward() : ?bool{ return $this->alignTargetAndCameraForward; }
+
+	public function getAimAssist() : ?bool{ return $this->aimAssist; }
 
 	public static function read(PacketSerializer $in) : self{
 		$name = $in->getString();
@@ -92,12 +98,14 @@ final class CameraPreset{
 		$horizontalRotationLimit = $in->readOptional($in->getVector2(...));
 		$verticalRotationLimit = $in->readOptional($in->getVector2(...));
 		$continueTargeting = $in->readOptional($in->getBool(...));
+		$blockListeningRadius = $in->readOptional($in->getLFloat(...));
 		$viewOffset = $in->readOptional($in->getVector2(...));
 		$entityOffset = $in->readOptional($in->getVector3(...));
 		$radius = $in->readOptional($in->getLFloat(...));
 		$audioListenerType = $in->readOptional($in->getByte(...));
 		$playerEffects = $in->readOptional($in->getBool(...));
 		$alignTargetAndCameraForward = $in->readOptional($in->getBool(...));
+		$aimAssist = $in->readOptional($in->getBool(...));
 
 		return new self(
 			$name,
@@ -112,12 +120,14 @@ final class CameraPreset{
 			$horizontalRotationLimit,
 			$verticalRotationLimit,
 			$continueTargeting,
+			$blockListeningRadius,
 			$viewOffset,
 			$entityOffset,
 			$radius,
 			$audioListenerType,
 			$playerEffects,
-			$alignTargetAndCameraForward
+			$alignTargetAndCameraForward,
+			$aimAssist
 		);
 	}
 
@@ -134,11 +144,13 @@ final class CameraPreset{
 		$out->writeOptional($this->horizontalRotationLimit, $out->putVector2(...));
 		$out->writeOptional($this->verticalRotationLimit, $out->putVector2(...));
 		$out->writeOptional($this->continueTargeting, $out->putBool(...));
+		$out->writeOptional($this->blockListeningRadius, $out->putLFloat(...));
 		$out->writeOptional($this->viewOffset, $out->putVector2(...));
 		$out->writeOptional($this->entityOffset, $out->putVector3(...));
 		$out->writeOptional($this->radius, $out->putLFloat(...));
 		$out->writeOptional($this->audioListenerType, $out->putByte(...));
 		$out->writeOptional($this->playerEffects, $out->putBool(...));
 		$out->writeOptional($this->alignTargetAndCameraForward, $out->putBool(...));
+		$out->writeOptional($this->aimAssist, $out->putBool(...));
 	}
 }

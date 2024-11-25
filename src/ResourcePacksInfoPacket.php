@@ -16,6 +16,7 @@ namespace pocketmine\network\mcpe\protocol;
 
 use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 use pocketmine\network\mcpe\protocol\types\resourcepacks\ResourcePackInfoEntry;
+use Ramsey\Uuid\UuidInterface;
 use function count;
 
 class ResourcePacksInfoPacket extends DataPacket implements ClientboundPacket{
@@ -26,17 +27,21 @@ class ResourcePacksInfoPacket extends DataPacket implements ClientboundPacket{
 	public bool $mustAccept = false; //if true, forces client to choose between accepting packs or being disconnected
 	public bool $hasAddons = false;
 	public bool $hasScripts = false; //if true, causes disconnect for any platform that doesn't support scripts yet
+	private UuidInterface $worldTemplateId;
+	private string $worldTemplateVersion;
 
 	/**
 	 * @generate-create-func
 	 * @param ResourcePackInfoEntry[] $resourcePackEntries
 	 */
-	public static function create(array $resourcePackEntries, bool $mustAccept, bool $hasAddons, bool $hasScripts) : self{
+	public static function create(array $resourcePackEntries, bool $mustAccept, bool $hasAddons, bool $hasScripts, UuidInterface $worldTemplateId, string $worldTemplateVersion) : self{
 		$result = new self;
 		$result->resourcePackEntries = $resourcePackEntries;
 		$result->mustAccept = $mustAccept;
 		$result->hasAddons = $hasAddons;
 		$result->hasScripts = $hasScripts;
+		$result->worldTemplateId = $worldTemplateId;
+		$result->worldTemplateVersion = $worldTemplateVersion;
 		return $result;
 	}
 
@@ -44,6 +49,8 @@ class ResourcePacksInfoPacket extends DataPacket implements ClientboundPacket{
 		$this->mustAccept = $in->getBool();
 		$this->hasAddons = $in->getBool();
 		$this->hasScripts = $in->getBool();
+		$this->worldTemplateId = $in->getUUID();
+		$this->worldTemplateVersion = $in->getString();
 
 		$resourcePackCount = $in->getLShort();
 		while($resourcePackCount-- > 0){
@@ -55,6 +62,8 @@ class ResourcePacksInfoPacket extends DataPacket implements ClientboundPacket{
 		$out->putBool($this->mustAccept);
 		$out->putBool($this->hasAddons);
 		$out->putBool($this->hasScripts);
+		$out->putUUID($this->worldTemplateId);
+		$out->putString($this->worldTemplateVersion);
 		$out->putLShort(count($this->resourcePackEntries));
 		foreach($this->resourcePackEntries as $entry){
 			$entry->write($out);

@@ -25,13 +25,15 @@ class RequestNetworkSettingsPacket extends DataPacket implements ServerboundPack
 	public const NETWORK_ID = ProtocolInfo::REQUEST_NETWORK_SETTINGS_PACKET;
 
 	private int $protocolVersion;
+	private int $minecraftVersion;
 
 	/**
 	 * @generate-create-func
 	 */
-	public static function create(int $protocolVersion) : self{
+	public static function create(int $protocolVersion, int $minecraftVersion) : self{
 		$result = new self;
 		$result->protocolVersion = $protocolVersion;
+		$result->minecraftVersion = $minecraftVersion;
 		return $result;
 	}
 
@@ -41,12 +43,16 @@ class RequestNetworkSettingsPacket extends DataPacket implements ServerboundPack
 
 	public function getProtocolVersion() : int{ return $this->protocolVersion; }
 
+	public function getMinecraftVersion() : int{ return $this->protocolVersion; }
+
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->protocolVersion = $in->getInt();
+		$this->minecraftVersion = $in->getInt();
 	}
 
 	protected function encodePayload(PacketSerializer $out) : void{
 		$out->putInt($this->protocolVersion);
+		$out->putInt($this->minecraftVersion);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

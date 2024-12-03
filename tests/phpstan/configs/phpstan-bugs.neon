@@ -9,3 +9,12 @@ parameters:
 			message: "#^Parameter \\#3 \\$packets of static method pocketmine\\\\network\\\\mcpe\\\\protocol\\\\serializer\\\\PacketBatch\\:\\:encodePackets\\(\\) expects array\\<int, pocketmine\\\\network\\\\mcpe\\\\protocol\\\\Packet\\>, array\\<int\\|string, pocketmine\\\\network\\\\mcpe\\\\protocol\\\\Packet\\> given\\.$#"
 			count: 1
 			path: ../../../src/serializer/PacketBatch.php
+		-
+			message: "#^Parameter \\#2 \\$parts of class pocketmine\\\\network\\\\mcpe\\\\protocol\\\\serializer\\\\BitSet constructor expects array\\<int\\>, array\\<int, float\\> given\\.$#"
+			count: 1
+			path: tests/phpunit/BitSetTest.php
+
+		-
+			message: "#^Parameter \\#2 \\$parts of class pocketmine\\\\network\\\\mcpe\\\\protocol\\\\serializer\\\\BitSet constructor expects array\\<int\\>, array\\<int, float\\|int\\> given\\.$#"
+			count: 1
+			path: tests/phpunit/BitSetTest.php

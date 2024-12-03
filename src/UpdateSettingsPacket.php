@@ -12,7 +12,13 @@ class UpdateSettingsPacket extends DataPacket implements ServerboundPacket{
 	/** @var int */
 	public int $defaultGameMode;
 	/** @var int */
-	public int $gameMode;
+	public int $gameMode;/*** @generate-create-func*/
+	public static function create(int $defaultGameMode, int $gameMode) : self{
+		$packet = new self();
+		$packet->defaultGameMode = $defaultGameMode;
+		$packet->gameMode = $gameMode;
+		return $packet;
+	}
 
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->defaultGameMode = $in->getByte();
@@ -22,13 +28,6 @@ class UpdateSettingsPacket extends DataPacket implements ServerboundPacket{
 	protected function encodePayload(PacketSerializer $out) : void{
 		$out->putByte($this->defaultGameMode);
 		$out->putByte($this->gameMode);
-	}
-
-	public static function create(int $defaultGameMode, int $gameMode) : self{
-		$packet = new self();
-		$packet->defaultGameMode = $defaultGameMode;
-		$packet->gameMode = $gameMode;
-		return $packet;
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

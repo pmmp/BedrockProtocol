@@ -255,4 +255,5 @@ final class ProtocolInfo{
 	public const CONTAINER_REGISTRY_CLEANUP_PACKET = 0x13d;
 	public const MOVEMENT_EFFECT_PACKET = 0x13e;
 	public const SET_MOVEMENT_AUTHORITY_PACKET = 0x13f;
+	public const UPDATE_SETTINGS_PACKET = 0x140;
 }

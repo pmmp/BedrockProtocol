@@ -18,7 +18,6 @@ use PHPUnit\Framework\TestCase;
 use pocketmine\network\mcpe\protocol\serializer\BitSet;
 use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 use function PHPUnit\Framework\assertTrue;
-use function var_dump;
 
 class BitSetTest extends TestCase{
 

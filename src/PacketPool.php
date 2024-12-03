@@ -237,6 +237,7 @@ class PacketPool{
 		$this->registerPacket(new ContainerRegistryCleanupPacket());
 		$this->registerPacket(new MovementEffectPacket());
 		$this->registerPacket(new SetMovementAuthorityPacket());
+		$this->registerPacket(new UpdateSettings());
 	}
 
 	public function registerPacket(Packet $packet) : void{

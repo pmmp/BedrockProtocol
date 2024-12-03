@@ -17,7 +17,6 @@ namespace pocketmine\network\mcpe\protocol;
 use PHPUnit\Framework\TestCase;
 use pocketmine\network\mcpe\protocol\serializer\BitSet;
 use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
-use function PHPUnit\Framework\assertTrue;
 
 class BitSetTest extends TestCase{
 
@@ -33,12 +32,12 @@ class BitSetTest extends TestCase{
 		$packetSerializer = PacketSerializer::decoder($packetSerializer->getBuffer(), 0);
 		$readTest = BitSet::read($packetSerializer, 65);
 
-		assertTrue($this->setsEqual($writeTest, $readTest));
+		self::assertEqualBitSets($writeTest, $readTest);
 	}
 
 	public function testBitSetConstructor() : void{
-		$test = new BitSet(65, [-9223372036854775808, 1]);
-		$test2 = new BitSet(65, [-9223372036854775808]);
+		$test = new BitSet(65, [-9223372036854775807 - 1, 1]);
+		$test2 = new BitSet(65, [-9223372036854775807 - 1]);
 
 		$test2->set(64, true);
 
@@ -61,7 +60,7 @@ class BitSetTest extends TestCase{
 		$packetSerializer = PacketSerializer::decoder($packetSerializer->getBuffer(), 0);
 		$readTest = BitSet::read($packetSerializer, 128);
 
-		assertTrue($this->setsEqual($writeTest, $readTest));
+		self::assertEqualBitSets($writeTest, $readTest);
 	}
 
 	public function testVarUnsignedLongCompatibility() : void{
@@ -74,21 +73,16 @@ class BitSetTest extends TestCase{
 		$expectedResult = new BitSet(64);
 		$expectedResult->set(63, true);
 
-		assertTrue($this->setsEqual($expectedResult, $readTest));
+		self::assertEqualBitSets($expectedResult, $readTest);
 	}
 
-	private function setsEqual(BitSet $a, BitSet $b) : bool{
-		$length = $a->getLength();
-		if($length !== $b->getLength()){
-			return false;
-		}
+	private static function assertEqualBitSets(BitSet $a, BitSet $b) : void{
+		self::assertEquals($length = $a->getLength(), $b->getLength(), "BitSet lengths are not equal");
 
 		for($i = 0; $i < $length; ++$i){
-			if($a->get($i) !== $b->get($i)){
-				return false;
-			}
+			self::assertEquals($a->get($i), $b->get($i), "BitSet values at index $i are not equal");
 		}
 
-		return $a->getPartsCount() === $b->getPartsCount();
+		self::assertEquals($a->getPartsCount(), $b->getPartsCount(), "BitSet parts count is not equal");
 	}
 }

@@ -81,13 +81,11 @@ class BitSetTest extends TestCase{
 	private function setsEqual(BitSet $a, BitSet $b) : bool{
 		$length = $a->getLength();
 		if($length !== $b->getLength()){
-			var_dump($length, $b->getLength());
 			return false;
 		}
 
 		for($i = 0; $i < $length; ++$i){
 			if($a->get($i) !== $b->get($i)){
-				var_dump($i, $a->get($i), $b->get($i));
 				return false;
 			}
 		}

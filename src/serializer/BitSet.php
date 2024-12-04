@@ -125,7 +125,7 @@ class BitSet{
 			$nextShift = $currentShift + self::SHIFT;
 			if($nextShift >= self::INT_BITS){
 				$nextShift -= self::INT_BITS;
-				$bits |= $parts[++$currentIndex] << (self::SHIFT - $nextShift);
+				$bits |= ($parts[++$currentIndex] ?? 0) << (self::SHIFT - $nextShift);
 			}
 			$currentShift = $nextShift;
 

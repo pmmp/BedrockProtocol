@@ -16,6 +16,7 @@ namespace pocketmine\network\mcpe\protocol;
 
 use pocketmine\math\Vector2;
 use pocketmine\math\Vector3;
+use pocketmine\network\mcpe\protocol\serializer\BitSet;
 use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 use pocketmine\network\mcpe\protocol\types\InputMode;
 use pocketmine\network\mcpe\protocol\types\InteractionMode;
@@ -38,7 +39,7 @@ class PlayerAuthInputPacket extends DataPacket implements ServerboundPacket{
 	private float $headYaw;
 	private float $moveVecX;
 	private float $moveVecZ;
-	private int $inputFlags;
+	private BitSet $inputFlags;
 	private int $inputMode;
 	private int $playMode;
 	private int $interactionMode;
@@ -53,6 +54,7 @@ class PlayerAuthInputPacket extends DataPacket implements ServerboundPacket{
 	private float $analogMoveVecX;
 	private float $analogMoveVecZ;
 	private Vector3 $cameraOrientation;
+	private Vector2 $rawMove;
 
 	/**
 	 * @generate-create-func
@@ -65,7 +67,7 @@ class PlayerAuthInputPacket extends DataPacket implements ServerboundPacket{
 		float $headYaw,
 		float $moveVecX,
 		float $moveVecZ,
-		int $inputFlags,
+		BitSet $inputFlags,
 		int $inputMode,
 		int $playMode,
 		int $interactionMode,
@@ -79,6 +81,7 @@ class PlayerAuthInputPacket extends DataPacket implements ServerboundPacket{
 		float $analogMoveVecX,
 		float $analogMoveVecZ,
 		Vector3 $cameraOrientation,
+		Vector2 $rawMove,
 	) : self{
 		$result = new self;
 		$result->position = $position;
@@ -101,11 +104,12 @@ class PlayerAuthInputPacket extends DataPacket implements ServerboundPacket{
 		$result->analogMoveVecX = $analogMoveVecX;
 		$result->analogMoveVecZ = $analogMoveVecZ;
 		$result->cameraOrientation = $cameraOrientation;
+		$result->rawMove = $rawMove;
 		return $result;
 	}
 
 	/**
-	 * @param int                      $inputFlags @see PlayerAuthInputFlags
+	 * @param BitSet                   $inputFlags @see PlayerAuthInputFlags
 	 * @param int                      $inputMode @see InputMode
 	 * @param int                      $playMode @see PlayMode
 	 * @param int                      $interactionMode @see InteractionMode
@@ -118,7 +122,7 @@ class PlayerAuthInputPacket extends DataPacket implements ServerboundPacket{
 		float $headYaw,
 		float $moveVecX,
 		float $moveVecZ,
-		int $inputFlags,
+		BitSet $inputFlags,
 		int $inputMode,
 		int $playMode,
 		int $interactionMode,
@@ -131,21 +135,17 @@ class PlayerAuthInputPacket extends DataPacket implements ServerboundPacket{
 		?PlayerAuthInputVehicleInfo $vehicleInfo,
 		float $analogMoveVecX,
 		float $analogMoveVecZ,
-		Vector3 $cameraOrientation
+		Vector3 $cameraOrientation,
+		Vector2 $rawMove
 	) : self{
-		$realInputFlags = $inputFlags & ~((1 << PlayerAuthInputFlags::PERFORM_ITEM_STACK_REQUEST) | (1 << PlayerAuthInputFlags::PERFORM_ITEM_INTERACTION) | (1 << PlayerAuthInputFlags::PERFORM_BLOCK_ACTIONS));
-		if($itemStackRequest !== null){
-			$realInputFlags |= 1 << PlayerAuthInputFlags::PERFORM_ITEM_STACK_REQUEST;
+		if($inputFlags->getLength() !== 65){
+			throw new \InvalidArgumentException("Input flags must be 65 bits long");
 		}
-		if($itemInteractionData !== null){
-			$realInputFlags |= 1 << PlayerAuthInputFlags::PERFORM_ITEM_INTERACTION;
-		}
-		if($blockActions !== null){
-			$realInputFlags |= 1 << PlayerAuthInputFlags::PERFORM_BLOCK_ACTIONS;
-		}
-		if($vehicleInfo !== null){
-			$realInputFlags |= 1 << PlayerAuthInputFlags::IN_CLIENT_PREDICTED_VEHICLE;
-		}
+
+		$inputFlags->set(PlayerAuthInputFlags::PERFORM_ITEM_STACK_REQUEST, $itemStackRequest !== null);
+		$inputFlags->set(PlayerAuthInputFlags::PERFORM_ITEM_INTERACTION, $itemInteractionData !== null);
+		$inputFlags->set(PlayerAuthInputFlags::PERFORM_BLOCK_ACTIONS, $blockActions !== null);
+		$inputFlags->set(PlayerAuthInputFlags::IN_CLIENT_PREDICTED_VEHICLE, $vehicleInfo !== null);
 
 		return self::internalCreate(
 			$position,
@@ -154,7 +154,7 @@ class PlayerAuthInputPacket extends DataPacket implements ServerboundPacket{
 			$headYaw,
 			$moveVecX,
 			$moveVecZ,
-			$realInputFlags,
+			$inputFlags,
 			$inputMode,
 			$playMode,
 			$interactionMode,
@@ -167,7 +167,8 @@ class PlayerAuthInputPacket extends DataPacket implements ServerboundPacket{
 			$vehicleInfo,
 			$analogMoveVecX,
 			$analogMoveVecZ,
-			$cameraOrientation
+			$cameraOrientation,
+			$rawMove
 		);
 	}
 
@@ -198,7 +199,7 @@ class PlayerAuthInputPacket extends DataPacket implements ServerboundPacket{
 	/**
 	 * @see PlayerAuthInputFlags
 	 */
-	public function getInputFlags() : int{
+	public function getInputFlags() : BitSet{
 		return $this->inputFlags;
 	}
 
@@ -256,9 +257,7 @@ class PlayerAuthInputPacket extends DataPacket implements ServerboundPacket{
 
 	public function getCameraOrientation() : Vector3{ return $this->cameraOrientation; }
 
-	public function hasFlag(int $flag) : bool{
-		return ($this->inputFlags & (1 << $flag)) !== 0;
-	}
+	public function getRawMove() : Vector2{ return $this->rawMove; }
 
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->pitch = $in->getLFloat();
@@ -267,20 +266,20 @@ class PlayerAuthInputPacket extends DataPacket implements ServerboundPacket{
 		$this->moveVecX = $in->getLFloat();
 		$this->moveVecZ = $in->getLFloat();
 		$this->headYaw = $in->getLFloat();
-		$this->inputFlags = $in->getUnsignedVarLong();
+		$this->inputFlags = BitSet::read($in, 65);
 		$this->inputMode = $in->getUnsignedVarInt();
 		$this->playMode = $in->getUnsignedVarInt();
 		$this->interactionMode = $in->getUnsignedVarInt();
 		$this->interactRotation = $in->getVector2();
 		$this->tick = $in->getUnsignedVarLong();
 		$this->delta = $in->getVector3();
-		if($this->hasFlag(PlayerAuthInputFlags::PERFORM_ITEM_INTERACTION)){
+		if($this->inputFlags->get(PlayerAuthInputFlags::PERFORM_ITEM_INTERACTION)){
 			$this->itemInteractionData = ItemInteractionData::read($in);
 		}
-		if($this->hasFlag(PlayerAuthInputFlags::PERFORM_ITEM_STACK_REQUEST)){
+		if($this->inputFlags->get(PlayerAuthInputFlags::PERFORM_ITEM_STACK_REQUEST)){
 			$this->itemStackRequest = ItemStackRequest::read($in);
 		}
-		if($this->hasFlag(PlayerAuthInputFlags::PERFORM_BLOCK_ACTIONS)){
+		if($this->inputFlags->get(PlayerAuthInputFlags::PERFORM_BLOCK_ACTIONS)){
 			$this->blockActions = [];
 			$max = $in->getVarInt();
 			for($i = 0; $i < $max; ++$i){
@@ -292,12 +291,13 @@ class PlayerAuthInputPacket extends DataPacket implements ServerboundPacket{
 				};
 			}
 		}
-		if($this->hasFlag(PlayerAuthInputFlags::IN_CLIENT_PREDICTED_VEHICLE)){
+		if($this->inputFlags->get(PlayerAuthInputFlags::IN_CLIENT_PREDICTED_VEHICLE)){
 			$this->vehicleInfo = PlayerAuthInputVehicleInfo::read($in);
 		}
 		$this->analogMoveVecX = $in->getLFloat();
 		$this->analogMoveVecZ = $in->getLFloat();
 		$this->cameraOrientation = $in->getVector3();
+		$this->rawMove = $in->getVector2();
 	}
 
 	protected function encodePayload(PacketSerializer $out) : void{
@@ -307,7 +307,7 @@ class PlayerAuthInputPacket extends DataPacket implements ServerboundPacket{
 		$out->putLFloat($this->moveVecX);
 		$out->putLFloat($this->moveVecZ);
 		$out->putLFloat($this->headYaw);
-		$out->putUnsignedVarLong($this->inputFlags);
+		$this->inputFlags->write($out);
 		$out->putUnsignedVarInt($this->inputMode);
 		$out->putUnsignedVarInt($this->playMode);
 		$out->putUnsignedVarInt($this->interactionMode);
@@ -333,6 +333,7 @@ class PlayerAuthInputPacket extends DataPacket implements ServerboundPacket{
 		$out->putLFloat($this->analogMoveVecX);
 		$out->putLFloat($this->analogMoveVecZ);
 		$out->putVector3($this->cameraOrientation);
+		$out->putVector2($this->rawMove);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

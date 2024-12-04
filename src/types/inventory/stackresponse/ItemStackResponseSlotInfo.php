@@ -23,6 +23,7 @@ final class ItemStackResponseSlotInfo{
 		private int $count,
 		private int $itemStackId,
 		private string $customName,
+		private string $filteredCustomName,
 		private int $durabilityCorrection
 	){}
 
@@ -36,6 +37,8 @@ final class ItemStackResponseSlotInfo{
 
 	public function getCustomName() : string{ return $this->customName; }
 
+	public function getFilteredCustomName() : string{ return $this->filteredCustomName; }
+
 	public function getDurabilityCorrection() : int{ return $this->durabilityCorrection; }
 
 	public static function read(PacketSerializer $in) : self{
@@ -44,8 +47,9 @@ final class ItemStackResponseSlotInfo{
 		$count = $in->getByte();
 		$itemStackId = $in->readServerItemStackId();
 		$customName = $in->getString();
+		$filteredCustomName = $in->getString();
 		$durabilityCorrection = $in->getVarInt();
-		return new self($slot, $hotbarSlot, $count, $itemStackId, $customName, $durabilityCorrection);
+		return new self($slot, $hotbarSlot, $count, $itemStackId, $customName, $filteredCustomName, $durabilityCorrection);
 	}
 
 	public function write(PacketSerializer $out) : void{
@@ -54,6 +58,7 @@ final class ItemStackResponseSlotInfo{
 		$out->putByte($this->count);
 		$out->writeServerItemStackId($this->itemStackId);
 		$out->putString($this->customName);
+		$out->putString($this->filteredCustomName);
 		$out->putVarInt($this->durabilityCorrection);
 	}
 }

@@ -15,10 +15,11 @@ declare(strict_types=1);
 namespace pocketmine\network\mcpe\protocol\types\resourcepacks;
 
 use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use Ramsey\Uuid\UuidInterface;
 
 class ResourcePackInfoEntry{
 	public function __construct(
-		private string $packId,
+		private UuidInterface $packId,
 		private string $version,
 		private int $sizeBytes,
 		private string $encryptionKey = "",
@@ -30,7 +31,7 @@ class ResourcePackInfoEntry{
 		private string $cdnUrl = ""
 	){}
 
-	public function getPackId() : string{
+	public function getPackId() : UuidInterface{
 		return $this->packId;
 	}
 
@@ -65,7 +66,7 @@ class ResourcePackInfoEntry{
 	public function getCdnUrl() : string{ return $this->cdnUrl; }
 
 	public function write(PacketSerializer $out) : void{
-		$out->putString($this->packId);
+		$out->putUUID($this->packId);
 		$out->putString($this->version);
 		$out->putLLong($this->sizeBytes);
 		$out->putString($this->encryptionKey);
@@ -78,7 +79,7 @@ class ResourcePackInfoEntry{
 	}
 
 	public static function read(PacketSerializer $in) : self{
-		$uuid = $in->getString();
+		$uuid = $in->getUUID();
 		$version = $in->getString();
 		$sizeBytes = $in->getLLong();
 		$encryptionKey = $in->getString();

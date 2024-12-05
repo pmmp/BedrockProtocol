@@ -837,4 +837,8 @@ trait PacketHandlerDefaultImplTrait{
 	public function handleSetMovementAuthority(SetMovementAuthorityPacket $packet) : bool{
 		return false;
 	}
+
+	public function handleCameraAimAssistPresets(CameraAimAssistPresetsPacket $packet) : bool{
+		return false;
+	}
 }

@@ -521,8 +521,20 @@ final class LevelSoundEvent{
 	public const RECORD_PRECIPICE = 529;
 	public const VAULT_REJECT_REWARDED_PLAYER = 530;
 	public const IMITATE_DROWNED = 531;
-
+	public const IMITATE_CREAKING = 532;
 	public const BUNDLE_INSERT_FAIL = 533;
+	public const SPONGE_ABSORB = 534;
+
+	public const BLOCK_CREAKING_HEART_TRAIL = 536;
+	public const CREAKING_HEART_SPAWN = 537;
+	public const ACTIVATE = 538;
+	public const DEACTIVATE = 539;
+	public const FREEZE = 540;
+	public const UNFREEZE = 541;
+	public const OPEN = 542;
+	public const OPEN_LONG = 543;
+	public const CLOSE = 544;
+	public const CLOSE_LONG = 545;
 
 	//The following aliases are kept for backwards compatibility only
 	public const SCULK_SENSOR_POWER_ON = self::POWER_ON_SCULK_SENSOR;

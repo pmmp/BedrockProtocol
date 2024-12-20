@@ -17,31 +17,21 @@ namespace pocketmine\network\mcpe\protocol;
 use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 use pocketmine\network\mcpe\protocol\types\VideoStreamAction;
 
-class VideoStreamConnectPacket extends DataPacket implements ClientboundPacket {
+class VideoStreamConnectPacket extends DataPacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::VIDEO_STREAM_CONNECT_PACKET;
 
-	/** @var string */
 	public string $address;
 
-	/** @var float */
 	public float $screenshotFrequency;
 
-	/** @var int */
 	public int $action;
 
-	/** @var int */
 	public int $width;
 
-	/** @var int */
 	public int $height;
 
 	/**
 	 * @generate-create-func
-	 * @param string $address
-	 * @param float $screenshotFrequency
-	 * @param int $action
-	 * @param int $width
-	 * @param int $height
 	 */
 	public static function create(
 		string $address,

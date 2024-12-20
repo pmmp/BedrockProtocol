@@ -23,6 +23,10 @@ class VideoStreamConnectPacket extends DataPacket implements ClientboundPacket{
 
 	public float $screenshotFrequency;
 
+	/**
+	 * @var int
+	 * @phpstan-var VideoStreamAction::*
+ 	 */
 	public int $action;
 
 	public int $width;
@@ -31,6 +35,7 @@ class VideoStreamConnectPacket extends DataPacket implements ClientboundPacket{
 
 	/**
 	 * @generate-create-func
+  	 * @phpstan-var VideoStreamAction::*
 	 */
 	public static function create(string $address, float $screenshotFrequency, int $action, int $width, int $height) : self{
 		$result = new self;

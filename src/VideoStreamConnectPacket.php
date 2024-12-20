@@ -24,7 +24,7 @@ class VideoStreamConnectPacket extends DataPacket implements ClientboundPacket{
 	public float $screenshotFrequency;
 
 	/**
-	 * @var int
+	 * @var int Action type
 	 * @phpstan-var VideoStreamAction::*
  	 */
 	public int $action;

@@ -427,4 +427,6 @@ interface PacketHandlerInterface{
 	public function handleSetMovementAuthority(SetMovementAuthorityPacket $packet) : bool;
 
 	public function handleCameraAimAssistPresets(CameraAimAssistPresetsPacket $packet) : bool;
+
+	public function handleVideoStreamConnect(VideoStreamConnectPacket $packet) : bool;
 }

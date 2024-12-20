@@ -256,4 +256,5 @@ final class ProtocolInfo{
 	public const MOVEMENT_EFFECT_PACKET = 0x13e;
 	public const SET_MOVEMENT_AUTHORITY_PACKET = 0x13f;
 	public const CAMERA_AIM_ASSIST_PRESETS_PACKET = 0x140;
+	public const VIDEO_STREAM_CONNECT_PACKET = 0x141;
 }

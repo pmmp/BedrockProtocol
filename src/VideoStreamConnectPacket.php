@@ -32,6 +32,7 @@ class VideoStreamConnectPacket extends DataPacket implements ClientboundPacket{
 
 	/**
 	 * @generate-create-func
+	 * @phpstan-param VideoStreamAction::* $action
 	 */
 	public static function create(
 		string $address,

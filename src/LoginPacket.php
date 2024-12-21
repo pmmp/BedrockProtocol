@@ -111,6 +111,10 @@ class LoginPacket extends DataPacket implements ServerboundPacket{
 		return $connRequestWriter->getBuffer();
 	}
 
+	protected function getClientInstance(): ClientInstance {
+		return <ClientInstance*>clientInstance;
+	}
+
 	public function handle(PacketHandlerInterface $handler) : bool{
 		return $handler->handleLogin($this);
 	}

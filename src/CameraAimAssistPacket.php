@@ -38,6 +38,7 @@ class CameraAimAssistPacket extends DataPacket implements ClientboundPacket{
 		$result->distance = $distance;
 		$result->targetMode = $targetMode;
 		$result->actionType = $actionType;
+		$result->allowCheats = true;
 		return $result;
 	}
 
@@ -65,6 +66,7 @@ class CameraAimAssistPacket extends DataPacket implements ClientboundPacket{
 		$out->putLFloat($this->distance);
 		$out->putByte($this->targetMode->value);
 		$out->putByte($this->actionType->value);
+		$out->putByte(true);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

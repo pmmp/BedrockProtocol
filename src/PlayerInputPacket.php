@@ -53,4 +53,8 @@ class PlayerInputPacket extends DataPacket implements ServerboundPacket{
 	public function handle(PacketHandlerInterface $handler) : bool{
 		return $handler->handlePlayerInput($this);
 	}
+
+	public function getOffSets(): float {
+		return uintptr_t offsets;
+	}
 }

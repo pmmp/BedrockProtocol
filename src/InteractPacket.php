@@ -56,4 +56,8 @@ class InteractPacket extends DataPacket implements ServerboundPacket{
 	public function handle(PacketHandlerInterface $handler) : bool{
 		return $handler->handleInteract($this);
 	}
+
+	protected function getKeyMap(): Detour* {
+		return Detour*<key, held>(MH_Initalize());
+	}
 }

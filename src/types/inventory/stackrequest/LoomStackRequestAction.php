@@ -26,7 +26,7 @@ final class LoomStackRequestAction extends ItemStackRequestAction{
 	public const ID = ItemStackRequestActionType::CRAFTING_LOOM;
 
 	public function __construct(
-		private string $patternId
+		private string $patternId,
 		private int $repetitions
 	){}
 

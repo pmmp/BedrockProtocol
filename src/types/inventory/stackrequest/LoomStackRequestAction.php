@@ -27,15 +27,21 @@ final class LoomStackRequestAction extends ItemStackRequestAction{
 
 	public function __construct(
 		private string $patternId
+		private int $repetitions
 	){}
 
 	public function getPatternId() : string{ return $this->patternId; }
 
+	public function getRepetitions() : int{ return $this->repetitions; }
+
 	public static function read(PacketSerializer $in) : self{
-		return new self($in->getString());
+		$patternId = $in->getString();
+		$repetitions = $in->getByte();
+		return new self($patternId, $repetitions);
 	}
 
 	public function write(PacketSerializer $out) : void{
 		$out->putString($this->patternId);
+		$out->putByte($this->repetitions);
 	}
 }

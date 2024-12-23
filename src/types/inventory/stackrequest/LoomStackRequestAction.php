@@ -27,7 +27,7 @@ final class LoomStackRequestAction extends ItemStackRequestAction{
 
 	public function __construct(
 		private string $patternId,
-		private int $repetitions
+		private int $repetitions = 1
 	){}
 
 	public function getPatternId() : string{ return $this->patternId; }

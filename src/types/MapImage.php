@@ -101,9 +101,11 @@ final class MapImage{
 		$pixels = [];
 
 		for($y = 0; $y < $height; ++$y){
+			$row = [];
 			for($x = 0; $x < $width; ++$x){
-				$pixels[$y][$x] = Color::fromRGBA(Binary::flipIntEndianness($input->getUnsignedVarInt()));
+				$row[] = Color::fromRGBA(Binary::flipIntEndianness($input->getUnsignedVarInt()));
 			}
+			$pixels[] = $row;
 		}
 
 		return new self($pixels);

@@ -12,6 +12,7 @@ parameters:
 	paths:
 		- src
 		- tests/phpunit
+		- tests/phpstan/DummyPacketHandler.php
 	stubFiles:
 		- tests/phpstan/stubs/JsonMapper.stub
 	reportUnmatchedIgnoredErrors: false #no other way to silence platform-specific non-warnings

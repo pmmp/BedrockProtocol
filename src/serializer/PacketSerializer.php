@@ -246,7 +246,7 @@ class PacketSerializer extends BinaryStream{
 	/**
 	 * @return int[]
 	 * @phpstan-return array{0: int, 1: int, 2: int}
-	 * @throws PacketDecodeException
+	 * @throws BinaryDataException
 	 */
 	private function getItemStackHeader() : array{
 		$id = $this->getVarInt();

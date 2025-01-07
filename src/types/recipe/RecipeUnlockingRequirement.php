@@ -21,6 +21,7 @@ final class RecipeUnlockingRequirement{
 
 	/**
 	 * @param RecipeIngredient[]|null $unlockingIngredients
+	 * @phpstan-param list<RecipeIngredient>|null $unlockingIngredients
 	 */
 	public function __construct(
 		private ?array $unlockingIngredients
@@ -28,6 +29,7 @@ final class RecipeUnlockingRequirement{
 
 	/**
 	 * @return RecipeIngredient[]|null
+	 * @phpstan-return list<RecipeIngredient>|null
 	 */
 	public function getUnlockingIngredients() : ?array{ return $this->unlockingIngredients; }
 

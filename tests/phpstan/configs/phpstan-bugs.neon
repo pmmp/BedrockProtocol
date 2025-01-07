@@ -29,3 +29,9 @@ parameters:
 			identifier: expr.resultUnused
 			count: 1
 			path: ../../../src/types/command/CommandOverload.php
+
+		-
+			message: '#^Parameter \#3 \$input of class pocketmine\\network\\mcpe\\protocol\\types\\recipe\\ShapedRecipe constructor expects list\<list\<pocketmine\\network\\mcpe\\protocol\\types\\recipe\\RecipeIngredient\>\>, array\<int\<0, max\>, non\-empty\-array\<int\<0, max\>, pocketmine\\network\\mcpe\\protocol\\types\\recipe\\RecipeIngredient\>\> given\.$#'
+			identifier: argument.type
+			count: 1
+			path: ../../../src/types/recipe/ShapedRecipe.php

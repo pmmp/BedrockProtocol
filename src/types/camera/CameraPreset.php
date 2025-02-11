@@ -44,7 +44,7 @@ final class CameraPreset{
 		private ?int $audioListenerType,
 		private ?bool $playerEffects,
 		private ?bool $alignTargetAndCameraForward,
-		private ?bool $aimAssist,
+		private ?CameraAimAssistPreset $aimAssist,
 	){}
 
 	public function getName() : string{ return $this->name; }
@@ -89,7 +89,7 @@ final class CameraPreset{
 
 	public function getAlignTargetAndCameraForward() : ?bool{ return $this->alignTargetAndCameraForward; }
 
-	public function getAimAssist() : ?bool{ return $this->aimAssist; }
+	public function getAimAssist() : ?CameraAimAssistPreset{ return $this->aimAssist; }
 
 	public static function read(PacketSerializer $in) : self{
 		$name = $in->getString();
@@ -113,7 +113,7 @@ final class CameraPreset{
 		$audioListenerType = $in->readOptional($in->getByte(...));
 		$playerEffects = $in->readOptional($in->getBool(...));
 		$alignTargetAndCameraForward = $in->readOptional($in->getBool(...));
-		$aimAssist = $in->readOptional($in->getBool(...));
+		$aimAssist = $in->readOptional(fn() => CameraAimAssistPreset::read($in));
 
 		return new self(
 			$name,
@@ -163,6 +163,6 @@ final class CameraPreset{
 		$out->writeOptional($this->audioListenerType, $out->putByte(...));
 		$out->writeOptional($this->playerEffects, $out->putBool(...));
 		$out->writeOptional($this->alignTargetAndCameraForward, $out->putBool(...));
-		$out->writeOptional($this->aimAssist, $out->putBool(...));
+		$out->writeOptional($this->aimAssist, fn(CameraAimAssistPreset $v) => $v->write($out));
 	}
 }

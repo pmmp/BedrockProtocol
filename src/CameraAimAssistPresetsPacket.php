@@ -26,16 +26,18 @@ class CameraAimAssistPresetsPacket extends DataPacket implements ClientboundPack
 	private array $categories;
 	/** @var CameraAimAssistPreset[] */
 	private array $presets;
+	private int $operation;
 
 	/**
 	 * @generate-create-func
 	 * @param CameraAimAssistCategories[] $categories
 	 * @param CameraAimAssistPreset[]     $presets
 	 */
-	public static function create(array $categories, array $presets) : self{
+	public static function create(array $categories, array $presets, int $operation) : self{
 		$result = new self;
 		$result->categories = $categories;
 		$result->presets = $presets;
+		$result->operation = $operation;
 		return $result;
 	}
 
@@ -49,6 +51,8 @@ class CameraAimAssistPresetsPacket extends DataPacket implements ClientboundPack
 	 */
 	public function getPresets() : array{ return $this->presets; }
 
+	public function getOperation() : int{ return $this->operation; }
+
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->categories = [];
 		for($i = 0, $count = $in->getUnsignedVarInt(); $i < $count; ++$i){
@@ -59,6 +63,8 @@ class CameraAimAssistPresetsPacket extends DataPacket implements ClientboundPack
 		for($i = 0, $count = $in->getUnsignedVarInt(); $i < $count; ++$i){
 			$this->presets[] = CameraAimAssistPreset::read($in);
 		}
+
+		$this->operation = $in->getByte();
 	}
 
 	protected function encodePayload(PacketSerializer $out) : void{
@@ -71,6 +77,8 @@ class CameraAimAssistPresetsPacket extends DataPacket implements ClientboundPack
 		foreach($this->presets as $preset){
 			$preset->write($out);
 		}
+
+		$out->putByte($this->operation);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

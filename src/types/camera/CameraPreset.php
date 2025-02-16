@@ -39,10 +39,12 @@ final class CameraPreset{
 		private ?Vector2 $viewOffset,
 		private ?Vector3 $entityOffset,
 		private ?float $radius,
+		private ?float $yawLimitMin,
+		private ?float $yawLimitMax,
 		private ?int $audioListenerType,
 		private ?bool $playerEffects,
 		private ?bool $alignTargetAndCameraForward,
-		private ?bool $aimAssist,
+		private ?CameraPresetAimAssist $aimAssist,
 	){}
 
 	public function getName() : string{ return $this->name; }
@@ -77,13 +79,17 @@ final class CameraPreset{
 
 	public function getRadius() : ?float{ return $this->radius; }
 
+	public function getYawLimitMin() : ?float{ return $this->yawLimitMin; }
+
+	public function getYawLimitMax() : ?float{ return $this->yawLimitMax; }
+
 	public function getAudioListenerType() : ?int{ return $this->audioListenerType; }
 
 	public function getPlayerEffects() : ?bool{ return $this->playerEffects; }
 
 	public function getAlignTargetAndCameraForward() : ?bool{ return $this->alignTargetAndCameraForward; }
 
-	public function getAimAssist() : ?bool{ return $this->aimAssist; }
+	public function getAimAssist() : ?CameraPresetAimAssist{ return $this->aimAssist; }
 
 	public static function read(PacketSerializer $in) : self{
 		$name = $in->getString();
@@ -102,10 +108,12 @@ final class CameraPreset{
 		$viewOffset = $in->readOptional($in->getVector2(...));
 		$entityOffset = $in->readOptional($in->getVector3(...));
 		$radius = $in->readOptional($in->getLFloat(...));
+		$yawLimitMin = $in->readOptional($in->getLFloat(...));
+		$yawLimitMax = $in->readOptional($in->getLFloat(...));
 		$audioListenerType = $in->readOptional($in->getByte(...));
 		$playerEffects = $in->readOptional($in->getBool(...));
 		$alignTargetAndCameraForward = $in->readOptional($in->getBool(...));
-		$aimAssist = $in->readOptional($in->getBool(...));
+		$aimAssist = $in->readOptional(fn() => CameraPresetAimAssist::read($in));
 
 		return new self(
 			$name,
@@ -124,6 +132,8 @@ final class CameraPreset{
 			$viewOffset,
 			$entityOffset,
 			$radius,
+			$yawLimitMin,
+			$yawLimitMax,
 			$audioListenerType,
 			$playerEffects,
 			$alignTargetAndCameraForward,
@@ -148,9 +158,11 @@ final class CameraPreset{
 		$out->writeOptional($this->viewOffset, $out->putVector2(...));
 		$out->writeOptional($this->entityOffset, $out->putVector3(...));
 		$out->writeOptional($this->radius, $out->putLFloat(...));
+		$out->writeOptional($this->yawLimitMin, $out->putLFloat(...));
+		$out->writeOptional($this->yawLimitMax, $out->putLFloat(...));
 		$out->writeOptional($this->audioListenerType, $out->putByte(...));
 		$out->writeOptional($this->playerEffects, $out->putBool(...));
 		$out->writeOptional($this->alignTargetAndCameraForward, $out->putBool(...));
-		$out->writeOptional($this->aimAssist, $out->putBool(...));
+		$out->writeOptional($this->aimAssist, fn(CameraPresetAimAssist $v) => $v->write($out));
 	}
 }

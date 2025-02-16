@@ -26,7 +26,6 @@ final class CameraAimAssistPreset{
 	 */
 	public function __construct(
 		private string $identifier,
-		private string $categories,
 		private array $exclusionList,
 		private array $liquidTargetingList,
 		private array $itemSettings,
@@ -35,8 +34,6 @@ final class CameraAimAssistPreset{
 	){}
 
 	public function getIdentifier() : string{ return $this->identifier; }
-
-	public function getCategories() : string{ return $this->categories; }
 
 	/**
 	 * @return string[]
@@ -59,7 +56,6 @@ final class CameraAimAssistPreset{
 
 	public static function read(PacketSerializer $in) : self{
 		$identifier = $in->getString();
-		$categories = $in->getString();
 
 		$exclusionList = [];
 		for($i = 0, $len = $in->getUnsignedVarInt(); $i < $len; ++$i){
@@ -81,7 +77,6 @@ final class CameraAimAssistPreset{
 
 		return new self(
 			$identifier,
-			$categories,
 			$exclusionList,
 			$liquidTargetingList,
 			$itemSettings,
@@ -92,7 +87,6 @@ final class CameraAimAssistPreset{
 
 	public function write(PacketSerializer $out) : void{
 		$out->putString($this->identifier);
-		$out->putString($this->categories);
 
 		$out->putUnsignedVarInt(count($this->exclusionList));
 		foreach($this->exclusionList as $exclusion){

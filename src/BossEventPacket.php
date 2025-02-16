@@ -45,6 +45,7 @@ class BossEventPacket extends DataPacket implements ClientboundPacket, Serverbou
 	public int $playerActorUniqueId;
 	public float $healthPercent;
 	public string $title;
+	public string $filteredTitle;
 	public bool $darkenScreen;
 	public int $color;
 	public int $overlay;
@@ -59,6 +60,7 @@ class BossEventPacket extends DataPacket implements ClientboundPacket, Serverbou
 	public static function show(int $bossActorUniqueId, string $title, float $healthPercent, bool $darkenScreen = false, int $color = BossBarColor::PURPLE, int $overlay = 0) : self{
 		$result = self::base($bossActorUniqueId, self::TYPE_SHOW);
 		$result->title = $title;
+		$result->filteredTitle = $title;
 		$result->healthPercent = $healthPercent;
 		$result->darkenScreen = $darkenScreen;
 		$result->color = $color;
@@ -91,6 +93,7 @@ class BossEventPacket extends DataPacket implements ClientboundPacket, Serverbou
 	public static function title(int $bossActorUniqueId, string $title) : self{
 		$result = self::base($bossActorUniqueId, self::TYPE_TITLE);
 		$result->title = $title;
+		$result->filteredTitle = $title;
 		return $result;
 	}
 
@@ -120,6 +123,7 @@ class BossEventPacket extends DataPacket implements ClientboundPacket, Serverbou
 			/** @noinspection PhpMissingBreakStatementInspection */
 			case self::TYPE_SHOW:
 				$this->title = $in->getString();
+				$this->filteredTitle = $in->getString();
 				$this->healthPercent = $in->getLFloat();
 			/** @noinspection PhpMissingBreakStatementInspection */
 			case self::TYPE_PROPERTIES:
@@ -137,6 +141,7 @@ class BossEventPacket extends DataPacket implements ClientboundPacket, Serverbou
 				break;
 			case self::TYPE_TITLE:
 				$this->title = $in->getString();
+				$this->filteredTitle = $in->getString();
 				break;
 			default:
 				break;
@@ -155,6 +160,7 @@ class BossEventPacket extends DataPacket implements ClientboundPacket, Serverbou
 			/** @noinspection PhpMissingBreakStatementInspection */
 			case self::TYPE_SHOW:
 				$out->putString($this->title);
+				$out->putString($this->filteredTitle);
 				$out->putLFloat($this->healthPercent);
 			/** @noinspection PhpMissingBreakStatementInspection */
 			case self::TYPE_PROPERTIES:
@@ -168,6 +174,7 @@ class BossEventPacket extends DataPacket implements ClientboundPacket, Serverbou
 				break;
 			case self::TYPE_TITLE:
 				$out->putString($this->title);
+				$out->putString($this->filteredTitle);
 				break;
 			default:
 				break;

@@ -32,6 +32,7 @@ class CommandBlockUpdatePacket extends DataPacket implements ServerboundPacket{
 	public string $command;
 	public string $lastOutput;
 	public string $name;
+	public string $filteredName;
 	public bool $shouldTrackOutput;
 	public int $tickDelay;
 	public bool $executeOnFirstTick;
@@ -52,7 +53,7 @@ class CommandBlockUpdatePacket extends DataPacket implements ServerboundPacket{
 		$this->command = $in->getString();
 		$this->lastOutput = $in->getString();
 		$this->name = $in->getString();
-
+		$this->filteredName = $in->getString();
 		$this->shouldTrackOutput = $in->getBool();
 		$this->tickDelay = $in->getLInt();
 		$this->executeOnFirstTick = $in->getBool();
@@ -73,7 +74,7 @@ class CommandBlockUpdatePacket extends DataPacket implements ServerboundPacket{
 		$out->putString($this->command);
 		$out->putString($this->lastOutput);
 		$out->putString($this->name);
-
+		$out->putString($this->filteredName);
 		$out->putBool($this->shouldTrackOutput);
 		$out->putLInt($this->tickDelay);
 		$out->putBool($this->executeOnFirstTick);

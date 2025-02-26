@@ -45,6 +45,10 @@ class ResourcePacksInfoPacket extends DataPacket implements ClientboundPacket{
 		return $result;
 	}
 
+	public function getWorldTemplateId() : UuidInterface{ return $this->worldTemplateId; }
+
+	public function getWorldTemplateVersion() : string{ return $this->worldTemplateVersion; }
+
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->mustAccept = $in->getBool();
 		$this->hasAddons = $in->getBool();

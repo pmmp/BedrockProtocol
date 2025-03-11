@@ -112,4 +112,8 @@ final class ParticleIds{
 	public const WIND_EXPLOSION = 91;
 	public const WOLF_ARMOR_CRACK = 92;
 	public const OMINOUS_ITEM_SPAWNER = 93;
+	public const CREAKING_CRUMBLE = 94;
+	public const PALE_OAK_LEAVES = 95;
+	public const EYEBLOSSOM_OPEN = 96;
+	public const EYEBLOSSOM_CLOSE = 97;
 }

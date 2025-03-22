@@ -17,7 +17,7 @@ namespace pocketmine\network\mcpe\protocol;
 use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 use pocketmine\network\mcpe\protocol\types\camera\CameraAimAssistActionType;
 
-class CameraAimAssistInstructionPacket extends DataPacket implements ClientboundPacket{
+class CameraAimAssistInstructionPacket extends DataPacket implements ServerboundPacket{
 	public const NETWORK_ID = ProtocolInfo::CAMERA_AIM_ASSIST_INSTRUCTION_PACKET;
 
 	private string $presetId;

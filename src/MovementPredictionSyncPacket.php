@@ -20,6 +20,8 @@ use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 class MovementPredictionSyncPacket extends DataPacket implements ServerboundPacket{
 	public const NETWORK_ID = ProtocolInfo::MOVEMENT_PREDICTION_SYNC_PACKET;
 
+	public const FLAG_LENGTH = 123;
+
 	private BitSet $flags;
 
 	private float $scale;
@@ -83,8 +85,8 @@ class MovementPredictionSyncPacket extends DataPacket implements ServerboundPack
 		int $actorUniqueId,
 		bool $actorFlyingState,
 	) : self{
-		if($flags->getLength() !== 123){
-			throw new \InvalidArgumentException("Input flags must be 123 bits long");
+		if($flags->getLength() !== self::FLAG_LENGTH){
+			throw new \InvalidArgumentException("Input flags must be " . self::FLAG_LENGTH . " bits long");
 		}
 
 		return self::internalCreate($flags, $scale, $width, $height, $movementSpeed, $underwaterMovementSpeed, $lavaMovementSpeed, $jumpStrength, $health, $hunger, $actorUniqueId, $actorFlyingState);
@@ -115,7 +117,7 @@ class MovementPredictionSyncPacket extends DataPacket implements ServerboundPack
 	public function getActorFlyingState() : bool{ return $this->actorFlyingState; }
 
 	protected function decodePayload(PacketSerializer $in) : void{
-		$this->flags = BitSet::read($in, 123);
+		$this->flags = BitSet::read($in, self::FLAG_LENGTH);
 		$this->scale = $in->getLFloat();
 		$this->width = $in->getLFloat();
 		$this->height = $in->getLFloat();

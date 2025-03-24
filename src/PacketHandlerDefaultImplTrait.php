@@ -842,11 +842,11 @@ trait PacketHandlerDefaultImplTrait{
 		return false;
 	}
 
-	public function handleCameraAimAssistInstruction(CameraAimAssistInstructionPacket $packet) : bool{
+	public function handleClientCameraAimAssist(ClientCameraAimAssistPacket $packet) : bool{
 		return false;
 	}
 
-	public function handleMovementPredictionSync(MovementPredictionSyncPacket $packet) : bool{
+	public function handleClientMovementPredictionSync(ClientMovementPredictionSyncPacket $packet) : bool{
 		return false;
 	}
 }

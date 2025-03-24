@@ -19,61 +19,55 @@ use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 class PlayerVideoCapturePacket extends DataPacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::PLAYER_VIDEO_CAPTURE_PACKET;
 
-	private bool $action;
+	private bool $recording;
 	private ?int $frameRate;
 	private ?string $filePrefix;
 
 	/**
 	 * @generate-create-func
 	 */
-	private static function create(bool $action, ?int $frameRate, ?string $filePrefix) : self{
+	private static function create(bool $recording, ?int $frameRate, ?string $filePrefix) : self{
 		$result = new self;
-		$result->action = $action;
+		$result->recording = $recording;
 		$result->frameRate = $frameRate;
 		$result->filePrefix = $filePrefix;
 		return $result;
 	}
 
-	public static function createStartCapture(int $frameRate, string $filePrefix) : self{
+	public static function createStartRecording(int $frameRate, string $filePrefix) : self{
 		return self::create(true, $frameRate, $filePrefix);
 	}
 
-	public static function createStopCapture() : self{
+	public static function createStopRecording() : self{
 		return self::create(false, null, null);
 	}
 
-	public function getAction() : bool{ return $this->action; }
+	public function isRecording() : bool{ return $this->recording; }
 
 	public function getFrameRate() : ?int{ return $this->frameRate; }
 
 	public function getFilePrefix() : ?string{ return $this->filePrefix; }
 
 	protected function decodePayload(PacketSerializer $in) : void{
-		$this->action = $in->getBool();
-		if($this->action){
+		$this->recording = $in->getBool();
+		if($this->recording){
 			$this->frameRate = $in->getLInt();
-			$in->getByte();
-			$in->getByte();
-			$in->getByte();
 			$this->filePrefix = $in->getString();
 		}
 	}
 
 	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putBool($this->action);
-		if($this->action){
+		$out->putBool($this->recording);
+		if($this->recording){
 			if($this->frameRate === null){ // this should never be the case
-				throw new \LogicException("PlayerUpdateEntityOverridesPacket with action=true require a frame rate to be provided");
+				throw new \LogicException("PlayerUpdateEntityOverridesPacket with recording=true require a frame rate to be provided");
 			}
 
 			if($this->filePrefix === null){ // this should never be the case
-				throw new \LogicException("PlayerUpdateEntityOverridesPacket with action=true require a file prefix to be provided");
+				throw new \LogicException("PlayerUpdateEntityOverridesPacket with recording=true require a file prefix to be provided");
 			}
 
 			$out->putLInt($this->frameRate);
-			$out->putByte(0);
-			$out->putByte(0);
-			$out->putByte(0);
 			$out->putString($this->filePrefix);
 		}
 	}

@@ -55,7 +55,6 @@ class PacketPool{
 		$this->registerPacket(new PassengerJumpPacket());
 		$this->registerPacket(new UpdateBlockPacket());
 		$this->registerPacket(new AddPaintingPacket());
-		$this->registerPacket(new LevelSoundEventPacketV1());
 		$this->registerPacket(new LevelEventPacket());
 		$this->registerPacket(new BlockEventPacket());
 		$this->registerPacket(new ActorEventPacket());
@@ -145,7 +144,6 @@ class PacketPool{
 		$this->registerPacket(new NetworkStackLatencyPacket());
 		$this->registerPacket(new SpawnParticleEffectPacket());
 		$this->registerPacket(new AvailableActorIdentifiersPacket());
-		$this->registerPacket(new LevelSoundEventPacketV2());
 		$this->registerPacket(new NetworkChunkPublisherUpdatePacket());
 		$this->registerPacket(new BiomeDefinitionListPacket());
 		$this->registerPacket(new LevelSoundEventPacket());
@@ -240,6 +238,9 @@ class PacketPool{
 		$this->registerPacket(new CameraAimAssistPresetsPacket());
 		$this->registerPacket(new CameraAimAssistInstructionPacket());
 		$this->registerPacket(new MovementPredictionSyncPacket());
+		$this->registerPacket(new UpdateClientOptionsPacket());
+		$this->registerPacket(new PlayerVideoCapturePacket());
+		$this->registerPacket(new PlayerUpdateEntityOverridesPacket());
 	}
 
 	public function registerPacket(Packet $packet) : void{

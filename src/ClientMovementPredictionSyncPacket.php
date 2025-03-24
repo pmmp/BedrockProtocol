@@ -17,8 +17,8 @@ namespace pocketmine\network\mcpe\protocol;
 use pocketmine\network\mcpe\protocol\serializer\BitSet;
 use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 
-class MovementPredictionSyncPacket extends DataPacket implements ServerboundPacket{
-	public const NETWORK_ID = ProtocolInfo::MOVEMENT_PREDICTION_SYNC_PACKET;
+class ClientMovementPredictionSyncPacket extends DataPacket implements ServerboundPacket{
+	public const NETWORK_ID = ProtocolInfo::CLIENT_MOVEMENT_PREDICTION_SYNC_PACKET;
 
 	public const FLAG_LENGTH = 123;
 
@@ -147,6 +147,6 @@ class MovementPredictionSyncPacket extends DataPacket implements ServerboundPack
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{
-		return $handler->handleMovementPredictionSync($this);
+		return $handler->handleClientMovementPredictionSync($this);
 	}
 }

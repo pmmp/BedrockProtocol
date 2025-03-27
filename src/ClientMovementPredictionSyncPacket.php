@@ -20,6 +20,8 @@ use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 class ClientMovementPredictionSyncPacket extends DataPacket implements ServerboundPacket{
 	public const NETWORK_ID = ProtocolInfo::CLIENT_MOVEMENT_PREDICTION_SYNC_PACKET;
 
+	public const FLAG_LENGTH = 123;
+
 	private BitSet $flags;
 
 	private float $scale;
@@ -34,6 +36,7 @@ class ClientMovementPredictionSyncPacket extends DataPacket implements Serverbou
 	private float $hunger;
 
 	private int $actorUniqueId;
+	private bool $actorFlyingState;
 
 	/**
 	 * @generate-create-func
@@ -50,6 +53,7 @@ class ClientMovementPredictionSyncPacket extends DataPacket implements Serverbou
 		float $health,
 		float $hunger,
 		int $actorUniqueId,
+		bool $actorFlyingState,
 	) : self{
 		$result = new self;
 		$result->flags = $flags;
@@ -63,6 +67,7 @@ class ClientMovementPredictionSyncPacket extends DataPacket implements Serverbou
 		$result->health = $health;
 		$result->hunger = $hunger;
 		$result->actorUniqueId = $actorUniqueId;
+		$result->actorFlyingState = $actorFlyingState;
 		return $result;
 	}
 
@@ -78,12 +83,13 @@ class ClientMovementPredictionSyncPacket extends DataPacket implements Serverbou
 		float $health,
 		float $hunger,
 		int $actorUniqueId,
+		bool $actorFlyingState,
 	) : self{
-		if($flags->getLength() !== 120){
-			throw new \InvalidArgumentException("Input flags must be 120 bits long");
+		if($flags->getLength() !== self::FLAG_LENGTH){
+			throw new \InvalidArgumentException("Input flags must be " . self::FLAG_LENGTH . " bits long");
 		}
 
-		return self::internalCreate($flags, $scale, $width, $height, $movementSpeed, $underwaterMovementSpeed, $lavaMovementSpeed, $jumpStrength, $health, $hunger, $actorUniqueId);
+		return self::internalCreate($flags, $scale, $width, $height, $movementSpeed, $underwaterMovementSpeed, $lavaMovementSpeed, $jumpStrength, $health, $hunger, $actorUniqueId, $actorFlyingState);
 	}
 
 	public function getFlags() : BitSet{ return $this->flags; }
@@ -108,8 +114,10 @@ class ClientMovementPredictionSyncPacket extends DataPacket implements Serverbou
 
 	public function getActorUniqueId() : int{ return $this->actorUniqueId; }
 
+	public function getActorFlyingState() : bool{ return $this->actorFlyingState; }
+
 	protected function decodePayload(PacketSerializer $in) : void{
-		$this->flags = BitSet::read($in, 120);
+		$this->flags = BitSet::read($in, self::FLAG_LENGTH);
 		$this->scale = $in->getLFloat();
 		$this->width = $in->getLFloat();
 		$this->height = $in->getLFloat();
@@ -120,6 +128,7 @@ class ClientMovementPredictionSyncPacket extends DataPacket implements Serverbou
 		$this->health = $in->getLFloat();
 		$this->hunger = $in->getLFloat();
 		$this->actorUniqueId = $in->getActorUniqueId();
+		$this->actorFlyingState = $in->getBool();
 	}
 
 	protected function encodePayload(PacketSerializer $out) : void{
@@ -134,6 +143,7 @@ class ClientMovementPredictionSyncPacket extends DataPacket implements Serverbou
 		$out->putLFloat($this->health);
 		$out->putLFloat($this->hunger);
 		$out->putActorUniqueId($this->actorUniqueId);
+		$out->putBool($this->actorFlyingState);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

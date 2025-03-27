@@ -62,8 +62,6 @@ interface PacketHandlerInterface{
 
 	public function handleAddPainting(AddPaintingPacket $packet) : bool;
 
-	public function handleLevelSoundEventPacketV1(LevelSoundEventPacketV1 $packet) : bool;
-
 	public function handleLevelEvent(LevelEventPacket $packet) : bool;
 
 	public function handleBlockEvent(BlockEventPacket $packet) : bool;
@@ -241,8 +239,6 @@ interface PacketHandlerInterface{
 	public function handleSpawnParticleEffect(SpawnParticleEffectPacket $packet) : bool;
 
 	public function handleAvailableActorIdentifiers(AvailableActorIdentifiersPacket $packet) : bool;
-
-	public function handleLevelSoundEventPacketV2(LevelSoundEventPacketV2 $packet) : bool;
 
 	public function handleNetworkChunkPublisherUpdate(NetworkChunkPublisherUpdatePacket $packet) : bool;
 
@@ -431,4 +427,10 @@ interface PacketHandlerInterface{
 	public function handleClientCameraAimAssist(ClientCameraAimAssistPacket $packet) : bool;
 
 	public function handleClientMovementPredictionSync(ClientMovementPredictionSyncPacket $packet) : bool;
+
+	public function handleUpdateClientOptions(UpdateClientOptionsPacket $packet) : bool;
+
+	public function handlePlayerVideoCapturePacket(PlayerVideoCapturePacket $packet) : bool;
+
+	public function handlePlayerUpdateEntityOverridesPacket(PlayerUpdateEntityOverridesPacket $packet) : bool;
 }

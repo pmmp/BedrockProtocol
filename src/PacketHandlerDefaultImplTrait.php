@@ -110,10 +110,6 @@ trait PacketHandlerDefaultImplTrait{
 		return false;
 	}
 
-	public function handleLevelSoundEventPacketV1(LevelSoundEventPacketV1 $packet) : bool{
-		return false;
-	}
-
 	public function handleLevelEvent(LevelEventPacket $packet) : bool{
 		return false;
 	}
@@ -467,10 +463,6 @@ trait PacketHandlerDefaultImplTrait{
 	}
 
 	public function handleAvailableActorIdentifiers(AvailableActorIdentifiersPacket $packet) : bool{
-		return false;
-	}
-
-	public function handleLevelSoundEventPacketV2(LevelSoundEventPacketV2 $packet) : bool{
 		return false;
 	}
 
@@ -847,6 +839,18 @@ trait PacketHandlerDefaultImplTrait{
 	}
 
 	public function handleClientMovementPredictionSync(ClientMovementPredictionSyncPacket $packet) : bool{
+		return false;
+	}
+
+	public function handleUpdateClientOptions(UpdateClientOptionsPacket $packet) : bool{
+		return false;
+	}
+
+	public function handlePlayerVideoCapturePacket(PlayerVideoCapturePacket $packet) : bool{
+		return false;
+	}
+
+	public function handlePlayerUpdateEntityOverridesPacket(PlayerUpdateEntityOverridesPacket $packet) : bool{
 		return false;
 	}
 }

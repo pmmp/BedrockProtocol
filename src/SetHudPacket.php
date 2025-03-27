@@ -45,17 +45,17 @@ class SetHudPacket extends DataPacket implements ClientboundPacket{
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->hudElements = [];
 		for($i = 0, $count = $in->getUnsignedVarInt(); $i < $count; ++$i){
-			$this->hudElements[] = HudElement::fromPacket($in->getByte());
+			$this->hudElements[] = HudElement::fromPacket($in->getVarInt());
 		}
-		$this->visibility = HudVisibility::fromPacket($in->getByte());
+		$this->visibility = HudVisibility::fromPacket($in->getVarInt());
 	}
 
 	protected function encodePayload(PacketSerializer $out) : void{
 		$out->putUnsignedVarInt(count($this->hudElements));
 		foreach($this->hudElements as $element){
-			$out->putByte($element->value);
+			$out->putVarInt($element->value);
 		}
-		$out->putByte($this->visibility->value);
+		$out->putVarInt($this->visibility->value);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

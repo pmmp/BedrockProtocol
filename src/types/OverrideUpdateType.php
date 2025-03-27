@@ -14,6 +14,9 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol\types;
 
+/**
+ * @see PlayerUpdateEntityOverridesPacket
+ */
 enum OverrideUpdateType : int{
 	use PacketIntEnumTrait;
 

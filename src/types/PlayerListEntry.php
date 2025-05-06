@@ -14,6 +14,7 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol\types;
 
+use pocketmine\color\Color;
 use pocketmine\network\mcpe\protocol\types\skin\SkinData;
 use Ramsey\Uuid\UuidInterface;
 
@@ -29,6 +30,7 @@ class PlayerListEntry{
 	public bool $isTeacher = false;
 	public bool $isHost = false;
 	public bool $isSubClient = false;
+	public ?Color $color = null;
 
 	public static function createRemovalEntry(UuidInterface $uuid) : PlayerListEntry{
 		$entry = new PlayerListEntry();
@@ -47,7 +49,8 @@ class PlayerListEntry{
 		int $buildPlatform = -1,
 		bool $isTeacher = false,
 		bool $isHost = false,
-		bool $isSubClient = false
+		bool $isSubClient = false,
+		?Color $color = null
 	) : PlayerListEntry{
 		$entry = new PlayerListEntry();
 		$entry->uuid = $uuid;
@@ -60,6 +63,7 @@ class PlayerListEntry{
 		$entry->isTeacher = $isTeacher;
 		$entry->isHost = $isHost;
 		$entry->isSubClient = $isSubClient;
+		$entry->color = $color;
 
 		return $entry;
 	}

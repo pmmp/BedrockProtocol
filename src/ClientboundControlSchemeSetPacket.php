@@ -15,30 +15,33 @@ declare(strict_types=1);
 namespace pocketmine\network\mcpe\protocol;
 
 use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pocketmine\network\mcpe\protocol\types\ControlScheme;
 
-class PassengerJumpPacket extends DataPacket implements ServerboundPacket{
-	public const NETWORK_ID = ProtocolInfo::PASSENGER_JUMP_PACKET;
+class ClientboundControlSchemeSetPacket extends DataPacket implements ClientboundPacket{
+	public const NETWORK_ID = ProtocolInfo::CLIENTBOUND_CONTROL_SCHEME_SET_PACKET;
 
-	public int $jumpStrength; //percentage
+	private ControlScheme $scheme;
 
 	/**
 	 * @generate-create-func
 	 */
-	public static function create(int $jumpStrength) : self{
+	public static function create(ControlScheme $scheme) : self{
 		$result = new self;
-		$result->jumpStrength = $jumpStrength;
+		$result->scheme = $scheme;
 		return $result;
 	}
 
+	public function getScheme() : ControlScheme{ return $this->scheme; }
+
 	protected function decodePayload(PacketSerializer $in) : void{
-		$this->jumpStrength = $in->getVarInt();
+		$this->scheme = ControlScheme::fromPacket($in->getByte());
 	}
 
 	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putVarInt($this->jumpStrength);
+		$out->putByte($this->scheme->value);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{
-		return $handler->handlePassengerJump($this);
+		return $handler->handleClientboundControlSchemeSet($this);
 	}
 }

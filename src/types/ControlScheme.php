@@ -14,14 +14,17 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol\types;
 
-final class EditorWorldType{
+use pocketmine\network\mcpe\protocol\ClientboundControlSchemeSetPacket;
 
-	private function __construct(){
-		//NOOP
-	}
+/**
+ * @see ClientboundControlSchemeSetPacket
+ */
+enum ControlScheme : int{
+	use PacketIntEnumTrait;
 
-	public const NON_EDITOR = 0;
-	public const PROJECT = 1;
-	public const TEST_LEVEL = 2;
-	public const REALMS_UPLOAD = 3;
+	case LOCKED_PLAYER_RELATIVE_STRAFE = 0;
+	case CAMERA_RELATIVE = 1;
+	case CAMERA_RELATIVE_STRAFE = 2;
+	case PLAYER_RELATIVE = 3;
+	case PLAYER_RELATIVE_STRAFE = 4;
 }

@@ -14,14 +14,14 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol\types;
 
-final class EditorWorldType{
+use pocketmine\network\mcpe\protocol\PlayerLocationPacket;
 
-	private function __construct(){
-		//NOOP
-	}
+/**
+ * @see PlayerLocationPacket
+ */
+enum PlayerLocationType : int{
+	use PacketIntEnumTrait;
 
-	public const NON_EDITOR = 0;
-	public const PROJECT = 1;
-	public const TEST_LEVEL = 2;
-	public const REALMS_UPLOAD = 3;
+	case PLAYER_LOCATION_COORDINATES = 0;
+	case PLAYER_LOCATION_HIDE = 1;
 }

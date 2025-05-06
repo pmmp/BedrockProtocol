@@ -20,7 +20,7 @@ use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 class ClientMovementPredictionSyncPacket extends DataPacket implements ServerboundPacket{
 	public const NETWORK_ID = ProtocolInfo::CLIENT_MOVEMENT_PREDICTION_SYNC_PACKET;
 
-	public const FLAG_LENGTH = 123;
+	public const FLAG_LENGTH = 124;
 
 	private BitSet $flags;
 

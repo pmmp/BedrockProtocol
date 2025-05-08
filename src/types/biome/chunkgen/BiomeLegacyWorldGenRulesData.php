@@ -12,39 +12,40 @@
 
 declare(strict_types=1);
 
-namespace pocketmine\network\mcpe\protocol\types\biome;
+namespace pocketmine\network\mcpe\protocol\types\biome\chunkgen;
 
 use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 use function count;
 
-final class BiomeConsolidatedFeaturesData{
+final class BiomeLegacyWorldGenRulesData{
 
 	/**
-	 * @param BiomeConsolidatedFeatureData[] $features
+	 * @param BiomeConditionalTransformationData[] $legacyPreHills
 	 */
 	public function __construct(
-		private array $features,
+		private array $legacyPreHills,
 	){}
 
 	/**
-	 * @return BiomeConsolidatedFeatureData[]
+	 * @return BiomeConditionalTransformationData[]
 	 */
-	public function getFeatures() : array{ return $this->features; }
+	public function getLegacyPreHills() : array{ return $this->legacyPreHills; }
 
 	public static function read(PacketSerializer $in) : self{
-		$features = [];
-
+		$legacyPreHills = [];
 		for($i = 0, $count = $in->getUnsignedVarInt(); $i < $count; ++$i){
-			$features[] = BiomeConsolidatedFeatureData::read($in);
+			$legacyPreHills[] = BiomeConditionalTransformationData::read($in);
 		}
 
-		return new self($features);
+		return new self(
+			$legacyPreHills,
+		);
 	}
 
 	public function write(PacketSerializer $out) : void{
-		$out->putUnsignedVarInt(count($this->features));
-		foreach($this->features as $feature){
-			$feature->write($out);
+		$out->putUnsignedVarInt(count($this->legacyPreHills));
+		foreach($this->legacyPreHills as $biome){
+			$biome->write($out);
 		}
 	}
 }

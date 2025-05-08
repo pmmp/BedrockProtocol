@@ -16,10 +16,17 @@ namespace pocketmine\network\mcpe\protocol\types\biome;
 
 use pocketmine\color\Color;
 use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pocketmine\network\mcpe\protocol\types\biome\chunkgen\BiomeDefinitionChunkGenData;
+use function count;
 
 final class BiomeDefinitionData{
 
+	/**
+	 * @param int[]             $tagIndexes
+	 * @phpstan-param list<int> $tagIndexes
+	 */
 	public function __construct(
+		private int $nameIndex,
 		private ?int $id,
 		private float $temperature,
 		private float $downfall,
@@ -31,9 +38,11 @@ final class BiomeDefinitionData{
 		private float $scale,
 		private Color $mapWaterColor,
 		private bool $rain,
-		private ?BiomeTagsData $tags,
+		private ?array $tagIndexes,
 		private ?BiomeDefinitionChunkGenData $chunkGenData = null
 	){}
+
+	public function getNameIndex() : int{ return $this->nameIndex; }
 
 	public function getId() : ?int{ return $this->id; }
 
@@ -57,11 +66,16 @@ final class BiomeDefinitionData{
 
 	public function hasRain() : bool{ return $this->rain; }
 
-	public function getTags() : ?BiomeTagsData{ return $this->tags; }
+	/**
+	 * @return int[]|null
+	 * @phpstan-return list<int>|null
+	 */
+	public function getTagIndexes() : ?array{ return $this->tagIndexes; }
 
 	public function getChunkGenData() : ?BiomeDefinitionChunkGenData{ return $this->chunkGenData; }
 
 	public static function read(PacketSerializer $in) : self{
+		$nameIndex = $in->getLShort();
 		$id = $in->readOptional($in->getLShort(...));
 		$temperature = $in->getLFloat();
 		$downfall = $in->getLFloat();
@@ -73,10 +87,19 @@ final class BiomeDefinitionData{
 		$scale = $in->getLFloat();
 		$mapWaterColor = Color::fromARGB($in->getLInt());
 		$rain = $in->getBool();
-		$tags = $in->readOptional(fn() => BiomeTagsData::read($in));
+		$tags = $in->readOptional(function() use ($in) : array{
+			$tagIndexes = [];
+
+			for($i = 0, $count = $in->getUnsignedVarInt(); $i < $count; ++$i){
+				$tagIndexes[] = $in->getLShort();
+			}
+
+			return $tagIndexes;
+		});
 		$chunkGenData = $in->readOptional(fn() => BiomeDefinitionChunkGenData::read($in));
 
 		return new self(
+			$nameIndex,
 			$id,
 			$temperature,
 			$downfall,
@@ -94,6 +117,7 @@ final class BiomeDefinitionData{
 	}
 
 	public function write(PacketSerializer $out) : void{
+		$out->putLShort($this->nameIndex);
 		$out->writeOptional($this->id, $out->putLShort(...));
 		$out->putLFloat($this->temperature);
 		$out->putLFloat($this->downfall);
@@ -105,7 +129,12 @@ final class BiomeDefinitionData{
 		$out->putLFloat($this->scale);
 		$out->putLInt($this->mapWaterColor->toARGB());
 		$out->putBool($this->rain);
-		$out->writeOptional($this->tags, fn(BiomeTagsData $tags) => $tags->write($out));
+		$out->writeOptional($this->tagIndexes, function(array $tagIndexes) use ($out) : void{
+			$out->putUnsignedVarInt(count($tagIndexes));
+			foreach($tagIndexes as $tag){
+				$out->putLShort($tag);
+			}
+		});
 		$out->writeOptional($this->chunkGenData, fn(BiomeDefinitionChunkGenData $chunkGenData) => $chunkGenData->write($out));
 	}
 }

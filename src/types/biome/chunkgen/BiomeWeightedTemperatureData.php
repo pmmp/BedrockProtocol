@@ -12,33 +12,33 @@
 
 declare(strict_types=1);
 
-namespace pocketmine\network\mcpe\protocol\types\biome;
+namespace pocketmine\network\mcpe\protocol\types\biome\chunkgen;
 
 use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 
-final class BiomeWeightedData{
+final class BiomeWeightedTemperatureData{
 
 	public function __construct(
-		private int $biome,
+		private int $temperature,
 		private int $weight,
 	){}
 
-	public function getBiome() : int{ return $this->biome; }
+	public function getTemperature() : int{ return $this->temperature; }
 
 	public function getWeight() : int{ return $this->weight; }
 
 	public static function read(PacketSerializer $in) : self{
-		$biome = $in->getLShort();
+		$temperature = $in->getVarInt();
 		$weight = $in->getLInt();
 
 		return new self(
-			$biome,
+			$temperature,
 			$weight
 		);
 	}
 
 	public function write(PacketSerializer $out) : void{
-		$out->putLShort($this->biome);
+		$out->putVarInt($this->temperature);
 		$out->putLInt($this->weight);
 	}
 }

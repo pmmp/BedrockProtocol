@@ -12,40 +12,33 @@
 
 declare(strict_types=1);
 
-namespace pocketmine\network\mcpe\protocol\types\biome;
+namespace pocketmine\network\mcpe\protocol\types\biome\chunkgen;
 
 use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
-use function count;
 
-final class BiomeLegacyWorldGenRulesData{
+final class BiomeWeightedData{
 
-	/**
-	 * @param BiomeConditionalTransformationData[] $legacyPreHills
-	 */
 	public function __construct(
-		private array $legacyPreHills,
+		private int $biome,
+		private int $weight,
 	){}
 
-	/**
-	 * @return BiomeConditionalTransformationData[]
-	 */
-	public function getLegacyPreHills() : array{ return $this->legacyPreHills; }
+	public function getBiome() : int{ return $this->biome; }
+
+	public function getWeight() : int{ return $this->weight; }
 
 	public static function read(PacketSerializer $in) : self{
-		$legacyPreHills = [];
-		for($i = 0, $count = $in->getUnsignedVarInt(); $i < $count; ++$i){
-			$legacyPreHills[] = BiomeConditionalTransformationData::read($in);
-		}
+		$biome = $in->getLShort();
+		$weight = $in->getLInt();
 
 		return new self(
-			$legacyPreHills,
+			$biome,
+			$weight
 		);
 	}
 
 	public function write(PacketSerializer $out) : void{
-		$out->putUnsignedVarInt(count($this->legacyPreHills));
-		foreach($this->legacyPreHills as $biome){
-			$biome->write($out);
-		}
+		$out->putLShort($this->biome);
+		$out->putLInt($this->weight);
 	}
 }

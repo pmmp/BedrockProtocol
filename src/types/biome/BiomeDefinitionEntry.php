@@ -15,6 +15,7 @@ declare(strict_types=1);
 namespace pocketmine\network\mcpe\protocol\types\biome;
 
 use pocketmine\color\Color;
+use pocketmine\network\mcpe\protocol\types\biome\chunkgen\BiomeDefinitionChunkGenData;
 
 final class BiomeDefinitionEntry{
 

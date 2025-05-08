@@ -88,6 +88,9 @@ class BiomeDefinitionListPacket extends DataPacket implements ClientboundPacket{
 		return self::create($definitionData, $strings);
 	}
 
+	/**
+	 * @throws PacketDecodeException
+	 */
 	private function locateString(int $index) : string{
 		return $this->strings[$index] ?? throw new PacketDecodeException("Unknown string index $index");
 	}
@@ -97,6 +100,8 @@ class BiomeDefinitionListPacket extends DataPacket implements ClientboundPacket{
 	 *
 	 * @return BiomeDefinitionEntry[]
 	 * @phpstan-return list<BiomeDefinitionEntry>
+	 *
+	 * @throws PacketDecodeException
 	 */
 	public function buildDefinitionsFromData() : array{
 		return array_map(fn(BiomeDefinitionData $data) => new BiomeDefinitionEntry(

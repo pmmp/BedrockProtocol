@@ -16,11 +16,12 @@ namespace pocketmine\network\mcpe\protocol;
 
 use pocketmine\network\mcpe\protocol\serializer\BitSet;
 use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pocketmine\network\mcpe\protocol\types\entity\EntityMetadataFlags;
 
 class ClientMovementPredictionSyncPacket extends DataPacket implements ServerboundPacket{
 	public const NETWORK_ID = ProtocolInfo::CLIENT_MOVEMENT_PREDICTION_SYNC_PACKET;
 
-	public const FLAG_LENGTH = 124;
+	public const FLAG_LENGTH = EntityMetadataFlags::NUMBER_OF_FLAGS;
 
 	private BitSet $flags;
 

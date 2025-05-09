@@ -43,6 +43,9 @@ class ResourcePackClientResponsePacket extends DataPacket implements Serverbound
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->status = $in->getByte();
 		$entryCount = $in->getLShort();
+		if($entryCount > 100) {
+			throw new PacketDecodeException("Too many pack ids");
+		}
 		$this->packIds = [];
 		while($entryCount-- > 0){
 			$this->packIds[] = $in->getString();

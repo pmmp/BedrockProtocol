@@ -262,4 +262,5 @@ final class ProtocolInfo{
 	public const PLAYER_UPDATE_ENTITY_OVERRIDES_PACKET = 0x145;
 	public const PLAYER_LOCATION_PACKET = 0x146;
 	public const CLIENTBOUND_CONTROL_SCHEME_SET_PACKET = 0x147;
+
 }

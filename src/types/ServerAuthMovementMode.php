@@ -17,7 +17,6 @@ namespace pocketmine\network\mcpe\protocol\types;
 enum ServerAuthMovementMode : int{
 	use PacketIntEnumTrait;
 
-	case LEGACY_CLIENT_AUTHORITATIVE_V1 = 0;
 	case SERVER_AUTHORITATIVE_V2 = 1;
 	case SERVER_AUTHORITATIVE_V3 = 2;
 }

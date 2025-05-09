@@ -17,6 +17,7 @@ namespace pocketmine\network\mcpe\protocol\types\camera;
 use pocketmine\math\Vector2;
 use pocketmine\math\Vector3;
 use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pocketmine\network\mcpe\protocol\types\ControlScheme;
 
 final class CameraPreset{
 	public const AUDIO_LISTENER_TYPE_CAMERA = 0;
@@ -45,6 +46,7 @@ final class CameraPreset{
 		private ?bool $playerEffects,
 		private ?bool $alignTargetAndCameraForward,
 		private ?CameraPresetAimAssist $aimAssist,
+		private ?ControlScheme $controlScheme,
 	){}
 
 	public function getName() : string{ return $this->name; }
@@ -91,6 +93,8 @@ final class CameraPreset{
 
 	public function getAimAssist() : ?CameraPresetAimAssist{ return $this->aimAssist; }
 
+	public function getControlScheme() : ?ControlScheme{ return $this->controlScheme; }
+
 	public static function read(PacketSerializer $in) : self{
 		$name = $in->getString();
 		$parent = $in->getString();
@@ -114,6 +118,7 @@ final class CameraPreset{
 		$playerEffects = $in->readOptional($in->getBool(...));
 		$alignTargetAndCameraForward = $in->readOptional($in->getBool(...));
 		$aimAssist = $in->readOptional(fn() => CameraPresetAimAssist::read($in));
+		$controlScheme = $in->readOptional(fn() => ControlScheme::fromPacket($in->getByte()));
 
 		return new self(
 			$name,
@@ -137,7 +142,8 @@ final class CameraPreset{
 			$audioListenerType,
 			$playerEffects,
 			$alignTargetAndCameraForward,
-			$aimAssist
+			$aimAssist,
+			$controlScheme
 		);
 	}
 
@@ -164,5 +170,6 @@ final class CameraPreset{
 		$out->writeOptional($this->playerEffects, $out->putBool(...));
 		$out->writeOptional($this->alignTargetAndCameraForward, $out->putBool(...));
 		$out->writeOptional($this->aimAssist, fn(CameraPresetAimAssist $v) => $v->write($out));
+		$out->writeOptional($this->controlScheme, fn(ControlScheme $v) => $out->putByte($v->value));
 	}
 }

@@ -111,11 +111,13 @@ final class PlayerAuthInputFlags{
 	public const IS_ROT_CONTROLLED_BY_MOVE_DIRECTION = 55;
 	public const START_SPIN_ATTACK = 56;
 	public const STOP_SPIN_ATTACK = 57;
-	public const JUMP_RELEASED_RAW = 58;
-	public const JUMP_PRESSED_RAW = 59;
-	public const JUMP_CURRENT_RAW = 60;
-	public const SNEAK_RELEASED_RAW = 61;
-	public const SNEAK_PRESSED_RAW = 62;
-	public const SNEAK_CURRENT_RAW = 63;
+	public const IS_HOTBAR_ONLY_TOUCH = 58;
+	public const JUMP_RELEASED_RAW = 59;
+	public const JUMP_PRESSED_RAW = 60;
+	public const JUMP_CURRENT_RAW = 61;
+	public const SNEAK_RELEASED_RAW = 62;
+	public const SNEAK_PRESSED_RAW = 63;
+	public const SNEAK_CURRENT_RAW = 64;
 
+	public const NUMBER_OF_FLAGS = 65;
 }

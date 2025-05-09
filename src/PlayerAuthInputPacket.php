@@ -138,8 +138,8 @@ class PlayerAuthInputPacket extends DataPacket implements ServerboundPacket{
 		Vector3 $cameraOrientation,
 		Vector2 $rawMove
 	) : self{
-		if($inputFlags->getLength() !== 65){
-			throw new \InvalidArgumentException("Input flags must be 65 bits long");
+		if($inputFlags->getLength() !== PlayerAuthInputFlags::NUMBER_OF_FLAGS){
+			throw new \InvalidArgumentException("Input flags must be " . PlayerAuthInputFlags::NUMBER_OF_FLAGS . " bits long");
 		}
 
 		$inputFlags->set(PlayerAuthInputFlags::PERFORM_ITEM_STACK_REQUEST, $itemStackRequest !== null);
@@ -266,7 +266,7 @@ class PlayerAuthInputPacket extends DataPacket implements ServerboundPacket{
 		$this->moveVecX = $in->getLFloat();
 		$this->moveVecZ = $in->getLFloat();
 		$this->headYaw = $in->getLFloat();
-		$this->inputFlags = BitSet::read($in, 65);
+		$this->inputFlags = BitSet::read($in, PlayerAuthInputFlags::NUMBER_OF_FLAGS);
 		$this->inputMode = $in->getUnsignedVarInt();
 		$this->playMode = $in->getUnsignedVarInt();
 		$this->interactionMode = $in->getUnsignedVarInt();

@@ -94,6 +94,6 @@ class PlayerUpdateEntityOverridesPacket extends DataPacket implements Clientboun
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{
-		return $handler->handlePlayerUpdateEntityOverridesPacket($this);
+		return $handler->handlePlayerUpdateEntityOverrides($this);
 	}
 }

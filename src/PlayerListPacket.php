@@ -14,6 +14,7 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
+use pocketmine\color\Color;
 use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 use pocketmine\network\mcpe\protocol\types\PlayerListEntry;
 use function count;
@@ -70,6 +71,7 @@ class PlayerListPacket extends DataPacket implements ClientboundPacket{
 				$entry->isTeacher = $in->getBool();
 				$entry->isHost = $in->getBool();
 				$entry->isSubClient = $in->getBool();
+				$entry->color = Color::fromARGB($in->getLInt());
 			}else{
 				$entry->uuid = $in->getUUID();
 			}
@@ -98,6 +100,7 @@ class PlayerListPacket extends DataPacket implements ClientboundPacket{
 				$out->putBool($entry->isTeacher);
 				$out->putBool($entry->isHost);
 				$out->putBool($entry->isSubClient);
+				$out->putLInt(($entry->color ?? new Color(255, 255, 255))->toARGB());
 			}else{
 				$out->putUUID($entry->uuid);
 			}

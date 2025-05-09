@@ -73,6 +73,6 @@ class PlayerVideoCapturePacket extends DataPacket implements ClientboundPacket{
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{
-		return $handler->handlePlayerVideoCapturePacket($this);
+		return $handler->handlePlayerVideoCapture($this);
 	}
 }

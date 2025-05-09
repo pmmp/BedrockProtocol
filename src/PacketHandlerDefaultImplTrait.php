@@ -98,10 +98,6 @@ trait PacketHandlerDefaultImplTrait{
 		return false;
 	}
 
-	public function handlePassengerJump(PassengerJumpPacket $packet) : bool{
-		return false;
-	}
-
 	public function handleUpdateBlock(UpdateBlockPacket $packet) : bool{
 		return false;
 	}
@@ -223,10 +219,6 @@ trait PacketHandlerDefaultImplTrait{
 	}
 
 	public function handleBlockActorData(BlockActorDataPacket $packet) : bool{
-		return false;
-	}
-
-	public function handlePlayerInput(PlayerInputPacket $packet) : bool{
 		return false;
 	}
 
@@ -758,10 +750,6 @@ trait PacketHandlerDefaultImplTrait{
 		return false;
 	}
 
-	public function handleCompressedBiomeDefinitionList(CompressedBiomeDefinitionListPacket $packet) : bool{
-		return false;
-	}
-
 	public function handleTrimData(TrimDataPacket $packet) : bool{
 		return false;
 	}
@@ -846,11 +834,19 @@ trait PacketHandlerDefaultImplTrait{
 		return false;
 	}
 
-	public function handlePlayerVideoCapturePacket(PlayerVideoCapturePacket $packet) : bool{
+	public function handlePlayerVideoCapture(PlayerVideoCapturePacket $packet) : bool{
 		return false;
 	}
 
-	public function handlePlayerUpdateEntityOverridesPacket(PlayerUpdateEntityOverridesPacket $packet) : bool{
+	public function handlePlayerUpdateEntityOverrides(PlayerUpdateEntityOverridesPacket $packet) : bool{
+		return false;
+	}
+
+	public function handlePlayerLocation(PlayerLocationPacket $packet) : bool{
+		return false;
+	}
+
+	public function handleClientboundControlSchemeSet(ClientboundControlSchemeSetPacket $packet) : bool{
 		return false;
 	}
 }

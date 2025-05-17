@@ -82,12 +82,12 @@ class PlayerUpdateEntityOverridesPacket extends DataPacket implements Clientboun
 		$out->putByte($this->updateType->value);
 		if($this->updateType === OverrideUpdateType::SET_INT_OVERRIDE){
 			if($this->intOverrideValue === null){ // this should never be the case
-				throw new \LogicException("PlayerUpdateEntityOverridesPacket with type SET_INT_OVERRIDE require an intOverrideValue to be provided");
+				throw new \LogicException("PlayerUpdateEntityOverridesPacket with type SET_INT_OVERRIDE requires intOverrideValue to be provided");
 			}
 			$out->putLInt($this->intOverrideValue);
 		}elseif($this->updateType === OverrideUpdateType::SET_FLOAT_OVERRIDE){
 			if($this->floatOverrideValue === null){ // this should never be the case
-				throw new \LogicException("PlayerUpdateEntityOverridesPacket with type SET_INT_OVERRIDE require an intOverrideValue to be provided");
+				throw new \LogicException("PlayerUpdateEntityOverridesPacket with type SET_FLOAT_OVERRIDE requires floatOverrideValue to be provided");
 			}
 			$out->putLFloat($this->floatOverrideValue);
 		}

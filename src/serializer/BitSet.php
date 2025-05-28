@@ -142,4 +142,8 @@ class BitSet{
 	public function getLength() : int{
 		return $this->length;
 	}
+
+	public function equals(BitSet $that) : bool{
+		return $this->length === $that->length && $this->parts === $that->parts;
+	}
 }

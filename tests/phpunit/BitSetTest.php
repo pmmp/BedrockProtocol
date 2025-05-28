@@ -84,5 +84,9 @@ class BitSetTest extends TestCase{
 		}
 
 		self::assertEquals($a->getPartsCount(), $b->getPartsCount(), "BitSet parts count is not equal");
+
+		self::assertTrue($a->equals($b));
+		$b->set($b->getLength() - 1, !$b->get($b->getLength() - 1));
+		self::assertFalse($a->equals($b), "BitSet equality check failed after modifying one BitSet");
 	}
 }

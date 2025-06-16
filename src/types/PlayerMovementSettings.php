@@ -18,26 +18,21 @@ use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 
 final class PlayerMovementSettings{
 	public function __construct(
-		private ServerAuthMovementMode $movementType,
 		private int $rewindHistorySize,
 		private bool $serverAuthoritativeBlockBreaking
 	){}
-
-	public function getMovementType() : ServerAuthMovementMode{ return $this->movementType; }
 
 	public function getRewindHistorySize() : int{ return $this->rewindHistorySize; }
 
 	public function isServerAuthoritativeBlockBreaking() : bool{ return $this->serverAuthoritativeBlockBreaking; }
 
 	public static function read(PacketSerializer $in) : self{
-		$movementType = ServerAuthMovementMode::fromPacket($in->getVarInt());
 		$rewindHistorySize = $in->getVarInt();
 		$serverAuthBlockBreaking = $in->getBool();
-		return new self($movementType, $rewindHistorySize, $serverAuthBlockBreaking);
+		return new self($rewindHistorySize, $serverAuthBlockBreaking);
 	}
 
 	public function write(PacketSerializer $out) : void{
-		$out->putVarInt($this->movementType->value);
 		$out->putVarInt($this->rewindHistorySize);
 		$out->putBool($this->serverAuthoritativeBlockBreaking);
 	}

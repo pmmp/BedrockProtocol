@@ -20,4 +20,5 @@ final class SubChunkPacketHeightMapType{
 	public const DATA = 1;
 	public const ALL_TOO_HIGH = 2;
 	public const ALL_TOO_LOW = 3;
+	public const ALL_COPIED = 4;
 }

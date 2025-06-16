@@ -231,7 +231,6 @@ class PacketPool{
 		$this->registerPacket(new CameraAimAssistPacket());
 		$this->registerPacket(new ContainerRegistryCleanupPacket());
 		$this->registerPacket(new MovementEffectPacket());
-		$this->registerPacket(new SetMovementAuthorityPacket());
 		$this->registerPacket(new CameraAimAssistPresetsPacket());
 		$this->registerPacket(new ClientCameraAimAssistPacket());
 		$this->registerPacket(new ClientMovementPredictionSyncPacket());
@@ -240,6 +239,7 @@ class PacketPool{
 		$this->registerPacket(new PlayerUpdateEntityOverridesPacket());
 		$this->registerPacket(new PlayerLocationPacket());
 		$this->registerPacket(new ClientboundControlSchemeSetPacket());
+		$this->registerPacket(new ServerScriptDebugDrawerPacket());
 	}
 
 	public function registerPacket(Packet $packet) : void{

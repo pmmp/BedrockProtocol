@@ -32,11 +32,11 @@ final class ProtocolInfo{
 	 */
 
 	/** Actual Minecraft: PE protocol version */
-	public const CURRENT_PROTOCOL = 800;
+	public const CURRENT_PROTOCOL = 818;
 	/** Current Minecraft PE version reported by the server. This is usually the earliest currently supported version. */
-	public const MINECRAFT_VERSION = 'v1.21.80';
+	public const MINECRAFT_VERSION = 'v1.21.90';
 	/** Version number sent to clients in ping responses. */
-	public const MINECRAFT_VERSION_NETWORK = '1.21.80';
+	public const MINECRAFT_VERSION_NETWORK = '1.21.90';
 
 	public const LOGIN_PACKET = 0x01;
 	public const PLAY_STATUS_PACKET = 0x02;
@@ -253,7 +253,7 @@ final class ProtocolInfo{
 	public const CAMERA_AIM_ASSIST_PACKET = 0x13c;
 	public const CONTAINER_REGISTRY_CLEANUP_PACKET = 0x13d;
 	public const MOVEMENT_EFFECT_PACKET = 0x13e;
-	public const SET_MOVEMENT_AUTHORITY_PACKET = 0x13f;
+
 	public const CAMERA_AIM_ASSIST_PRESETS_PACKET = 0x140;
 	public const CLIENT_CAMERA_AIM_ASSIST_PACKET = 0x141;
 	public const CLIENT_MOVEMENT_PREDICTION_SYNC_PACKET = 0x142;
@@ -262,5 +262,6 @@ final class ProtocolInfo{
 	public const PLAYER_UPDATE_ENTITY_OVERRIDES_PACKET = 0x145;
 	public const PLAYER_LOCATION_PACKET = 0x146;
 	public const CLIENTBOUND_CONTROL_SCHEME_SET_PACKET = 0x147;
+	public const SERVER_SCRIPT_DEBUG_DRAWER_PACKET = 0x148;
 
 }

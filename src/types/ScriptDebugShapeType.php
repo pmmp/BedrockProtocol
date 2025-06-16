@@ -14,9 +14,13 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol\types;
 
-enum ServerAuthMovementMode : int{
+enum ScriptDebugShapeType : int{
 	use PacketIntEnumTrait;
 
-	case SERVER_AUTHORITATIVE_V2 = 1;
-	case SERVER_AUTHORITATIVE_V3 = 2;
+	case LINE = 0;
+	case BOX = 1;
+	case SPHERE = 2;
+	case CIRCLE = 3;
+	case TEST = 4;
+	case ARROW = 5;
 }

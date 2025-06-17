@@ -17,7 +17,11 @@ namespace pocketmine\network\mcpe\protocol\types;
 use pocketmine\color\Color;
 use pocketmine\math\Vector3;
 use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pocketmine\network\mcpe\protocol\ServerScriptDebugDrawerPacket;
 
+/**
+ * @see ServerScriptDebugDrawerPacket
+ */
 final class PacketShapeData{
 
 	public function __construct(

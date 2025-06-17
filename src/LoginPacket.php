@@ -15,15 +15,8 @@ declare(strict_types=1);
 namespace pocketmine\network\mcpe\protocol;
 
 use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
-use pocketmine\network\mcpe\protocol\types\login\JwtChain;
 use pocketmine\utils\BinaryStream;
-use function count;
-use function is_array;
-use function is_string;
-use function json_decode;
-use function json_encode;
 use function strlen;
-use const JSON_THROW_ON_ERROR;
 
 class LoginPacket extends DataPacket implements ServerboundPacket{
 	public const NETWORK_ID = ProtocolInfo::LOGIN_PACKET;

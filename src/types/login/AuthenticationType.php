@@ -14,9 +14,6 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol\types\login;
 
-use pocketmine\network\mcpe\protocol\ClientboundControlSchemeSetPacket;
-use pocketmine\network\mcpe\protocol\types\PacketIntEnumTrait;
-
 /**
  * @see AuthenticationInfo
  */

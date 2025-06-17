@@ -44,7 +44,6 @@ final class CameraPreset{
 		private ?float $yawLimitMax,
 		private ?int $audioListenerType,
 		private ?bool $playerEffects,
-		private ?bool $alignTargetAndCameraForward,
 		private ?CameraPresetAimAssist $aimAssist,
 		private ?ControlScheme $controlScheme,
 	){}
@@ -89,8 +88,6 @@ final class CameraPreset{
 
 	public function getPlayerEffects() : ?bool{ return $this->playerEffects; }
 
-	public function getAlignTargetAndCameraForward() : ?bool{ return $this->alignTargetAndCameraForward; }
-
 	public function getAimAssist() : ?CameraPresetAimAssist{ return $this->aimAssist; }
 
 	public function getControlScheme() : ?ControlScheme{ return $this->controlScheme; }
@@ -116,7 +113,6 @@ final class CameraPreset{
 		$yawLimitMax = $in->readOptional($in->getLFloat(...));
 		$audioListenerType = $in->readOptional($in->getByte(...));
 		$playerEffects = $in->readOptional($in->getBool(...));
-		$alignTargetAndCameraForward = $in->readOptional($in->getBool(...));
 		$aimAssist = $in->readOptional(fn() => CameraPresetAimAssist::read($in));
 		$controlScheme = $in->readOptional(fn() => ControlScheme::fromPacket($in->getByte()));
 
@@ -141,7 +137,6 @@ final class CameraPreset{
 			$yawLimitMax,
 			$audioListenerType,
 			$playerEffects,
-			$alignTargetAndCameraForward,
 			$aimAssist,
 			$controlScheme
 		);
@@ -168,7 +163,6 @@ final class CameraPreset{
 		$out->writeOptional($this->yawLimitMax, $out->putLFloat(...));
 		$out->writeOptional($this->audioListenerType, $out->putByte(...));
 		$out->writeOptional($this->playerEffects, $out->putBool(...));
-		$out->writeOptional($this->alignTargetAndCameraForward, $out->putBool(...));
 		$out->writeOptional($this->aimAssist, fn(CameraPresetAimAssist $v) => $v->write($out));
 		$out->writeOptional($this->controlScheme, fn(ControlScheme $v) => $out->putByte($v->value));
 	}

@@ -535,6 +535,21 @@ final class LevelSoundEvent{
 	public const OPEN_LONG = 543;
 	public const CLOSE = 544;
 	public const CLOSE_LONG = 545;
+	public const IMITATE_PHANTOM = 546;
+	public const IMITATE_ZOGLIN = 547;
+	public const IMITATE_GUARDIAN = 548;
+	public const IMITATE_RAVAGER = 549;
+	public const IMITATE_PILLAGER = 550;
+	public const PLACE_IN_WATER = 551;
+	public const STATE_CHANGE = 552;
+	public const IMITATE_HAPPY_GHAST = 553;
+	public const UNEQUIP_GENERIC = 554;
+	public const RECORD_TEARS = 555;
+	public const THE_END_LIGHT_FLASH = 556;
+	public const LEAD_LEASH = 557;
+	public const LEAD_UNLEASH = 558;
+	public const LEAD_BREAK = 559;
+	public const UNSADDLE = 560;
 
 	//The following aliases are kept for backwards compatibility only
 	public const SCULK_SENSOR_POWER_ON = self::POWER_ON_SCULK_SENSOR;

@@ -12,11 +12,19 @@
 
 declare(strict_types=1);
 
-namespace pocketmine\network\mcpe\protocol\types;
+namespace pocketmine\network\mcpe\protocol\types\login;
 
-enum ServerAuthMovementMode : int{
-	use PacketIntEnumTrait;
+/**
+ * Model class for LoginPacket JSON data for JsonMapper
+ */
+final class AuthenticationInfo{
 
-	case SERVER_AUTHORITATIVE_V2 = 1;
-	case SERVER_AUTHORITATIVE_V3 = 2;
+	/** @required */
+	public int $AuthenticationType;
+
+	/** @required */
+	public string $Certificate;
+
+	/** @required */
+	public string $Token;
 }

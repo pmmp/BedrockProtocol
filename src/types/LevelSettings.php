@@ -79,6 +79,7 @@ final class LevelSettings{
 	public string $serverIdentifier = "";
 	public string $worldIdentifier = "";
 	public string $scenarioIdentifier = "";
+	public string $ownerIdentifier = "";
 
 	/**
 	 * @throws BinaryDataException
@@ -148,6 +149,7 @@ final class LevelSettings{
 		$this->serverIdentifier = $in->getString();
 		$this->worldIdentifier = $in->getString();
 		$this->scenarioIdentifier = $in->getString();
+		$this->ownerIdentifier = $in->getString();
 	}
 
 	public function write(PacketSerializer $out) : void{
@@ -202,5 +204,6 @@ final class LevelSettings{
 		$out->putString($this->serverIdentifier);
 		$out->putString($this->worldIdentifier);
 		$out->putString($this->scenarioIdentifier);
+		$out->putString($this->ownerIdentifier);
 	}
 }

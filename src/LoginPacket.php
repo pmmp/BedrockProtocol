@@ -15,30 +15,23 @@ declare(strict_types=1);
 namespace pocketmine\network\mcpe\protocol;
 
 use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
-use pocketmine\network\mcpe\protocol\types\login\JwtChain;
 use pocketmine\utils\BinaryStream;
-use function count;
-use function is_array;
-use function is_string;
-use function json_decode;
-use function json_encode;
 use function strlen;
-use const JSON_THROW_ON_ERROR;
 
 class LoginPacket extends DataPacket implements ServerboundPacket{
 	public const NETWORK_ID = ProtocolInfo::LOGIN_PACKET;
 
 	public int $protocol;
-	public JwtChain $chainDataJwt;
+	public string $authInfoJson;
 	public string $clientDataJwt;
 
 	/**
 	 * @generate-create-func
 	 */
-	public static function create(int $protocol, JwtChain $chainDataJwt, string $clientDataJwt) : self{
+	public static function create(int $protocol, string $authInfoJson, string $clientDataJwt) : self{
 		$result = new self;
 		$result->protocol = $protocol;
-		$result->chainDataJwt = $chainDataJwt;
+		$result->authInfoJson = $authInfoJson;
 		$result->clientDataJwt = $clientDataJwt;
 		return $result;
 	}
@@ -55,34 +48,13 @@ class LoginPacket extends DataPacket implements ServerboundPacket{
 	protected function decodeConnectionRequest(string $binary) : void{
 		$connRequestReader = new BinaryStream($binary);
 
-		$chainDataJsonLength = $connRequestReader->getLInt();
-		if($chainDataJsonLength <= 0){
+		$authInfoJsonLength = $connRequestReader->getLInt();
+		if($authInfoJsonLength <= 0){
 			//technically this is always positive; the problem results because getLInt() is implicitly signed
 			//this is inconsistent with many other methods, but we can't do anything about that for now
-			throw new PacketDecodeException("Length of chain data JSON must be positive");
+			throw new PacketDecodeException("Length of auth info JSON must be positive");
 		}
-		try{
-			$chainDataJson = json_decode($connRequestReader->get($chainDataJsonLength), associative: true, flags: JSON_THROW_ON_ERROR);
-		}catch(\JsonException $e){
-			throw new PacketDecodeException("Failed decoding chain data JSON: " . $e->getMessage());
-		}
-		if(!is_array($chainDataJson) || count($chainDataJson) !== 1 || !isset($chainDataJson["chain"])){
-			throw new PacketDecodeException("Chain data must be a JSON object containing only the 'chain' element");
-		}
-		if(!is_array($chainDataJson["chain"])){
-			throw new PacketDecodeException("Chain data 'chain' element must be a list of strings");
-		}
-		$jwts = [];
-		foreach($chainDataJson["chain"] as $jwt){
-			if(!is_string($jwt)){
-				throw new PacketDecodeException("Chain data 'chain' must contain only strings");
-			}
-			$jwts[] = $jwt;
-		}
-		//TODO: this pointless JwtChain model is here for BC - get rid of it next chance we get
-		$wrapper = new JwtChain;
-		$wrapper->chain = $jwts;
-		$this->chainDataJwt = $wrapper;
+		$this->authInfoJson = $connRequestReader->get($authInfoJsonLength);
 
 		$clientDataJwtLength = $connRequestReader->getLInt();
 		if($clientDataJwtLength <= 0){
@@ -101,9 +73,8 @@ class LoginPacket extends DataPacket implements ServerboundPacket{
 	protected function encodeConnectionRequest() : string{
 		$connRequestWriter = new BinaryStream();
 
-		$chainDataJson = json_encode($this->chainDataJwt, JSON_THROW_ON_ERROR);
-		$connRequestWriter->putLInt(strlen($chainDataJson));
-		$connRequestWriter->put($chainDataJson);
+		$connRequestWriter->putLInt(strlen($this->authInfoJson));
+		$connRequestWriter->put($this->authInfoJson);
 
 		$connRequestWriter->putLInt(strlen($this->clientDataJwt));
 		$connRequestWriter->put($this->clientDataJwt);

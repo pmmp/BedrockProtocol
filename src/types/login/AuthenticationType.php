@@ -12,13 +12,13 @@
 
 declare(strict_types=1);
 
-namespace pocketmine\network\mcpe\protocol\types;
+namespace pocketmine\network\mcpe\protocol\types\login;
 
-final class SubChunkPacketHeightMapType{
-
-	public const NO_DATA = 0;
-	public const DATA = 1;
-	public const ALL_TOO_HIGH = 2;
-	public const ALL_TOO_LOW = 3;
-	public const ALL_COPIED = 4;
+/**
+ * @see AuthenticationInfo
+ */
+enum AuthenticationType : int{
+	case FULL = 0;
+	case GUEST = 1;
+	case SELF_SIGNED = 2;
 }

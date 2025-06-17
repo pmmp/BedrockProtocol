@@ -14,11 +14,13 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol\types;
 
-final class SubChunkPacketHeightMapType{
+enum ScriptDebugShapeType : int{
+	use PacketIntEnumTrait;
 
-	public const NO_DATA = 0;
-	public const DATA = 1;
-	public const ALL_TOO_HIGH = 2;
-	public const ALL_TOO_LOW = 3;
-	public const ALL_COPIED = 4;
+	case LINE = 0;
+	case BOX = 1;
+	case SPHERE = 2;
+	case CIRCLE = 3;
+	case TEST = 4;
+	case ARROW = 5;
 }

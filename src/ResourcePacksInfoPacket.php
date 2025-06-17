@@ -29,12 +29,21 @@ class ResourcePacksInfoPacket extends DataPacket implements ClientboundPacket{
 	public bool $hasScripts = false; //if true, causes disconnect for any platform that doesn't support scripts yet
 	private UuidInterface $worldTemplateId;
 	private string $worldTemplateVersion;
+	private bool $forceDisableVibrantVisuals;
 
 	/**
 	 * @generate-create-func
 	 * @param ResourcePackInfoEntry[] $resourcePackEntries
 	 */
-	public static function create(array $resourcePackEntries, bool $mustAccept, bool $hasAddons, bool $hasScripts, UuidInterface $worldTemplateId, string $worldTemplateVersion) : self{
+	public static function create(
+		array $resourcePackEntries,
+		bool $mustAccept,
+		bool $hasAddons,
+		bool $hasScripts,
+		UuidInterface $worldTemplateId,
+		string $worldTemplateVersion,
+		bool $forceDisableVibrantVisuals,
+	) : self{
 		$result = new self;
 		$result->resourcePackEntries = $resourcePackEntries;
 		$result->mustAccept = $mustAccept;
@@ -42,6 +51,7 @@ class ResourcePacksInfoPacket extends DataPacket implements ClientboundPacket{
 		$result->hasScripts = $hasScripts;
 		$result->worldTemplateId = $worldTemplateId;
 		$result->worldTemplateVersion = $worldTemplateVersion;
+		$result->forceDisableVibrantVisuals = $forceDisableVibrantVisuals;
 		return $result;
 	}
 
@@ -49,10 +59,13 @@ class ResourcePacksInfoPacket extends DataPacket implements ClientboundPacket{
 
 	public function getWorldTemplateVersion() : string{ return $this->worldTemplateVersion; }
 
+	public function isForceDisablingVibrantVisuals() : bool{ return $this->forceDisableVibrantVisuals; }
+
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->mustAccept = $in->getBool();
 		$this->hasAddons = $in->getBool();
 		$this->hasScripts = $in->getBool();
+		$this->forceDisableVibrantVisuals = $in->getBool();
 		$this->worldTemplateId = $in->getUUID();
 		$this->worldTemplateVersion = $in->getString();
 
@@ -66,6 +79,7 @@ class ResourcePacksInfoPacket extends DataPacket implements ClientboundPacket{
 		$out->putBool($this->mustAccept);
 		$out->putBool($this->hasAddons);
 		$out->putBool($this->hasScripts);
+		$out->putBool($this->forceDisableVibrantVisuals);
 		$out->putUUID($this->worldTemplateId);
 		$out->putString($this->worldTemplateVersion);
 		$out->putLShort(count($this->resourcePackEntries));

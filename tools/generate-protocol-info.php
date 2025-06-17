@@ -46,6 +46,7 @@ use function str_contains;
 use function str_ends_with;
 use function str_pad;
 use function strlen;
+use function strrpos;
 use function strtoupper;
 use function substr;
 use const DIRECTORY_SEPARATOR;
@@ -262,6 +263,8 @@ final class ProtocolInfo{
 
 CODE;
 
+const CPP_NAMESPACE_SEPARATOR = "::";
+
 /**
  * @return string[]
  */
@@ -452,6 +455,13 @@ foreach($json["packets"] as $name => $id){
 	if(!is_string($name) || !is_int($id)){
 		fwrite(STDERR, "Invalid packet entry \"$name\", expected string => int" . PHP_EOL);
 		exit(1);
+	}
+	$namespaceSeparatorPos = strrpos($name, CPP_NAMESPACE_SEPARATOR);
+	if($namespaceSeparatorPos !== false){
+		//TODO: namespaced packet - discard namespace for now and just hope this is OK? This would be a real pain to
+		//deal with otherwise :(
+		echo "Warning: Discarded C++ namespace for $name - this might result in class name conflicts" . PHP_EOL;
+		$name = substr($name, $namespaceSeparatorPos + strlen(CPP_NAMESPACE_SEPARATOR));
 	}
 	$packetToIdList[$name] = $id;
 }

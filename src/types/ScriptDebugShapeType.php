@@ -21,6 +21,6 @@ enum ScriptDebugShapeType : int{
 	case BOX = 1;
 	case SPHERE = 2;
 	case CIRCLE = 3;
-	case TEST = 4;
+	case TEXT = 4;
 	case ARROW = 5;
 }

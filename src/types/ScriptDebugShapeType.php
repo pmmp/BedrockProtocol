@@ -15,14 +15,14 @@ declare(strict_types=1);
 namespace pocketmine\network\mcpe\protocol\types;
 
 enum ScriptDebugShapeType : int{
-    use PacketIntEnumTrait;
+	use PacketIntEnumTrait;
 
-    case LINE = 0;
-    case BOX = 1;
-    case SPHERE = 2;
-    case CIRCLE = 3;
-    case TEXT = 4;
-    case ARROW = 5;
+	case LINE = 0;
+	case BOX = 1;
+	case SPHERE = 2;
+	case CIRCLE = 3;
+	case TEXT = 4;
+	case ARROW = 5;
 }
 
 /** @deprecated use ScriptDebugShapeType::TEXT instead */

@@ -99,7 +99,7 @@ final class PacketShapeData{
 	}
 
 	public function write(PacketSerializer $out) : void{
-		$out->writeOptional($this->networkId, $out->putUnsignedVarLong(...));
+		$out->putUnsignedVarLong($this->networkId);
 		$out->writeOptional($this->type, fn(ScriptDebugShapeType $type) => $out->putByte($type->value));
 		$out->writeOptional($this->location, $out->putVector3(...));
 		$out->writeOptional($this->scale, $out->putLFloat(...));

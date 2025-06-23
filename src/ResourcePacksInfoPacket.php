@@ -59,7 +59,7 @@ class ResourcePacksInfoPacket extends DataPacket implements ClientboundPacket{
 
 	public function getWorldTemplateVersion() : string{ return $this->worldTemplateVersion; }
 
-	public function setForceDisableVibrantVisuals(bool $forceDisable) : void{
+	public function setForceDisablingVibrantVisuals(bool $forceDisable) : void{
 		$this->forceDisableVibrantVisuals = $forceDisable;
 	}
 

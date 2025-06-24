@@ -40,6 +40,118 @@ final class PacketShapeData{
 		private ?int $segments,
 	){}
 
+	public static function remove(int $networkId) : self{
+		return new self($networkId, null, null, null, null, null, null, null, null, null, null, null, null);
+	}
+
+	public static function line(int $networkId, Vector3 $location, Vector3 $lineEndLocation, ?Color $color = null) : self{
+		return new self(
+			networkId: $networkId,
+			type: ScriptDebugShapeType::LINE,
+			location: $location,
+			scale: null,
+			rotation: null,
+			totalTimeLeft: null,
+			color: $color,
+			text: null,
+			boxBound: null,
+			lineEndLocation: $lineEndLocation,
+			arrowHeadLength: null,
+			arrowHeadRadius: null,
+			segments: null
+		);
+	}
+
+	public static function box(int $networkId, Vector3 $location, Vector3 $boxBound, ?float $scale = null, ?Color $color = null) : self{
+		return new self(
+			networkId: $networkId,
+			type: ScriptDebugShapeType::BOX,
+			location: $location,
+			scale: $scale,
+			rotation: null,
+			totalTimeLeft: null,
+			color: $color,
+			text: null,
+			boxBound: $boxBound,
+			lineEndLocation: null,
+			arrowHeadLength: null,
+			arrowHeadRadius: null,
+			segments: null
+		);
+	}
+
+	public static function sphere(int $networkId, Vector3 $location, ?float $scale = null, ?Color $color = null, ?int $segments = null) : self{
+		return new self(
+			networkId: $networkId,
+			type: ScriptDebugShapeType::SPHERE,
+			location: $location,
+			scale: $scale,
+			rotation: null,
+			totalTimeLeft: null,
+			color: $color,
+			text: null,
+			boxBound: null,
+			lineEndLocation: null,
+			arrowHeadLength: null,
+			arrowHeadRadius: null,
+			segments: $segments
+		);
+	}
+
+	public static function circle(int $networkId, Vector3 $location, ?float $scale = null, ?Color $color = null, ?int $segments = null) : self{
+		return new self(
+			networkId: $networkId,
+			type: ScriptDebugShapeType::CIRCLE,
+			location: $location,
+			scale: $scale,
+			rotation: null,
+			totalTimeLeft: null,
+			color: $color,
+			text: null,
+			boxBound: null,
+			lineEndLocation: null,
+			arrowHeadLength: null,
+			arrowHeadRadius: null,
+			segments: $segments
+		);
+	}
+
+	public static function text(int $networkId, Vector3 $location, string $text, ?Color $color = null) : self{
+		return new self(
+			networkId: $networkId,
+			type: ScriptDebugShapeType::TEXT,
+			location: $location,
+			scale: null,
+			rotation: null,
+			totalTimeLeft: null,
+			color: $color,
+			text: $text,
+			boxBound: null,
+			lineEndLocation: null,
+			arrowHeadLength: null,
+			arrowHeadRadius: null,
+			segments: null
+		);
+	}
+
+	public static function arrow(int $networkId, Vector3 $location, Vector3 $lineEndLocation, ?float $scale = null, ?Color $color = null, ?float $arrowHeadLength = null, ?float $arrowHeadRadius = null, ?int $segments = null) : self{
+		return new self(
+			networkId: $networkId,
+			type: ScriptDebugShapeType::ARROW,
+			location: $location,
+			scale: $scale,
+			rotation: null,
+			totalTimeLeft: null,
+			color: $color,
+			text: null,
+			boxBound: null,
+			lineEndLocation: $lineEndLocation,
+			arrowHeadLength: $arrowHeadLength,
+			arrowHeadRadius: $arrowHeadRadius,
+			segments: $segments
+		);
+	}
+
 	public function getNetworkId() : int{ return $this->networkId; }
 
 	public function getType() : ?ScriptDebugShapeType{ return $this->type; }
@@ -99,7 +211,7 @@ final class PacketShapeData{
 	}
 
 	public function write(PacketSerializer $out) : void{
-		$out->writeOptional($this->networkId, $out->putUnsignedVarLong(...));
+		$out->putUnsignedVarLong($this->networkId);
 		$out->writeOptional($this->type, fn(ScriptDebugShapeType $type) => $out->putByte($type->value));
 		$out->writeOptional($this->location, $out->putVector3(...));
 		$out->writeOptional($this->scale, $out->putLFloat(...));

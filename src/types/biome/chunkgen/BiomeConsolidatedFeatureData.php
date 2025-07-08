@@ -40,7 +40,7 @@ final class BiomeConsolidatedFeatureData{
 		$scatter = BiomeScatterParamData::read($in);
 		$feature = $in->getLShort();
 		$identifier = $in->getLShort();
-		$pass = $in->getUnsignedVarInt();
+		$pass = $in->getLShort();
 		$useInternal = $in->getBool();
 
 		return new self(
@@ -56,7 +56,7 @@ final class BiomeConsolidatedFeatureData{
 		$this->scatter->write($out);
 		$out->putLShort($this->feature);
 		$out->putLShort($this->identifier);
-		$out->putUnsignedVarInt($this->pass);
+		$out->putLShort($this->pass);
 		$out->putBool($this->useInternal);
 	}
 }

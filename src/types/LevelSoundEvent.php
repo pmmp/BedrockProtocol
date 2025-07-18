@@ -129,6 +129,7 @@ final class LevelSoundEvent{
 	public const RECORD_BLOCKS = 103;
 	public const RECORD_CHIRP = 104;
 	public const RECORD_FAR = 105;
+	public const RECORD_LAVA_CHICKEN = 561;
 	public const RECORD_MALL = 106;
 	public const RECORD_MELLOHI = 107;
 	public const RECORD_STAL = 108;

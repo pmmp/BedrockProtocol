@@ -75,6 +75,7 @@ final class EntityIds{
 	public const GLOW_SQUID = "minecraft:glow_squid";
 	public const GOAT = "minecraft:goat";
 	public const GUARDIAN = "minecraft:guardian";
+	public const HAPPY_GHAST = "minecraft:happy_ghast";
 	public const HOGLIN = "minecraft:hoglin";
 	public const HOPPER_MINECART = "minecraft:hopper_minecart";
 	public const HORSE = "minecraft:horse";

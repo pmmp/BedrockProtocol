@@ -16,6 +16,7 @@ namespace pocketmine\network\mcpe\protocol;
 
 use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 use pocketmine\network\mcpe\protocol\types\camera\CameraFadeInstruction;
+use pocketmine\network\mcpe\protocol\types\camera\CameraFovInstruction;
 use pocketmine\network\mcpe\protocol\types\camera\CameraSetInstruction;
 use pocketmine\network\mcpe\protocol\types\camera\CameraTargetInstruction;
 
@@ -27,17 +28,19 @@ class CameraInstructionPacket extends DataPacket implements ClientboundPacket{
 	private ?CameraFadeInstruction $fade;
 	private ?CameraTargetInstruction $target;
 	private ?bool $removeTarget;
+	private ?CameraFovInstruction $fieldOfView;
 
 	/**
 	 * @generate-create-func
 	 */
-	public static function create(?CameraSetInstruction $set, ?bool $clear, ?CameraFadeInstruction $fade, ?CameraTargetInstruction $target, ?bool $removeTarget) : self{
+	public static function create(?CameraSetInstruction $set, ?bool $clear, ?CameraFadeInstruction $fade, ?CameraTargetInstruction $target, ?bool $removeTarget, ?CameraFovInstruction $fieldOfView) : self{
 		$result = new self;
 		$result->set = $set;
 		$result->clear = $clear;
 		$result->fade = $fade;
 		$result->target = $target;
 		$result->removeTarget = $removeTarget;
+		$result->fieldOfView = $fieldOfView;
 		return $result;
 	}
 
@@ -51,12 +54,15 @@ class CameraInstructionPacket extends DataPacket implements ClientboundPacket{
 
 	public function getRemoveTarget() : ?bool{ return $this->removeTarget; }
 
+	public function getFieldOfView() : ?CameraFovInstruction{ return $this->fieldOfView; }
+
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->set = $in->readOptional(fn() => CameraSetInstruction::read($in));
 		$this->clear = $in->readOptional($in->getBool(...));
 		$this->fade = $in->readOptional(fn() => CameraFadeInstruction::read($in));
 		$this->target = $in->readOptional(fn() => CameraTargetInstruction::read($in));
 		$this->removeTarget = $in->readOptional($in->getBool(...));
+		$this->fieldOfView = $in->readOptional(fn() => CameraFovInstruction::read($in));
 	}
 
 	protected function encodePayload(PacketSerializer $out) : void{
@@ -65,6 +71,7 @@ class CameraInstructionPacket extends DataPacket implements ClientboundPacket{
 		$out->writeOptional($this->fade, fn(CameraFadeInstruction $v) => $v->write($out));
 		$out->writeOptional($this->target, fn(CameraTargetInstruction $v) => $v->write($out));
 		$out->writeOptional($this->removeTarget, $out->putBool(...));
+		$out->writeOptional($this->fieldOfView, fn(CameraFovInstruction $v) => $v->write($out));
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

@@ -543,13 +543,15 @@ final class LevelSoundEvent{
 	public const PLACE_IN_WATER = 551;
 	public const STATE_CHANGE = 552;
 	public const IMITATE_HAPPY_GHAST = 553;
-	public const UNEQUIP_GENERIC = 554;
+	public const ARMOR_UNEQUIP_GENERIC = 554;
 	public const RECORD_TEARS = 555;
-	public const THE_END_LIGHT_FLASH = 556;
+	public const AMBIENT_WEATHER_THE_END_LIGHT_FLASH = 556;
 	public const LEAD_LEASH = 557;
 	public const LEAD_UNLEASH = 558;
 	public const LEAD_BREAK = 559;
 	public const UNSADDLE = 560;
+	public const ARMOR_EQUIP_COPPER = 561;
+	public const RECORD_LAVA_CHICKEN = 562;
 
 	//The following aliases are kept for backwards compatibility only
 	public const SCULK_SENSOR_POWER_ON = self::POWER_ON_SCULK_SENSOR;

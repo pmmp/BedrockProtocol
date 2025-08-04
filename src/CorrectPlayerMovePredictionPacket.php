@@ -65,9 +65,9 @@ class CorrectPlayerMovePredictionPacket extends DataPacket implements Clientboun
 
 	public function getPredictionType() : int{ return $this->predictionType; }
 
-	public function getVehicleRotation() : ?Vector2{ return $this->vehicleRotation; }
+	public function getVehicleRotation() : Vector2{ return $this->vehicleRotation; }
 
-	public function getVehicleAngularVelocity() : ?float{ return $this->vehicleAngularVelocity; }
+	public function getVehicleAngularVelocity() : float{ return $this->vehicleAngularVelocity; }
 
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->predictionType = $in->getByte();

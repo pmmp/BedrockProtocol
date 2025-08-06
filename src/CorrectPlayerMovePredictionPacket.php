@@ -30,7 +30,7 @@ class CorrectPlayerMovePredictionPacket extends DataPacket implements Clientboun
 	private int $tick;
 	private int $predictionType;
 	private Vector2 $vehicleRotation;
-	private float $vehicleAngularVelocity;
+	private ?float $vehicleAngularVelocity;
 
 	/**
 	 * @generate-create-func
@@ -42,7 +42,7 @@ class CorrectPlayerMovePredictionPacket extends DataPacket implements Clientboun
 		int $tick,
 		int $predictionType,
 		Vector2 $vehicleRotation,
-		float $vehicleAngularVelocity,
+		?float $vehicleAngularVelocity,
 	) : self{
 		$result = new self;
 		$result->position = $position;
@@ -67,14 +67,14 @@ class CorrectPlayerMovePredictionPacket extends DataPacket implements Clientboun
 
 	public function getVehicleRotation() : Vector2{ return $this->vehicleRotation; }
 
-	public function getVehicleAngularVelocity() : float{ return $this->vehicleAngularVelocity; }
+	public function getVehicleAngularVelocity() : ?float{ return $this->vehicleAngularVelocity; }
 
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->predictionType = $in->getByte();
 		$this->position = $in->getVector3();
 		$this->delta = $in->getVector3();
 		$this->vehicleRotation = new Vector2($in->getFloat(), $in->getFloat());
-		$this->vehicleAngularVelocity = $in->getFloat();
+		$this->vehicleAngularVelocity = $in->readOptional($in->getFloat(...));
 		$this->onGround = $in->getBool();
 		$this->tick = $in->getUnsignedVarLong();
 	}
@@ -85,7 +85,7 @@ class CorrectPlayerMovePredictionPacket extends DataPacket implements Clientboun
 		$out->putVector3($this->delta);
 		$out->putFloat($this->vehicleRotation->getX());
 		$out->putFloat($this->vehicleRotation->getY());
-		$out->putFloat($this->vehicleAngularVelocity);
+		$out->writeOptional($this->vehicleAngularVelocity, $out->putFloat(...));
 		$out->putBool($this->onGround);
 		$out->putUnsignedVarLong($this->tick);
 	}

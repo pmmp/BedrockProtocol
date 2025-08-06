@@ -55,6 +55,7 @@ class StartGamePacket extends DataPacket implements ClientboundPacket{
 	public UuidInterface $worldTemplateId; //why is this here twice ??? mojang
 	public bool $enableClientSideChunkGeneration;
 	public bool $blockNetworkIdsAreHashes = false; //new in 1.19.80, possibly useful for multi version
+	public bool $enableTickDeathSystems = false;
 	public NetworkPermissions $networkPermissions;
 
 	/**
@@ -98,6 +99,7 @@ class StartGamePacket extends DataPacket implements ClientboundPacket{
 		UuidInterface $worldTemplateId,
 		bool $enableClientSideChunkGeneration,
 		bool $blockNetworkIdsAreHashes,
+		bool $enableTickDeathSystems,
 		NetworkPermissions $networkPermissions,
 		array $blockPalette,
 		int $blockPaletteChecksum,
@@ -124,6 +126,7 @@ class StartGamePacket extends DataPacket implements ClientboundPacket{
 		$result->worldTemplateId = $worldTemplateId;
 		$result->enableClientSideChunkGeneration = $enableClientSideChunkGeneration;
 		$result->blockNetworkIdsAreHashes = $blockNetworkIdsAreHashes;
+		$result->enableTickDeathSystems = $enableTickDeathSystems;
 		$result->networkPermissions = $networkPermissions;
 		$result->blockPalette = $blockPalette;
 		$result->blockPaletteChecksum = $blockPaletteChecksum;
@@ -166,6 +169,7 @@ class StartGamePacket extends DataPacket implements ClientboundPacket{
 		$this->worldTemplateId = $in->getUUID();
 		$this->enableClientSideChunkGeneration = $in->getBool();
 		$this->blockNetworkIdsAreHashes = $in->getBool();
+		$this->enableTickDeathSystems = $in->getBool();
 		$this->networkPermissions = NetworkPermissions::decode($in);
 	}
 
@@ -204,6 +208,7 @@ class StartGamePacket extends DataPacket implements ClientboundPacket{
 		$out->putUUID($this->worldTemplateId);
 		$out->putBool($this->enableClientSideChunkGeneration);
 		$out->putBool($this->blockNetworkIdsAreHashes);
+		$out->putBool($this->enableTickDeathSystems);
 		$this->networkPermissions->encode($out);
 	}
 

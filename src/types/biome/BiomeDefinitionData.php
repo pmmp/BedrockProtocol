@@ -27,7 +27,7 @@ final class BiomeDefinitionData{
 	 */
 	public function __construct(
 		private int $nameIndex,
-		private ?int $id,
+		private int $id,
 		private float $temperature,
 		private float $downfall,
 		private float $redSporeDensity,
@@ -44,7 +44,7 @@ final class BiomeDefinitionData{
 
 	public function getNameIndex() : int{ return $this->nameIndex; }
 
-	public function getId() : ?int{ return $this->id; }
+	public function getId() : int{ return $this->id; }
 
 	public function getTemperature() : float{ return $this->temperature; }
 
@@ -76,7 +76,7 @@ final class BiomeDefinitionData{
 
 	public static function read(PacketSerializer $in) : self{
 		$nameIndex = $in->getLShort();
-		$id = $in->readOptional($in->getLShort(...));
+		$id = $in->getLShort();
 		$temperature = $in->getLFloat();
 		$downfall = $in->getLFloat();
 		$redSporeDensity = $in->getLFloat();
@@ -118,7 +118,7 @@ final class BiomeDefinitionData{
 
 	public function write(PacketSerializer $out) : void{
 		$out->putLShort($this->nameIndex);
-		$out->writeOptional($this->id, $out->putLShort(...));
+		$out->putLShort($this->id);
 		$out->putLFloat($this->temperature);
 		$out->putLFloat($this->downfall);
 		$out->putLFloat($this->redSporeDensity);

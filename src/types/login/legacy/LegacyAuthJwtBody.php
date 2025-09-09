@@ -12,19 +12,14 @@
 
 declare(strict_types=1);
 
-namespace pocketmine\network\mcpe\protocol\types\login;
+namespace pocketmine\network\mcpe\protocol\types\login\legacy;
+
+use pocketmine\network\mcpe\protocol\types\login\JwtBodyRfc7519;
 
 /**
- * Model class for JsonMapper which describes the RFC7519 standard fields in a JWT. Any of these fields might not be
- * provided.
+ * Model for JsonMapper exposing the data in the login JWT chain links.
+ * TODO: extend this with more complete models
  */
-class JwtBodyRfc7519{
-	public string $iss;
-	public string $sub;
-	/** @var mixed */
-	public $aud;
-	public int $exp;
-	public int $nbf;
-	public int $iat;
-	public string $jti;
+final class LegacyAuthJwtBody extends JwtBodyRfc7519{
+	public string $identityPublicKey;
 }

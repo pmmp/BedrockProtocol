@@ -12,19 +12,15 @@
 
 declare(strict_types=1);
 
-namespace pocketmine\network\mcpe\protocol\types\login;
+namespace pocketmine\network\mcpe\protocol\types\login\openid;
 
-/**
- * Model class for JsonMapper which describes the RFC7519 standard fields in a JWT. Any of these fields might not be
- * provided.
- */
-class JwtBodyRfc7519{
-	public string $iss;
-	public string $sub;
-	/** @var mixed */
-	public $aud;
-	public int $exp;
-	public int $nbf;
-	public int $iat;
-	public string $jti;
+final class XboxAuthJwtHeader{
+	/** @required */
+	public string $alg;
+
+	/** @required */
+	public string $kid;
+
+	/** @required */
+	public string $typ;
 }

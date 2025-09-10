@@ -66,6 +66,12 @@ final class BiomeCoordinateData{
 	}
 
 	public function write(ByteBufferWriter $out) : void{
-
+		VarInt::writeSignedInt($out, $this->minValueType);
+		LE::writeSignedShort($out, $this->minValue);
+		VarInt::writeSignedInt($out, $this->maxValueType);
+		LE::writeSignedShort($out, $this->maxValue);
+		LE::writeUnsignedInt($out, $this->gridOffset);
+		LE::writeUnsignedInt($out, $this->gridStepSize);
+		VarInt::writeSignedInt($out, $this->distribution);
 	}
 }

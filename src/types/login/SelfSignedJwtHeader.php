@@ -15,16 +15,17 @@ declare(strict_types=1);
 namespace pocketmine\network\mcpe\protocol\types\login;
 
 /**
- * Model class for JsonMapper which describes the RFC7519 standard fields in a JWT. Any of these fields might not be
- * provided.
+ * JsonMapper model for headers of JWTs used in self-signed authentication and for the client data JWT header.
  */
-class JwtBodyRfc7519{
-	public string $iss;
-	public string $sub;
-	/** @var mixed */
-	public $aud;
-	public int $exp;
-	public int $nbf;
-	public int $iat;
-	public string $jti;
+final class SelfSignedJwtHeader{
+	/** @required */
+	public string $alg;
+	/** @required */
+	public string $x5u;
+
+	/**
+	 * As of 2023-03-29, this field suddenly started appearing in JWTs returned by the Mojang authentication API.
+	 * It's unclear whether this was intended, but it is part of the JWT spec, so it's not a problem to accept it.
+	 */
+	public string $x5t;
 }

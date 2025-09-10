@@ -12,18 +12,23 @@
 
 declare(strict_types=1);
 
-namespace pocketmine\network\mcpe\protocol\types\login;
+namespace pocketmine\network\mcpe\protocol\types\login\legacy;
 
 /**
  * Model class for LoginPacket JSON data for JsonMapper
  */
-final class ClientDataPersonaPieceTintColor{
-	/** @required */
-	public string $PieceType;
+final class LegacyAuthIdentityData{
 
-	/**
-	 * @var string[]
-	 * @required
-	 */
-	public array $Colors;
+	/** @required */
+	public string $displayName;
+
+	/** @required */
+	public string $identity;
+
+	public string $sandboxId = "RETAIL"; //TODO: what are the other possible values?
+
+	public ?string $titleId = ""; //TODO: find out what this is for
+
+	/** @required */
+	public string $XUID;
 }

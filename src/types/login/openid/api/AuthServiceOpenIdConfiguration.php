@@ -12,23 +12,15 @@
 
 declare(strict_types=1);
 
-namespace pocketmine\network\mcpe\protocol\types\login;
+namespace pocketmine\network\mcpe\protocol\types\login\openid\api;
 
 /**
- * Model class for LoginPacket JSON data for JsonMapper
+ * Model class for https://authorization.franchise.minecraft-services.net/.well-known/openid-configuration JSON data for JsonMapper
  */
-final class AuthenticationData{
+final class AuthServiceOpenIdConfiguration{
+	/** @required */
+	public string $issuer;
 
 	/** @required */
-	public string $displayName;
-
-	/** @required */
-	public string $identity;
-
-	public string $sandboxId = "RETAIL"; //TODO: what are the other possible values?
-
-	public ?string $titleId = ""; //TODO: find out what this is for
-
-	/** @required */
-	public string $XUID;
+	public string $jwks_uri;
 }

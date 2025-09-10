@@ -12,28 +12,18 @@
 
 declare(strict_types=1);
 
-namespace pocketmine\network\mcpe\protocol\types\login;
+namespace pocketmine\network\mcpe\protocol\types\login\clientdata;
 
 /**
  * Model class for LoginPacket JSON data for JsonMapper
  */
-final class ClientDataAnimationFrame{
-
+final class ClientDataPersonaPieceTintColor{
 	/** @required */
-	public int $ImageHeight;
+	public string $PieceType;
 
-	/** @required */
-	public int $ImageWidth;
-
-	/** @required */
-	public float $Frames;
-
-	/** @required */
-	public int $Type;
-
-	/** @required */
-	public string $Image;
-
-	/** @required */
-	public int $AnimationExpression;
+	/**
+	 * @var string[]
+	 * @required
+	 */
+	public array $Colors;
 }

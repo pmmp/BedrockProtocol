@@ -12,7 +12,7 @@
 
 declare(strict_types=1);
 
-namespace pocketmine\network\mcpe\protocol\types\login;
+namespace pocketmine\network\mcpe\protocol\types\login\clientdata;
 
 /**
  * Model class for LoginPacket JSON data for JsonMapper

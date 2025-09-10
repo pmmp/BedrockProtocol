@@ -63,6 +63,12 @@ final class BiomeCoordinateData{
 	}
 
 	public function write(PacketSerializer $out) : void{
-
+		$out->putVarInt($this->minValueType);
+		$out->putLShort($this->minValue);
+		$out->putVarInt($this->maxValueType);
+		$out->putLShort($this->maxValue);
+		$out->putLInt($this->gridOffset);
+		$out->putLInt($this->gridStepSize);
+		$out->putVarInt($this->distribution);
 	}
 }

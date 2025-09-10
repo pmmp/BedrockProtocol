@@ -27,17 +27,19 @@ class CameraAimAssistPacket extends DataPacket implements ClientboundPacket{
 	private float $distance;
 	private CameraAimAssistTargetMode $targetMode;
 	private CameraAimAssistActionType $actionType;
+	private bool $showDebugRender;
 
 	/**
 	 * @generate-create-func
 	 */
-	public static function create(string $presetId, Vector2 $viewAngle, float $distance, CameraAimAssistTargetMode $targetMode, CameraAimAssistActionType $actionType) : self{
+	public static function create(string $presetId, Vector2 $viewAngle, float $distance, CameraAimAssistTargetMode $targetMode, CameraAimAssistActionType $actionType, bool $showDebugRender) : self{
 		$result = new self;
 		$result->presetId = $presetId;
 		$result->viewAngle = $viewAngle;
 		$result->distance = $distance;
 		$result->targetMode = $targetMode;
 		$result->actionType = $actionType;
+		$result->showDebugRender = $showDebugRender;
 		return $result;
 	}
 
@@ -51,12 +53,15 @@ class CameraAimAssistPacket extends DataPacket implements ClientboundPacket{
 
 	public function getActionType() : CameraAimAssistActionType{ return $this->actionType; }
 
+	public function getShowDebugRender() : bool{ return $this->showDebugRender; }
+
 	protected function decodePayload(PacketSerializer $in) : void{
 		$this->presetId = $in->getString();
 		$this->viewAngle = $in->getVector2();
 		$this->distance = $in->getLFloat();
 		$this->targetMode = CameraAimAssistTargetMode::fromPacket($in->getByte());
 		$this->actionType = CameraAimAssistActionType::fromPacket($in->getByte());
+		$this->showDebugRender = $in->getBool();
 	}
 
 	protected function encodePayload(PacketSerializer $out) : void{
@@ -65,6 +70,7 @@ class CameraAimAssistPacket extends DataPacket implements ClientboundPacket{
 		$out->putLFloat($this->distance);
 		$out->putByte($this->targetMode->value);
 		$out->putByte($this->actionType->value);
+		$out->putBool($this->showDebugRender);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

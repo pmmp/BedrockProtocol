@@ -14,6 +14,8 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol\serializer;
 
+use pmmp\encoding\LE;
+use pmmp\encoding\VarInt;
 use pocketmine\nbt\BaseNbtSerializer;
 use pocketmine\nbt\NbtDataException;
 use function count;
@@ -22,75 +24,70 @@ use function strlen;
 class NetworkNbtSerializer extends BaseNbtSerializer{
 
 	public function readShort() : int{
-		return $this->buffer->getLShort();
+		return LE::readUnsignedShort($this->reader);
 	}
 
 	public function readSignedShort() : int{
-		return $this->buffer->getSignedLShort();
+		return LE::readSignedShort($this->reader);
 	}
 
 	public function writeShort(int $v) : void{
-		$this->buffer->putLShort($v);
+		//TODO: signed and unsigned are encoded the same, but this API should be redesigned
+		LE::writeSignedShort($this->writer, $v);
 	}
 
 	public function readInt() : int{
-		return $this->buffer->getVarInt();
+		return VarInt::readSignedInt($this->reader);
 	}
 
 	public function writeInt(int $v) : void{
-		$this->buffer->putVarInt($v);
+		VarInt::writeSignedInt($this->writer, $v);
 	}
 
 	public function readLong() : int{
-		return $this->buffer->getVarLong();
+		return VarInt::readSignedLong($this->reader);
 	}
 
 	public function writeLong(int $v) : void{
-		$this->buffer->putVarLong($v);
+		VarInt::writeSignedLong($this->writer, $v);
 	}
 
 	public function readString() : string{
-		return $this->buffer->get(self::checkReadStringLength($this->buffer->getUnsignedVarInt()));
+		return $this->reader->readByteArray(self::checkReadStringLength(VarInt::readUnsignedInt($this->reader)));
 	}
 
 	public function writeString(string $v) : void{
-		$this->buffer->putUnsignedVarInt(self::checkWriteStringLength(strlen($v)));
-		$this->buffer->put($v);
+		VarInt::writeUnsignedInt($this->writer, self::checkWriteStringLength(strlen($v)));
+		$this->writer->writeByteArray($v);
 	}
 
 	public function readFloat() : float{
-		return $this->buffer->getLFloat();
+		return LE::readFloat($this->reader);
 	}
 
 	public function writeFloat(float $v) : void{
-		$this->buffer->putLFloat($v);
+		LE::writeFloat($this->writer, $v);
 	}
 
 	public function readDouble() : float{
-		return $this->buffer->getLDouble();
+		return LE::readDouble($this->reader);
 	}
 
 	public function writeDouble(float $v) : void{
-		$this->buffer->putLDouble($v);
+		LE::writeDouble($this->writer, $v);
 	}
 
 	public function readIntArray() : array{
-		$len = $this->readInt(); //varint
+		$len = VarInt::readSignedInt($this->reader);
 		if($len < 0){
 			throw new NbtDataException("Array length cannot be less than zero ($len < 0)");
 		}
-		$ret = [];
-		for($i = 0; $i < $len; ++$i){
-			$ret[] = $this->readInt(); //varint
-		}
 
-		return $ret;
+		return VarInt::readSignedIntArray($this->reader, $len);
 	}
 
 	public function writeIntArray(array $array) : void{
-		$this->writeInt(count($array)); //varint
-		foreach($array as $v){
-			$this->writeInt($v); //varint
-		}
+		VarInt::writeSignedInt($this->writer, count($array));
+		VarInt::writeSignedIntArray($this->writer, $array);
 	}
 }

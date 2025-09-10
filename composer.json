@@ -9,7 +9,7 @@
         "pocketmine/binaryutils": "^0.2.0",
         "pocketmine/color": "^0.2.0 || ^0.3.0",
         "pocketmine/math": "^0.3.0 || ^0.4.0 || ^1.0.0",
-        "pocketmine/nbt": "^1.0.0",
+        "pocketmine/nbt": "dev-ext-encoding",
         "ramsey/uuid": "^4.1"
     },
     "require-dev": {

@@ -75,7 +75,7 @@ class PlayerUpdateEntityOverridesPacket extends DataPacket implements Clientboun
 		$this->propertyIndex = VarInt::readUnsignedInt($in);
 		$this->updateType = OverrideUpdateType::fromPacket(Byte::readUnsigned($in));
 		if($this->updateType === OverrideUpdateType::SET_INT_OVERRIDE){
-			$this->intOverrideValue = /* TODO: check if this should be unsigned */ LE::readSignedInt($in);
+			$this->intOverrideValue = LE::readSignedInt($in);
 		}elseif($this->updateType === OverrideUpdateType::SET_FLOAT_OVERRIDE){
 			$this->floatOverrideValue = LE::readFloat($in);
 		}
@@ -89,7 +89,7 @@ class PlayerUpdateEntityOverridesPacket extends DataPacket implements Clientboun
 			if($this->intOverrideValue === null){ // this should never be the case
 				throw new \LogicException("PlayerUpdateEntityOverridesPacket with type SET_INT_OVERRIDE requires intOverrideValue to be provided");
 			}
-			/* TODO: check if this should be unsigned */ LE::writeSignedInt($out, $this->intOverrideValue);
+			LE::writeSignedInt($out, $this->intOverrideValue);
 		}elseif($this->updateType === OverrideUpdateType::SET_FLOAT_OVERRIDE){
 			if($this->floatOverrideValue === null){ // this should never be the case
 				throw new \LogicException("PlayerUpdateEntityOverridesPacket with type SET_FLOAT_OVERRIDE requires floatOverrideValue to be provided");

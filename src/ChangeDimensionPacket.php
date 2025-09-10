@@ -47,14 +47,14 @@ class ChangeDimensionPacket extends DataPacket implements ClientboundPacket{
 		$this->dimension = VarInt::readSignedInt($in);
 		$this->position = CommonTypes::getVector3($in);
 		$this->respawn = CommonTypes::getBool($in);
-		$this->loadingScreenId = CommonTypes::readOptional($in, fn() => /* TODO: check if this should be unsigned */ LE::readSignedInt($in));
+		$this->loadingScreenId = CommonTypes::readOptional($in, LE::readUnsignedInt(...));
 	}
 
 	protected function encodePayload(ByteBufferWriter $out) : void{
 		VarInt::writeSignedInt($out, $this->dimension);
 		CommonTypes::putVector3($out, $this->position);
 		CommonTypes::putBool($out, $this->respawn);
-		CommonTypes::writeOptional($out, $this->loadingScreenId, /* TODO: check if this should be unsigned */ LE::writeSignedInt(...));
+		CommonTypes::writeOptional($out, $this->loadingScreenId, LE::writeUnsignedInt(...));
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

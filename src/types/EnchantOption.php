@@ -78,7 +78,7 @@ final class EnchantOption{
 	public static function read(ByteBufferReader $in) : self{
 		$cost = VarInt::readUnsignedInt($in);
 
-		$slotFlags = /* TODO: check if this should be unsigned */ LE::readSignedInt($in);
+		$slotFlags = LE::readUnsignedInt($in);
 		$equipActivatedEnchants = self::readEnchantList($in);
 		$heldActivatedEnchants = self::readEnchantList($in);
 		$selfActivatedEnchants = self::readEnchantList($in);
@@ -92,7 +92,7 @@ final class EnchantOption{
 	public function write(ByteBufferWriter $out) : void{
 		VarInt::writeUnsignedInt($out, $this->cost);
 
-		/* TODO: check if this should be unsigned */ LE::writeSignedInt($out, $this->slotFlags);
+		LE::writeUnsignedInt($out, $this->slotFlags);
 		self::writeEnchantList($out, $this->equipActivatedEnchantments);
 		self::writeEnchantList($out, $this->heldActivatedEnchantments);
 		self::writeEnchantList($out, $this->selfActivatedEnchantments);

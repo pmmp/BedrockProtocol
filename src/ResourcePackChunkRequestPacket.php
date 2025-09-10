@@ -37,12 +37,12 @@ class ResourcePackChunkRequestPacket extends DataPacket implements ServerboundPa
 
 	protected function decodePayload(ByteBufferReader $in) : void{
 		$this->packId = CommonTypes::getString($in);
-		$this->chunkIndex = /* TODO: check if this should be unsigned */ LE::readSignedInt($in);
+		$this->chunkIndex = LE::readUnsignedInt($in);
 	}
 
 	protected function encodePayload(ByteBufferWriter $out) : void{
 		CommonTypes::putString($out, $this->packId);
-		/* TODO: check if this should be unsigned */ LE::writeSignedInt($out, $this->chunkIndex);
+		LE::writeUnsignedInt($out, $this->chunkIndex);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

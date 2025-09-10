@@ -45,7 +45,7 @@ class TransferPacket extends DataPacket implements ClientboundPacket{
 
 	protected function encodePayload(ByteBufferWriter $out) : void{
 		CommonTypes::putString($out, $this->address);
-		/* TODO: check if this should be unsigned */ LE::writeUnsignedShort($out, $this->port);
+		LE::writeUnsignedShort($out, $this->port);
 		CommonTypes::putBool($out, $this->reloadWorld);
 	}
 

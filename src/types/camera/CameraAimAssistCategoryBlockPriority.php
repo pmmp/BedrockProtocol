@@ -32,7 +32,7 @@ final class CameraAimAssistCategoryBlockPriority{
 
 	public static function read(ByteBufferReader $in) : self{
 		$identifier = CommonTypes::getString($in);
-		$priority = /* TODO: check if this should be unsigned */ LE::readSignedInt($in);
+		$priority = LE::readSignedInt($in);
 		return new self(
 			$identifier,
 			$priority
@@ -41,6 +41,6 @@ final class CameraAimAssistCategoryBlockPriority{
 
 	public function write(ByteBufferWriter $out) : void{
 		CommonTypes::putString($out, $this->identifier);
-		/* TODO: check if this should be unsigned */ LE::writeSignedInt($out, $this->priority);
+		LE::writeSignedInt($out, $this->priority);
 	}
 }

@@ -288,7 +288,7 @@ class AvailableCommandsPacket extends DataPacket implements ClientboundPacket{
 		}elseif($valueCount < 65536){
 			return LE::readUnsignedShort($in);
 		}else{
-			return /* TODO: check if this should be unsigned */ LE::readSignedInt($in);
+			return LE::readUnsignedInt($in);
 		}
 	}
 
@@ -296,9 +296,9 @@ class AvailableCommandsPacket extends DataPacket implements ClientboundPacket{
 		if($valueCount < 256){
 			Byte::writeUnsigned($out, $index);
 		}elseif($valueCount < 65536){
-			/* TODO: check if this should be unsigned */ LE::writeUnsignedShort($out, $index);
+			LE::writeUnsignedShort($out, $index);
 		}else{
-			/* TODO: check if this should be unsigned */ LE::writeSignedInt($out, $index);
+			LE::writeUnsignedInt($out, $index);
 		}
 	}
 
@@ -311,11 +311,11 @@ class AvailableCommandsPacket extends DataPacket implements ClientboundPacket{
 	 */
 	protected function getEnumConstraint(array $enums, array $enumValues, ByteBufferReader $in) : CommandEnumConstraint{
 		//wtf, what was wrong with an offset inside the enum? :(
-		$valueIndex = /* TODO: check if this should be unsigned */ LE::readSignedInt($in);
+		$valueIndex = LE::readUnsignedInt($in);
 		if(!isset($enumValues[$valueIndex])){
 			throw new PacketDecodeException("Enum constraint refers to unknown enum value index $valueIndex");
 		}
-		$enumIndex = /* TODO: check if this should be unsigned */ LE::readSignedInt($in);
+		$enumIndex = LE::readUnsignedInt($in);
 		if(!isset($enums[$enumIndex])){
 			throw new PacketDecodeException("Enum constraint refers to unknown enum index $enumIndex");
 		}
@@ -338,8 +338,8 @@ class AvailableCommandsPacket extends DataPacket implements ClientboundPacket{
 	 * @param int[]                 $enumValueIndexes string value -> int index
 	 */
 	protected function putEnumConstraint(CommandEnumConstraint $constraint, array $enumIndexes, array $enumValueIndexes, ByteBufferWriter $out) : void{
-		/* TODO: check if this should be unsigned */ LE::writeSignedInt($out, $enumValueIndexes[$constraint->getAffectedValue()]);
-		/* TODO: check if this should be unsigned */ LE::writeSignedInt($out, $enumIndexes[$constraint->getEnum()->getName()]);
+		LE::writeUnsignedInt($out, $enumValueIndexes[$constraint->getAffectedValue()]);
+		LE::writeUnsignedInt($out, $enumIndexes[$constraint->getEnum()->getName()]);
 		VarInt::writeUnsignedInt($out, count($constraint->getConstraints()));
 		foreach($constraint->getConstraints() as $v){
 			Byte::writeUnsigned($out, $v);
@@ -359,7 +359,7 @@ class AvailableCommandsPacket extends DataPacket implements ClientboundPacket{
 		$description = CommonTypes::getString($in);
 		$flags = LE::readUnsignedShort($in);
 		$permission = Byte::readUnsigned($in);
-		$aliases = $enums[/* TODO: check if this should be unsigned */ LE::readSignedInt($in)] ?? null;
+		$aliases = $enums[LE::readSignedInt($in)] ?? null;
 
 		$chainedSubCommandData = [];
 		for($i = 0, $count = VarInt::readUnsignedInt($in); $i < $count; ++$i){
@@ -374,7 +374,7 @@ class AvailableCommandsPacket extends DataPacket implements ClientboundPacket{
 			for($paramIndex = 0, $paramCount = VarInt::readUnsignedInt($in); $paramIndex < $paramCount; ++$paramIndex){
 				$parameter = new CommandParameter();
 				$parameter->paramName = CommonTypes::getString($in);
-				$parameter->paramType = /* TODO: check if this should be unsigned */ LE::readSignedInt($in);
+				$parameter->paramType = LE::readUnsignedInt($in);
 				$parameter->isOptional = CommonTypes::getBool($in);
 				$parameter->flags = Byte::readUnsigned($in);
 
@@ -449,7 +449,7 @@ class AvailableCommandsPacket extends DataPacket implements ClientboundPacket{
 					$type = $parameter->paramType;
 				}
 
-				/* TODO: check if this should be unsigned */ LE::writeSignedInt($out, $type);
+				LE::writeUnsignedInt($out, $type);
 				CommonTypes::putBool($out, $parameter->isOptional);
 				Byte::writeUnsigned($out, $parameter->flags);
 			}
@@ -585,8 +585,8 @@ class AvailableCommandsPacket extends DataPacket implements ClientboundPacket{
 			foreach($chainedSubCommandData->getValues() as $value){
 				$valueNameIndex = $chainedSubCommandValueNameIndexes[$value->getName()] ??
 					throw new \LogicException("Chained subcommand value name index for \"" . $value->getName() . "\" not found (this should never happen)");
-				/* TODO: check if this should be unsigned */ LE::writeUnsignedShort($out, $valueNameIndex);
-				/* TODO: check if this should be unsigned */ LE::writeUnsignedShort($out, $value->getType());
+				LE::writeUnsignedShort($out, $valueNameIndex);
+				LE::writeUnsignedShort($out, $value->getType());
 			}
 		}
 

@@ -97,8 +97,8 @@ class MovePlayerPacket extends DataPacket implements ClientboundPacket, Serverbo
 		$this->onGround = CommonTypes::getBool($in);
 		$this->ridingActorRuntimeId = CommonTypes::getActorRuntimeId($in);
 		if($this->mode === MovePlayerPacket::MODE_TELEPORT){
-			$this->teleportCause = /* TODO: check if this should be unsigned */ LE::readSignedInt($in);
-			$this->teleportItem = /* TODO: check if this should be unsigned */ LE::readSignedInt($in);
+			$this->teleportCause = LE::readSignedInt($in);
+			$this->teleportItem = LE::readSignedInt($in);
 		}
 		$this->tick = VarInt::readUnsignedLong($in);
 	}
@@ -113,8 +113,8 @@ class MovePlayerPacket extends DataPacket implements ClientboundPacket, Serverbo
 		CommonTypes::putBool($out, $this->onGround);
 		CommonTypes::putActorRuntimeId($out, $this->ridingActorRuntimeId);
 		if($this->mode === MovePlayerPacket::MODE_TELEPORT){
-			/* TODO: check if this should be unsigned */ LE::writeSignedInt($out, $this->teleportCause);
-			/* TODO: check if this should be unsigned */ LE::writeSignedInt($out, $this->teleportItem);
+			LE::writeSignedInt($out, $this->teleportCause);
+			LE::writeSignedInt($out, $this->teleportItem);
 		}
 		VarInt::writeUnsignedLong($out, $this->tick);
 	}

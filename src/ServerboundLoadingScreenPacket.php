@@ -43,12 +43,12 @@ class ServerboundLoadingScreenPacket extends DataPacket implements ServerboundPa
 
 	protected function decodePayload(ByteBufferReader $in) : void{
 		$this->loadingScreenType = LoadingScreenType::fromPacket(VarInt::readSignedInt($in));
-		$this->loadingScreenId = CommonTypes::readOptional($in, fn() => /* TODO: check if this should be unsigned */ LE::readSignedInt($in));
+		$this->loadingScreenId = CommonTypes::readOptional($in, LE::readUnsignedInt(...));
 	}
 
 	protected function encodePayload(ByteBufferWriter $out) : void{
 		VarInt::writeSignedInt($out, $this->loadingScreenType->value);
-		CommonTypes::writeOptional($out, $this->loadingScreenId, /* TODO: check if this should be unsigned */ LE::writeSignedInt(...));
+		CommonTypes::writeOptional($out, $this->loadingScreenId, LE::writeUnsignedInt(...));
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

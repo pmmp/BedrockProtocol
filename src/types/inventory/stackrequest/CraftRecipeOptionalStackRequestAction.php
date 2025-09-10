@@ -43,12 +43,12 @@ final class CraftRecipeOptionalStackRequestAction extends ItemStackRequestAction
 
 	public static function read(ByteBufferReader $in) : self{
 		$recipeId = CommonTypes::readRecipeNetId($in);
-		$filterStringIndex = /* TODO: check if this should be unsigned */ LE::readSignedInt($in);
+		$filterStringIndex = LE::readSignedInt($in);
 		return new self($recipeId, $filterStringIndex);
 	}
 
 	public function write(ByteBufferWriter $out) : void{
 		CommonTypes::writeRecipeNetId($out, $this->recipeId);
-		/* TODO: check if this should be unsigned */ LE::writeSignedInt($out, $this->filterStringIndex);
+		LE::writeSignedInt($out, $this->filterStringIndex);
 	}
 }

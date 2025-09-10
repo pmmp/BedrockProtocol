@@ -126,7 +126,7 @@ class AddPlayerPacket extends DataPacket implements ClientboundPacket{
 		}
 
 		$this->deviceId = CommonTypes::getString($in);
-		$this->buildPlatform = /* TODO: check if this should be unsigned */ LE::readSignedInt($in);
+		$this->buildPlatform = LE::readSignedInt($in);
 	}
 
 	protected function encodePayload(ByteBufferWriter $out) : void{
@@ -152,7 +152,7 @@ class AddPlayerPacket extends DataPacket implements ClientboundPacket{
 		}
 
 		CommonTypes::putString($out, $this->deviceId);
-		/* TODO: check if this should be unsigned */ LE::writeSignedInt($out, $this->buildPlatform);
+		LE::writeSignedInt($out, $this->buildPlatform);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

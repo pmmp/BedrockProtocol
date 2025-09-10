@@ -54,7 +54,7 @@ final class SpawnSettings{
 	}
 
 	public function write(ByteBufferWriter $out) : void{
-		/* TODO: check if this should be unsigned */ LE::writeUnsignedShort($out, $this->biomeType);
+		LE::writeUnsignedShort($out, $this->biomeType);
 		CommonTypes::putString($out, $this->biomeName);
 		VarInt::writeSignedInt($out, $this->dimension);
 	}

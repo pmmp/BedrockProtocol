@@ -46,18 +46,18 @@ class PlayerToggleCrafterSlotRequestPacket extends DataPacket implements Serverb
 	public function isDisabled() : bool{ return $this->disabled; }
 
 	protected function decodePayload(ByteBufferReader $in) : void{
-		$x = /* TODO: check if this should be unsigned */ LE::readSignedInt($in);
-		$y = /* TODO: check if this should be unsigned */ LE::readSignedInt($in);
-		$z = /* TODO: check if this should be unsigned */ LE::readSignedInt($in);
+		$x = LE::readSignedInt($in);
+		$y = LE::readSignedInt($in);
+		$z = LE::readSignedInt($in);
 		$this->position = new BlockPosition($x, $y, $z);
 		$this->slot = Byte::readUnsigned($in);
 		$this->disabled = CommonTypes::getBool($in);
 	}
 
 	protected function encodePayload(ByteBufferWriter $out) : void{
-		/* TODO: check if this should be unsigned */ LE::writeSignedInt($out, $this->position->getX());
-		/* TODO: check if this should be unsigned */ LE::writeSignedInt($out, $this->position->getY());
-		/* TODO: check if this should be unsigned */ LE::writeSignedInt($out, $this->position->getZ());
+		LE::writeSignedInt($out, $this->position->getX());
+		LE::writeSignedInt($out, $this->position->getY());
+		LE::writeSignedInt($out, $this->position->getZ());
 		Byte::writeUnsigned($out, $this->slot);
 		CommonTypes::putBool($out, $this->disabled);
 	}

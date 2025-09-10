@@ -54,7 +54,7 @@ class PlayerLocationPacket extends DataPacket implements ClientboundPacket{
 	public function getPosition() : ?Vector3{ return $this->position; }
 
 	protected function decodePayload(ByteBufferReader $in) : void{
-		$this->type = PlayerLocationType::fromPacket(/* TODO: check if this should be unsigned */ LE::readSignedInt($in));
+		$this->type = PlayerLocationType::fromPacket(LE::readUnsignedInt($in));
 		$this->actorUniqueId = CommonTypes::getActorUniqueId($in);
 
 		if($this->type === PlayerLocationType::PLAYER_LOCATION_COORDINATES){
@@ -63,7 +63,7 @@ class PlayerLocationPacket extends DataPacket implements ClientboundPacket{
 	}
 
 	protected function encodePayload(ByteBufferWriter $out) : void{
-		/* TODO: check if this should be unsigned */ LE::writeSignedInt($out, $this->type->value);
+		LE::writeUnsignedInt($out, $this->type->value);
 		CommonTypes::putActorUniqueId($out, $this->actorUniqueId);
 
 		if($this->type === PlayerLocationType::PLAYER_LOCATION_COORDINATES){

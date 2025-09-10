@@ -33,11 +33,11 @@ class OnScreenTextureAnimationPacket extends DataPacket implements ClientboundPa
 	}
 
 	protected function decodePayload(ByteBufferReader $in) : void{
-		$this->effectId = /* TODO: check if this should be unsigned */ LE::readSignedInt($in); //unsigned
+		$this->effectId = LE::readUnsignedInt($in);
 	}
 
 	protected function encodePayload(ByteBufferWriter $out) : void{
-		/* TODO: check if this should be unsigned */ LE::writeSignedInt($out, $this->effectId);
+		LE::writeUnsignedInt($out, $this->effectId);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

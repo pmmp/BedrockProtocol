@@ -80,8 +80,8 @@ final class AbilitiesLayer{
 
 	public static function decode(ByteBufferReader $in) : self{
 		$layerId = LE::readUnsignedShort($in);
-		$setAbilities = /* TODO: check if this should be unsigned */ LE::readSignedInt($in);
-		$setAbilityValues = /* TODO: check if this should be unsigned */ LE::readSignedInt($in);
+		$setAbilities = LE::readUnsignedInt($in);
+		$setAbilityValues = LE::readUnsignedInt($in);
 		$flySpeed = LE::readFloat($in);
 		$verticalFlySpeed = LE::readFloat($in);
 		$walkSpeed = LE::readFloat($in);
@@ -118,7 +118,7 @@ final class AbilitiesLayer{
 	}
 
 	public function encode(ByteBufferWriter $out) : void{
-		/* TODO: check if this should be unsigned */ LE::writeUnsignedShort($out, $this->layerId);
+		LE::writeUnsignedShort($out, $this->layerId);
 
 		$setAbilities = 0;
 		$setAbilityValues = 0;
@@ -136,8 +136,8 @@ final class AbilitiesLayer{
 			$setAbilities |= (1 << self::ABILITY_WALK_SPEED);
 		}
 
-		/* TODO: check if this should be unsigned */ LE::writeSignedInt($out, $setAbilities);
-		/* TODO: check if this should be unsigned */ LE::writeSignedInt($out, $setAbilityValues);
+		LE::writeUnsignedInt($out, $setAbilities);
+		LE::writeUnsignedInt($out, $setAbilityValues);
 		LE::writeFloat($out, $this->flySpeed ?? 0);
 		LE::writeFloat($out, $this->verticalFlySpeed ?? 0);
 		LE::writeFloat($out, $this->walkSpeed ?? 0);

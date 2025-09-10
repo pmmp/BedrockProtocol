@@ -59,8 +59,8 @@ final class CameraAimAssistCategoryPriorities{
 			$blocks[] = CameraAimAssistCategoryBlockPriority::read($in);
 		}
 
-		$defaultEntityPriority = CommonTypes::readOptional($in, /* TODO: check if this should be unsigned */ LE::readSignedInt(...));
-		$defaultBlockPriority = CommonTypes::readOptional($in, /* TODO: check if this should be unsigned */ LE::readSignedInt(...));
+		$defaultEntityPriority = CommonTypes::readOptional($in, LE::readSignedInt(...));
+		$defaultBlockPriority = CommonTypes::readOptional($in, LE::readSignedInt(...));
 		return new self(
 			$entities,
 			$blocks,
@@ -80,7 +80,7 @@ final class CameraAimAssistCategoryPriorities{
 			$block->write($out);
 		}
 
-		CommonTypes::writeOptional($out, $this->defaultEntityPriority, /* TODO: check if this should be unsigned */ LE::writeSignedInt(...));
-		CommonTypes::writeOptional($out, $this->defaultBlockPriority, /* TODO: check if this should be unsigned */ LE::writeSignedInt(...));
+		CommonTypes::writeOptional($out, $this->defaultEntityPriority, LE::writeSignedInt(...));
+		CommonTypes::writeOptional($out, $this->defaultBlockPriority, LE::writeSignedInt(...));
 	}
 }

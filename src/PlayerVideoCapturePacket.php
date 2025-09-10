@@ -54,7 +54,7 @@ class PlayerVideoCapturePacket extends DataPacket implements ClientboundPacket{
 	protected function decodePayload(ByteBufferReader $in) : void{
 		$this->recording = CommonTypes::getBool($in);
 		if($this->recording){
-			$this->frameRate = /* TODO: check if this should be unsigned */ LE::readSignedInt($in);
+			$this->frameRate = LE::readUnsignedInt($in);
 			$this->filePrefix = CommonTypes::getString($in);
 		}
 	}
@@ -70,7 +70,7 @@ class PlayerVideoCapturePacket extends DataPacket implements ClientboundPacket{
 				throw new \LogicException("PlayerUpdateEntityOverridesPacket with recording=true require a file prefix to be provided");
 			}
 
-			/* TODO: check if this should be unsigned */ LE::writeSignedInt($out, $this->frameRate);
+			LE::writeUnsignedInt($out, $this->frameRate);
 			CommonTypes::putString($out, $this->filePrefix);
 		}
 	}

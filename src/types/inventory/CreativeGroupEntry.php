@@ -33,14 +33,14 @@ final class CreativeGroupEntry{
 	public function getIcon() : ItemStack{ return $this->icon; }
 
 	public static function read(ByteBufferReader $in) : self{
-		$categoryId = /* TODO: check if this should be unsigned */ LE::readSignedInt($in);
+		$categoryId = LE::readSignedInt($in);
 		$categoryName = CommonTypes::getString($in);
 		$icon = CommonTypes::getItemStackWithoutStackId($in);
 		return new self($categoryId, $categoryName, $icon);
 	}
 
 	public function write(ByteBufferWriter $out) : void{
-		/* TODO: check if this should be unsigned */ LE::writeSignedInt($out, $this->categoryId);
+		LE::writeSignedInt($out, $this->categoryId);
 		CommonTypes::putString($out, $this->categoryName);
 		CommonTypes::putItemStackWithoutStackId($out, $this->icon);
 	}

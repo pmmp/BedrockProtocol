@@ -54,17 +54,17 @@ final class BiomeCappedSurfaceData{
 	public static function read(ByteBufferReader $in) : self{
 		$floorBlocks = [];
 		for($i = 0, $count = VarInt::readUnsignedInt($in); $i < $count; ++$i){
-			$floorBlocks[] = /* TODO: check if this should be unsigned */ LE::readSignedInt($in);
+			$floorBlocks[] = LE::readUnsignedInt($in);
 		}
 
 		$ceilingBlocks = [];
 		for($i = 0, $count = VarInt::readUnsignedInt($in); $i < $count; ++$i){
-			$ceilingBlocks[] = /* TODO: check if this should be unsigned */ LE::readSignedInt($in);
+			$ceilingBlocks[] = LE::readUnsignedInt($in);
 		}
 
-		$seaBlock = CommonTypes::readOptional($in, /* TODO: check if this should be unsigned */ LE::readSignedInt(...));
-		$foundationBlock = CommonTypes::readOptional($in, /* TODO: check if this should be unsigned */ LE::readSignedInt(...));
-		$beachBlock = CommonTypes::readOptional($in, /* TODO: check if this should be unsigned */ LE::readSignedInt(...));
+		$seaBlock = CommonTypes::readOptional($in, LE::readUnsignedInt(...));
+		$foundationBlock = CommonTypes::readOptional($in, LE::readUnsignedInt(...));
+		$beachBlock = CommonTypes::readOptional($in, LE::readUnsignedInt(...));
 
 		return new self(
 			$floorBlocks,
@@ -78,16 +78,16 @@ final class BiomeCappedSurfaceData{
 	public function write(ByteBufferWriter $out) : void{
 		VarInt::writeUnsignedInt($out, count($this->floorBlocks));
 		foreach($this->floorBlocks as $block){
-			/* TODO: check if this should be unsigned */ LE::writeSignedInt($out, $block);
+			LE::writeUnsignedInt($out, $block);
 		}
 
 		VarInt::writeUnsignedInt($out, count($this->ceilingBlocks));
 		foreach($this->ceilingBlocks as $block){
-			/* TODO: check if this should be unsigned */ LE::writeSignedInt($out, $block);
+			LE::writeUnsignedInt($out, $block);
 		}
 
-		CommonTypes::writeOptional($out, $this->seaBlock, /* TODO: check if this should be unsigned */ LE::writeSignedInt(...));
-		CommonTypes::writeOptional($out, $this->foundationBlock, /* TODO: check if this should be unsigned */ LE::writeSignedInt(...));
-		CommonTypes::writeOptional($out, $this->beachBlock, /* TODO: check if this should be unsigned */ LE::writeSignedInt(...));
+		CommonTypes::writeOptional($out, $this->seaBlock, LE::writeUnsignedInt(...));
+		CommonTypes::writeOptional($out, $this->foundationBlock, LE::writeUnsignedInt(...));
+		CommonTypes::writeOptional($out, $this->beachBlock, LE::writeUnsignedInt(...));
 	}
 }

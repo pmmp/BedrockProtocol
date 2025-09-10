@@ -35,11 +35,11 @@ class AwardAchievementPacket extends DataPacket implements ClientboundPacket{
 	public function getAchievementId() : int{ return $this->achievementId; }
 
 	protected function decodePayload(ByteBufferReader $in) : void{
-		$this->achievementId = /* TODO: check if this should be unsigned */ LE::readSignedInt($in);
+		$this->achievementId = LE::readSignedInt($in);
 	}
 
 	protected function encodePayload(ByteBufferWriter $out) : void{
-		/* TODO: check if this should be unsigned */ LE::writeSignedInt($out, $this->achievementId);
+		LE::writeSignedInt($out, $this->achievementId);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

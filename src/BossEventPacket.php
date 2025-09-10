@@ -168,7 +168,7 @@ class BossEventPacket extends DataPacket implements ClientboundPacket, Serverbou
 				LE::writeFloat($out, $this->healthPercent);
 			/** @noinspection PhpMissingBreakStatementInspection */
 			case self::TYPE_PROPERTIES:
-				/* TODO: check if this should be unsigned */ LE::writeUnsignedShort($out, $this->darkenScreen ? 1 : 0);
+				LE::writeUnsignedShort($out, $this->darkenScreen ? 1 : 0);
 			case self::TYPE_TEXTURE:
 				VarInt::writeUnsignedInt($out, $this->color);
 				VarInt::writeUnsignedInt($out, $this->overlay);

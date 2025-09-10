@@ -37,7 +37,7 @@ class SetDefaultGameTypePacket extends DataPacket implements ClientboundPacket, 
 	}
 
 	protected function encodePayload(ByteBufferWriter $out) : void{
-		VarInt::writeUnsignedInt($out, $this->gamemode);
+		VarInt::writeSignedInt($out, $this->gamemode);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

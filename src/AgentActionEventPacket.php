@@ -51,13 +51,13 @@ class AgentActionEventPacket extends DataPacket implements ClientboundPacket{
 
 	protected function decodePayload(ByteBufferReader $in) : void{
 		$this->requestId = CommonTypes::getString($in);
-		$this->action = /* TODO: check if this should be unsigned */ LE::readSignedInt($in);
+		$this->action = LE::readUnsignedInt($in);
 		$this->responseJson = CommonTypes::getString($in);
 	}
 
 	protected function encodePayload(ByteBufferWriter $out) : void{
 		CommonTypes::putString($out, $this->requestId);
-		/* TODO: check if this should be unsigned */ LE::writeSignedInt($out, $this->action);
+		LE::writeUnsignedInt($out, $this->action);
 		CommonTypes::putString($out, $this->responseJson);
 	}
 

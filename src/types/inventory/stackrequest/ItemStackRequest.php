@@ -89,7 +89,7 @@ final class ItemStackRequest{
 		for($i = 0, $len = VarInt::readUnsignedInt($in); $i < $len; ++$i){
 			$filterStrings[] = CommonTypes::getString($in);
 		}
-		$filterStringCause = /* TODO: check if this should be unsigned */ LE::readSignedInt($in);
+		$filterStringCause = LE::readSignedInt($in);
 		return new self($requestId, $actions, $filterStrings, $filterStringCause);
 	}
 
@@ -104,6 +104,6 @@ final class ItemStackRequest{
 		foreach($this->filterStrings as $string){
 			CommonTypes::putString($out, $string);
 		}
-		/* TODO: check if this should be unsigned */ LE::writeSignedInt($out, $this->filterStringCause);
+		LE::writeSignedInt($out, $this->filterStringCause);
 	}
 }

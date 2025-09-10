@@ -41,7 +41,7 @@ class SimpleEventPacket extends DataPacket implements ClientboundPacket, Serverb
 	}
 
 	protected function encodePayload(ByteBufferWriter $out) : void{
-		/* TODO: check if this should be unsigned */ LE::writeUnsignedShort($out, $this->eventType);
+		LE::writeUnsignedShort($out, $this->eventType);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

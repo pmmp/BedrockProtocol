@@ -49,9 +49,9 @@ final class IntIdMetaItemDescriptor implements ItemDescriptor{
 	}
 
 	public function write(ByteBufferWriter $out) : void{
-		/* TODO: check if this should be unsigned */ LE::writeUnsignedShort($out, $this->id);
+		LE::writeSignedShort($out, $this->id);
 		if($this->id !== 0){
-			/* TODO: check if this should be unsigned */ LE::writeUnsignedShort($out, $this->meta);
+			LE::writeSignedShort($out, $this->meta);
 		}
 	}
 }

@@ -80,7 +80,7 @@ final class MapImage{
 			for($y = 0; $y < $this->height; ++$y){
 				for($x = 0; $x < $this->width; ++$x){
 					//if mojang had any sense this would just be a regular LE int
-					VarInt::writeSignedInt($serializer, Binary::flipIntEndianness($this->pixels[$y][$x]->toRGBA()));
+					VarInt::writeUnsignedInt($serializer, Binary::flipIntEndianness($this->pixels[$y][$x]->toRGBA()));
 				}
 			}
 			$this->encodedPixelCache = $serializer->getData();

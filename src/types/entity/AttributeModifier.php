@@ -50,8 +50,8 @@ final class AttributeModifier{
 		$id = CommonTypes::getString($in);
 		$name = CommonTypes::getString($in);
 		$amount = LE::readFloat($in);
-		$operation = /* TODO: check if this should be unsigned */ LE::readSignedInt($in);
-		$operand = /* TODO: check if this should be unsigned */ LE::readSignedInt($in);
+		$operation = LE::readSignedInt($in);
+		$operand = LE::readSignedInt($in);
 		$serializable = CommonTypes::getBool($in);
 
 		return new self($id, $name, $amount, $operation, $operand, $serializable);
@@ -61,8 +61,8 @@ final class AttributeModifier{
 		CommonTypes::putString($out, $this->id);
 		CommonTypes::putString($out, $this->name);
 		LE::writeFloat($out, $this->amount);
-		/* TODO: check if this should be unsigned */ LE::writeSignedInt($out, $this->operation);
-		/* TODO: check if this should be unsigned */ LE::writeSignedInt($out, $this->operand);
+		LE::writeSignedInt($out, $this->operation);
+		LE::writeSignedInt($out, $this->operand);
 		CommonTypes::putBool($out, $this->serializable);
 	}
 }

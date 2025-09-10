@@ -43,7 +43,7 @@ final class BiomeMountainParamsData{
 	public function hasTopSlideEnabled() : bool{ return $this->topSlideEnabled; }
 
 	public static function read(ByteBufferReader $in) : self{
-		$steepBlock = /* TODO: check if this should be unsigned */ LE::readSignedInt($in);
+		$steepBlock = LE::readUnsignedInt($in);
 		$northSlopes = CommonTypes::getBool($in);
 		$southSlopes = CommonTypes::getBool($in);
 		$westSlopes = CommonTypes::getBool($in);
@@ -61,7 +61,7 @@ final class BiomeMountainParamsData{
 	}
 
 	public function write(ByteBufferWriter $out) : void{
-		/* TODO: check if this should be unsigned */ LE::writeSignedInt($out, $this->steepBlock);
+		LE::writeUnsignedInt($out, $this->steepBlock);
 		CommonTypes::putBool($out, $this->northSlopes);
 		CommonTypes::putBool($out, $this->southSlopes);
 		CommonTypes::putBool($out, $this->westSlopes);

@@ -32,7 +32,7 @@ final class BiomeWeightedTemperatureData{
 
 	public static function read(ByteBufferReader $in) : self{
 		$temperature = VarInt::readSignedInt($in);
-		$weight = /* TODO: check if this should be unsigned */ LE::readSignedInt($in);
+		$weight = LE::readUnsignedInt($in);
 
 		return new self(
 			$temperature,
@@ -42,6 +42,6 @@ final class BiomeWeightedTemperatureData{
 
 	public function write(ByteBufferWriter $out) : void{
 		VarInt::writeSignedInt($out, $this->temperature);
-		/* TODO: check if this should be unsigned */ LE::writeSignedInt($out, $this->weight);
+		LE::writeUnsignedInt($out, $this->weight);
 	}
 }

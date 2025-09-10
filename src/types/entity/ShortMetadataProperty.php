@@ -38,6 +38,6 @@ final class ShortMetadataProperty implements MetadataProperty{
 	}
 
 	public function write(ByteBufferWriter $out) : void{
-		/* TODO: check if this should be unsigned */ LE::writeUnsignedShort($out, $this->value);
+		LE::writeSignedShort($out, $this->value);
 	}
 }

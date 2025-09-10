@@ -37,8 +37,8 @@ final class BiomeMesaSurfaceData{
 	public function hasForest() : bool{ return $this->forest; }
 
 	public static function read(ByteBufferReader $in) : self{
-		$clayMaterial = /* TODO: check if this should be unsigned */ LE::readSignedInt($in);
-		$hardClayMaterial = /* TODO: check if this should be unsigned */ LE::readSignedInt($in);
+		$clayMaterial = LE::readUnsignedInt($in);
+		$hardClayMaterial = LE::readUnsignedInt($in);
 		$brycePillars = CommonTypes::getBool($in);
 		$forest = CommonTypes::getBool($in);
 
@@ -51,8 +51,8 @@ final class BiomeMesaSurfaceData{
 	}
 
 	public function write(ByteBufferWriter $out) : void{
-		/* TODO: check if this should be unsigned */ LE::writeSignedInt($out, $this->clayMaterial);
-		/* TODO: check if this should be unsigned */ LE::writeSignedInt($out, $this->hardClayMaterial);
+		LE::writeUnsignedInt($out, $this->clayMaterial);
+		LE::writeUnsignedInt($out, $this->hardClayMaterial);
 		CommonTypes::putBool($out, $this->brycePillars);
 		CommonTypes::putBool($out, $this->forest);
 	}

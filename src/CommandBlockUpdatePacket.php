@@ -59,7 +59,7 @@ class CommandBlockUpdatePacket extends DataPacket implements ServerboundPacket{
 		$this->name = CommonTypes::getString($in);
 		$this->filteredName = CommonTypes::getString($in);
 		$this->shouldTrackOutput = CommonTypes::getBool($in);
-		$this->tickDelay = /* TODO: check if this should be unsigned */ LE::readSignedInt($in);
+		$this->tickDelay = LE::readUnsignedInt($in);
 		$this->executeOnFirstTick = CommonTypes::getBool($in);
 	}
 
@@ -80,7 +80,7 @@ class CommandBlockUpdatePacket extends DataPacket implements ServerboundPacket{
 		CommonTypes::putString($out, $this->name);
 		CommonTypes::putString($out, $this->filteredName);
 		CommonTypes::putBool($out, $this->shouldTrackOutput);
-		/* TODO: check if this should be unsigned */ LE::writeSignedInt($out, $this->tickDelay);
+		LE::writeUnsignedInt($out, $this->tickDelay);
 		CommonTypes::putBool($out, $this->executeOnFirstTick);
 	}
 

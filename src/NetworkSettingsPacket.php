@@ -79,8 +79,8 @@ class NetworkSettingsPacket extends DataPacket implements ClientboundPacket{
 	}
 
 	protected function encodePayload(ByteBufferWriter $out) : void{
-		/* TODO: check if this should be unsigned */ LE::writeUnsignedShort($out, $this->compressionThreshold);
-		/* TODO: check if this should be unsigned */ LE::writeUnsignedShort($out, $this->compressionAlgorithm);
+		LE::writeUnsignedShort($out, $this->compressionThreshold);
+		LE::writeUnsignedShort($out, $this->compressionAlgorithm);
 		CommonTypes::putBool($out, $this->enableClientThrottling);
 		Byte::writeUnsigned($out, $this->clientThrottleThreshold);
 		LE::writeFloat($out, $this->clientThrottleScalar);

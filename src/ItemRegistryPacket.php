@@ -65,7 +65,7 @@ class ItemRegistryPacket extends DataPacket implements ClientboundPacket{
 		VarInt::writeUnsignedInt($out, count($this->entries));
 		foreach($this->entries as $entry){
 			CommonTypes::putString($out, $entry->getStringId());
-			/* TODO: check if this should be unsigned */ LE::writeUnsignedShort($out, $entry->getNumericId());
+			LE::writeSignedShort($out, $entry->getNumericId());
 			CommonTypes::putBool($out, $entry->isComponentBased());
 			VarInt::writeSignedInt($out, $entry->getVersion());
 			$out->writeByteArray($entry->getComponentNbt()->getEncodedNbt());

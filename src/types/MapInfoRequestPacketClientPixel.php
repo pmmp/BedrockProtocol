@@ -37,7 +37,7 @@ final class MapInfoRequestPacketClientPixel{
 	public function getY() : int{ return $this->y; }
 
 	public static function read(ByteBufferReader $in) : self{
-		$color = /* TODO: check if this should be unsigned */ LE::readSignedInt($in);
+		$color = LE::readUnsignedInt($in);
 		$index = LE::readUnsignedShort($in);
 
 		$x = $index % self::Y_INDEX_MULTIPLIER;
@@ -47,7 +47,7 @@ final class MapInfoRequestPacketClientPixel{
 	}
 
 	public function write(ByteBufferWriter $out) : void{
-		/* TODO: check if this should be unsigned */ LE::writeSignedInt($out, $this->color->toRGBA());
-		/* TODO: check if this should be unsigned */ LE::writeUnsignedShort($out, $this->x + ($this->y * self::Y_INDEX_MULTIPLIER));
+		LE::writeUnsignedInt($out, $this->color->toRGBA());
+		LE::writeUnsignedShort($out, $this->x + ($this->y * self::Y_INDEX_MULTIPLIER));
 	}
 }

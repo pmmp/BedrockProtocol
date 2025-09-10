@@ -18,7 +18,6 @@ use pmmp\encoding\ByteBufferReader;
 use pmmp\encoding\ByteBufferWriter;
 use pmmp\encoding\DataDecodeException;
 use pmmp\encoding\VarInt;
-use pocketmine\utils\BinaryDataException;
 use function get_class;
 
 abstract class DataPacket implements Packet{
@@ -78,7 +77,7 @@ abstract class DataPacket implements Packet{
 	 * Decodes the packet body, without the packet ID or other generic header fields.
 	 *
 	 * @throws PacketDecodeException
-	 * @throws BinaryDataException
+	 * @throws DataDecodeException
 	 */
 	abstract protected function decodePayload(ByteBufferReader $in) : void;
 

@@ -17,12 +17,12 @@ namespace pocketmine\network\mcpe\protocol\types;
 use pmmp\encoding\Byte;
 use pmmp\encoding\ByteBufferReader;
 use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\DataDecodeException;
 use pmmp\encoding\LE;
 use pmmp\encoding\VarInt;
 use pocketmine\network\mcpe\protocol\PacketDecodeException;
 use pocketmine\network\mcpe\protocol\ProtocolInfo;
 use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
-use pocketmine\utils\BinaryDataException;
 
 final class LevelSettings{
 
@@ -87,7 +87,7 @@ final class LevelSettings{
 	public string $ownerIdentifier = "";
 
 	/**
-	 * @throws BinaryDataException
+	 * @throws DataDecodeException
 	 * @throws PacketDecodeException
 	 */
 	public static function read(ByteBufferReader $in) : self{
@@ -99,7 +99,7 @@ final class LevelSettings{
 	}
 
 	/**
-	 * @throws BinaryDataException
+	 * @throws DataDecodeException
 	 * @throws PacketDecodeException
 	 */
 	private function internalRead(ByteBufferReader $in) : void{

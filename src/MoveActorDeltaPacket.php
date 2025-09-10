@@ -16,9 +16,9 @@ namespace pocketmine\network\mcpe\protocol;
 
 use pmmp\encoding\ByteBufferReader;
 use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\DataDecodeException;
 use pmmp\encoding\LE;
 use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
-use pocketmine\utils\BinaryDataException;
 
 class MoveActorDeltaPacket extends DataPacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::MOVE_ACTOR_DELTA_PACKET;
@@ -42,9 +42,7 @@ class MoveActorDeltaPacket extends DataPacket implements ClientboundPacket{
 	public float $yaw = 0.0;
 	public float $headYaw = 0.0;
 
-	/**
-	 * @throws BinaryDataException
-	 */
+	/** @throws DataDecodeException */
 	private function maybeReadCoord(int $flag, ByteBufferReader $in) : float{
 		if(($this->flags & $flag) !== 0){
 			return LE::readFloat($in);
@@ -52,9 +50,7 @@ class MoveActorDeltaPacket extends DataPacket implements ClientboundPacket{
 		return 0;
 	}
 
-	/**
-	 * @throws BinaryDataException
-	 */
+	/** @throws DataDecodeException */
 	private function maybeReadRotation(int $flag, ByteBufferReader $in) : float{
 		if(($this->flags & $flag) !== 0){
 			return CommonTypes::getRotationByte($in);

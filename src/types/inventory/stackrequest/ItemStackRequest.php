@@ -17,11 +17,11 @@ namespace pocketmine\network\mcpe\protocol\types\inventory\stackrequest;
 use pmmp\encoding\Byte;
 use pmmp\encoding\ByteBufferReader;
 use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\DataDecodeException;
 use pmmp\encoding\LE;
 use pmmp\encoding\VarInt;
 use pocketmine\network\mcpe\protocol\PacketDecodeException;
 use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
-use pocketmine\utils\BinaryDataException;
 use function count;
 
 final class ItemStackRequest{
@@ -51,7 +51,7 @@ final class ItemStackRequest{
 	public function getFilterStringCause() : int{ return $this->filterStringCause; }
 
 	/**
-	 * @throws BinaryDataException
+	 * @throws DataDecodeException
 	 * @throws PacketDecodeException
 	 */
 	private static function readAction(ByteBufferReader $in, int $typeId) : ItemStackRequestAction{

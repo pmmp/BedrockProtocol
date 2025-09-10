@@ -16,9 +16,9 @@ namespace pocketmine\network\mcpe\protocol\types\inventory;
 
 use pmmp\encoding\ByteBufferReader;
 use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\DataDecodeException;
 use pmmp\encoding\VarInt;
 use pocketmine\network\mcpe\protocol\PacketDecodeException;
-use pocketmine\utils\BinaryDataException;
 use function count;
 
 abstract class TransactionData{
@@ -35,7 +35,7 @@ abstract class TransactionData{
 	abstract public function getTypeId() : int;
 
 	/**
-	 * @throws BinaryDataException
+	 * @throws DataDecodeException
 	 * @throws PacketDecodeException
 	 */
 	final public function decode(ByteBufferReader $in) : void{
@@ -47,7 +47,7 @@ abstract class TransactionData{
 	}
 
 	/**
-	 * @throws BinaryDataException
+	 * @throws DataDecodeException
 	 * @throws PacketDecodeException
 	 */
 	abstract protected function decodeData(ByteBufferReader $in) : void;

@@ -16,11 +16,11 @@ namespace pocketmine\network\mcpe\protocol\types;
 
 use pmmp\encoding\ByteBufferReader;
 use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\DataDecodeException;
 use pmmp\encoding\VarInt;
 use pocketmine\color\Color;
 use pocketmine\network\mcpe\protocol\PacketDecodeException;
 use pocketmine\utils\Binary;
-use pocketmine\utils\BinaryDataException;
 use function count;
 
 final class MapImage{
@@ -91,7 +91,7 @@ final class MapImage{
 
 	/**
 	 * @throws PacketDecodeException
-	 * @throws BinaryDataException
+	 * @throws DataDecodeException
 	 */
 	public static function decode(ByteBufferReader $in, int $height, int $width) : self{
 		if($width > self::MAX_WIDTH){

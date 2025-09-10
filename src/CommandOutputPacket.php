@@ -17,11 +17,11 @@ namespace pocketmine\network\mcpe\protocol;
 use pmmp\encoding\Byte;
 use pmmp\encoding\ByteBufferReader;
 use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\DataDecodeException;
 use pmmp\encoding\VarInt;
 use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 use pocketmine\network\mcpe\protocol\types\command\CommandOriginData;
 use pocketmine\network\mcpe\protocol\types\command\CommandOutputMessage;
-use pocketmine\utils\BinaryDataException;
 use function count;
 
 class CommandOutputPacket extends DataPacket implements ClientboundPacket{
@@ -54,7 +54,7 @@ class CommandOutputPacket extends DataPacket implements ClientboundPacket{
 	}
 
 	/**
-	 * @throws BinaryDataException
+	 * @throws DataDecodeException
 	 */
 	protected function getCommandMessage(ByteBufferReader $in) : CommandOutputMessage{
 		$message = new CommandOutputMessage();

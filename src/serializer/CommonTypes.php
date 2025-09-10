@@ -17,6 +17,7 @@ namespace pocketmine\network\mcpe\protocol\serializer;
 use pmmp\encoding\Byte;
 use pmmp\encoding\ByteBufferReader;
 use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\DataDecodeException;
 use pmmp\encoding\LE;
 use pmmp\encoding\VarInt;
 use pocketmine\math\Vector2;
@@ -59,7 +60,6 @@ use pocketmine\network\mcpe\protocol\types\skin\SkinImage;
 use pocketmine\network\mcpe\protocol\types\StructureEditorData;
 use pocketmine\network\mcpe\protocol\types\StructureSettings;
 use pocketmine\utils\Binary;
-use pocketmine\utils\BinaryDataException;
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
 use function count;
@@ -73,9 +73,7 @@ final class CommonTypes{
 		//NOOP
 	}
 
-	/**
-	 * @throws BinaryDataException
-	 */
+	/** @throws DataDecodeException */
 	public static function getString(ByteBufferReader $in) : string{
 		return $in->readByteArray(VarInt::readUnsignedInt($in));
 	}
@@ -85,6 +83,7 @@ final class CommonTypes{
 		$out->writeByteArray($v);
 	}
 
+	/** @throws DataDecodeException */
 	public static function getBool(ByteBufferReader $in) : bool{
 		return Byte::readUnsigned($in) !== 0;
 	}
@@ -93,9 +92,7 @@ final class CommonTypes{
 		Byte::writeUnsigned($out, $v ? 1 : 0);
 	}
 
-	/**
-	 * @throws BinaryDataException
-	 */
+	/** @throws DataDecodeException */
 	public static function getUUID(ByteBufferReader $in) : UuidInterface{
 		//This is two little-endian longs: bytes 7-0 followed by bytes 15-8
 		$p1 = strrev($in->readByteArray(8));
@@ -109,6 +106,7 @@ final class CommonTypes{
 		$out->writeByteArray(strrev(substr($bytes, 8, 8)));
 	}
 
+	/** @throws DataDecodeException */
 	public static function getSkin(ByteBufferReader $in) : SkinData{
 		$skinId = self::getString($in);
 		$skinPlayFabId = self::getString($in);
@@ -230,6 +228,7 @@ final class CommonTypes{
 		self::putBool($out, $skin->isOverride());
 	}
 
+	/** @throws DataDecodeException */
 	private static function getSkinImage(ByteBufferReader $in) : SkinImage{
 		$width = LE::readUnsignedInt($in);
 		$height = LE::readUnsignedInt($in);
@@ -250,7 +249,7 @@ final class CommonTypes{
 	/**
 	 * @return int[]
 	 * @phpstan-return array{0: int, 1: int, 2: int}
-	 * @throws BinaryDataException
+	 * @throws DataDecodeException
 	 */
 	private static function getItemStackHeader(ByteBufferReader $in) : array{
 		$id = VarInt::readSignedInt($in);
@@ -277,6 +276,7 @@ final class CommonTypes{
 		return true;
 	}
 
+	/** @throws DataDecodeException */
 	private static function getItemStackFooter(ByteBufferReader $in, int $id, int $meta, int $count) : ItemStack{
 		$blockRuntimeId = VarInt::readSignedInt($in);
 		$rawExtraData = self::getString($in);
@@ -291,7 +291,7 @@ final class CommonTypes{
 
 	/**
 	 * @throws PacketDecodeException
-	 * @throws BinaryDataException
+	 * @throws DataDecodeException
 	 */
 	public static function getItemStackWithoutStackId(ByteBufferReader $in) : ItemStack{
 		[$id, $count, $meta] = self::getItemStackHeader($in);
@@ -306,6 +306,7 @@ final class CommonTypes{
 		}
 	}
 
+	/** @throws DataDecodeException */
 	public static function getItemStackWrapper(ByteBufferReader $in) : ItemStackWrapper{
 		[$id, $count, $meta] = self::getItemStackHeader($in);
 		if($id === 0){
@@ -333,6 +334,7 @@ final class CommonTypes{
 		}
 	}
 
+	/** @throws DataDecodeException */
 	public static function getRecipeIngredient(ByteBufferReader $in) : RecipeIngredient{
 		$descriptorType = Byte::readUnsigned($in);
 		$descriptor = match($descriptorType){
@@ -364,7 +366,7 @@ final class CommonTypes{
 	 * @phpstan-return array<int, MetadataProperty>
 	 *
 	 * @throws PacketDecodeException
-	 * @throws BinaryDataException
+	 * @throws DataDecodeException
 	 */
 	public static function getEntityMetadata(ByteBufferReader $in) : array{
 		$count = VarInt::readUnsignedInt($in);
@@ -379,6 +381,7 @@ final class CommonTypes{
 		return $data;
 	}
 
+	/** @throws DataDecodeException */
 	private static function readMetadataProperty(ByteBufferReader $in, int $type) : MetadataProperty{
 		return match($type){
 			ByteMetadataProperty::ID => ByteMetadataProperty::read($in),
@@ -410,9 +413,7 @@ final class CommonTypes{
 		}
 	}
 
-	/**
-	 * @throws BinaryDataException
-	 */
+	/** @throws DataDecodeException */
 	public static function getActorUniqueId(ByteBufferReader $in) : int{
 		return VarInt::readSignedLong($in);
 	}
@@ -421,9 +422,7 @@ final class CommonTypes{
 		VarInt::writeSignedLong($out, $eid);
 	}
 
-	/**
-	 * @throws BinaryDataException
-	 */
+	/** @throws DataDecodeException */
 	public static function getActorRuntimeId(ByteBufferReader $in) : int{
 		return VarInt::readUnsignedLong($in);
 	}
@@ -435,7 +434,7 @@ final class CommonTypes{
 	/**
 	 * Reads a block position with unsigned Y coordinate.
 	 *
-	 * @throws BinaryDataException
+	 * @throws DataDecodeException
 	 */
 	public static function getBlockPosition(ByteBufferReader $in) : BlockPosition{
 		$x = VarInt::readSignedInt($in);
@@ -456,7 +455,7 @@ final class CommonTypes{
 	/**
 	 * Reads a block position with a signed Y coordinate.
 	 *
-	 * @throws BinaryDataException
+	 * @throws DataDecodeException
 	 */
 	public static function getSignedBlockPosition(ByteBufferReader $in) : BlockPosition{
 		$x = VarInt::readSignedInt($in);
@@ -477,7 +476,7 @@ final class CommonTypes{
 	/**
 	 * Reads a floating-point Vector3 object with coordinates rounded to 4 decimal places.
 	 *
-	 * @throws BinaryDataException
+	 * @throws DataDecodeException
 	 */
 	public static function getVector3(ByteBufferReader $in) : Vector3{
 		$x = LE::readFloat($in);
@@ -489,7 +488,7 @@ final class CommonTypes{
 	/**
 	 * Reads a floating-point Vector2 object with coordinates rounded to 4 decimal places.
 	 *
-	 * @throws BinaryDataException
+	 * @throws DataDecodeException
 	 */
 	public static function getVector2(ByteBufferReader $in) : Vector2{
 		$x = LE::readFloat($in);
@@ -532,9 +531,7 @@ final class CommonTypes{
 		LE::writeFloat($out, $vector2->y);
 	}
 
-	/**
-	 * @throws BinaryDataException
-	 */
+	/** @throws DataDecodeException */
 	public static function getRotationByte(ByteBufferReader $in) : float{
 		return Byte::readUnsigned($in) * (360 / 256);
 	}
@@ -543,6 +540,7 @@ final class CommonTypes{
 		Byte::writeUnsigned($out, (int) ($rotation / (360 / 256)));
 	}
 
+	/** @throws DataDecodeException */
 	private static function readGameRule(ByteBufferReader $in, int $type, bool $isPlayerModifiable) : GameRule{
 		return match($type){
 			BoolGameRule::ID => BoolGameRule::decode($in, $isPlayerModifiable),
@@ -559,7 +557,7 @@ final class CommonTypes{
 	 * @phpstan-return array<string, GameRule>
 	 *
 	 * @throws PacketDecodeException
-	 * @throws BinaryDataException
+	 * @throws DataDecodeException
 	 */
 	public static function getGameRules(ByteBufferReader $in) : array{
 		$count = VarInt::readUnsignedInt($in);
@@ -590,9 +588,7 @@ final class CommonTypes{
 		}
 	}
 
-	/**
-	 * @throws BinaryDataException
-	 */
+	/** @throws DataDecodeException */
 	public static function getEntityLink(ByteBufferReader $in) : EntityLink{
 		$fromActorUniqueId = self::getActorUniqueId($in);
 		$toActorUniqueId = self::getActorUniqueId($in);
@@ -612,9 +608,7 @@ final class CommonTypes{
 		LE::writeFloat($out, $link->vehicleAngularVelocity);
 	}
 
-	/**
-	 * @throws BinaryDataException
-	 */
+	/** @throws DataDecodeException */
 	public static function getCommandOriginData(ByteBufferReader $in) : CommandOriginData{
 		$result = new CommandOriginData();
 
@@ -639,6 +633,7 @@ final class CommonTypes{
 		}
 	}
 
+	/** @throws DataDecodeException */
 	public static function getStructureSettings(ByteBufferReader $in) : StructureSettings{
 		$result = new StructureSettings();
 
@@ -683,6 +678,7 @@ final class CommonTypes{
 		self::putVector3($out, $structureSettings->pivot);
 	}
 
+	/** @throws DataDecodeException */
 	public static function getStructureEditorData(ByteBufferReader $in) : StructureEditorData{
 		$result = new StructureEditorData();
 
@@ -713,6 +709,7 @@ final class CommonTypes{
 		VarInt::writeSignedInt($out, $structureEditorData->structureRedstoneSaveMode);
 	}
 
+	/** @throws PacketDecodeException */
 	public static function getNbtRoot(ByteBufferReader $in) : TreeRoot{
 		$offset = $in->getOffset();
 		try{
@@ -732,6 +729,7 @@ final class CommonTypes{
 		}
 	}
 
+	/** @throws DataDecodeException */
 	public static function readRecipeNetId(ByteBufferReader $in) : int{
 		return VarInt::readUnsignedInt($in);
 	}
@@ -740,6 +738,7 @@ final class CommonTypes{
 		VarInt::writeUnsignedInt($out, $id);
 	}
 
+	/** @throws DataDecodeException */
 	public static function readCreativeItemNetId(ByteBufferReader $in) : int{
 		return VarInt::readUnsignedInt($in);
 	}
@@ -757,6 +756,8 @@ final class CommonTypes{
 	 * - InventoryTransaction "legacy" request ID is negative and even
 	 * - ItemStackRequest request ID is negative and odd
 	 * - 0 refers to an empty itemstack (air)
+	 *
+	 * @throws DataDecodeException
 	 */
 	public static function readItemStackNetIdVariant(ByteBufferReader $in) : int{
 		return VarInt::readSignedInt($in);
@@ -771,6 +772,7 @@ final class CommonTypes{
 		VarInt::writeSignedInt($out, $id);
 	}
 
+	/** @throws DataDecodeException */
 	public static function readItemStackRequestId(ByteBufferReader $in) : int{
 		return VarInt::readSignedInt($in);
 	}
@@ -779,6 +781,7 @@ final class CommonTypes{
 		VarInt::writeSignedInt($out, $id);
 	}
 
+	/** @throws DataDecodeException */
 	public static function readLegacyItemStackRequestId(ByteBufferReader $in) : int{
 		return VarInt::readSignedInt($in);
 	}
@@ -787,6 +790,7 @@ final class CommonTypes{
 		VarInt::writeSignedInt($out, $id);
 	}
 
+	/** @throws DataDecodeException */
 	public static function readServerItemStackId(ByteBufferReader $in) : int{
 		return VarInt::readSignedInt($in);
 	}
@@ -799,6 +803,7 @@ final class CommonTypes{
 	 * @phpstan-template T
 	 * @phpstan-param \Closure(ByteBufferReader) : T $reader
 	 * @phpstan-return T|null
+	 * @throws DataDecodeException
 	 */
 	public static function readOptional(ByteBufferReader $in, \Closure $reader) : mixed{
 		if(self::getBool($in)){

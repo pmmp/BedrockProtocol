@@ -14,12 +14,13 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol\serializer;
 
-use pmmp\encoding\ByteBufferReader;use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\DataDecodeException;
 use pmmp\encoding\VarInt;
 use pocketmine\network\mcpe\protocol\Packet;
 use pocketmine\network\mcpe\protocol\PacketDecodeException;
 use pocketmine\network\mcpe\protocol\PacketPool;
-use pocketmine\utils\BinaryDataException;
 use function strlen;
 
 class PacketBatch{
@@ -39,7 +40,7 @@ class PacketBatch{
 			try{
 				$length = VarInt::readUnsignedInt($in);
 				$buffer = $in->readByteArray($length);
-			}catch(BinaryDataException $e){
+			}catch(DataDecodeException $e){
 				throw new PacketDecodeException("Error decoding packet $c in batch: " . $e->getMessage(), 0, $e);
 			}
 			yield $buffer;

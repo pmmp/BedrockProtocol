@@ -16,10 +16,10 @@ namespace pocketmine\network\mcpe\protocol\types\inventory;
 
 use pmmp\encoding\ByteBufferReader;
 use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\DataDecodeException;
 use pmmp\encoding\VarInt;
 use pocketmine\network\mcpe\protocol\PacketDecodeException;
 use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
-use pocketmine\utils\BinaryDataException;
 
 class NetworkInventoryAction{
 	public const SOURCE_CONTAINER = 0;
@@ -68,7 +68,7 @@ class NetworkInventoryAction{
 	/**
 	 * @return $this
 	 *
-	 * @throws BinaryDataException
+	 * @throws DataDecodeException
 	 * @throws PacketDecodeException
 	 */
 	public function read(ByteBufferReader $in) : NetworkInventoryAction{

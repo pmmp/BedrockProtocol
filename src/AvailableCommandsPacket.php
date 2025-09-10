@@ -17,6 +17,7 @@ namespace pocketmine\network\mcpe\protocol;
 use pmmp\encoding\Byte;
 use pmmp\encoding\ByteBufferReader;
 use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\DataDecodeException;
 use pmmp\encoding\LE;
 use pmmp\encoding\VarInt;
 use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
@@ -28,7 +29,6 @@ use pocketmine\network\mcpe\protocol\types\command\CommandEnumConstraint;
 use pocketmine\network\mcpe\protocol\types\command\CommandOverload;
 use pocketmine\network\mcpe\protocol\types\command\CommandParameter;
 use pocketmine\network\mcpe\protocol\types\command\CommandParameterTypes as ArgTypes;
-use pocketmine\utils\BinaryDataException;
 use function array_search;
 use function count;
 use function dechex;
@@ -217,7 +217,7 @@ class AvailableCommandsPacket extends DataPacket implements ClientboundPacket{
 	 * @param string[] $enumValueList
 	 *
 	 * @throws PacketDecodeException
-	 * @throws BinaryDataException
+	 * @throws DataDecodeException
 	 */
 	protected function getEnum(array $enumValueList, ByteBufferReader $in) : CommandEnum{
 		$enumName = CommonTypes::getString($in);
@@ -238,7 +238,7 @@ class AvailableCommandsPacket extends DataPacket implements ClientboundPacket{
 	}
 
 	/**
-	 * @throws BinaryDataException
+	 * @throws DataDecodeException
 	 */
 	protected function getSoftEnum(ByteBufferReader $in) : CommandEnum{
 		$enumName = CommonTypes::getString($in);
@@ -280,7 +280,7 @@ class AvailableCommandsPacket extends DataPacket implements ClientboundPacket{
 	}
 
 	/**
-	 * @throws BinaryDataException
+	 * @throws DataDecodeException
 	 */
 	protected function getEnumValueIndex(int $valueCount, ByteBufferReader $in) : int{
 		if($valueCount < 256){
@@ -307,7 +307,7 @@ class AvailableCommandsPacket extends DataPacket implements ClientboundPacket{
 	 * @param string[]      $enumValues
 	 *
 	 * @throws PacketDecodeException
-	 * @throws BinaryDataException
+	 * @throws DataDecodeException
 	 */
 	protected function getEnumConstraint(array $enums, array $enumValues, ByteBufferReader $in) : CommandEnumConstraint{
 		//wtf, what was wrong with an offset inside the enum? :(
@@ -352,7 +352,7 @@ class AvailableCommandsPacket extends DataPacket implements ClientboundPacket{
 	 * @param ChainedSubCommandData[] $allChainedSubCommandData
 	 *
 	 * @throws PacketDecodeException
-	 * @throws BinaryDataException
+	 * @throws DataDecodeException
 	 */
 	protected function getCommandData(array $enums, array $postfixes, array $allChainedSubCommandData, ByteBufferReader $in) : CommandData{
 		$name = CommonTypes::getString($in);

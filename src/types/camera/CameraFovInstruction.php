@@ -14,7 +14,11 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol\types\camera;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\Byte;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\LE;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 
 final class CameraFovInstruction{
 
@@ -39,11 +43,11 @@ final class CameraFovInstruction{
 
 	public function getClear() : bool{ return $this->clear; }
 
-	public static function read(PacketSerializer $in) : self{
-		$fieldOfView = $in->getLFloat();
-		$easeTime = $in->getLFloat();
-		$easeType = $in->getByte();
-		$clear = $in->getBool();
+	public static function read(ByteBufferReader $in) : self{
+		$fieldOfView = LE::readFloat($in);
+		$easeTime = LE::readFloat($in);
+		$easeType = Byte::readUnsigned($in);
+		$clear = CommonTypes::getBool($in);
 		return new self(
 			$fieldOfView,
 			$easeTime,
@@ -52,10 +56,10 @@ final class CameraFovInstruction{
 		);
 	}
 
-	public function write(PacketSerializer $out) : void{
-		$out->putLFloat($this->fieldOfView);
-		$out->putLFloat($this->easeTime);
-		$out->putByte($this->easeType);
-		$out->putBool($this->clear);
+	public function write(ByteBufferWriter $out) : void{
+		LE::writeFloat($out, $this->fieldOfView);
+		LE::writeFloat($out, $this->easeTime);
+		Byte::writeUnsigned($out, $this->easeType);
+		CommonTypes::putBool($out, $this->clear);
 	}
 }

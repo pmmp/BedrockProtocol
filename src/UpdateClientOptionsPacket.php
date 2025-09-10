@@ -14,7 +14,10 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\Byte;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 use pocketmine\network\mcpe\protocol\types\GraphicsMode;
 
 class UpdateClientOptionsPacket extends DataPacket implements ServerboundPacket{
@@ -33,12 +36,12 @@ class UpdateClientOptionsPacket extends DataPacket implements ServerboundPacket{
 
 	public function getGraphicsMode() : ?GraphicsMode{ return $this->graphicsMode; }
 
-	protected function decodePayload(PacketSerializer $in) : void{
-		$this->graphicsMode = $in->readOptional(fn() => GraphicsMode::fromPacket($in->getByte()));
+	protected function decodePayload(ByteBufferReader $in) : void{
+		$this->graphicsMode = CommonTypes::readOptional($in, fn() => GraphicsMode::fromPacket(Byte::readUnsigned($in)));
 	}
 
-	protected function encodePayload(PacketSerializer $out) : void{
-		$out->writeOptional($this->graphicsMode, fn(GraphicsMode $v) => $out->putByte($v->value));
+	protected function encodePayload(ByteBufferWriter $out) : void{
+		CommonTypes::writeOptional($out, $this->graphicsMode, fn(ByteBufferWriter $out, GraphicsMode $v) => Byte::writeUnsigned($out, $v->value));
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

@@ -14,9 +14,14 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol\types;
 
+use pmmp\encoding\Byte;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\LE;
+use pmmp\encoding\VarInt;
 use pocketmine\color\Color;
 use pocketmine\math\Vector3;
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 use pocketmine\network\mcpe\protocol\ServerScriptDebugDrawerPacket;
 
 /**
@@ -178,20 +183,20 @@ final class PacketShapeData{
 
 	public function getSegments() : ?int{ return $this->segments; }
 
-	public static function read(PacketSerializer $in) : self{
-		$networkId = $in->getUnsignedVarLong();
-		$type = $in->readOptional(fn() => ScriptDebugShapeType::fromPacket($in->getByte()));
-		$location = $in->readOptional($in->getVector3(...));
-		$scale = $in->readOptional($in->getLFloat(...));
-		$rotation = $in->readOptional($in->getVector3(...));
-		$totalTimeLeft = $in->readOptional($in->getLFloat(...));
-		$color = $in->readOptional(fn() => Color::fromARGB($in->getLInt()));
-		$text = $in->readOptional($in->getString(...));
-		$boxBound = $in->readOptional($in->getVector3(...));
-		$lineEndLocation = $in->readOptional($in->getVector3(...));
-		$arrowHeadLength = $in->readOptional($in->getLFloat(...));
-		$arrowHeadRadius = $in->readOptional($in->getLFloat(...));
-		$segments = $in->readOptional($in->getByte(...));
+	public static function read(ByteBufferReader $in) : self{
+		$networkId = VarInt::readUnsignedLong($in);
+		$type = CommonTypes::readOptional($in, fn() => ScriptDebugShapeType::fromPacket(Byte::readUnsigned($in)));
+		$location = CommonTypes::readOptional($in, CommonTypes::getVector3(...));
+		$scale = CommonTypes::readOptional($in, LE::readFloat(...));
+		$rotation = CommonTypes::readOptional($in, CommonTypes::getVector3(...));
+		$totalTimeLeft = CommonTypes::readOptional($in, LE::readFloat(...));
+		$color = CommonTypes::readOptional($in, fn() => Color::fromARGB(LE::readUnsignedInt($in)));
+		$text = CommonTypes::readOptional($in, CommonTypes::getString(...));
+		$boxBound = CommonTypes::readOptional($in, CommonTypes::getVector3(...));
+		$lineEndLocation = CommonTypes::readOptional($in, CommonTypes::getVector3(...));
+		$arrowHeadLength = CommonTypes::readOptional($in, LE::readFloat(...));
+		$arrowHeadRadius = CommonTypes::readOptional($in, LE::readFloat(...));
+		$segments = CommonTypes::readOptional($in, Byte::readUnsigned(...));
 
 		return new self(
 			$networkId,
@@ -210,19 +215,19 @@ final class PacketShapeData{
 		);
 	}
 
-	public function write(PacketSerializer $out) : void{
-		$out->putUnsignedVarLong($this->networkId);
-		$out->writeOptional($this->type, fn(ScriptDebugShapeType $type) => $out->putByte($type->value));
-		$out->writeOptional($this->location, $out->putVector3(...));
-		$out->writeOptional($this->scale, $out->putLFloat(...));
-		$out->writeOptional($this->rotation, $out->putVector3(...));
-		$out->writeOptional($this->totalTimeLeft, $out->putLFloat(...));
-		$out->writeOptional($this->color, fn(Color $color) => $out->putLInt($color->toARGB()));
-		$out->writeOptional($this->text, $out->putString(...));
-		$out->writeOptional($this->boxBound, $out->putVector3(...));
-		$out->writeOptional($this->lineEndLocation, $out->putVector3(...));
-		$out->writeOptional($this->arrowHeadLength, $out->putLFloat(...));
-		$out->writeOptional($this->arrowHeadRadius, $out->putLFloat(...));
-		$out->writeOptional($this->segments, $out->putByte(...));
+	public function write(ByteBufferWriter $out) : void{
+		VarInt::writeUnsignedLong($out, $this->networkId);
+		CommonTypes::writeOptional($out, $this->type, fn(ByteBufferWriter $out, ScriptDebugShapeType $type) => Byte::writeUnsigned($out, $type->value));
+		CommonTypes::writeOptional($out, $this->location, CommonTypes::putVector3(...));
+		CommonTypes::writeOptional($out, $this->scale, LE::writeFloat(...));
+		CommonTypes::writeOptional($out, $this->rotation, CommonTypes::putVector3(...));
+		CommonTypes::writeOptional($out, $this->totalTimeLeft, LE::writeFloat(...));
+		CommonTypes::writeOptional($out, $this->color, fn(ByteBufferWriter $out, Color $color) => LE::writeUnsignedInt($out, $color->toARGB()));
+		CommonTypes::writeOptional($out, $this->text, CommonTypes::putString(...));
+		CommonTypes::writeOptional($out, $this->boxBound, CommonTypes::putVector3(...));
+		CommonTypes::writeOptional($out, $this->lineEndLocation, CommonTypes::putVector3(...));
+		CommonTypes::writeOptional($out, $this->arrowHeadLength, LE::writeFloat(...));
+		CommonTypes::writeOptional($out, $this->arrowHeadRadius, LE::writeFloat(...));
+		CommonTypes::writeOptional($out, $this->segments, Byte::writeUnsigned(...));
 	}
 }

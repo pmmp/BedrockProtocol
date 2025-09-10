@@ -14,7 +14,9 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\Byte;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
 use pocketmine\network\mcpe\protocol\types\ControlScheme;
 
 class ClientboundControlSchemeSetPacket extends DataPacket implements ClientboundPacket{
@@ -33,12 +35,12 @@ class ClientboundControlSchemeSetPacket extends DataPacket implements Clientboun
 
 	public function getScheme() : ControlScheme{ return $this->scheme; }
 
-	protected function decodePayload(PacketSerializer $in) : void{
-		$this->scheme = ControlScheme::fromPacket($in->getByte());
+	protected function decodePayload(ByteBufferReader $in) : void{
+		$this->scheme = ControlScheme::fromPacket(Byte::readUnsigned($in));
 	}
 
-	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putByte($this->scheme->value);
+	protected function encodePayload(ByteBufferWriter $out) : void{
+		Byte::writeUnsigned($out, $this->scheme->value);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

@@ -14,7 +14,9 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol\types;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\LE;
 
 final class FloatGameRule extends GameRule{
 	use GetTypeIdFromConstTrait;
@@ -32,11 +34,11 @@ final class FloatGameRule extends GameRule{
 		return $this->value;
 	}
 
-	public function encode(PacketSerializer $out) : void{
-		$out->putLFloat($this->value);
+	public function encode(ByteBufferWriter $out) : void{
+		LE::writeFloat($out, $this->value);
 	}
 
-	public static function decode(PacketSerializer $in, bool $isPlayerModifiable) : self{
-		return new self($in->getLFloat(), $isPlayerModifiable);
+	public static function decode(ByteBufferReader $in, bool $isPlayerModifiable) : self{
+		return new self(LE::readFloat($in), $isPlayerModifiable);
 	}
 }

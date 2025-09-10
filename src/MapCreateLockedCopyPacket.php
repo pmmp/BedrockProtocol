@@ -14,7 +14,9 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 
 class MapCreateLockedCopyPacket extends DataPacket implements ServerboundPacket{
 	public const NETWORK_ID = ProtocolInfo::MAP_CREATE_LOCKED_COPY_PACKET;
@@ -32,14 +34,14 @@ class MapCreateLockedCopyPacket extends DataPacket implements ServerboundPacket{
 		return $result;
 	}
 
-	protected function decodePayload(PacketSerializer $in) : void{
-		$this->originalMapId = $in->getActorUniqueId();
-		$this->newMapId = $in->getActorUniqueId();
+	protected function decodePayload(ByteBufferReader $in) : void{
+		$this->originalMapId = CommonTypes::getActorUniqueId($in);
+		$this->newMapId = CommonTypes::getActorUniqueId($in);
 	}
 
-	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putActorUniqueId($this->originalMapId);
-		$out->putActorUniqueId($this->newMapId);
+	protected function encodePayload(ByteBufferWriter $out) : void{
+		CommonTypes::putActorUniqueId($out, $this->originalMapId);
+		CommonTypes::putActorUniqueId($out, $this->newMapId);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

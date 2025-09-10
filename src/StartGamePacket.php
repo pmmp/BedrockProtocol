@@ -14,9 +14,13 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\LE;
+use pmmp\encoding\VarInt;
 use pocketmine\math\Vector3;
 use pocketmine\nbt\tag\CompoundTag;
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 use pocketmine\network\mcpe\protocol\types\BlockPaletteEntry;
 use pocketmine\network\mcpe\protocol\types\CacheableNbt;
 use pocketmine\network\mcpe\protocol\types\LevelSettings;
@@ -133,82 +137,82 @@ class StartGamePacket extends DataPacket implements ClientboundPacket{
 		return $result;
 	}
 
-	protected function decodePayload(PacketSerializer $in) : void{
-		$this->actorUniqueId = $in->getActorUniqueId();
-		$this->actorRuntimeId = $in->getActorRuntimeId();
-		$this->playerGamemode = $in->getVarInt();
+	protected function decodePayload(ByteBufferReader $in) : void{
+		$this->actorUniqueId = CommonTypes::getActorUniqueId($in);
+		$this->actorRuntimeId = CommonTypes::getActorRuntimeId($in);
+		$this->playerGamemode = VarInt::readSignedInt($in);
 
-		$this->playerPosition = $in->getVector3();
+		$this->playerPosition = CommonTypes::getVector3($in);
 
-		$this->pitch = $in->getLFloat();
-		$this->yaw = $in->getLFloat();
+		$this->pitch = LE::readFloat($in);
+		$this->yaw = LE::readFloat($in);
 
 		$this->levelSettings = LevelSettings::read($in);
 
-		$this->levelId = $in->getString();
-		$this->worldName = $in->getString();
-		$this->premiumWorldTemplateId = $in->getString();
-		$this->isTrial = $in->getBool();
+		$this->levelId = CommonTypes::getString($in);
+		$this->worldName = CommonTypes::getString($in);
+		$this->premiumWorldTemplateId = CommonTypes::getString($in);
+		$this->isTrial = CommonTypes::getBool($in);
 		$this->playerMovementSettings = PlayerMovementSettings::read($in);
-		$this->currentTick = $in->getLLong();
+		$this->currentTick = LE::readUnsignedLong($in);
 
-		$this->enchantmentSeed = $in->getVarInt();
+		$this->enchantmentSeed = VarInt::readSignedInt($in);
 
 		$this->blockPalette = [];
-		for($i = 0, $len = $in->getUnsignedVarInt(); $i < $len; ++$i){
-			$blockName = $in->getString();
-			$state = $in->getNbtCompoundRoot();
+		for($i = 0, $len = VarInt::readUnsignedInt($in); $i < $len; ++$i){
+			$blockName = CommonTypes::getString($in);
+			$state = CommonTypes::getNbtCompoundRoot($in);
 			$this->blockPalette[] = new BlockPaletteEntry($blockName, new CacheableNbt($state));
 		}
 
-		$this->multiplayerCorrelationId = $in->getString();
-		$this->enableNewInventorySystem = $in->getBool();
-		$this->serverSoftwareVersion = $in->getString();
-		$this->playerActorProperties = new CacheableNbt($in->getNbtCompoundRoot());
-		$this->blockPaletteChecksum = $in->getLLong();
-		$this->worldTemplateId = $in->getUUID();
-		$this->enableClientSideChunkGeneration = $in->getBool();
-		$this->blockNetworkIdsAreHashes = $in->getBool();
-		$this->enableTickDeathSystems = $in->getBool();
+		$this->multiplayerCorrelationId = CommonTypes::getString($in);
+		$this->enableNewInventorySystem = CommonTypes::getBool($in);
+		$this->serverSoftwareVersion = CommonTypes::getString($in);
+		$this->playerActorProperties = new CacheableNbt(CommonTypes::getNbtCompoundRoot($in));
+		$this->blockPaletteChecksum = LE::readUnsignedLong($in);
+		$this->worldTemplateId = CommonTypes::getUUID($in);
+		$this->enableClientSideChunkGeneration = CommonTypes::getBool($in);
+		$this->blockNetworkIdsAreHashes = CommonTypes::getBool($in);
+		$this->enableTickDeathSystems = CommonTypes::getBool($in);
 		$this->networkPermissions = NetworkPermissions::decode($in);
 	}
 
-	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putActorUniqueId($this->actorUniqueId);
-		$out->putActorRuntimeId($this->actorRuntimeId);
-		$out->putVarInt($this->playerGamemode);
+	protected function encodePayload(ByteBufferWriter $out) : void{
+		CommonTypes::putActorUniqueId($out, $this->actorUniqueId);
+		CommonTypes::putActorRuntimeId($out, $this->actorRuntimeId);
+		VarInt::writeSignedInt($out, $this->playerGamemode);
 
-		$out->putVector3($this->playerPosition);
+		CommonTypes::putVector3($out, $this->playerPosition);
 
-		$out->putLFloat($this->pitch);
-		$out->putLFloat($this->yaw);
+		LE::writeFloat($out, $this->pitch);
+		LE::writeFloat($out, $this->yaw);
 
 		$this->levelSettings->write($out);
 
-		$out->putString($this->levelId);
-		$out->putString($this->worldName);
-		$out->putString($this->premiumWorldTemplateId);
-		$out->putBool($this->isTrial);
+		CommonTypes::putString($out, $this->levelId);
+		CommonTypes::putString($out, $this->worldName);
+		CommonTypes::putString($out, $this->premiumWorldTemplateId);
+		CommonTypes::putBool($out, $this->isTrial);
 		$this->playerMovementSettings->write($out);
-		$out->putLLong($this->currentTick);
+		LE::writeUnsignedLong($out, $this->currentTick);
 
-		$out->putVarInt($this->enchantmentSeed);
+		VarInt::writeSignedInt($out, $this->enchantmentSeed);
 
-		$out->putUnsignedVarInt(count($this->blockPalette));
+		VarInt::writeUnsignedInt($out, count($this->blockPalette));
 		foreach($this->blockPalette as $entry){
-			$out->putString($entry->getName());
-			$out->put($entry->getStates()->getEncodedNbt());
+			CommonTypes::putString($out, $entry->getName());
+			$out->writeByteArray($entry->getStates()->getEncodedNbt());
 		}
 
-		$out->putString($this->multiplayerCorrelationId);
-		$out->putBool($this->enableNewInventorySystem);
-		$out->putString($this->serverSoftwareVersion);
-		$out->put($this->playerActorProperties->getEncodedNbt());
-		$out->putLLong($this->blockPaletteChecksum);
-		$out->putUUID($this->worldTemplateId);
-		$out->putBool($this->enableClientSideChunkGeneration);
-		$out->putBool($this->blockNetworkIdsAreHashes);
-		$out->putBool($this->enableTickDeathSystems);
+		CommonTypes::putString($out, $this->multiplayerCorrelationId);
+		CommonTypes::putBool($out, $this->enableNewInventorySystem);
+		CommonTypes::putString($out, $this->serverSoftwareVersion);
+		$out->writeByteArray($this->playerActorProperties->getEncodedNbt());
+		LE::writeUnsignedLong($out, $this->blockPaletteChecksum);
+		CommonTypes::putUUID($out, $this->worldTemplateId);
+		CommonTypes::putBool($out, $this->enableClientSideChunkGeneration);
+		CommonTypes::putBool($out, $this->blockNetworkIdsAreHashes);
+		CommonTypes::putBool($out, $this->enableTickDeathSystems);
 		$this->networkPermissions->encode($out);
 	}
 

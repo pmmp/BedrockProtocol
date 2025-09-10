@@ -14,7 +14,10 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\VarInt;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 use pocketmine\network\mcpe\protocol\types\GameMode;
 
 class UpdatePlayerGameTypePacket extends DataPacket implements ClientboundPacket{
@@ -42,16 +45,16 @@ class UpdatePlayerGameTypePacket extends DataPacket implements ClientboundPacket
 
 	public function getTick() : int{ return $this->tick; }
 
-	protected function decodePayload(PacketSerializer $in) : void{
-		$this->gameMode = $in->getVarInt();
-		$this->playerActorUniqueId = $in->getActorUniqueId();
-		$this->tick = $in->getUnsignedVarLong();
+	protected function decodePayload(ByteBufferReader $in) : void{
+		$this->gameMode = VarInt::readSignedInt($in);
+		$this->playerActorUniqueId = CommonTypes::getActorUniqueId($in);
+		$this->tick = VarInt::readUnsignedLong($in);
 	}
 
-	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putVarInt($this->gameMode);
-		$out->putActorUniqueId($this->playerActorUniqueId);
-		$out->putUnsignedVarLong($this->tick);
+	protected function encodePayload(ByteBufferWriter $out) : void{
+		VarInt::writeSignedInt($out, $this->gameMode);
+		CommonTypes::putActorUniqueId($out, $this->playerActorUniqueId);
+		VarInt::writeUnsignedLong($out, $this->tick);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

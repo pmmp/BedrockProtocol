@@ -1,31 +1,31 @@
 parameters:
 	ignoreErrors:
 		-
-			message: "#^Property pocketmine\\\\network\\\\mcpe\\\\protocol\\\\LevelChunkPacket\\:\\:\\$dimensionId \\(0\\|1\\|2\\) does not accept int\\.$#"
+			message: '#^Property pocketmine\\network\\mcpe\\protocol\\LevelChunkPacket\:\:\$dimensionId \(0\|1\|2\) does not accept int\.$#'
+			identifier: assign.propertyType
 			count: 1
 			path: ../../../src/LevelChunkPacket.php
 
 		-
-			message: "#^Parameter \\#1 \\$eid of method pocketmine\\\\network\\\\mcpe\\\\protocol\\\\serializer\\\\PacketSerializer\\:\\:putActorUniqueId\\(\\) expects int, int\\|null given\\.$#"
+			message: '#^Parameter \#2 \$eid of static method pocketmine\\network\\mcpe\\protocol\\serializer\\CommonTypes\:\:putActorUniqueId\(\) expects int, int\|null given\.$#'
+			identifier: argument.type
 			count: 1
 			path: ../../../src/SetScorePacket.php
 
 		-
-			message: "#^Parameter \\#1 \\$v of method pocketmine\\\\network\\\\mcpe\\\\protocol\\\\serializer\\\\PacketSerializer\\:\\:putString\\(\\) expects string, string\\|null given\\.$#"
+			message: '#^Parameter \#2 \$v of static method pocketmine\\network\\mcpe\\protocol\\serializer\\CommonTypes\:\:putString\(\) expects string, string\|null given\.$#'
+			identifier: argument.type
 			count: 1
 			path: ../../../src/SetScorePacket.php
 
 		-
-			message: "#^Parameter \\#1 \\$eid of method pocketmine\\\\network\\\\mcpe\\\\protocol\\\\serializer\\\\PacketSerializer\\:\\:putActorUniqueId\\(\\) expects int, int\\|null given\\.$#"
+			message: '#^Parameter \#2 \$eid of static method pocketmine\\network\\mcpe\\protocol\\serializer\\CommonTypes\:\:putActorUniqueId\(\) expects int, int\|null given\.$#'
+			identifier: argument.type
 			count: 1
 			path: ../../../src/SetScoreboardIdentityPacket.php
 
 		-
-			message: "#^Property pocketmine\\\\network\\\\mcpe\\\\protocol\\\\serializer\\\\PacketSerializer\\:\\:\\$context is never read, only written\\.$#"
-			count: 1
-			path: ../../../src/serializer/PacketSerializer.php
-
-		-
-			message: "#^Parameter \\#1 \\$v of method pocketmine\\\\utils\\\\BinaryStream\\:\\:putVarInt\\(\\) expects int, int\\|null given\\.$#"
+			message: '#^Parameter \#2 \$value of static method pmmp\\encoding\\VarInt\:\:writeSignedInt\(\) expects int, int\|null given\.$#'
+			identifier: argument.type
 			count: 1
 			path: ../../../src/types/recipe/FurnaceRecipe.php

@@ -14,12 +14,15 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol\types\inventory;
 
+use pmmp\encoding\Byte;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\LE;
 use pocketmine\nbt\LittleEndianNbtSerializer;
 use pocketmine\nbt\NbtDataException;
 use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\nbt\TreeRoot;
 use pocketmine\network\mcpe\protocol\PacketDecodeException;
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 use function count;
 use function strlen;
 
@@ -57,19 +60,19 @@ class ItemStackExtraData{
 		return $this->nbt;
 	}
 
-	public static function read(PacketSerializer $in) : self{
-		$nbtLen = $in->getLShort();
+	public static function read(ByteBufferReader $in) : self{
+		$nbtLen = LE::readSignedShort($in);
 
 		/** @var CompoundTag|null $compound */
 		$compound = null;
-		if($nbtLen === 0xffff){
-			$nbtDataVersion = $in->getByte();
+		if($nbtLen === -1){
+			$nbtDataVersion = Byte::readUnsigned($in);
 			if($nbtDataVersion !== 1){
 				throw new PacketDecodeException("Unexpected NBT data version $nbtDataVersion");
 			}
 			$offset = $in->getOffset();
 			try{
-				$compound = (new LittleEndianNbtSerializer())->read($in->getBuffer(), $offset, 512)->mustGetCompoundTag();
+				$compound = (new LittleEndianNbtSerializer())->read($in->getData(), $offset, 512)->mustGetCompoundTag();
 			}catch(NbtDataException $e){
 				throw PacketDecodeException::wrap($e, "Failed decoding NBT root");
 			}finally{
@@ -80,36 +83,37 @@ class ItemStackExtraData{
 		}
 
 		$canPlaceOn = [];
-		for($i = 0, $canPlaceOnCount = $in->getLInt(); $i < $canPlaceOnCount; ++$i){
-			$canPlaceOn[] = $in->get($in->getLShort());
+		//TODO: apparently this is not correct as of 1.21.50
+		for($i = 0, $canPlaceOnCount = LE::readUnsignedInt($in); $i < $canPlaceOnCount; ++$i){
+			$canPlaceOn[] = $in->readByteArray(LE::readUnsignedShort($in));
 		}
 
 		$canDestroy = [];
-		for($i = 0, $canDestroyCount = $in->getLInt(); $i < $canDestroyCount; ++$i){
-			$canDestroy[] = $in->get($in->getLShort());
+		for($i = 0, $canDestroyCount = LE::readUnsignedInt($in); $i < $canDestroyCount; ++$i){
+			$canDestroy[] = $in->readByteArray(LE::readUnsignedShort($in));
 		}
 
 		return new self($compound, $canPlaceOn, $canDestroy);
 	}
 
-	public function write(PacketSerializer $out) : void{
+	public function write(ByteBufferWriter $out) : void{
 		if($this->nbt !== null){
-			$out->putLShort(0xffff);
-			$out->putByte(1); //TODO: NBT data version (?)
-			$out->put((new LittleEndianNbtSerializer())->write(new TreeRoot($this->nbt)));
+			LE::writeSignedShort($out, 0xffff);
+			Byte::writeUnsigned($out, 1); //TODO: NBT data version (?)
+			$out->writeByteArray((new LittleEndianNbtSerializer())->write(new TreeRoot($this->nbt)));
 		}else{
-			$out->putLShort(0);
+			LE::writeSignedShort($out, 0);
 		}
 
-		$out->putLInt(count($this->canPlaceOn));
+		LE::writeUnsignedInt($out, count($this->canPlaceOn));
 		foreach($this->canPlaceOn as $entry){
-			$out->putLShort(strlen($entry));
-			$out->put($entry);
+			LE::writeUnsignedShort($out, strlen($entry));
+			$out->writeByteArray($entry);
 		}
-		$out->putLInt(count($this->canDestroy));
+		LE::writeUnsignedInt($out, count($this->canDestroy));
 		foreach($this->canDestroy as $entry){
-			$out->putLShort(strlen($entry));
-			$out->put($entry);
+			LE::writeUnsignedShort($out, strlen($entry));
+			$out->writeByteArray($entry);
 		}
 	}
 }

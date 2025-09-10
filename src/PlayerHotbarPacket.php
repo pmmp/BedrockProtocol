@@ -14,7 +14,11 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\Byte;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\VarInt;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 use pocketmine\network\mcpe\protocol\types\inventory\ContainerIds;
 
 class PlayerHotbarPacket extends DataPacket implements ClientboundPacket, ServerboundPacket{
@@ -35,16 +39,16 @@ class PlayerHotbarPacket extends DataPacket implements ClientboundPacket, Server
 		return $result;
 	}
 
-	protected function decodePayload(PacketSerializer $in) : void{
-		$this->selectedHotbarSlot = $in->getUnsignedVarInt();
-		$this->windowId = $in->getByte();
-		$this->selectHotbarSlot = $in->getBool();
+	protected function decodePayload(ByteBufferReader $in) : void{
+		$this->selectedHotbarSlot = VarInt::readUnsignedInt($in);
+		$this->windowId = Byte::readUnsigned($in);
+		$this->selectHotbarSlot = CommonTypes::getBool($in);
 	}
 
-	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putUnsignedVarInt($this->selectedHotbarSlot);
-		$out->putByte($this->windowId);
-		$out->putBool($this->selectHotbarSlot);
+	protected function encodePayload(ByteBufferWriter $out) : void{
+		VarInt::writeUnsignedInt($out, $this->selectedHotbarSlot);
+		Byte::writeUnsigned($out, $this->windowId);
+		CommonTypes::putBool($out, $this->selectHotbarSlot);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

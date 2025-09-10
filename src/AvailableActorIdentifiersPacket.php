@@ -14,7 +14,9 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 use pocketmine\network\mcpe\protocol\types\CacheableNbt;
 
 class AvailableActorIdentifiersPacket extends DataPacket implements ClientboundPacket{
@@ -33,12 +35,12 @@ class AvailableActorIdentifiersPacket extends DataPacket implements ClientboundP
 		return $result;
 	}
 
-	protected function decodePayload(PacketSerializer $in) : void{
-		$this->identifiers = new CacheableNbt($in->getNbtCompoundRoot());
+	protected function decodePayload(ByteBufferReader $in) : void{
+		$this->identifiers = new CacheableNbt(CommonTypes::getNbtCompoundRoot($in));
 	}
 
-	protected function encodePayload(PacketSerializer $out) : void{
-		$out->put($this->identifiers->getEncodedNbt());
+	protected function encodePayload(ByteBufferWriter $out) : void{
+		$out->writeByteArray($this->identifiers->getEncodedNbt());
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

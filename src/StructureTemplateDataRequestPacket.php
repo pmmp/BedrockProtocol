@@ -14,7 +14,10 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\Byte;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 use pocketmine\network\mcpe\protocol\types\BlockPosition;
 use pocketmine\network\mcpe\protocol\types\StructureSettings;
 
@@ -42,18 +45,18 @@ class StructureTemplateDataRequestPacket extends DataPacket implements Serverbou
 		return $result;
 	}
 
-	protected function decodePayload(PacketSerializer $in) : void{
-		$this->structureTemplateName = $in->getString();
-		$this->structureBlockPosition = $in->getBlockPosition();
-		$this->structureSettings = $in->getStructureSettings();
-		$this->requestType = $in->getByte();
+	protected function decodePayload(ByteBufferReader $in) : void{
+		$this->structureTemplateName = CommonTypes::getString($in);
+		$this->structureBlockPosition = CommonTypes::getBlockPosition($in);
+		$this->structureSettings = CommonTypes::getStructureSettings($in);
+		$this->requestType = Byte::readUnsigned($in);
 	}
 
-	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putString($this->structureTemplateName);
-		$out->putBlockPosition($this->structureBlockPosition);
-		$out->putStructureSettings($this->structureSettings);
-		$out->putByte($this->requestType);
+	protected function encodePayload(ByteBufferWriter $out) : void{
+		CommonTypes::putString($out, $this->structureTemplateName);
+		CommonTypes::putBlockPosition($out, $this->structureBlockPosition);
+		CommonTypes::putStructureSettings($out, $this->structureSettings);
+		Byte::writeUnsigned($out, $this->requestType);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

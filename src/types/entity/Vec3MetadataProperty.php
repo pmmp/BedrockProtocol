@@ -14,8 +14,10 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol\types\entity;
 
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
 use pocketmine\math\Vector3;
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 use pocketmine\network\mcpe\protocol\types\GetTypeIdFromConstTrait;
 
 class Vec3MetadataProperty implements MetadataProperty{
@@ -33,12 +35,12 @@ class Vec3MetadataProperty implements MetadataProperty{
 		return clone $this->value;
 	}
 
-	public static function read(PacketSerializer $in) : self{
-		return new self($in->getVector3());
+	public static function read(ByteBufferReader $in) : self{
+		return new self(CommonTypes::getVector3($in));
 	}
 
-	public function write(PacketSerializer $out) : void{
-		$out->putVector3($this->value);
+	public function write(ByteBufferWriter $out) : void{
+		CommonTypes::putVector3($out, $this->value);
 	}
 
 	public function equals(MetadataProperty $other) : bool{

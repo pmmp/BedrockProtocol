@@ -14,7 +14,11 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol\types\inventory\stackrequest;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\Byte;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\VarInt;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 use pocketmine\network\mcpe\protocol\types\GetTypeIdFromConstTrait;
 use pocketmine\network\mcpe\protocol\types\inventory\ItemStack;
 use function count;
@@ -41,20 +45,20 @@ final class DeprecatedCraftingResultsStackRequestAction extends ItemStackRequest
 
 	public function getIterations() : int{ return $this->iterations; }
 
-	public static function read(PacketSerializer $in) : self{
+	public static function read(ByteBufferReader $in) : self{
 		$results = [];
-		for($i = 0, $len = $in->getUnsignedVarInt(); $i < $len; ++$i){
-			$results[] = $in->getItemStackWithoutStackId();
+		for($i = 0, $len = VarInt::readUnsignedInt($in); $i < $len; ++$i){
+			$results[] = CommonTypes::getItemStackWithoutStackId($in);
 		}
-		$iterations = $in->getByte();
+		$iterations = Byte::readUnsigned($in);
 		return new self($results, $iterations);
 	}
 
-	public function write(PacketSerializer $out) : void{
-		$out->putUnsignedVarInt(count($this->results));
+	public function write(ByteBufferWriter $out) : void{
+		VarInt::writeUnsignedInt($out, count($this->results));
 		foreach($this->results as $result){
-			$out->putItemStackWithoutStackId($result);
+			CommonTypes::putItemStackWithoutStackId($out, $result);
 		}
-		$out->putByte($this->iterations);
+		Byte::writeUnsigned($out, $this->iterations);
 	}
 }

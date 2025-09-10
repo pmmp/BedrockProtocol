@@ -14,7 +14,11 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\LE;
+use pmmp\encoding\VarInt;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 use pocketmine\network\mcpe\protocol\types\ChunkPosition;
 use pocketmine\network\mcpe\protocol\types\DimensionIds;
 use pocketmine\utils\Limits;
@@ -89,59 +93,59 @@ class LevelChunkPacket extends DataPacket implements ClientboundPacket{
 		return $this->extraPayload;
 	}
 
-	protected function decodePayload(PacketSerializer $in) : void{
+	protected function decodePayload(ByteBufferReader $in) : void{
 		$this->chunkPosition = ChunkPosition::read($in);
-		$this->dimensionId = $in->getVarInt();
+		$this->dimensionId = VarInt::readSignedInt($in);
 
-		$subChunkCountButNotReally = $in->getUnsignedVarInt();
+		$subChunkCountButNotReally = VarInt::readUnsignedInt($in);
 		if($subChunkCountButNotReally === self::CLIENT_REQUEST_FULL_COLUMN_FAKE_COUNT){
 			$this->clientSubChunkRequestsEnabled = true;
 			$this->subChunkCount = PHP_INT_MAX;
 		}elseif($subChunkCountButNotReally === self::CLIENT_REQUEST_TRUNCATED_COLUMN_FAKE_COUNT){
 			$this->clientSubChunkRequestsEnabled = true;
-			$this->subChunkCount = $in->getLShort();
+			$this->subChunkCount = LE::readUnsignedShort($in);
 		}else{
 			$this->clientSubChunkRequestsEnabled = false;
 			$this->subChunkCount = $subChunkCountButNotReally;
 		}
 
-		$cacheEnabled = $in->getBool();
+		$cacheEnabled = CommonTypes::getBool($in);
 		if($cacheEnabled){
 			$this->usedBlobHashes = [];
-			$count = $in->getUnsignedVarInt();
+			$count = VarInt::readUnsignedInt($in);
 			if($count > self::MAX_BLOB_HASHES){
 				throw new PacketDecodeException("Expected at most " . self::MAX_BLOB_HASHES . " blob hashes, got " . $count);
 			}
 			for($i = 0; $i < $count; ++$i){
-				$this->usedBlobHashes[] = $in->getLLong();
+				$this->usedBlobHashes[] = LE::readUnsignedLong($in);
 			}
 		}
-		$this->extraPayload = $in->getString();
+		$this->extraPayload = CommonTypes::getString($in);
 	}
 
-	protected function encodePayload(PacketSerializer $out) : void{
+	protected function encodePayload(ByteBufferWriter $out) : void{
 		$this->chunkPosition->write($out);
-		$out->putVarInt($this->dimensionId);
+		VarInt::writeSignedInt($out, $this->dimensionId);
 
 		if($this->clientSubChunkRequestsEnabled){
 			if($this->subChunkCount === PHP_INT_MAX){
-				$out->putUnsignedVarInt(self::CLIENT_REQUEST_FULL_COLUMN_FAKE_COUNT);
+				VarInt::writeUnsignedInt($out, self::CLIENT_REQUEST_FULL_COLUMN_FAKE_COUNT);
 			}else{
-				$out->putUnsignedVarInt(self::CLIENT_REQUEST_TRUNCATED_COLUMN_FAKE_COUNT);
-				$out->putLShort($this->subChunkCount);
+				VarInt::writeUnsignedInt($out, self::CLIENT_REQUEST_TRUNCATED_COLUMN_FAKE_COUNT);
+				LE::writeUnsignedShort($out, $this->subChunkCount);
 			}
 		}else{
-			$out->putUnsignedVarInt($this->subChunkCount);
+			VarInt::writeUnsignedInt($out, $this->subChunkCount);
 		}
 
-		$out->putBool($this->usedBlobHashes !== null);
+		CommonTypes::putBool($out, $this->usedBlobHashes !== null);
 		if($this->usedBlobHashes !== null){
-			$out->putUnsignedVarInt(count($this->usedBlobHashes));
+			VarInt::writeUnsignedInt($out, count($this->usedBlobHashes));
 			foreach($this->usedBlobHashes as $hash){
-				$out->putLLong($hash);
+				LE::writeUnsignedLong($out, $hash);
 			}
 		}
-		$out->putString($this->extraPayload);
+		CommonTypes::putString($out, $this->extraPayload);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

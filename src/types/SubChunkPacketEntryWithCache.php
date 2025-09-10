@@ -14,7 +14,9 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol\types;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\LE;
 
 final class SubChunkPacketEntryWithCache{
 
@@ -27,15 +29,15 @@ final class SubChunkPacketEntryWithCache{
 
 	public function getUsedBlobHash() : int{ return $this->usedBlobHash; }
 
-	public static function read(PacketSerializer $in) : self{
+	public static function read(ByteBufferReader $in) : self{
 		$base = SubChunkPacketEntryCommon::read($in, true);
-		$usedBlobHash = $in->getLLong();
+		$usedBlobHash = LE::readUnsignedLong($in);
 
 		return new self($base, $usedBlobHash);
 	}
 
-	public function write(PacketSerializer $out) : void{
+	public function write(ByteBufferWriter $out) : void{
 		$this->base->write($out, true);
-		$out->putLLong($this->usedBlobHash);
+		LE::writeUnsignedLong($out, $this->usedBlobHash);
 	}
 }

@@ -14,7 +14,11 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\Byte;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\VarInt;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 use pocketmine\network\mcpe\protocol\types\CacheableNbt;
 
 class UpdateEquipPacket extends DataPacket implements ClientboundPacket{
@@ -41,20 +45,20 @@ class UpdateEquipPacket extends DataPacket implements ClientboundPacket{
 		return $result;
 	}
 
-	protected function decodePayload(PacketSerializer $in) : void{
-		$this->windowId = $in->getByte();
-		$this->windowType = $in->getByte();
-		$this->windowSlotCount = $in->getVarInt();
-		$this->actorUniqueId = $in->getActorUniqueId();
-		$this->nbt = new CacheableNbt($in->getNbtCompoundRoot());
+	protected function decodePayload(ByteBufferReader $in) : void{
+		$this->windowId = Byte::readUnsigned($in);
+		$this->windowType = Byte::readUnsigned($in);
+		$this->windowSlotCount = VarInt::readSignedInt($in);
+		$this->actorUniqueId = CommonTypes::getActorUniqueId($in);
+		$this->nbt = new CacheableNbt(CommonTypes::getNbtCompoundRoot($in));
 	}
 
-	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putByte($this->windowId);
-		$out->putByte($this->windowType);
-		$out->putVarInt($this->windowSlotCount);
-		$out->putActorUniqueId($this->actorUniqueId);
-		$out->put($this->nbt->getEncodedNbt());
+	protected function encodePayload(ByteBufferWriter $out) : void{
+		Byte::writeUnsigned($out, $this->windowId);
+		Byte::writeUnsigned($out, $this->windowType);
+		VarInt::writeSignedInt($out, $this->windowSlotCount);
+		CommonTypes::putActorUniqueId($out, $this->actorUniqueId);
+		$out->writeByteArray($this->nbt->getEncodedNbt());
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

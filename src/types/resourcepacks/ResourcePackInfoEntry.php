@@ -14,7 +14,10 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol\types\resourcepacks;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\LE;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 use Ramsey\Uuid\UuidInterface;
 
 class ResourcePackInfoEntry{
@@ -65,30 +68,30 @@ class ResourcePackInfoEntry{
 
 	public function getCdnUrl() : string{ return $this->cdnUrl; }
 
-	public function write(PacketSerializer $out) : void{
-		$out->putUUID($this->packId);
-		$out->putString($this->version);
-		$out->putLLong($this->sizeBytes);
-		$out->putString($this->encryptionKey);
-		$out->putString($this->subPackName);
-		$out->putString($this->contentId);
-		$out->putBool($this->hasScripts);
-		$out->putBool($this->isAddonPack);
-		$out->putBool($this->isRtxCapable);
-		$out->putString($this->cdnUrl);
+	public function write(ByteBufferWriter $out) : void{
+		CommonTypes::putUUID($out, $this->packId);
+		CommonTypes::putString($out, $this->version);
+		LE::writeUnsignedLong($out, $this->sizeBytes);
+		CommonTypes::putString($out, $this->encryptionKey);
+		CommonTypes::putString($out, $this->subPackName);
+		CommonTypes::putString($out, $this->contentId);
+		CommonTypes::putBool($out, $this->hasScripts);
+		CommonTypes::putBool($out, $this->isAddonPack);
+		CommonTypes::putBool($out, $this->isRtxCapable);
+		CommonTypes::putString($out, $this->cdnUrl);
 	}
 
-	public static function read(PacketSerializer $in) : self{
-		$uuid = $in->getUUID();
-		$version = $in->getString();
-		$sizeBytes = $in->getLLong();
-		$encryptionKey = $in->getString();
-		$subPackName = $in->getString();
-		$contentId = $in->getString();
-		$hasScripts = $in->getBool();
-		$isAddonPack = $in->getBool();
-		$rtxCapable = $in->getBool();
-		$cdnUrl = $in->getString();
+	public static function read(ByteBufferReader $in) : self{
+		$uuid = CommonTypes::getUUID($in);
+		$version = CommonTypes::getString($in);
+		$sizeBytes = LE::readUnsignedLong($in);
+		$encryptionKey = CommonTypes::getString($in);
+		$subPackName = CommonTypes::getString($in);
+		$contentId = CommonTypes::getString($in);
+		$hasScripts = CommonTypes::getBool($in);
+		$isAddonPack = CommonTypes::getBool($in);
+		$rtxCapable = CommonTypes::getBool($in);
+		$cdnUrl = CommonTypes::getString($in);
 		return new self($uuid, $version, $sizeBytes, $encryptionKey, $subPackName, $contentId, $hasScripts, $isAddonPack, $rtxCapable, $cdnUrl);
 	}
 }

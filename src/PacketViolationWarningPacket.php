@@ -14,7 +14,10 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\VarInt;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 
 class PacketViolationWarningPacket extends DataPacket implements ServerboundPacket{
 	public const NETWORK_ID = ProtocolInfo::PACKET_VIOLATION_WARNING_PACKET;
@@ -50,18 +53,18 @@ class PacketViolationWarningPacket extends DataPacket implements ServerboundPack
 
 	public function getMessage() : string{ return $this->message; }
 
-	protected function decodePayload(PacketSerializer $in) : void{
-		$this->type = $in->getVarInt();
-		$this->severity = $in->getVarInt();
-		$this->packetId = $in->getVarInt();
-		$this->message = $in->getString();
+	protected function decodePayload(ByteBufferReader $in) : void{
+		$this->type = VarInt::readSignedInt($in);
+		$this->severity = VarInt::readSignedInt($in);
+		$this->packetId = VarInt::readSignedInt($in);
+		$this->message = CommonTypes::getString($in);
 	}
 
-	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putVarInt($this->type);
-		$out->putVarInt($this->severity);
-		$out->putVarInt($this->packetId);
-		$out->putString($this->message);
+	protected function encodePayload(ByteBufferWriter $out) : void{
+		VarInt::writeSignedInt($out, $this->type);
+		VarInt::writeSignedInt($out, $this->severity);
+		VarInt::writeSignedInt($out, $this->packetId);
+		CommonTypes::putString($out, $this->message);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

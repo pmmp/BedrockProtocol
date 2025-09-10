@@ -14,7 +14,10 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\LE;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 
 class ResourcePackChunkRequestPacket extends DataPacket implements ServerboundPacket{
 	public const NETWORK_ID = ProtocolInfo::RESOURCE_PACK_CHUNK_REQUEST_PACKET;
@@ -32,14 +35,14 @@ class ResourcePackChunkRequestPacket extends DataPacket implements ServerboundPa
 		return $result;
 	}
 
-	protected function decodePayload(PacketSerializer $in) : void{
-		$this->packId = $in->getString();
-		$this->chunkIndex = $in->getLInt();
+	protected function decodePayload(ByteBufferReader $in) : void{
+		$this->packId = CommonTypes::getString($in);
+		$this->chunkIndex = /* TODO: check if this should be unsigned */ LE::readSignedInt($in);
 	}
 
-	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putString($this->packId);
-		$out->putLInt($this->chunkIndex);
+	protected function encodePayload(ByteBufferWriter $out) : void{
+		CommonTypes::putString($out, $this->packId);
+		/* TODO: check if this should be unsigned */ LE::writeSignedInt($out, $this->chunkIndex);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

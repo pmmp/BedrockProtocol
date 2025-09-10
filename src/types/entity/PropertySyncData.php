@@ -14,7 +14,10 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol\types\entity;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\LE;
+use pmmp\encoding\VarInt;
 use function count;
 
 final class PropertySyncData{
@@ -45,30 +48,30 @@ final class PropertySyncData{
 		return $this->floatProperties;
 	}
 
-	public static function read(PacketSerializer $in) : self{
+	public static function read(ByteBufferReader $in) : self{
 		$intProperties = [];
 		$floatProperties = [];
 
-		for($i = 0, $count = $in->getUnsignedVarInt(); $i < $count; ++$i){
-			$intProperties[$in->getUnsignedVarInt()] = $in->getVarInt();
+		for($i = 0, $count = VarInt::readUnsignedInt($in); $i < $count; ++$i){
+			$intProperties[VarInt::readUnsignedInt($in)] = VarInt::readSignedInt($in);
 		}
-		for($i = 0, $count = $in->getUnsignedVarInt(); $i < $count; ++$i){
-			$floatProperties[$in->getUnsignedVarInt()] = $in->getLFloat();
+		for($i = 0, $count = VarInt::readUnsignedInt($in); $i < $count; ++$i){
+			$floatProperties[VarInt::readUnsignedInt($in)] = LE::readFloat($in);
 		}
 
 		return new self($intProperties, $floatProperties);
 	}
 
-	public function write(PacketSerializer $out) : void{
-		$out->putUnsignedVarInt(count($this->intProperties));
+	public function write(ByteBufferWriter $out) : void{
+		VarInt::writeUnsignedInt($out, count($this->intProperties));
 		foreach($this->intProperties as $key => $value){
-			$out->putUnsignedVarInt($key);
-			$out->putVarInt($value);
+			VarInt::writeUnsignedInt($out, $key);
+			VarInt::writeSignedInt($out, $value);
 		}
-		$out->putUnsignedVarInt(count($this->floatProperties));
+		VarInt::writeUnsignedInt($out, count($this->floatProperties));
 		foreach($this->floatProperties as $key => $value){
-			$out->putUnsignedVarInt($key);
-			$out->putLFloat($value);
+			VarInt::writeUnsignedInt($out, $key);
+			LE::writeFloat($out, $value);
 		}
 	}
 }

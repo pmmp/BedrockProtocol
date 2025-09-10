@@ -14,7 +14,10 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol\types;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\VarInt;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 
 /** This is used for PlayerAuthInput packet when the flags include PERFORM_BLOCK_ACTIONS */
 final class PlayerBlockActionWithBlockInfo implements PlayerBlockAction{
@@ -34,15 +37,15 @@ final class PlayerBlockActionWithBlockInfo implements PlayerBlockAction{
 
 	public function getFace() : int{ return $this->face; }
 
-	public static function read(PacketSerializer $in, int $actionType) : self{
-		$blockPosition = $in->getSignedBlockPosition();
-		$face = $in->getVarInt();
+	public static function read(ByteBufferReader $in, int $actionType) : self{
+		$blockPosition = CommonTypes::getSignedBlockPosition($in);
+		$face = VarInt::readSignedInt($in);
 		return new self($actionType, $blockPosition, $face);
 	}
 
-	public function write(PacketSerializer $out) : void{
-		$out->putSignedBlockPosition($this->blockPosition);
-		$out->putVarInt($this->face);
+	public function write(ByteBufferWriter $out) : void{
+		CommonTypes::putSignedBlockPosition($out, $this->blockPosition);
+		VarInt::writeSignedInt($out, $this->face);
 	}
 
 	public static function isValidActionType(int $actionType) : bool{

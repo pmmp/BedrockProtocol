@@ -14,7 +14,9 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol\types\biome\chunkgen;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\LE;
 
 final class BiomeMultinoiseGenRulesData{
 
@@ -36,12 +38,12 @@ final class BiomeMultinoiseGenRulesData{
 
 	public function getWeight() : float{ return $this->weight; }
 
-	public static function read(PacketSerializer $in) : self{
-		$temperature = $in->getLFloat();
-		$humidity = $in->getLFloat();
-		$altitude = $in->getLFloat();
-		$weirdness = $in->getLFloat();
-		$weight = $in->getLFloat();
+	public static function read(ByteBufferReader $in) : self{
+		$temperature = LE::readFloat($in);
+		$humidity = LE::readFloat($in);
+		$altitude = LE::readFloat($in);
+		$weirdness = LE::readFloat($in);
+		$weight = LE::readFloat($in);
 
 		return new self(
 			$temperature,
@@ -52,11 +54,11 @@ final class BiomeMultinoiseGenRulesData{
 		);
 	}
 
-	public function write(PacketSerializer $out) : void{
-		$out->putLFloat($this->temperature);
-		$out->putLFloat($this->humidity);
-		$out->putLFloat($this->altitude);
-		$out->putLFloat($this->weirdness);
-		$out->putLFloat($this->weight);
+	public function write(ByteBufferWriter $out) : void{
+		LE::writeFloat($out, $this->temperature);
+		LE::writeFloat($out, $this->humidity);
+		LE::writeFloat($out, $this->altitude);
+		LE::writeFloat($out, $this->weirdness);
+		LE::writeFloat($out, $this->weight);
 	}
 }

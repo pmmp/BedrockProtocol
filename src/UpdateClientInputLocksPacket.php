@@ -14,8 +14,11 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\VarInt;
 use pocketmine\math\Vector3;
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 
 class UpdateClientInputLocksPacket extends DataPacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::UPDATE_CLIENT_INPUT_LOCKS_PACKET;
@@ -37,14 +40,14 @@ class UpdateClientInputLocksPacket extends DataPacket implements ClientboundPack
 
 	public function getPosition() : Vector3{ return $this->position; }
 
-	protected function decodePayload(PacketSerializer $in) : void{
-		$this->flags = $in->getUnsignedVarInt();
-		$this->position = $in->getVector3();
+	protected function decodePayload(ByteBufferReader $in) : void{
+		$this->flags = VarInt::readUnsignedInt($in);
+		$this->position = CommonTypes::getVector3($in);
 	}
 
-	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putUnsignedVarInt($this->flags);
-		$out->putVector3($this->position);
+	protected function encodePayload(ByteBufferWriter $out) : void{
+		VarInt::writeUnsignedInt($out, $this->flags);
+		CommonTypes::putVector3($out, $this->position);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

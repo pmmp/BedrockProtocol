@@ -14,7 +14,9 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 
 class TakeItemActorPacket extends DataPacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::TAKE_ITEM_ACTOR_PACKET;
@@ -32,14 +34,14 @@ class TakeItemActorPacket extends DataPacket implements ClientboundPacket{
 		return $result;
 	}
 
-	protected function decodePayload(PacketSerializer $in) : void{
-		$this->itemActorRuntimeId = $in->getActorRuntimeId();
-		$this->takerActorRuntimeId = $in->getActorRuntimeId();
+	protected function decodePayload(ByteBufferReader $in) : void{
+		$this->itemActorRuntimeId = CommonTypes::getActorRuntimeId($in);
+		$this->takerActorRuntimeId = CommonTypes::getActorRuntimeId($in);
 	}
 
-	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putActorRuntimeId($this->itemActorRuntimeId);
-		$out->putActorRuntimeId($this->takerActorRuntimeId);
+	protected function encodePayload(ByteBufferWriter $out) : void{
+		CommonTypes::putActorRuntimeId($out, $this->itemActorRuntimeId);
+		CommonTypes::putActorRuntimeId($out, $this->takerActorRuntimeId);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

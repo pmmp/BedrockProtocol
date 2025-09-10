@@ -14,8 +14,11 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol\types\camera;
 
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\LE;
 use pocketmine\math\Vector3;
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 
 final class CameraTargetInstruction{
 
@@ -28,17 +31,17 @@ final class CameraTargetInstruction{
 
 	public function getActorUniqueId() : int{ return $this->actorUniqueId; }
 
-	public static function read(PacketSerializer $in) : self{
-		$targetCenterOffset = $in->readOptional(fn() => $in->getVector3());
-		$actorUniqueId = $in->getLLong(); //why be consistent mojang ?????
+	public static function read(ByteBufferReader $in) : self{
+		$targetCenterOffset = CommonTypes::readOptional($in, CommonTypes::getVector3(...));
+		$actorUniqueId = LE::readSignedLong($in); //why be consistent mojang ?????
 		return new self(
 			$targetCenterOffset,
 			$actorUniqueId
 		);
 	}
 
-	public function write(PacketSerializer $out) : void{
-		$out->writeOptional($this->targetCenterOffset, fn(Vector3 $v) => $out->putVector3($v));
-		$out->putLLong($this->actorUniqueId);
+	public function write(ByteBufferWriter $out) : void{
+		CommonTypes::writeOptional($out, $this->targetCenterOffset, CommonTypes::putVector3(...));
+		LE::writeSignedLong($out, $this->actorUniqueId);
 	}
 }

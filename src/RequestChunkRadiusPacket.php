@@ -14,7 +14,10 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\Byte;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\VarInt;
 
 class RequestChunkRadiusPacket extends DataPacket implements ServerboundPacket{
 	public const NETWORK_ID = ProtocolInfo::REQUEST_CHUNK_RADIUS_PACKET;
@@ -32,14 +35,14 @@ class RequestChunkRadiusPacket extends DataPacket implements ServerboundPacket{
 		return $result;
 	}
 
-	protected function decodePayload(PacketSerializer $in) : void{
-		$this->radius = $in->getVarInt();
-		$this->maxRadius = $in->getByte();
+	protected function decodePayload(ByteBufferReader $in) : void{
+		$this->radius = VarInt::readSignedInt($in);
+		$this->maxRadius = Byte::readUnsigned($in);
 	}
 
-	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putVarInt($this->radius);
-		$out->putByte($this->maxRadius);
+	protected function encodePayload(ByteBufferWriter $out) : void{
+		VarInt::writeSignedInt($out, $this->radius);
+		Byte::writeUnsigned($out, $this->maxRadius);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

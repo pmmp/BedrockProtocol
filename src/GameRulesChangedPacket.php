@@ -14,7 +14,9 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 use pocketmine\network\mcpe\protocol\types\GameRule;
 
 class GameRulesChangedPacket extends DataPacket implements ClientboundPacket{
@@ -37,12 +39,12 @@ class GameRulesChangedPacket extends DataPacket implements ClientboundPacket{
 		return $result;
 	}
 
-	protected function decodePayload(PacketSerializer $in) : void{
-		$this->gameRules = $in->getGameRules();
+	protected function decodePayload(ByteBufferReader $in) : void{
+		$this->gameRules = CommonTypes::getGameRules($in);
 	}
 
-	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putGameRules($this->gameRules);
+	protected function encodePayload(ByteBufferWriter $out) : void{
+		CommonTypes::putGameRules($out, $this->gameRules);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

@@ -14,7 +14,7 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol\types\recipe;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\ByteBufferWriter;
 
 /**
  * Describes what items are accepted in a recipe input.
@@ -22,5 +22,5 @@ use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 interface ItemDescriptor{
 	public function getTypeId() : int;
 
-	public function write(PacketSerializer $out) : void;
+	public function write(ByteBufferWriter $out) : void;
 }

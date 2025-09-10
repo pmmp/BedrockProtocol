@@ -14,7 +14,9 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol\types\camera;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\LE;
 
 final class CameraSetInstructionRotation{
 
@@ -27,14 +29,14 @@ final class CameraSetInstructionRotation{
 
 	public function getYaw() : float{ return $this->yaw; }
 
-	public static function read(PacketSerializer $in) : self{
-		$pitch = $in->getLFloat();
-		$yaw = $in->getLFloat();
+	public static function read(ByteBufferReader $in) : self{
+		$pitch = LE::readFloat($in);
+		$yaw = LE::readFloat($in);
 		return new self($pitch, $yaw);
 	}
 
-	public function write(PacketSerializer $out) : void{
-		$out->putLFloat($this->pitch);
-		$out->putLFloat($this->yaw);
+	public function write(ByteBufferWriter $out) : void{
+		LE::writeFloat($out, $this->pitch);
+		LE::writeFloat($out, $this->yaw);
 	}
 }

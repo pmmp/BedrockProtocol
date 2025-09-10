@@ -14,7 +14,8 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
 
 interface Packet{
 
@@ -27,9 +28,9 @@ interface Packet{
 	/**
 	 * @throws PacketDecodeException
 	 */
-	public function decode(PacketSerializer $in) : void;
+	public function decode(ByteBufferReader $in) : void;
 
-	public function encode(PacketSerializer $out) : void;
+	public function encode(ByteBufferWriter $out) : void;
 
 	/**
 	 * Performs handling for this packet. Usually you'll want an appropriately named method in the session handler for

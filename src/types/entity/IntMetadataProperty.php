@@ -14,7 +14,9 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol\types\entity;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\VarInt;
 use pocketmine\network\mcpe\protocol\types\GetTypeIdFromConstTrait;
 
 final class IntMetadataProperty implements MetadataProperty{
@@ -31,11 +33,11 @@ final class IntMetadataProperty implements MetadataProperty{
 		return 0x7fffffff;
 	}
 
-	public static function read(PacketSerializer $in) : self{
-		return new self($in->getVarInt());
+	public static function read(ByteBufferReader $in) : self{
+		return new self(VarInt::readSignedInt($in));
 	}
 
-	public function write(PacketSerializer $out) : void{
-		$out->putVarInt($this->value);
+	public function write(ByteBufferWriter $out) : void{
+		VarInt::writeSignedInt($out, $this->value);
 	}
 }

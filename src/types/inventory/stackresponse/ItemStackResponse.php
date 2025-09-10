@@ -14,7 +14,11 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol\types\inventory\stackresponse;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\Byte;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\VarInt;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 use function count;
 
 final class ItemStackResponse{
@@ -44,23 +48,23 @@ final class ItemStackResponse{
 	/** @return ItemStackResponseContainerInfo[] */
 	public function getContainerInfos() : array{ return $this->containerInfos; }
 
-	public static function read(PacketSerializer $in) : self{
-		$result = $in->getByte();
-		$requestId = $in->readItemStackRequestId();
+	public static function read(ByteBufferReader $in) : self{
+		$result = Byte::readUnsigned($in);
+		$requestId = CommonTypes::readItemStackRequestId($in);
 		$containerInfos = [];
 		if($result === self::RESULT_OK){
-			for($i = 0, $len = $in->getUnsignedVarInt(); $i < $len; ++$i){
+			for($i = 0, $len = VarInt::readUnsignedInt($in); $i < $len; ++$i){
 				$containerInfos[] = ItemStackResponseContainerInfo::read($in);
 			}
 		}
 		return new self($result, $requestId, $containerInfos);
 	}
 
-	public function write(PacketSerializer $out) : void{
-		$out->putByte($this->result);
-		$out->writeItemStackRequestId($this->requestId);
+	public function write(ByteBufferWriter $out) : void{
+		Byte::writeUnsigned($out, $this->result);
+		CommonTypes::writeItemStackRequestId($out, $this->requestId);
 		if($this->result === self::RESULT_OK){
-			$out->putUnsignedVarInt(count($this->containerInfos));
+			VarInt::writeUnsignedInt($out, count($this->containerInfos));
 			foreach($this->containerInfos as $containerInfo){
 				$containerInfo->write($out);
 			}

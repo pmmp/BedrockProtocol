@@ -14,7 +14,9 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol\types;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\VarInt;
 
 final class ChunkPosition{
 
@@ -27,15 +29,15 @@ final class ChunkPosition{
 
 	public function getZ() : int{ return $this->z; }
 
-	public static function read(PacketSerializer $in) : self{
-		$x = $in->getVarInt();
-		$z = $in->getVarInt();
+	public static function read(ByteBufferReader $in) : self{
+		$x = VarInt::readSignedInt($in);
+		$z = VarInt::readSignedInt($in);
 
 		return new self($x, $z);
 	}
 
-	public function write(PacketSerializer $out) : void{
-		$out->putVarInt($this->x);
-		$out->putVarInt($this->z);
+	public function write(ByteBufferWriter $out) : void{
+		VarInt::writeSignedInt($out, $this->x);
+		VarInt::writeSignedInt($out, $this->z);
 	}
 }

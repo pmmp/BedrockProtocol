@@ -14,7 +14,10 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol\types;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\VarInt;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 
 final class PlayerMovementSettings{
 	public function __construct(
@@ -26,14 +29,14 @@ final class PlayerMovementSettings{
 
 	public function isServerAuthoritativeBlockBreaking() : bool{ return $this->serverAuthoritativeBlockBreaking; }
 
-	public static function read(PacketSerializer $in) : self{
-		$rewindHistorySize = $in->getVarInt();
-		$serverAuthBlockBreaking = $in->getBool();
+	public static function read(ByteBufferReader $in) : self{
+		$rewindHistorySize = VarInt::readSignedInt($in);
+		$serverAuthBlockBreaking = CommonTypes::getBool($in);
 		return new self($rewindHistorySize, $serverAuthBlockBreaking);
 	}
 
-	public function write(PacketSerializer $out) : void{
-		$out->putVarInt($this->rewindHistorySize);
-		$out->putBool($this->serverAuthoritativeBlockBreaking);
+	public function write(ByteBufferWriter $out) : void{
+		VarInt::writeSignedInt($out, $this->rewindHistorySize);
+		CommonTypes::putBool($out, $this->serverAuthoritativeBlockBreaking);
 	}
 }

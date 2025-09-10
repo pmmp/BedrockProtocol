@@ -14,7 +14,11 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\Byte;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\VarInt;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 use pocketmine\network\mcpe\protocol\types\ScoreboardIdentityPacketEntry;
 use function count;
 
@@ -39,26 +43,26 @@ class SetScoreboardIdentityPacket extends DataPacket implements ClientboundPacke
 		return $result;
 	}
 
-	protected function decodePayload(PacketSerializer $in) : void{
-		$this->type = $in->getByte();
-		for($i = 0, $count = $in->getUnsignedVarInt(); $i < $count; ++$i){
+	protected function decodePayload(ByteBufferReader $in) : void{
+		$this->type = Byte::readUnsigned($in);
+		for($i = 0, $count = VarInt::readUnsignedInt($in); $i < $count; ++$i){
 			$entry = new ScoreboardIdentityPacketEntry();
-			$entry->scoreboardId = $in->getVarLong();
+			$entry->scoreboardId = VarInt::readSignedLong($in);
 			if($this->type === self::TYPE_REGISTER_IDENTITY){
-				$entry->actorUniqueId = $in->getActorUniqueId();
+				$entry->actorUniqueId = CommonTypes::getActorUniqueId($in);
 			}
 
 			$this->entries[] = $entry;
 		}
 	}
 
-	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putByte($this->type);
-		$out->putUnsignedVarInt(count($this->entries));
+	protected function encodePayload(ByteBufferWriter $out) : void{
+		Byte::writeUnsigned($out, $this->type);
+		VarInt::writeUnsignedInt($out, count($this->entries));
 		foreach($this->entries as $entry){
-			$out->putVarLong($entry->scoreboardId);
+			VarInt::writeSignedLong($out, $entry->scoreboardId);
 			if($this->type === self::TYPE_REGISTER_IDENTITY){
-				$out->putActorUniqueId($entry->actorUniqueId);
+				CommonTypes::putActorUniqueId($out, $entry->actorUniqueId);
 			}
 		}
 	}

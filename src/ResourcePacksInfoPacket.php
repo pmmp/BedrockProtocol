@@ -14,7 +14,10 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\LE;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 use pocketmine\network\mcpe\protocol\types\resourcepacks\ResourcePackInfoEntry;
 use Ramsey\Uuid\UuidInterface;
 use function count;
@@ -61,28 +64,28 @@ class ResourcePacksInfoPacket extends DataPacket implements ClientboundPacket{
 
 	public function isForceDisablingVibrantVisuals() : bool{ return $this->forceDisableVibrantVisuals; }
 
-	protected function decodePayload(PacketSerializer $in) : void{
-		$this->mustAccept = $in->getBool();
-		$this->hasAddons = $in->getBool();
-		$this->hasScripts = $in->getBool();
-		$this->forceDisableVibrantVisuals = $in->getBool();
-		$this->worldTemplateId = $in->getUUID();
-		$this->worldTemplateVersion = $in->getString();
+	protected function decodePayload(ByteBufferReader $in) : void{
+		$this->mustAccept = CommonTypes::getBool($in);
+		$this->hasAddons = CommonTypes::getBool($in);
+		$this->hasScripts = CommonTypes::getBool($in);
+		$this->forceDisableVibrantVisuals = CommonTypes::getBool($in);
+		$this->worldTemplateId = CommonTypes::getUUID($in);
+		$this->worldTemplateVersion = CommonTypes::getString($in);
 
-		$resourcePackCount = $in->getLShort();
+		$resourcePackCount = LE::readUnsignedShort($in);
 		while($resourcePackCount-- > 0){
 			$this->resourcePackEntries[] = ResourcePackInfoEntry::read($in);
 		}
 	}
 
-	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putBool($this->mustAccept);
-		$out->putBool($this->hasAddons);
-		$out->putBool($this->hasScripts);
-		$out->putBool($this->forceDisableVibrantVisuals);
-		$out->putUUID($this->worldTemplateId);
-		$out->putString($this->worldTemplateVersion);
-		$out->putLShort(count($this->resourcePackEntries));
+	protected function encodePayload(ByteBufferWriter $out) : void{
+		CommonTypes::putBool($out, $this->mustAccept);
+		CommonTypes::putBool($out, $this->hasAddons);
+		CommonTypes::putBool($out, $this->hasScripts);
+		CommonTypes::putBool($out, $this->forceDisableVibrantVisuals);
+		CommonTypes::putUUID($out, $this->worldTemplateId);
+		CommonTypes::putString($out, $this->worldTemplateVersion);
+		LE::writeUnsignedShort($out, count($this->resourcePackEntries));
 		foreach($this->resourcePackEntries as $entry){
 			$entry->write($out);
 		}

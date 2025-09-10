@@ -14,7 +14,11 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol\types\inventory\stackresponse;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\Byte;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\VarInt;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 
 final class ItemStackResponseSlotInfo{
 	public function __construct(
@@ -41,24 +45,24 @@ final class ItemStackResponseSlotInfo{
 
 	public function getDurabilityCorrection() : int{ return $this->durabilityCorrection; }
 
-	public static function read(PacketSerializer $in) : self{
-		$slot = $in->getByte();
-		$hotbarSlot = $in->getByte();
-		$count = $in->getByte();
-		$itemStackId = $in->readServerItemStackId();
-		$customName = $in->getString();
-		$filteredCustomName = $in->getString();
-		$durabilityCorrection = $in->getVarInt();
+	public static function read(ByteBufferReader $in) : self{
+		$slot = Byte::readUnsigned($in);
+		$hotbarSlot = Byte::readUnsigned($in);
+		$count = Byte::readUnsigned($in);
+		$itemStackId = CommonTypes::readServerItemStackId($in);
+		$customName = CommonTypes::getString($in);
+		$filteredCustomName = CommonTypes::getString($in);
+		$durabilityCorrection = VarInt::readSignedInt($in);
 		return new self($slot, $hotbarSlot, $count, $itemStackId, $customName, $filteredCustomName, $durabilityCorrection);
 	}
 
-	public function write(PacketSerializer $out) : void{
-		$out->putByte($this->slot);
-		$out->putByte($this->hotbarSlot);
-		$out->putByte($this->count);
-		$out->writeServerItemStackId($this->itemStackId);
-		$out->putString($this->customName);
-		$out->putString($this->filteredCustomName);
-		$out->putVarInt($this->durabilityCorrection);
+	public function write(ByteBufferWriter $out) : void{
+		Byte::writeUnsigned($out, $this->slot);
+		Byte::writeUnsigned($out, $this->hotbarSlot);
+		Byte::writeUnsigned($out, $this->count);
+		CommonTypes::writeServerItemStackId($out, $this->itemStackId);
+		CommonTypes::putString($out, $this->customName);
+		CommonTypes::putString($out, $this->filteredCustomName);
+		VarInt::writeSignedInt($out, $this->durabilityCorrection);
 	}
 }

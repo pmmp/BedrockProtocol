@@ -14,7 +14,9 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol\types;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 
 final class BoolGameRule extends GameRule{
 	use GetTypeIdFromConstTrait;
@@ -32,11 +34,11 @@ final class BoolGameRule extends GameRule{
 		return $this->value;
 	}
 
-	public function encode(PacketSerializer $out) : void{
-		$out->putBool($this->value);
+	public function encode(ByteBufferWriter $out) : void{
+		CommonTypes::putBool($out, $this->value);
 	}
 
-	public static function decode(PacketSerializer $in, bool $isPlayerModifiable) : self{
-		return new self($in->getBool(), $isPlayerModifiable);
+	public static function decode(ByteBufferReader $in, bool $isPlayerModifiable) : self{
+		return new self(CommonTypes::getBool($in), $isPlayerModifiable);
 	}
 }

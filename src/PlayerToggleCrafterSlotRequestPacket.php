@@ -14,7 +14,11 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\Byte;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\LE;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 use pocketmine\network\mcpe\protocol\types\BlockPosition;
 
 class PlayerToggleCrafterSlotRequestPacket extends DataPacket implements ServerboundPacket{
@@ -41,21 +45,21 @@ class PlayerToggleCrafterSlotRequestPacket extends DataPacket implements Serverb
 
 	public function isDisabled() : bool{ return $this->disabled; }
 
-	protected function decodePayload(PacketSerializer $in) : void{
-		$x = $in->getLInt();
-		$y = $in->getLInt();
-		$z = $in->getLInt();
+	protected function decodePayload(ByteBufferReader $in) : void{
+		$x = /* TODO: check if this should be unsigned */ LE::readSignedInt($in);
+		$y = /* TODO: check if this should be unsigned */ LE::readSignedInt($in);
+		$z = /* TODO: check if this should be unsigned */ LE::readSignedInt($in);
 		$this->position = new BlockPosition($x, $y, $z);
-		$this->slot = $in->getByte();
-		$this->disabled = $in->getBool();
+		$this->slot = Byte::readUnsigned($in);
+		$this->disabled = CommonTypes::getBool($in);
 	}
 
-	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putLInt($this->position->getX());
-		$out->putLInt($this->position->getY());
-		$out->putLInt($this->position->getZ());
-		$out->putByte($this->slot);
-		$out->putBool($this->disabled);
+	protected function encodePayload(ByteBufferWriter $out) : void{
+		/* TODO: check if this should be unsigned */ LE::writeSignedInt($out, $this->position->getX());
+		/* TODO: check if this should be unsigned */ LE::writeSignedInt($out, $this->position->getY());
+		/* TODO: check if this should be unsigned */ LE::writeSignedInt($out, $this->position->getZ());
+		Byte::writeUnsigned($out, $this->slot);
+		CommonTypes::putBool($out, $this->disabled);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

@@ -14,7 +14,10 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\LE;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 use pocketmine\network\mcpe\protocol\types\BlockPosition;
 
 class PlaySoundPacket extends DataPacket implements ClientboundPacket{
@@ -41,21 +44,21 @@ class PlaySoundPacket extends DataPacket implements ClientboundPacket{
 		return $result;
 	}
 
-	protected function decodePayload(PacketSerializer $in) : void{
-		$this->soundName = $in->getString();
-		$blockPosition = $in->getBlockPosition();
+	protected function decodePayload(ByteBufferReader $in) : void{
+		$this->soundName = CommonTypes::getString($in);
+		$blockPosition = CommonTypes::getBlockPosition($in);
 		$this->x = $blockPosition->getX() / 8;
 		$this->y = $blockPosition->getY() / 8;
 		$this->z = $blockPosition->getZ() / 8;
-		$this->volume = $in->getLFloat();
-		$this->pitch = $in->getLFloat();
+		$this->volume = LE::readFloat($in);
+		$this->pitch = LE::readFloat($in);
 	}
 
-	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putString($this->soundName);
-		$out->putBlockPosition(new BlockPosition((int) ($this->x * 8), (int) ($this->y * 8), (int) ($this->z * 8)));
-		$out->putLFloat($this->volume);
-		$out->putLFloat($this->pitch);
+	protected function encodePayload(ByteBufferWriter $out) : void{
+		CommonTypes::putString($out, $this->soundName);
+		CommonTypes::putBlockPosition($out, new BlockPosition((int) ($this->x * 8), (int) ($this->y * 8), (int) ($this->z * 8)));
+		LE::writeFloat($out, $this->volume);
+		LE::writeFloat($out, $this->pitch);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

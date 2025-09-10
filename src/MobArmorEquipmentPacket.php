@@ -14,7 +14,9 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 use pocketmine\network\mcpe\protocol\types\inventory\ItemStackWrapper;
 
 class MobArmorEquipmentPacket extends DataPacket implements ClientboundPacket, ServerboundPacket{
@@ -43,22 +45,22 @@ class MobArmorEquipmentPacket extends DataPacket implements ClientboundPacket, S
 		return $result;
 	}
 
-	protected function decodePayload(PacketSerializer $in) : void{
-		$this->actorRuntimeId = $in->getActorRuntimeId();
-		$this->head = $in->getItemStackWrapper();
-		$this->chest = $in->getItemStackWrapper();
-		$this->legs = $in->getItemStackWrapper();
-		$this->feet = $in->getItemStackWrapper();
-		$this->body = $in->getItemStackWrapper();
+	protected function decodePayload(ByteBufferReader $in) : void{
+		$this->actorRuntimeId = CommonTypes::getActorRuntimeId($in);
+		$this->head = CommonTypes::getItemStackWrapper($in);
+		$this->chest = CommonTypes::getItemStackWrapper($in);
+		$this->legs = CommonTypes::getItemStackWrapper($in);
+		$this->feet = CommonTypes::getItemStackWrapper($in);
+		$this->body = CommonTypes::getItemStackWrapper($in);
 	}
 
-	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putActorRuntimeId($this->actorRuntimeId);
-		$out->putItemStackWrapper($this->head);
-		$out->putItemStackWrapper($this->chest);
-		$out->putItemStackWrapper($this->legs);
-		$out->putItemStackWrapper($this->feet);
-		$out->putItemStackWrapper($this->body);
+	protected function encodePayload(ByteBufferWriter $out) : void{
+		CommonTypes::putActorRuntimeId($out, $this->actorRuntimeId);
+		CommonTypes::putItemStackWrapper($out, $this->head);
+		CommonTypes::putItemStackWrapper($out, $this->chest);
+		CommonTypes::putItemStackWrapper($out, $this->legs);
+		CommonTypes::putItemStackWrapper($out, $this->feet);
+		CommonTypes::putItemStackWrapper($out, $this->body);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

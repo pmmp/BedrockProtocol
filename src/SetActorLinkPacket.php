@@ -14,7 +14,9 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 use pocketmine\network\mcpe\protocol\types\entity\EntityLink;
 
 class SetActorLinkPacket extends DataPacket implements ClientboundPacket, ServerboundPacket{
@@ -31,12 +33,12 @@ class SetActorLinkPacket extends DataPacket implements ClientboundPacket, Server
 		return $result;
 	}
 
-	protected function decodePayload(PacketSerializer $in) : void{
-		$this->link = $in->getEntityLink();
+	protected function decodePayload(ByteBufferReader $in) : void{
+		$this->link = CommonTypes::getEntityLink($in);
 	}
 
-	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putEntityLink($this->link);
+	protected function encodePayload(ByteBufferWriter $out) : void{
+		CommonTypes::putEntityLink($out, $this->link);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

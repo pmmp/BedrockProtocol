@@ -14,7 +14,10 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol\types;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\Byte;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\LE;
 use function count;
 
 final class AbilitiesData{
@@ -41,25 +44,25 @@ final class AbilitiesData{
 	 */
 	public function getAbilityLayers() : array{ return $this->abilityLayers; }
 
-	public static function decode(PacketSerializer $in) : self{
-		$targetActorUniqueId = $in->getLLong(); //WHY IS THIS NON-STANDARD?
-		$playerPermission = $in->getByte();
-		$commandPermission = $in->getByte();
+	public static function decode(ByteBufferReader $in) : self{
+		$targetActorUniqueId = LE::readSignedLong($in); //WHY IS THIS NON-STANDARD?
+		$playerPermission = Byte::readUnsigned($in);
+		$commandPermission = Byte::readUnsigned($in);
 
 		$abilityLayers = [];
-		for($i = 0, $len = $in->getByte(); $i < $len; $i++){
+		for($i = 0, $len = Byte::readUnsigned($in); $i < $len; $i++){
 			$abilityLayers[] = AbilitiesLayer::decode($in);
 		}
 
 		return new self($commandPermission, $playerPermission, $targetActorUniqueId, $abilityLayers);
 	}
 
-	public function encode(PacketSerializer $out) : void{
-		$out->putLLong($this->targetActorUniqueId);
-		$out->putByte($this->playerPermission);
-		$out->putByte($this->commandPermission);
+	public function encode(ByteBufferWriter $out) : void{
+		LE::writeSignedLong($out, $this->targetActorUniqueId);
+		Byte::writeUnsigned($out, $this->playerPermission);
+		Byte::writeUnsigned($out, $this->commandPermission);
 
-		$out->putByte(count($this->abilityLayers));
+		Byte::writeUnsigned($out, count($this->abilityLayers));
 		foreach($this->abilityLayers as $abilityLayer){
 			$abilityLayer->encode($out);
 		}

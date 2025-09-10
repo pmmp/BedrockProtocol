@@ -14,7 +14,9 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol\types\entity;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\LE;
 use pocketmine\network\mcpe\protocol\types\GetTypeIdFromConstTrait;
 
 final class FloatMetadataProperty implements MetadataProperty{
@@ -34,11 +36,11 @@ final class FloatMetadataProperty implements MetadataProperty{
 		return $other instanceof self and $other->value === $this->value;
 	}
 
-	public static function read(PacketSerializer $in) : self{
-		return new self($in->getLFloat());
+	public static function read(ByteBufferReader $in) : self{
+		return new self(LE::readFloat($in));
 	}
 
-	public function write(PacketSerializer $out) : void{
-		$out->putLFloat($this->value);
+	public function write(ByteBufferWriter $out) : void{
+		LE::writeFloat($out, $this->value);
 	}
 }

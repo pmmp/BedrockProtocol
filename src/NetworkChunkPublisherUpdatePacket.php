@@ -14,7 +14,11 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\LE;
+use pmmp\encoding\VarInt;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 use pocketmine\network\mcpe\protocol\types\BlockPosition;
 use pocketmine\network\mcpe\protocol\types\ChunkPosition;
 use function count;
@@ -41,11 +45,11 @@ class NetworkChunkPublisherUpdatePacket extends DataPacket implements Clientboun
 		return $result;
 	}
 
-	protected function decodePayload(PacketSerializer $in) : void{
-		$this->blockPosition = $in->getSignedBlockPosition();
-		$this->radius = $in->getUnsignedVarInt();
+	protected function decodePayload(ByteBufferReader $in) : void{
+		$this->blockPosition = CommonTypes::getSignedBlockPosition($in);
+		$this->radius = VarInt::readUnsignedInt($in);
 
-		$count = $in->getLInt();
+		$count = LE::readUnsignedInt($in);
 		if($count > self::MAX_SAVED_CHUNKS){
 			throw new PacketDecodeException("Expected at most " . self::MAX_SAVED_CHUNKS . " saved chunks, got " . $count);
 		}
@@ -54,11 +58,11 @@ class NetworkChunkPublisherUpdatePacket extends DataPacket implements Clientboun
 		}
 	}
 
-	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putSignedBlockPosition($this->blockPosition);
-		$out->putUnsignedVarInt($this->radius);
+	protected function encodePayload(ByteBufferWriter $out) : void{
+		CommonTypes::putSignedBlockPosition($out, $this->blockPosition);
+		VarInt::writeUnsignedInt($out, $this->radius);
 
-		$out->putLInt(count($this->savedChunks));
+		LE::writeUnsignedInt($out, count($this->savedChunks));
 		foreach($this->savedChunks as $chunk){
 			$chunk->write($out);
 		}

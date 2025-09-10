@@ -14,7 +14,9 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol\types;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 
 final class NetworkPermissions{
 	public function __construct(
@@ -25,12 +27,12 @@ final class NetworkPermissions{
 		return $this->disableClientSounds;
 	}
 
-	public static function decode(PacketSerializer $in) : self{
-		$disableClientSounds = $in->getBool();
+	public static function decode(ByteBufferReader $in) : self{
+		$disableClientSounds = CommonTypes::getBool($in);
 		return new self($disableClientSounds);
 	}
 
-	public function encode(PacketSerializer $out) : void{
-		$out->putBool($this->disableClientSounds);
+	public function encode(ByteBufferWriter $out) : void{
+		CommonTypes::putBool($out, $this->disableClientSounds);
 	}
 }

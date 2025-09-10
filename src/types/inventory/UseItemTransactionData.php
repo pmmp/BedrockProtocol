@@ -14,9 +14,12 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol\types\inventory;
 
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\VarInt;
 use pocketmine\math\Vector3;
 use pocketmine\network\mcpe\protocol\InventoryTransactionPacket;
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 use pocketmine\network\mcpe\protocol\types\BlockPosition;
 use pocketmine\network\mcpe\protocol\types\GetTypeIdFromConstTrait;
 
@@ -76,30 +79,30 @@ class UseItemTransactionData extends TransactionData{
 
 	public function getClientInteractPrediction() : PredictedResult{ return $this->clientInteractPrediction; }
 
-	protected function decodeData(PacketSerializer $stream) : void{
-		$this->actionType = $stream->getUnsignedVarInt();
-		$this->triggerType = TriggerType::fromPacket($stream->getUnsignedVarInt());
-		$this->blockPosition = $stream->getBlockPosition();
-		$this->face = $stream->getVarInt();
-		$this->hotbarSlot = $stream->getVarInt();
-		$this->itemInHand = $stream->getItemStackWrapper();
-		$this->playerPosition = $stream->getVector3();
-		$this->clickPosition = $stream->getVector3();
-		$this->blockRuntimeId = $stream->getUnsignedVarInt();
-		$this->clientInteractPrediction = PredictedResult::fromPacket($stream->getUnsignedVarInt());
+	protected function decodeData(ByteBufferReader $in) : void{
+		$this->actionType = VarInt::readUnsignedInt($in);
+		$this->triggerType = TriggerType::fromPacket(VarInt::readUnsignedInt($in));
+		$this->blockPosition = CommonTypes::getBlockPosition($in);
+		$this->face = VarInt::readSignedInt($in);
+		$this->hotbarSlot = VarInt::readSignedInt($in);
+		$this->itemInHand = CommonTypes::getItemStackWrapper($in);
+		$this->playerPosition = CommonTypes::getVector3($in);
+		$this->clickPosition = CommonTypes::getVector3($in);
+		$this->blockRuntimeId = VarInt::readUnsignedInt($in);
+		$this->clientInteractPrediction = PredictedResult::fromPacket(VarInt::readUnsignedInt($in));
 	}
 
-	protected function encodeData(PacketSerializer $stream) : void{
-		$stream->putUnsignedVarInt($this->actionType);
-		$stream->putUnsignedVarInt($this->triggerType->value);
-		$stream->putBlockPosition($this->blockPosition);
-		$stream->putVarInt($this->face);
-		$stream->putVarInt($this->hotbarSlot);
-		$stream->putItemStackWrapper($this->itemInHand);
-		$stream->putVector3($this->playerPosition);
-		$stream->putVector3($this->clickPosition);
-		$stream->putUnsignedVarInt($this->blockRuntimeId);
-		$stream->putUnsignedVarInt($this->clientInteractPrediction->value);
+	protected function encodeData(ByteBufferWriter $out) : void{
+		VarInt::writeUnsignedInt($out, $this->actionType);
+		VarInt::writeUnsignedInt($out, $this->triggerType->value);
+		CommonTypes::putBlockPosition($out, $this->blockPosition);
+		VarInt::writeSignedInt($out, $this->face);
+		VarInt::writeSignedInt($out, $this->hotbarSlot);
+		CommonTypes::putItemStackWrapper($out, $this->itemInHand);
+		CommonTypes::putVector3($out, $this->playerPosition);
+		CommonTypes::putVector3($out, $this->clickPosition);
+		VarInt::writeUnsignedInt($out, $this->blockRuntimeId);
+		VarInt::writeUnsignedInt($out, $this->clientInteractPrediction->value);
 	}
 
 	/**

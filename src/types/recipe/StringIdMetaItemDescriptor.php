@@ -14,7 +14,10 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol\types\recipe;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\LE;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 use pocketmine\network\mcpe\protocol\types\GetTypeIdFromConstTrait;
 
 final class StringIdMetaItemDescriptor implements ItemDescriptor{
@@ -35,15 +38,15 @@ final class StringIdMetaItemDescriptor implements ItemDescriptor{
 
 	public function getMeta() : int{ return $this->meta; }
 
-	public static function read(PacketSerializer $in) : self{
-		$stringId = $in->getString();
-		$meta = $in->getLShort();
+	public static function read(ByteBufferReader $in) : self{
+		$stringId = CommonTypes::getString($in);
+		$meta = LE::readUnsignedShort($in);
 
 		return new self($stringId, $meta);
 	}
 
-	public function write(PacketSerializer $out) : void{
-		$out->putString($this->id);
-		$out->putLShort($this->meta);
+	public function write(ByteBufferWriter $out) : void{
+		CommonTypes::putString($out, $this->id);
+		LE::writeUnsignedShort($out, $this->meta);
 	}
 }

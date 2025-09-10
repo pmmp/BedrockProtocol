@@ -14,7 +14,9 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol\types;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\Byte;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
 use pocketmine\utils\Binary;
 use pocketmine\utils\Limits;
 
@@ -42,17 +44,17 @@ final class SubChunkPositionOffset{
 
 	public function getZOffset() : int{ return $this->zOffset; }
 
-	public static function read(PacketSerializer $in) : self{
-		$xOffset = Binary::signByte($in->getByte());
-		$yOffset = Binary::signByte($in->getByte());
-		$zOffset = Binary::signByte($in->getByte());
+	public static function read(ByteBufferReader $in) : self{
+		$xOffset = Binary::signByte(Byte::readUnsigned($in));
+		$yOffset = Binary::signByte(Byte::readUnsigned($in));
+		$zOffset = Binary::signByte(Byte::readUnsigned($in));
 
 		return new self($xOffset, $yOffset, $zOffset);
 	}
 
-	public function write(PacketSerializer $out) : void{
-		$out->putByte($this->xOffset);
-		$out->putByte($this->yOffset);
-		$out->putByte($this->zOffset);
+	public function write(ByteBufferWriter $out) : void{
+		Byte::writeUnsigned($out, $this->xOffset);
+		Byte::writeUnsigned($out, $this->yOffset);
+		Byte::writeUnsigned($out, $this->zOffset);
 	}
 }

@@ -14,8 +14,11 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol\types\recipe;
 
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\VarInt;
 use pocketmine\network\mcpe\protocol\CraftingDataPacket;
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 use pocketmine\network\mcpe\protocol\types\inventory\ItemStack;
 
 final class FurnaceRecipe extends RecipeWithTypeId{
@@ -45,24 +48,24 @@ final class FurnaceRecipe extends RecipeWithTypeId{
 		return $this->blockName;
 	}
 
-	public static function decode(int $typeId, PacketSerializer $in) : self{
-		$inputId = $in->getVarInt();
+	public static function decode(int $typeId, ByteBufferReader $in) : self{
+		$inputId = VarInt::readSignedInt($in);
 		$inputData = null;
 		if($typeId === CraftingDataPacket::ENTRY_FURNACE_DATA){
-			$inputData = $in->getVarInt();
+			$inputData = VarInt::readSignedInt($in);
 		}
-		$output = $in->getItemStackWithoutStackId();
-		$block = $in->getString();
+		$output = CommonTypes::getItemStackWithoutStackId($in);
+		$block = CommonTypes::getString($in);
 
 		return new self($typeId, $inputId, $inputData, $output, $block);
 	}
 
-	public function encode(PacketSerializer $out) : void{
-		$out->putVarInt($this->inputId);
+	public function encode(ByteBufferWriter $out) : void{
+		VarInt::writeSignedInt($out, $this->inputId);
 		if($this->getTypeId() === CraftingDataPacket::ENTRY_FURNACE_DATA){
-			$out->putVarInt($this->inputMeta);
+			VarInt::writeSignedInt($out, $this->inputMeta);
 		}
-		$out->putItemStackWithoutStackId($this->result);
-		$out->putString($this->blockName);
+		CommonTypes::putItemStackWithoutStackId($out, $this->result);
+		CommonTypes::putString($out, $this->blockName);
 	}
 }

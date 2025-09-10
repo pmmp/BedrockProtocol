@@ -14,7 +14,9 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\Byte;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
 
 class SimulationTypePacket extends DataPacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::SIMULATION_TYPE_PACKET;
@@ -36,12 +38,12 @@ class SimulationTypePacket extends DataPacket implements ClientboundPacket{
 
 	public function getType() : int{ return $this->type; }
 
-	protected function decodePayload(PacketSerializer $in) : void{
-		$this->type = $in->getByte();
+	protected function decodePayload(ByteBufferReader $in) : void{
+		$this->type = Byte::readUnsigned($in);
 	}
 
-	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putByte($this->type);
+	protected function encodePayload(ByteBufferWriter $out) : void{
+		Byte::writeUnsigned($out, $this->type);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

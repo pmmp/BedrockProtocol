@@ -14,7 +14,10 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol\types\biome\chunkgen;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\LE;
+use pmmp\encoding\VarInt;
 
 final class BiomeElementData{
 
@@ -45,14 +48,14 @@ final class BiomeElementData{
 
 	public function getSurfaceMaterial() : BiomeSurfaceMaterialData{ return $this->surfaceMaterial; }
 
-	public static function read(PacketSerializer $in) : self{
-		$noiseFrequencyScale = $in->getLFloat();
-		$noiseLowerBound = $in->getLFloat();
-		$noiseUpperBound = $in->getLFloat();
-		$heightMinType = $in->getVarInt();
-		$heightMin = $in->getLShort();
-		$heightMaxType = $in->getVarInt();
-		$heightMax = $in->getLShort();
+	public static function read(ByteBufferReader $in) : self{
+		$noiseFrequencyScale = LE::readFloat($in);
+		$noiseLowerBound = LE::readFloat($in);
+		$noiseUpperBound = LE::readFloat($in);
+		$heightMinType = VarInt::readSignedInt($in);
+		$heightMin = LE::readSignedShort($in);
+		$heightMaxType = VarInt::readSignedInt($in);
+		$heightMax = LE::readSignedShort($in);
 		$surfaceMaterial = BiomeSurfaceMaterialData::read($in);
 
 		return new self(
@@ -67,14 +70,14 @@ final class BiomeElementData{
 		);
 	}
 
-	public function write(PacketSerializer $out) : void{
-		$out->putLFloat($this->noiseFrequencyScale);
-		$out->putLFloat($this->noiseLowerBound);
-		$out->putLFloat($this->noiseUpperBound);
-		$out->putVarInt($this->heightMinType);
-		$out->putLShort($this->heightMin);
-		$out->putVarInt($this->heightMaxType);
-		$out->putLShort($this->heightMax);
+	public function write(ByteBufferWriter $out) : void{
+		LE::writeFloat($out, $this->noiseFrequencyScale);
+		LE::writeFloat($out, $this->noiseLowerBound);
+		LE::writeFloat($out, $this->noiseUpperBound);
+		VarInt::writeSignedInt($out, $this->heightMinType);
+		LE::writeSignedShort($out, $this->heightMin);
+		VarInt::writeSignedInt($out, $this->heightMaxType);
+		LE::writeSignedShort($out, $this->heightMax);
 		$this->surfaceMaterial->write($out);
 	}
 }

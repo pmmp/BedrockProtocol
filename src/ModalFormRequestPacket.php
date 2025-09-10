@@ -14,7 +14,10 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\VarInt;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 
 class ModalFormRequestPacket extends DataPacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::MODAL_FORM_REQUEST_PACKET;
@@ -32,14 +35,14 @@ class ModalFormRequestPacket extends DataPacket implements ClientboundPacket{
 		return $result;
 	}
 
-	protected function decodePayload(PacketSerializer $in) : void{
-		$this->formId = $in->getUnsignedVarInt();
-		$this->formData = $in->getString();
+	protected function decodePayload(ByteBufferReader $in) : void{
+		$this->formId = VarInt::readUnsignedInt($in);
+		$this->formData = CommonTypes::getString($in);
 	}
 
-	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putUnsignedVarInt($this->formId);
-		$out->putString($this->formData);
+	protected function encodePayload(ByteBufferWriter $out) : void{
+		VarInt::writeUnsignedInt($out, $this->formId);
+		CommonTypes::putString($out, $this->formData);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

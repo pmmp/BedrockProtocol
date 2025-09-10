@@ -14,7 +14,9 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 
 class ScriptMessagePacket extends DataPacket implements ClientboundPacket, ServerboundPacket{
 	public const NETWORK_ID = ProtocolInfo::SCRIPT_MESSAGE_PACKET;
@@ -36,14 +38,14 @@ class ScriptMessagePacket extends DataPacket implements ClientboundPacket, Serve
 
 	public function getValue() : string{ return $this->value; }
 
-	protected function decodePayload(PacketSerializer $in) : void{
-		$this->messageId = $in->getString();
-		$this->value = $in->getString();
+	protected function decodePayload(ByteBufferReader $in) : void{
+		$this->messageId = CommonTypes::getString($in);
+		$this->value = CommonTypes::getString($in);
 	}
 
-	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putString($this->messageId);
-		$out->putString($this->value);
+	protected function encodePayload(ByteBufferWriter $out) : void{
+		CommonTypes::putString($out, $this->messageId);
+		CommonTypes::putString($out, $this->value);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

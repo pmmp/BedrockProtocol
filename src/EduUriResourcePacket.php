@@ -14,7 +14,8 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
 use pocketmine\network\mcpe\protocol\types\EducationUriResource;
 
 class EduUriResourcePacket extends DataPacket implements ClientboundPacket{
@@ -33,11 +34,11 @@ class EduUriResourcePacket extends DataPacket implements ClientboundPacket{
 
 	public function getResource() : EducationUriResource{ return $this->resource; }
 
-	protected function decodePayload(PacketSerializer $in) : void{
+	protected function decodePayload(ByteBufferReader $in) : void{
 		$this->resource = EducationUriResource::read($in);
 	}
 
-	protected function encodePayload(PacketSerializer $out) : void{
+	protected function encodePayload(ByteBufferWriter $out) : void{
 		$this->resource->write($out);
 	}
 

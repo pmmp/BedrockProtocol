@@ -14,7 +14,10 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol\types\biome\chunkgen;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\LE;
+use pmmp\encoding\VarInt;
 
 final class BiomeCoordinateData{
 
@@ -42,14 +45,14 @@ final class BiomeCoordinateData{
 
 	public function getDistribution() : int{ return $this->distribution; }
 
-	public static function read(PacketSerializer $in) : self{
-		$minValueType = $in->getVarInt();
-		$minValue = $in->getLShort();
-		$maxValueType = $in->getVarInt();
-		$maxValue = $in->getLShort();
-		$gridOffset = $in->getLInt();
-		$gridStepSize = $in->getLInt();
-		$distribution = $in->getVarInt();
+	public static function read(ByteBufferReader $in) : self{
+		$minValueType = VarInt::readSignedInt($in);
+		$minValue = LE::readSignedShort($in);
+		$maxValueType = VarInt::readSignedInt($in);
+		$maxValue = LE::readSignedShort($in);
+		$gridOffset = LE::readUnsignedInt($in);
+		$gridStepSize = LE::readUnsignedInt($in);
+		$distribution = VarInt::readSignedInt($in);
 
 		return new self(
 			$minValueType,
@@ -62,7 +65,7 @@ final class BiomeCoordinateData{
 		);
 	}
 
-	public function write(PacketSerializer $out) : void{
+	public function write(ByteBufferWriter $out) : void{
 
 	}
 }

@@ -14,7 +14,11 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\Byte;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\VarInt;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 use function count;
 
 class UpdateSoftEnumPacket extends DataPacket implements ClientboundPacket{
@@ -41,21 +45,21 @@ class UpdateSoftEnumPacket extends DataPacket implements ClientboundPacket{
 		return $result;
 	}
 
-	protected function decodePayload(PacketSerializer $in) : void{
-		$this->enumName = $in->getString();
-		for($i = 0, $count = $in->getUnsignedVarInt(); $i < $count; ++$i){
-			$this->values[] = $in->getString();
+	protected function decodePayload(ByteBufferReader $in) : void{
+		$this->enumName = CommonTypes::getString($in);
+		for($i = 0, $count = VarInt::readUnsignedInt($in); $i < $count; ++$i){
+			$this->values[] = CommonTypes::getString($in);
 		}
-		$this->type = $in->getByte();
+		$this->type = Byte::readUnsigned($in);
 	}
 
-	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putString($this->enumName);
-		$out->putUnsignedVarInt(count($this->values));
+	protected function encodePayload(ByteBufferWriter $out) : void{
+		CommonTypes::putString($out, $this->enumName);
+		VarInt::writeUnsignedInt($out, count($this->values));
 		foreach($this->values as $v){
-			$out->putString($v);
+			CommonTypes::putString($out, $v);
 		}
-		$out->putByte($this->type);
+		Byte::writeUnsigned($out, $this->type);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

@@ -14,7 +14,9 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol\types\biome\chunkgen;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\VarInt;
 use function count;
 
 final class BiomeSurfaceMaterialAdjustmentData{
@@ -31,18 +33,18 @@ final class BiomeSurfaceMaterialAdjustmentData{
 	 */
 	public function getAdjustments() : array{ return $this->adjustments; }
 
-	public static function read(PacketSerializer $in) : self{
+	public static function read(ByteBufferReader $in) : self{
 		$adjustments = [];
 
-		for($i = 0, $count = $in->getUnsignedVarInt(); $i < $count; ++$i){
+		for($i = 0, $count = VarInt::readUnsignedInt($in); $i < $count; ++$i){
 			$adjustments[] = BiomeElementData::read($in);
 		}
 
 		return new self($adjustments);
 	}
 
-	public function write(PacketSerializer $out) : void{
-		$out->putUnsignedVarInt(count($this->adjustments));
+	public function write(ByteBufferWriter $out) : void{
+		VarInt::writeUnsignedInt($out, count($this->adjustments));
 		foreach($this->adjustments as $adjustment){
 			$adjustment->write($out);
 		}

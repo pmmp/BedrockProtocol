@@ -14,7 +14,10 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol\types\recipe;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\VarInt;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 use pocketmine\network\mcpe\protocol\types\inventory\ItemStack;
 use Ramsey\Uuid\UuidInterface;
 use function count;
@@ -104,53 +107,53 @@ final class ShapedRecipe extends RecipeWithTypeId{
 		return $this->recipeNetId;
 	}
 
-	public static function decode(int $recipeType, PacketSerializer $in) : self{
-		$recipeId = $in->getString();
-		$width = $in->getVarInt();
-		$height = $in->getVarInt();
+	public static function decode(int $recipeType, ByteBufferReader $in) : self{
+		$recipeId = CommonTypes::getString($in);
+		$width = VarInt::readSignedInt($in);
+		$height = VarInt::readSignedInt($in);
 		$input = [];
 		for($row = 0; $row < $height; ++$row){
 			for($column = 0; $column < $width; ++$column){
-				$input[$row][$column] = $in->getRecipeIngredient();
+				$input[$row][$column] = CommonTypes::getRecipeIngredient($in);
 			}
 		}
 
 		$output = [];
-		for($k = 0, $resultCount = $in->getUnsignedVarInt(); $k < $resultCount; ++$k){
-			$output[] = $in->getItemStackWithoutStackId();
+		for($k = 0, $resultCount = VarInt::readUnsignedInt($in); $k < $resultCount; ++$k){
+			$output[] = CommonTypes::getItemStackWithoutStackId($in);
 		}
-		$uuid = $in->getUUID();
-		$block = $in->getString();
-		$priority = $in->getVarInt();
-		$symmetric = $in->getBool();
+		$uuid = CommonTypes::getUUID($in);
+		$block = CommonTypes::getString($in);
+		$priority = VarInt::readSignedInt($in);
+		$symmetric = CommonTypes::getBool($in);
 		$unlockingRequirement = RecipeUnlockingRequirement::read($in);
 
-		$recipeNetId = $in->readRecipeNetId();
+		$recipeNetId = CommonTypes::readRecipeNetId($in);
 
 		return new self($recipeType, $recipeId, $input, $output, $uuid, $block, $priority, $symmetric, $unlockingRequirement, $recipeNetId);
 	}
 
-	public function encode(PacketSerializer $out) : void{
-		$out->putString($this->recipeId);
-		$out->putVarInt($this->getWidth());
-		$out->putVarInt($this->getHeight());
+	public function encode(ByteBufferWriter $out) : void{
+		CommonTypes::putString($out, $this->recipeId);
+		VarInt::writeSignedInt($out, $this->getWidth());
+		VarInt::writeSignedInt($out, $this->getHeight());
 		foreach($this->input as $row){
 			foreach($row as $ingredient){
-				$out->putRecipeIngredient($ingredient);
+				CommonTypes::putRecipeIngredient($out, $ingredient);
 			}
 		}
 
-		$out->putUnsignedVarInt(count($this->output));
+		VarInt::writeUnsignedInt($out, count($this->output));
 		foreach($this->output as $item){
-			$out->putItemStackWithoutStackId($item);
+			CommonTypes::putItemStackWithoutStackId($out, $item);
 		}
 
-		$out->putUUID($this->uuid);
-		$out->putString($this->blockName);
-		$out->putVarInt($this->priority);
-		$out->putBool($this->symmetric);
+		CommonTypes::putUUID($out, $this->uuid);
+		CommonTypes::putString($out, $this->blockName);
+		VarInt::writeSignedInt($out, $this->priority);
+		CommonTypes::putBool($out, $this->symmetric);
 		$this->unlockingRequirement->write($out);
 
-		$out->writeRecipeNetId($this->recipeNetId);
+		CommonTypes::writeRecipeNetId($out, $this->recipeNetId);
 	}
 }

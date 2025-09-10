@@ -14,13 +14,13 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol\types\entity;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\ByteBufferWriter;
 
 interface MetadataProperty{
 
 	public function getTypeId() : int;
 
-	public function write(PacketSerializer $out) : void;
+	public function write(ByteBufferWriter $out) : void;
 
 	public function equals(MetadataProperty $other) : bool;
 }

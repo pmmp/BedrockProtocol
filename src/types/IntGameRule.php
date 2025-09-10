@@ -14,7 +14,9 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol\types;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\VarInt;
 
 final class IntGameRule extends GameRule{
 	use GetTypeIdFromConstTrait;
@@ -32,11 +34,11 @@ final class IntGameRule extends GameRule{
 		return $this->value;
 	}
 
-	public function encode(PacketSerializer $out) : void{
-		$out->putUnsignedVarInt($this->value);
+	public function encode(ByteBufferWriter $out) : void{
+		VarInt::writeUnsignedInt($out, $this->value);
 	}
 
-	public static function decode(PacketSerializer $in, bool $isPlayerModifiable) : self{
-		return new self($in->getUnsignedVarInt(), $isPlayerModifiable);
+	public static function decode(ByteBufferReader $in, bool $isPlayerModifiable) : self{
+		return new self(VarInt::readUnsignedInt($in), $isPlayerModifiable);
 	}
 }

@@ -14,7 +14,10 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\VarInt;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 use pocketmine\network\mcpe\protocol\types\inventory\InventoryLayout;
 use pocketmine\network\mcpe\protocol\types\inventory\InventoryLeftTab;
 use pocketmine\network\mcpe\protocol\types\inventory\InventoryRightTab;
@@ -51,20 +54,20 @@ class SetPlayerInventoryOptionsPacket extends DataPacket implements ClientboundP
 
 	public function getCraftingLayout() : InventoryLayout{ return $this->craftingLayout; }
 
-	protected function decodePayload(PacketSerializer $in) : void{
-		$this->leftTab = InventoryLeftTab::fromPacket($in->getVarInt());
-		$this->rightTab = InventoryRightTab::fromPacket($in->getVarInt());
-		$this->filtering = $in->getBool();
-		$this->inventoryLayout = InventoryLayout::fromPacket($in->getVarInt());
-		$this->craftingLayout = InventoryLayout::fromPacket($in->getVarInt());
+	protected function decodePayload(ByteBufferReader $in) : void{
+		$this->leftTab = InventoryLeftTab::fromPacket(VarInt::readSignedInt($in));
+		$this->rightTab = InventoryRightTab::fromPacket(VarInt::readSignedInt($in));
+		$this->filtering = CommonTypes::getBool($in);
+		$this->inventoryLayout = InventoryLayout::fromPacket(VarInt::readSignedInt($in));
+		$this->craftingLayout = InventoryLayout::fromPacket(VarInt::readSignedInt($in));
 	}
 
-	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putVarInt($this->leftTab->value);
-		$out->putVarInt($this->rightTab->value);
-		$out->putBool($this->filtering);
-		$out->putVarInt($this->inventoryLayout->value);
-		$out->putVarInt($this->craftingLayout->value);
+	protected function encodePayload(ByteBufferWriter $out) : void{
+		VarInt::writeSignedInt($out, $this->leftTab->value);
+		VarInt::writeSignedInt($out, $this->rightTab->value);
+		CommonTypes::putBool($out, $this->filtering);
+		VarInt::writeSignedInt($out, $this->inventoryLayout->value);
+		VarInt::writeSignedInt($out, $this->craftingLayout->value);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

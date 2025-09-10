@@ -14,7 +14,11 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol\types\biome\chunkgen;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\LE;
+use pmmp\encoding\VarInt;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 use function count;
 
 final class BiomeCappedSurfaceData{
@@ -47,20 +51,20 @@ final class BiomeCappedSurfaceData{
 
 	public function getBeachBlock() : ?int{ return $this->beachBlock; }
 
-	public static function read(PacketSerializer $in) : self{
+	public static function read(ByteBufferReader $in) : self{
 		$floorBlocks = [];
-		for($i = 0, $count = $in->getUnsignedVarInt(); $i < $count; ++$i){
-			$floorBlocks[] = $in->getLInt();
+		for($i = 0, $count = VarInt::readUnsignedInt($in); $i < $count; ++$i){
+			$floorBlocks[] = /* TODO: check if this should be unsigned */ LE::readSignedInt($in);
 		}
 
 		$ceilingBlocks = [];
-		for($i = 0, $count = $in->getUnsignedVarInt(); $i < $count; ++$i){
-			$ceilingBlocks[] = $in->getLInt();
+		for($i = 0, $count = VarInt::readUnsignedInt($in); $i < $count; ++$i){
+			$ceilingBlocks[] = /* TODO: check if this should be unsigned */ LE::readSignedInt($in);
 		}
 
-		$seaBlock = $in->readOptional($in->getLInt(...));
-		$foundationBlock = $in->readOptional($in->getLInt(...));
-		$beachBlock = $in->readOptional($in->getLInt(...));
+		$seaBlock = CommonTypes::readOptional($in, /* TODO: check if this should be unsigned */ LE::readSignedInt(...));
+		$foundationBlock = CommonTypes::readOptional($in, /* TODO: check if this should be unsigned */ LE::readSignedInt(...));
+		$beachBlock = CommonTypes::readOptional($in, /* TODO: check if this should be unsigned */ LE::readSignedInt(...));
 
 		return new self(
 			$floorBlocks,
@@ -71,19 +75,19 @@ final class BiomeCappedSurfaceData{
 		);
 	}
 
-	public function write(PacketSerializer $out) : void{
-		$out->putUnsignedVarInt(count($this->floorBlocks));
+	public function write(ByteBufferWriter $out) : void{
+		VarInt::writeUnsignedInt($out, count($this->floorBlocks));
 		foreach($this->floorBlocks as $block){
-			$out->putLInt($block);
+			/* TODO: check if this should be unsigned */ LE::writeSignedInt($out, $block);
 		}
 
-		$out->putUnsignedVarInt(count($this->ceilingBlocks));
+		VarInt::writeUnsignedInt($out, count($this->ceilingBlocks));
 		foreach($this->ceilingBlocks as $block){
-			$out->putLInt($block);
+			/* TODO: check if this should be unsigned */ LE::writeSignedInt($out, $block);
 		}
 
-		$out->writeOptional($this->seaBlock, $out->putLInt(...));
-		$out->writeOptional($this->foundationBlock, $out->putLInt(...));
-		$out->writeOptional($this->beachBlock, $out->putLInt(...));
+		CommonTypes::writeOptional($out, $this->seaBlock, /* TODO: check if this should be unsigned */ LE::writeSignedInt(...));
+		CommonTypes::writeOptional($out, $this->foundationBlock, /* TODO: check if this should be unsigned */ LE::writeSignedInt(...));
+		CommonTypes::writeOptional($out, $this->beachBlock, /* TODO: check if this should be unsigned */ LE::writeSignedInt(...));
 	}
 }

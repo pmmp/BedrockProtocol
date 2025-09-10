@@ -14,7 +14,9 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol\types\biome\chunkgen;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\LE;
 
 final class BiomeClimateData{
 
@@ -45,15 +47,15 @@ final class BiomeClimateData{
 
 	public function getSnowAccumulationMax() : float{ return $this->snowAccumulationMax; }
 
-	public static function read(PacketSerializer $in) : self{
-		$temperature = $in->getLFloat();
-		$downfall = $in->getLFloat();
-		$redSporeDensity = $in->getLFloat();
-		$blueSporeDensity = $in->getLFloat();
-		$ashDensity = $in->getLFloat();
-		$whiteAshDensity = $in->getLFloat();
-		$snowAccumulationMin = $in->getLFloat();
-		$snowAccumulationMax = $in->getLFloat();
+	public static function read(ByteBufferReader $in) : self{
+		$temperature = LE::readFloat($in);
+		$downfall = LE::readFloat($in);
+		$redSporeDensity = LE::readFloat($in);
+		$blueSporeDensity = LE::readFloat($in);
+		$ashDensity = LE::readFloat($in);
+		$whiteAshDensity = LE::readFloat($in);
+		$snowAccumulationMin = LE::readFloat($in);
+		$snowAccumulationMax = LE::readFloat($in);
 
 		return new self(
 			$temperature,
@@ -67,14 +69,14 @@ final class BiomeClimateData{
 		);
 	}
 
-	public function write(PacketSerializer $out) : void{
-		$out->putLFloat($this->temperature);
-		$out->putLFloat($this->downfall);
-		$out->putLFloat($this->redSporeDensity);
-		$out->putLFloat($this->blueSporeDensity);
-		$out->putLFloat($this->ashDensity);
-		$out->putLFloat($this->whiteAshDensity);
-		$out->putLFloat($this->snowAccumulationMin);
-		$out->putFloat($this->snowAccumulationMax);
+	public function write(ByteBufferWriter $out) : void{
+		LE::writeFloat($out, $this->temperature);
+		LE::writeFloat($out, $this->downfall);
+		LE::writeFloat($out, $this->redSporeDensity);
+		LE::writeFloat($out, $this->blueSporeDensity);
+		LE::writeFloat($out, $this->ashDensity);
+		LE::writeFloat($out, $this->whiteAshDensity);
+		LE::writeFloat($out, $this->snowAccumulationMin);
+		LE::writeFloat($out, $this->snowAccumulationMax);
 	}
 }

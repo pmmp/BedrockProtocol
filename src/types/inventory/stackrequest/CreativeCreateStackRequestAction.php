@@ -14,7 +14,10 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol\types\inventory\stackrequest;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\Byte;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 use pocketmine\network\mcpe\protocol\types\GetTypeIdFromConstTrait;
 
 /**
@@ -34,14 +37,14 @@ final class CreativeCreateStackRequestAction extends ItemStackRequestAction{
 
 	public function getRepetitions() : int{ return $this->repetitions; }
 
-	public static function read(PacketSerializer $in) : self{
-		$creativeItemId = $in->readCreativeItemNetId();
-		$repetitions = $in->getByte();
+	public static function read(ByteBufferReader $in) : self{
+		$creativeItemId = CommonTypes::readCreativeItemNetId($in);
+		$repetitions = Byte::readUnsigned($in);
 		return new self($creativeItemId, $repetitions);
 	}
 
-	public function write(PacketSerializer $out) : void{
-		$out->writeCreativeItemNetId($this->creativeItemId);
-		$out->putByte($this->repetitions);
+	public function write(ByteBufferWriter $out) : void{
+		CommonTypes::writeCreativeItemNetId($out, $this->creativeItemId);
+		Byte::writeUnsigned($out, $this->repetitions);
 	}
 }

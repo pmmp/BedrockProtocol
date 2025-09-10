@@ -14,7 +14,9 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol\types\recipe;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 use pocketmine\network\mcpe\protocol\types\GetTypeIdFromConstTrait;
 
 final class ComplexAliasItemDescriptor implements ItemDescriptor{
@@ -28,13 +30,13 @@ final class ComplexAliasItemDescriptor implements ItemDescriptor{
 
 	public function getAlias() : string{ return $this->alias; }
 
-	public static function read(PacketSerializer $in) : self{
-		$alias = $in->getString();
+	public static function read(ByteBufferReader $in) : self{
+		$alias = CommonTypes::getString($in);
 
 		return new self($alias);
 	}
 
-	public function write(PacketSerializer $out) : void{
-		$out->putString($this->alias);
+	public function write(ByteBufferWriter $out) : void{
+		CommonTypes::putString($out, $this->alias);
 	}
 }

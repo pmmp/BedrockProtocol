@@ -14,7 +14,11 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\Byte;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\LE;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 use pocketmine\network\mcpe\protocol\types\resourcepacks\ResourcePackType;
 
 class ResourcePackDataInfoPacket extends DataPacket implements ClientboundPacket{
@@ -51,24 +55,24 @@ class ResourcePackDataInfoPacket extends DataPacket implements ClientboundPacket
 		return $result;
 	}
 
-	protected function decodePayload(PacketSerializer $in) : void{
-		$this->packId = $in->getString();
-		$this->maxChunkSize = $in->getLInt();
-		$this->chunkCount = $in->getLInt();
-		$this->compressedPackSize = $in->getLLong();
-		$this->sha256 = $in->getString();
-		$this->isPremium = $in->getBool();
-		$this->packType = $in->getByte();
+	protected function decodePayload(ByteBufferReader $in) : void{
+		$this->packId = CommonTypes::getString($in);
+		$this->maxChunkSize = LE::readUnsignedInt($in);
+		$this->chunkCount = LE::readUnsignedInt($in);
+		$this->compressedPackSize = LE::readUnsignedLong($in);
+		$this->sha256 = CommonTypes::getString($in);
+		$this->isPremium = CommonTypes::getBool($in);
+		$this->packType = Byte::readUnsigned($in);
 	}
 
-	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putString($this->packId);
-		$out->putLInt($this->maxChunkSize);
-		$out->putLInt($this->chunkCount);
-		$out->putLLong($this->compressedPackSize);
-		$out->putString($this->sha256);
-		$out->putBool($this->isPremium);
-		$out->putByte($this->packType);
+	protected function encodePayload(ByteBufferWriter $out) : void{
+		CommonTypes::putString($out, $this->packId);
+		LE::writeUnsignedInt($out, $this->maxChunkSize);
+		LE::writeUnsignedInt($out, $this->chunkCount);
+		LE::writeUnsignedLong($out, $this->compressedPackSize);
+		CommonTypes::putString($out, $this->sha256);
+		CommonTypes::putBool($out, $this->isPremium);
+		Byte::writeUnsigned($out, $this->packType);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

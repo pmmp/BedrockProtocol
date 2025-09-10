@@ -14,9 +14,12 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol\types\camera;
 
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\LE;
 use pocketmine\math\Vector2;
 use pocketmine\math\Vector3;
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 
 final class CameraSetInstruction{
 
@@ -50,16 +53,16 @@ final class CameraSetInstruction{
 
 	public function isIgnoringStartingValuesComponent() : bool{ return $this->ignoreStartingValuesComponent; }
 
-	public static function read(PacketSerializer $in) : self{
-		$preset = $in->getLInt();
-		$ease = $in->readOptional(fn() => CameraSetInstructionEase::read($in));
-		$cameraPosition = $in->readOptional($in->getVector3(...));
-		$rotation = $in->readOptional(fn() => CameraSetInstructionRotation::read($in));
-		$facingPosition = $in->readOptional($in->getVector3(...));
-		$viewOffset = $in->readOptional($in->getVector2(...));
-		$entityOffset = $in->readOptional($in->getVector3(...));
-		$default = $in->readOptional($in->getBool(...));
-		$ignoreStartingValuesComponent = $in->getBool();
+	public static function read(ByteBufferReader $in) : self{
+		$preset = LE::readUnsignedInt($in);
+		$ease = CommonTypes::readOptional($in, CameraSetInstructionEase::read(...));
+		$cameraPosition = CommonTypes::readOptional($in, CommonTypes::getVector3(...));
+		$rotation = CommonTypes::readOptional($in, CameraSetInstructionRotation::read(...));
+		$facingPosition = CommonTypes::readOptional($in, CommonTypes::getVector3(...));
+		$viewOffset = CommonTypes::readOptional($in, CommonTypes::getVector2(...));
+		$entityOffset = CommonTypes::readOptional($in, CommonTypes::getVector3(...));
+		$default = CommonTypes::readOptional($in, CommonTypes::getBool(...));
+		$ignoreStartingValuesComponent = CommonTypes::getBool($in);
 
 		return new self(
 			$preset,
@@ -74,15 +77,15 @@ final class CameraSetInstruction{
 		);
 	}
 
-	public function write(PacketSerializer $out) : void{
-		$out->putLInt($this->preset);
-		$out->writeOptional($this->ease, fn(CameraSetInstructionEase $v) => $v->write($out));
-		$out->writeOptional($this->cameraPosition, $out->putVector3(...));
-		$out->writeOptional($this->rotation, fn(CameraSetInstructionRotation $v) => $v->write($out));
-		$out->writeOptional($this->facingPosition, $out->putVector3(...));
-		$out->writeOptional($this->viewOffset, $out->putVector2(...));
-		$out->writeOptional($this->entityOffset, $out->putVector3(...));
-		$out->writeOptional($this->default, $out->putBool(...));
-		$out->putBool($this->ignoreStartingValuesComponent);
+	public function write(ByteBufferWriter $out) : void{
+		LE::writeUnsignedInt($out, $this->preset);
+		CommonTypes::writeOptional($out, $this->ease, fn(ByteBufferWriter $out, CameraSetInstructionEase $v) => $v->write($out));
+		CommonTypes::writeOptional($out, $this->cameraPosition, CommonTypes::putVector3(...));
+		CommonTypes::writeOptional($out, $this->rotation, fn(ByteBufferWriter $out, CameraSetInstructionRotation $v) => $v->write($out));
+		CommonTypes::writeOptional($out, $this->facingPosition, CommonTypes::putVector3(...));
+		CommonTypes::writeOptional($out, $this->viewOffset, CommonTypes::putVector2(...));
+		CommonTypes::writeOptional($out, $this->entityOffset, CommonTypes::putVector3(...));
+		CommonTypes::writeOptional($out, $this->default, CommonTypes::putBool(...));
+		CommonTypes::putBool($out, $this->ignoreStartingValuesComponent);
 	}
 }

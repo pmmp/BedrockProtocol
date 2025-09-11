@@ -82,12 +82,17 @@ class NetworkNbtSerializer extends BaseNbtSerializer{
 		if($len < 0){
 			throw new NbtDataException("Array length cannot be less than zero ($len < 0)");
 		}
-
-		return VarInt::readSignedIntArray($this->reader, $len);
+		$result = [];
+		for($i = 0; $i < $len; ++$i){
+			$result[] = VarInt::readSignedInt($this->reader);
+		}
+		return $result;
 	}
 
 	public function writeIntArray(array $array) : void{
 		VarInt::writeSignedInt($this->writer, count($array));
-		VarInt::writeSignedIntArray($this->writer, $array);
+		foreach($array as $v){
+			VarInt::writeSignedInt($this->writer, $v);
+		}
 	}
 }

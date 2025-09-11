@@ -14,7 +14,10 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol\types\inventory;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\LE;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 
 final class CreativeGroupEntry{
 	public function __construct(
@@ -29,16 +32,16 @@ final class CreativeGroupEntry{
 
 	public function getIcon() : ItemStack{ return $this->icon; }
 
-	public static function read(PacketSerializer $in) : self{
-		$categoryId = $in->getLInt();
-		$categoryName = $in->getString();
-		$icon = $in->getItemStackWithoutStackId();
+	public static function read(ByteBufferReader $in) : self{
+		$categoryId = LE::readSignedInt($in);
+		$categoryName = CommonTypes::getString($in);
+		$icon = CommonTypes::getItemStackWithoutStackId($in);
 		return new self($categoryId, $categoryName, $icon);
 	}
 
-	public function write(PacketSerializer $out) : void{
-		$out->putLInt($this->categoryId);
-		$out->putString($this->categoryName);
-		$out->putItemStackWithoutStackId($this->icon);
+	public function write(ByteBufferWriter $out) : void{
+		LE::writeSignedInt($out, $this->categoryId);
+		CommonTypes::putString($out, $this->categoryName);
+		CommonTypes::putItemStackWithoutStackId($out, $this->icon);
 	}
 }

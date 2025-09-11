@@ -14,7 +14,9 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol\types\resourcepacks;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 
 class ResourcePackStackEntry{
 	public function __construct(
@@ -35,16 +37,16 @@ class ResourcePackStackEntry{
 		return $this->subPackName;
 	}
 
-	public function write(PacketSerializer $out) : void{
-		$out->putString($this->packId);
-		$out->putString($this->version);
-		$out->putString($this->subPackName);
+	public function write(ByteBufferWriter $out) : void{
+		CommonTypes::putString($out, $this->packId);
+		CommonTypes::putString($out, $this->version);
+		CommonTypes::putString($out, $this->subPackName);
 	}
 
-	public static function read(PacketSerializer $in) : self{
-		$packId = $in->getString();
-		$version = $in->getString();
-		$subPackName = $in->getString();
+	public static function read(ByteBufferReader $in) : self{
+		$packId = CommonTypes::getString($in);
+		$version = CommonTypes::getString($in);
+		$subPackName = CommonTypes::getString($in);
 		return new self($packId, $version, $subPackName);
 	}
 }

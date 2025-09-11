@@ -14,7 +14,9 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol\types\entity;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\VarInt;
 use pocketmine\network\mcpe\protocol\types\GetTypeIdFromConstTrait;
 use const PHP_INT_MAX;
 use const PHP_INT_MIN;
@@ -33,11 +35,11 @@ final class LongMetadataProperty implements MetadataProperty{
 		return PHP_INT_MAX;
 	}
 
-	public static function read(PacketSerializer $in) : self{
-		return new self($in->getVarLong());
+	public static function read(ByteBufferReader $in) : self{
+		return new self(VarInt::readSignedLong($in));
 	}
 
-	public function write(PacketSerializer $out) : void{
-		$out->putVarLong($this->value);
+	public function write(ByteBufferWriter $out) : void{
+		VarInt::writeSignedLong($out, $this->value);
 	}
 }

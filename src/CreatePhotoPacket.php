@@ -14,7 +14,10 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\LE;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 
 class CreatePhotoPacket extends DataPacket implements ServerboundPacket{
 	public const NETWORK_ID = ProtocolInfo::CREATE_PHOTO_PACKET;
@@ -40,16 +43,16 @@ class CreatePhotoPacket extends DataPacket implements ServerboundPacket{
 
 	public function getPhotoItemName() : string{ return $this->photoItemName; }
 
-	protected function decodePayload(PacketSerializer $in) : void{
-		$this->actorUniqueId = $in->getLLong(); //why be consistent mojang ?????
-		$this->photoName = $in->getString();
-		$this->photoItemName = $in->getString();
+	protected function decodePayload(ByteBufferReader $in) : void{
+		$this->actorUniqueId = LE::readSignedLong($in); //why be consistent mojang ?????
+		$this->photoName = CommonTypes::getString($in);
+		$this->photoItemName = CommonTypes::getString($in);
 	}
 
-	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putLLong($this->actorUniqueId);
-		$out->putString($this->photoName);
-		$out->putString($this->photoItemName);
+	protected function encodePayload(ByteBufferWriter $out) : void{
+		LE::writeSignedLong($out, $this->actorUniqueId);
+		CommonTypes::putString($out, $this->photoName);
+		CommonTypes::putString($out, $this->photoItemName);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

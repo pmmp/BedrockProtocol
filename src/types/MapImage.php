@@ -14,11 +14,13 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol\types;
 
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\DataDecodeException;
+use pmmp\encoding\VarInt;
 use pocketmine\color\Color;
 use pocketmine\network\mcpe\protocol\PacketDecodeException;
 use pocketmine\utils\Binary;
-use pocketmine\utils\BinaryDataException;
-use pocketmine\utils\BinaryStream;
 use function count;
 
 final class MapImage{
@@ -72,26 +74,26 @@ final class MapImage{
 	 */
 	public function getPixels() : array{ return $this->pixels; }
 
-	public function encode(BinaryStream $output) : void{
+	public function encode(ByteBufferWriter $out) : void{
 		if($this->encodedPixelCache === null){
-			$serializer = new BinaryStream();
+			$serializer = new ByteBufferWriter();
 			for($y = 0; $y < $this->height; ++$y){
 				for($x = 0; $x < $this->width; ++$x){
 					//if mojang had any sense this would just be a regular LE int
-					$serializer->putUnsignedVarInt(Binary::flipIntEndianness($this->pixels[$y][$x]->toRGBA()));
+					VarInt::writeUnsignedInt($serializer, Binary::flipIntEndianness($this->pixels[$y][$x]->toRGBA()));
 				}
 			}
-			$this->encodedPixelCache = $serializer->getBuffer();
+			$this->encodedPixelCache = $serializer->getData();
 		}
 
-		$output->put($this->encodedPixelCache);
+		$out->writeByteArray($this->encodedPixelCache);
 	}
 
 	/**
 	 * @throws PacketDecodeException
-	 * @throws BinaryDataException
+	 * @throws DataDecodeException
 	 */
-	public static function decode(BinaryStream $input, int $height, int $width) : self{
+	public static function decode(ByteBufferReader $in, int $height, int $width) : self{
 		if($width > self::MAX_WIDTH){
 			throw new PacketDecodeException("Image width must be at most " . self::MAX_WIDTH . " pixels wide");
 		}
@@ -103,7 +105,7 @@ final class MapImage{
 		for($y = 0; $y < $height; ++$y){
 			$row = [];
 			for($x = 0; $x < $width; ++$x){
-				$row[] = Color::fromRGBA(Binary::flipIntEndianness($input->getUnsignedVarInt()));
+				$row[] = Color::fromRGBA(Binary::flipIntEndianness(VarInt::readUnsignedInt($in)));
 			}
 			$pixels[] = $row;
 		}

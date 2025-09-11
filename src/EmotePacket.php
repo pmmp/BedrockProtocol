@@ -14,7 +14,11 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\Byte;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\VarInt;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 
 class EmotePacket extends DataPacket implements ClientboundPacket, ServerboundPacket{
 	public const NETWORK_ID = ProtocolInfo::EMOTE_PACKET;
@@ -61,22 +65,22 @@ class EmotePacket extends DataPacket implements ClientboundPacket, ServerboundPa
 		return $this->flags;
 	}
 
-	protected function decodePayload(PacketSerializer $in) : void{
-		$this->actorRuntimeId = $in->getActorRuntimeId();
-		$this->emoteId = $in->getString();
-		$this->emoteLengthTicks = $in->getUnsignedVarInt();
-		$this->xboxUserId = $in->getString();
-		$this->platformChatId = $in->getString();
-		$this->flags = $in->getByte();
+	protected function decodePayload(ByteBufferReader $in) : void{
+		$this->actorRuntimeId = CommonTypes::getActorRuntimeId($in);
+		$this->emoteId = CommonTypes::getString($in);
+		$this->emoteLengthTicks = VarInt::readUnsignedInt($in);
+		$this->xboxUserId = CommonTypes::getString($in);
+		$this->platformChatId = CommonTypes::getString($in);
+		$this->flags = Byte::readUnsigned($in);
 	}
 
-	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putActorRuntimeId($this->actorRuntimeId);
-		$out->putString($this->emoteId);
-		$out->putUnsignedVarInt($this->emoteLengthTicks);
-		$out->putString($this->xboxUserId);
-		$out->putString($this->platformChatId);
-		$out->putByte($this->flags);
+	protected function encodePayload(ByteBufferWriter $out) : void{
+		CommonTypes::putActorRuntimeId($out, $this->actorRuntimeId);
+		CommonTypes::putString($out, $this->emoteId);
+		VarInt::writeUnsignedInt($out, $this->emoteLengthTicks);
+		CommonTypes::putString($out, $this->xboxUserId);
+		CommonTypes::putString($out, $this->platformChatId);
+		Byte::writeUnsigned($out, $this->flags);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

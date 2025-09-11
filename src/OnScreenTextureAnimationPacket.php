@@ -14,7 +14,9 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\LE;
 
 class OnScreenTextureAnimationPacket extends DataPacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::ON_SCREEN_TEXTURE_ANIMATION_PACKET;
@@ -30,12 +32,12 @@ class OnScreenTextureAnimationPacket extends DataPacket implements ClientboundPa
 		return $result;
 	}
 
-	protected function decodePayload(PacketSerializer $in) : void{
-		$this->effectId = $in->getLInt(); //unsigned
+	protected function decodePayload(ByteBufferReader $in) : void{
+		$this->effectId = LE::readUnsignedInt($in);
 	}
 
-	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putLInt($this->effectId);
+	protected function encodePayload(ByteBufferWriter $out) : void{
+		LE::writeUnsignedInt($out, $this->effectId);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

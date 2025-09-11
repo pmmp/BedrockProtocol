@@ -14,7 +14,10 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\Byte;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 use pocketmine\network\mcpe\protocol\types\BlockPosition;
 
 class LecternUpdatePacket extends DataPacket implements ServerboundPacket{
@@ -35,16 +38,16 @@ class LecternUpdatePacket extends DataPacket implements ServerboundPacket{
 		return $result;
 	}
 
-	protected function decodePayload(PacketSerializer $in) : void{
-		$this->page = $in->getByte();
-		$this->totalPages = $in->getByte();
-		$this->blockPosition = $in->getBlockPosition();
+	protected function decodePayload(ByteBufferReader $in) : void{
+		$this->page = Byte::readUnsigned($in);
+		$this->totalPages = Byte::readUnsigned($in);
+		$this->blockPosition = CommonTypes::getBlockPosition($in);
 	}
 
-	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putByte($this->page);
-		$out->putByte($this->totalPages);
-		$out->putBlockPosition($this->blockPosition);
+	protected function encodePayload(ByteBufferWriter $out) : void{
+		Byte::writeUnsigned($out, $this->page);
+		Byte::writeUnsigned($out, $this->totalPages);
+		CommonTypes::putBlockPosition($out, $this->blockPosition);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

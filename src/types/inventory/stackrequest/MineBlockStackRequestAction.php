@@ -14,7 +14,10 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol\types\inventory\stackrequest;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\VarInt;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 use pocketmine\network\mcpe\protocol\types\GetTypeIdFromConstTrait;
 
 final class MineBlockStackRequestAction extends ItemStackRequestAction{
@@ -34,16 +37,16 @@ final class MineBlockStackRequestAction extends ItemStackRequestAction{
 
 	public function getStackId() : int{ return $this->stackId; }
 
-	public static function read(PacketSerializer $in) : self{
-		$hotbarSlot = $in->getVarInt();
-		$predictedDurability = $in->getVarInt();
-		$stackId = $in->readItemStackNetIdVariant();
+	public static function read(ByteBufferReader $in) : self{
+		$hotbarSlot = VarInt::readSignedInt($in);
+		$predictedDurability = VarInt::readSignedInt($in);
+		$stackId = CommonTypes::readItemStackNetIdVariant($in);
 		return new self($hotbarSlot, $predictedDurability, $stackId);
 	}
 
-	public function write(PacketSerializer $out) : void{
-		$out->putVarInt($this->hotbarSlot);
-		$out->putVarInt($this->predictedDurability);
-		$out->writeItemStackNetIdVariant($this->stackId);
+	public function write(ByteBufferWriter $out) : void{
+		VarInt::writeSignedInt($out, $this->hotbarSlot);
+		VarInt::writeSignedInt($out, $this->predictedDurability);
+		CommonTypes::writeItemStackNetIdVariant($out, $this->stackId);
 	}
 }

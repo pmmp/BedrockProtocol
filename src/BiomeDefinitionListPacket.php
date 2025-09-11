@@ -14,7 +14,10 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\VarInt;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 use pocketmine\network\mcpe\protocol\types\biome\BiomeDefinitionData;
 use pocketmine\network\mcpe\protocol\types\biome\BiomeDefinitionEntry;
 use function array_map;
@@ -122,25 +125,25 @@ class BiomeDefinitionListPacket extends DataPacket implements ClientboundPacket{
 		), $this->definitionData);
 	}
 
-	protected function decodePayload(PacketSerializer $in) : void{
-		for($i = 0, $count = $in->getUnsignedVarInt(); $i < $count; ++$i){
+	protected function decodePayload(ByteBufferReader $in) : void{
+		for($i = 0, $count = VarInt::readUnsignedInt($in); $i < $count; ++$i){
 			$this->definitionData[] = BiomeDefinitionData::read($in);
 		}
 
-		for($i = 0, $count = $in->getUnsignedVarInt(); $i < $count; ++$i){
-			$this->strings[] = $in->getString();
+		for($i = 0, $count = VarInt::readUnsignedInt($in); $i < $count; ++$i){
+			$this->strings[] = CommonTypes::getString($in);
 		}
 	}
 
-	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putUnsignedVarInt(count($this->definitionData));
+	protected function encodePayload(ByteBufferWriter $out) : void{
+		VarInt::writeUnsignedInt($out, count($this->definitionData));
 		foreach($this->definitionData as $data){
 			$data->write($out);
 		}
 
-		$out->putUnsignedVarInt(count($this->strings));
+		VarInt::writeUnsignedInt($out, count($this->strings));
 		foreach($this->strings as $string){
-			$out->putString($string);
+			CommonTypes::putString($out, $string);
 		}
 	}
 

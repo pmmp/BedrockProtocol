@@ -14,7 +14,10 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\VarInt;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 use pocketmine\network\mcpe\protocol\types\recipe\FurnaceRecipe;
 use pocketmine\network\mcpe\protocol\types\recipe\MaterialReducerRecipe;
 use pocketmine\network\mcpe\protocol\types\recipe\MaterialReducerRecipeOutput;
@@ -69,11 +72,11 @@ class CraftingDataPacket extends DataPacket implements ClientboundPacket{
 		return $result;
 	}
 
-	protected function decodePayload(PacketSerializer $in) : void{
-		$recipeCount = $in->getUnsignedVarInt();
+	protected function decodePayload(ByteBufferReader $in) : void{
+		$recipeCount = VarInt::readUnsignedInt($in);
 		$previousType = "none";
 		for($i = 0; $i < $recipeCount; ++$i){
-			$recipeType = $in->getVarInt();
+			$recipeType = VarInt::readSignedInt($in);
 
 			$this->recipesWithTypeIds[] = match($recipeType){
 				self::ENTRY_SHAPELESS, self::ENTRY_USER_DATA_SHAPELESS, self::ENTRY_SHAPELESS_CHEMISTRY => ShapelessRecipe::decode($recipeType, $in),
@@ -86,66 +89,66 @@ class CraftingDataPacket extends DataPacket implements ClientboundPacket{
 			};
 			$previousType = $recipeType;
 		}
-		for($i = 0, $count = $in->getUnsignedVarInt(); $i < $count; ++$i){
-			$inputId = $in->getVarInt();
-			$inputMeta = $in->getVarInt();
-			$ingredientId = $in->getVarInt();
-			$ingredientMeta = $in->getVarInt();
-			$outputId = $in->getVarInt();
-			$outputMeta = $in->getVarInt();
+		for($i = 0, $count = VarInt::readUnsignedInt($in); $i < $count; ++$i){
+			$inputId = VarInt::readSignedInt($in);
+			$inputMeta = VarInt::readSignedInt($in);
+			$ingredientId = VarInt::readSignedInt($in);
+			$ingredientMeta = VarInt::readSignedInt($in);
+			$outputId = VarInt::readSignedInt($in);
+			$outputMeta = VarInt::readSignedInt($in);
 			$this->potionTypeRecipes[] = new PotionTypeRecipe($inputId, $inputMeta, $ingredientId, $ingredientMeta, $outputId, $outputMeta);
 		}
-		for($i = 0, $count = $in->getUnsignedVarInt(); $i < $count; ++$i){
-			$input = $in->getVarInt();
-			$ingredient = $in->getVarInt();
-			$output = $in->getVarInt();
+		for($i = 0, $count = VarInt::readUnsignedInt($in); $i < $count; ++$i){
+			$input = VarInt::readSignedInt($in);
+			$ingredient = VarInt::readSignedInt($in);
+			$output = VarInt::readSignedInt($in);
 			$this->potionContainerRecipes[] = new PotionContainerChangeRecipe($input, $ingredient, $output);
 		}
-		for($i = 0, $count = $in->getUnsignedVarInt(); $i < $count; ++$i){
-			$inputIdAndData = $in->getVarInt();
+		for($i = 0, $count = VarInt::readUnsignedInt($in); $i < $count; ++$i){
+			$inputIdAndData = VarInt::readSignedInt($in);
 			[$inputId, $inputMeta] = [$inputIdAndData >> 16, $inputIdAndData & 0x7fff];
 			$outputs = [];
-			for($j = 0, $outputCount = $in->getUnsignedVarInt(); $j < $outputCount; ++$j){
-				$outputItemId = $in->getVarInt();
-				$outputItemCount = $in->getVarInt();
+			for($j = 0, $outputCount = VarInt::readUnsignedInt($in); $j < $outputCount; ++$j){
+				$outputItemId = VarInt::readSignedInt($in);
+				$outputItemCount = VarInt::readSignedInt($in);
 				$outputs[] = new MaterialReducerRecipeOutput($outputItemId, $outputItemCount);
 			}
 			$this->materialReducerRecipes[] = new MaterialReducerRecipe($inputId, $inputMeta, $outputs);
 		}
-		$this->cleanRecipes = $in->getBool();
+		$this->cleanRecipes = CommonTypes::getBool($in);
 	}
 
-	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putUnsignedVarInt(count($this->recipesWithTypeIds));
+	protected function encodePayload(ByteBufferWriter $out) : void{
+		VarInt::writeUnsignedInt($out, count($this->recipesWithTypeIds));
 		foreach($this->recipesWithTypeIds as $d){
-			$out->putVarInt($d->getTypeId());
+			VarInt::writeSignedInt($out, $d->getTypeId());
 			$d->encode($out);
 		}
-		$out->putUnsignedVarInt(count($this->potionTypeRecipes));
+		VarInt::writeUnsignedInt($out, count($this->potionTypeRecipes));
 		foreach($this->potionTypeRecipes as $recipe){
-			$out->putVarInt($recipe->getInputItemId());
-			$out->putVarInt($recipe->getInputItemMeta());
-			$out->putVarInt($recipe->getIngredientItemId());
-			$out->putVarInt($recipe->getIngredientItemMeta());
-			$out->putVarInt($recipe->getOutputItemId());
-			$out->putVarInt($recipe->getOutputItemMeta());
+			VarInt::writeSignedInt($out, $recipe->getInputItemId());
+			VarInt::writeSignedInt($out, $recipe->getInputItemMeta());
+			VarInt::writeSignedInt($out, $recipe->getIngredientItemId());
+			VarInt::writeSignedInt($out, $recipe->getIngredientItemMeta());
+			VarInt::writeSignedInt($out, $recipe->getOutputItemId());
+			VarInt::writeSignedInt($out, $recipe->getOutputItemMeta());
 		}
-		$out->putUnsignedVarInt(count($this->potionContainerRecipes));
+		VarInt::writeUnsignedInt($out, count($this->potionContainerRecipes));
 		foreach($this->potionContainerRecipes as $recipe){
-			$out->putVarInt($recipe->getInputItemId());
-			$out->putVarInt($recipe->getIngredientItemId());
-			$out->putVarInt($recipe->getOutputItemId());
+			VarInt::writeSignedInt($out, $recipe->getInputItemId());
+			VarInt::writeSignedInt($out, $recipe->getIngredientItemId());
+			VarInt::writeSignedInt($out, $recipe->getOutputItemId());
 		}
-		$out->putUnsignedVarInt(count($this->materialReducerRecipes));
+		VarInt::writeUnsignedInt($out, count($this->materialReducerRecipes));
 		foreach($this->materialReducerRecipes as $recipe){
-			$out->putVarInt(($recipe->getInputItemId() << 16) | $recipe->getInputItemMeta());
-			$out->putUnsignedVarInt(count($recipe->getOutputs()));
+			VarInt::writeSignedInt($out, ($recipe->getInputItemId() << 16) | $recipe->getInputItemMeta());
+			VarInt::writeUnsignedInt($out, count($recipe->getOutputs()));
 			foreach($recipe->getOutputs() as $output){
-				$out->putVarInt($output->getItemId());
-				$out->putVarInt($output->getCount());
+				VarInt::writeSignedInt($out, $output->getItemId());
+				VarInt::writeSignedInt($out, $output->getCount());
 			}
 		}
-		$out->putBool($this->cleanRecipes);
+		CommonTypes::putBool($out, $this->cleanRecipes);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

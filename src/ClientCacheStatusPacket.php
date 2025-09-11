@@ -14,7 +14,9 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 
 class ClientCacheStatusPacket extends DataPacket implements ServerboundPacket{
 	public const NETWORK_ID = ProtocolInfo::CLIENT_CACHE_STATUS_PACKET;
@@ -34,12 +36,12 @@ class ClientCacheStatusPacket extends DataPacket implements ServerboundPacket{
 		return $this->enabled;
 	}
 
-	protected function decodePayload(PacketSerializer $in) : void{
-		$this->enabled = $in->getBool();
+	protected function decodePayload(ByteBufferReader $in) : void{
+		$this->enabled = CommonTypes::getBool($in);
 	}
 
-	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putBool($this->enabled);
+	protected function encodePayload(ByteBufferWriter $out) : void{
+		CommonTypes::putBool($out, $this->enabled);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

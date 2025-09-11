@@ -14,8 +14,12 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\LE;
+use pmmp\encoding\VarInt;
 use pocketmine\math\Vector3;
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 
 class ChangeDimensionPacket extends DataPacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::CHANGE_DIMENSION_PACKET;
@@ -39,18 +43,18 @@ class ChangeDimensionPacket extends DataPacket implements ClientboundPacket{
 
 	public function getLoadingScreenId() : ?int{ return $this->loadingScreenId; }
 
-	protected function decodePayload(PacketSerializer $in) : void{
-		$this->dimension = $in->getVarInt();
-		$this->position = $in->getVector3();
-		$this->respawn = $in->getBool();
-		$this->loadingScreenId = $in->readOptional(fn() => $in->getLInt());
+	protected function decodePayload(ByteBufferReader $in) : void{
+		$this->dimension = VarInt::readSignedInt($in);
+		$this->position = CommonTypes::getVector3($in);
+		$this->respawn = CommonTypes::getBool($in);
+		$this->loadingScreenId = CommonTypes::readOptional($in, LE::readUnsignedInt(...));
 	}
 
-	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putVarInt($this->dimension);
-		$out->putVector3($this->position);
-		$out->putBool($this->respawn);
-		$out->writeOptional($this->loadingScreenId, $out->putLInt(...));
+	protected function encodePayload(ByteBufferWriter $out) : void{
+		VarInt::writeSignedInt($out, $this->dimension);
+		CommonTypes::putVector3($out, $this->position);
+		CommonTypes::putBool($out, $this->respawn);
+		CommonTypes::writeOptional($out, $this->loadingScreenId, LE::writeUnsignedInt(...));
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

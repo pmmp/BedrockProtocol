@@ -14,9 +14,12 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol\types\inventory;
 
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\VarInt;
 use pocketmine\math\Vector3;
 use pocketmine\network\mcpe\protocol\InventoryTransactionPacket;
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 use pocketmine\network\mcpe\protocol\types\GetTypeIdFromConstTrait;
 
 class ReleaseItemTransactionData extends TransactionData{
@@ -48,18 +51,18 @@ class ReleaseItemTransactionData extends TransactionData{
 		return $this->headPosition;
 	}
 
-	protected function decodeData(PacketSerializer $stream) : void{
-		$this->actionType = $stream->getUnsignedVarInt();
-		$this->hotbarSlot = $stream->getVarInt();
-		$this->itemInHand = $stream->getItemStackWrapper();
-		$this->headPosition = $stream->getVector3();
+	protected function decodeData(ByteBufferReader $in) : void{
+		$this->actionType = VarInt::readUnsignedInt($in);
+		$this->hotbarSlot = VarInt::readSignedInt($in);
+		$this->itemInHand = CommonTypes::getItemStackWrapper($in);
+		$this->headPosition = CommonTypes::getVector3($in);
 	}
 
-	protected function encodeData(PacketSerializer $stream) : void{
-		$stream->putUnsignedVarInt($this->actionType);
-		$stream->putVarInt($this->hotbarSlot);
-		$stream->putItemStackWrapper($this->itemInHand);
-		$stream->putVector3($this->headPosition);
+	protected function encodeData(ByteBufferWriter $out) : void{
+		VarInt::writeUnsignedInt($out, $this->actionType);
+		VarInt::writeSignedInt($out, $this->hotbarSlot);
+		CommonTypes::putItemStackWrapper($out, $this->itemInHand);
+		CommonTypes::putVector3($out, $this->headPosition);
 	}
 
 	/**

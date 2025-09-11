@@ -14,7 +14,10 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\VarInt;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 use pocketmine\network\mcpe\protocol\types\inventory\FullContainerName;
 use pocketmine\network\mcpe\protocol\types\inventory\ItemStackWrapper;
 use function count;
@@ -41,24 +44,24 @@ class InventoryContentPacket extends DataPacket implements ClientboundPacket{
 		return $result;
 	}
 
-	protected function decodePayload(PacketSerializer $in) : void{
-		$this->windowId = $in->getUnsignedVarInt();
-		$count = $in->getUnsignedVarInt();
+	protected function decodePayload(ByteBufferReader $in) : void{
+		$this->windowId = VarInt::readUnsignedInt($in);
+		$count = VarInt::readUnsignedInt($in);
 		for($i = 0; $i < $count; ++$i){
-			$this->items[] = $in->getItemStackWrapper();
+			$this->items[] = CommonTypes::getItemStackWrapper($in);
 		}
 		$this->containerName = FullContainerName::read($in);
-		$this->storage = $in->getItemStackWrapper();
+		$this->storage = CommonTypes::getItemStackWrapper($in);
 	}
 
-	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putUnsignedVarInt($this->windowId);
-		$out->putUnsignedVarInt(count($this->items));
+	protected function encodePayload(ByteBufferWriter $out) : void{
+		VarInt::writeUnsignedInt($out, $this->windowId);
+		VarInt::writeUnsignedInt($out, count($this->items));
 		foreach($this->items as $item){
-			$out->putItemStackWrapper($item);
+			CommonTypes::putItemStackWrapper($out, $item);
 		}
 		$this->containerName->write($out);
-		$out->putItemStackWrapper($this->storage);
+		CommonTypes::putItemStackWrapper($out, $this->storage);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

@@ -14,9 +14,14 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol\types\inventory\stackrequest;
 
+use pmmp\encoding\Byte;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\DataDecodeException;
+use pmmp\encoding\LE;
+use pmmp\encoding\VarInt;
 use pocketmine\network\mcpe\protocol\PacketDecodeException;
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
-use pocketmine\utils\BinaryDataException;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 use function count;
 
 final class ItemStackRequest{
@@ -46,10 +51,10 @@ final class ItemStackRequest{
 	public function getFilterStringCause() : int{ return $this->filterStringCause; }
 
 	/**
-	 * @throws BinaryDataException
+	 * @throws DataDecodeException
 	 * @throws PacketDecodeException
 	 */
-	private static function readAction(PacketSerializer $in, int $typeId) : ItemStackRequestAction{
+	private static function readAction(ByteBufferReader $in, int $typeId) : ItemStackRequestAction{
 		return match($typeId){
 			TakeStackRequestAction::ID => TakeStackRequestAction::read($in),
 			PlaceStackRequestAction::ID => PlaceStackRequestAction::read($in),
@@ -73,32 +78,32 @@ final class ItemStackRequest{
 		};
 	}
 
-	public static function read(PacketSerializer $in) : self{
-		$requestId = $in->readItemStackRequestId();
+	public static function read(ByteBufferReader $in) : self{
+		$requestId = CommonTypes::readItemStackRequestId($in);
 		$actions = [];
-		for($i = 0, $len = $in->getUnsignedVarInt(); $i < $len; ++$i){
-			$typeId = $in->getByte();
+		for($i = 0, $len = VarInt::readUnsignedInt($in); $i < $len; ++$i){
+			$typeId = Byte::readUnsigned($in);
 			$actions[] = self::readAction($in, $typeId);
 		}
 		$filterStrings = [];
-		for($i = 0, $len = $in->getUnsignedVarInt(); $i < $len; ++$i){
-			$filterStrings[] = $in->getString();
+		for($i = 0, $len = VarInt::readUnsignedInt($in); $i < $len; ++$i){
+			$filterStrings[] = CommonTypes::getString($in);
 		}
-		$filterStringCause = $in->getLInt();
+		$filterStringCause = LE::readSignedInt($in);
 		return new self($requestId, $actions, $filterStrings, $filterStringCause);
 	}
 
-	public function write(PacketSerializer $out) : void{
-		$out->writeItemStackRequestId($this->requestId);
-		$out->putUnsignedVarInt(count($this->actions));
+	public function write(ByteBufferWriter $out) : void{
+		CommonTypes::writeItemStackRequestId($out, $this->requestId);
+		VarInt::writeUnsignedInt($out, count($this->actions));
 		foreach($this->actions as $action){
-			$out->putByte($action->getTypeId());
+			Byte::writeUnsigned($out, $action->getTypeId());
 			$action->write($out);
 		}
-		$out->putUnsignedVarInt(count($this->filterStrings));
+		VarInt::writeUnsignedInt($out, count($this->filterStrings));
 		foreach($this->filterStrings as $string){
-			$out->putString($string);
+			CommonTypes::putString($out, $string);
 		}
-		$out->putLInt($this->filterStringCause);
+		LE::writeSignedInt($out, $this->filterStringCause);
 	}
 }

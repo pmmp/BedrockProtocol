@@ -14,8 +14,13 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
+use pmmp\encoding\Byte;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\LE;
+use pmmp\encoding\VarInt;
 use pocketmine\color\Color;
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 use pocketmine\network\mcpe\protocol\types\PlayerListEntry;
 use function count;
 
@@ -54,60 +59,60 @@ class PlayerListPacket extends DataPacket implements ClientboundPacket{
 		return self::create(self::TYPE_REMOVE, $entries);
 	}
 
-	protected function decodePayload(PacketSerializer $in) : void{
-		$this->type = $in->getByte();
-		$count = $in->getUnsignedVarInt();
+	protected function decodePayload(ByteBufferReader $in) : void{
+		$this->type = Byte::readUnsigned($in);
+		$count = VarInt::readUnsignedInt($in);
 		for($i = 0; $i < $count; ++$i){
 			$entry = new PlayerListEntry();
 
 			if($this->type === self::TYPE_ADD){
-				$entry->uuid = $in->getUUID();
-				$entry->actorUniqueId = $in->getActorUniqueId();
-				$entry->username = $in->getString();
-				$entry->xboxUserId = $in->getString();
-				$entry->platformChatId = $in->getString();
-				$entry->buildPlatform = $in->getLInt();
-				$entry->skinData = $in->getSkin();
-				$entry->isTeacher = $in->getBool();
-				$entry->isHost = $in->getBool();
-				$entry->isSubClient = $in->getBool();
-				$entry->color = Color::fromARGB($in->getLInt());
+				$entry->uuid = CommonTypes::getUUID($in);
+				$entry->actorUniqueId = CommonTypes::getActorUniqueId($in);
+				$entry->username = CommonTypes::getString($in);
+				$entry->xboxUserId = CommonTypes::getString($in);
+				$entry->platformChatId = CommonTypes::getString($in);
+				$entry->buildPlatform = LE::readSignedInt($in);
+				$entry->skinData = CommonTypes::getSkin($in);
+				$entry->isTeacher = CommonTypes::getBool($in);
+				$entry->isHost = CommonTypes::getBool($in);
+				$entry->isSubClient = CommonTypes::getBool($in);
+				$entry->color = Color::fromARGB(LE::readUnsignedInt($in));
 			}else{
-				$entry->uuid = $in->getUUID();
+				$entry->uuid = CommonTypes::getUUID($in);
 			}
 
 			$this->entries[$i] = $entry;
 		}
 		if($this->type === self::TYPE_ADD){
 			for($i = 0; $i < $count; ++$i){
-				$this->entries[$i]->skinData->setVerified($in->getBool());
+				$this->entries[$i]->skinData->setVerified(CommonTypes::getBool($in));
 			}
 		}
 	}
 
-	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putByte($this->type);
-		$out->putUnsignedVarInt(count($this->entries));
+	protected function encodePayload(ByteBufferWriter $out) : void{
+		Byte::writeUnsigned($out, $this->type);
+		VarInt::writeUnsignedInt($out, count($this->entries));
 		foreach($this->entries as $entry){
 			if($this->type === self::TYPE_ADD){
-				$out->putUUID($entry->uuid);
-				$out->putActorUniqueId($entry->actorUniqueId);
-				$out->putString($entry->username);
-				$out->putString($entry->xboxUserId);
-				$out->putString($entry->platformChatId);
-				$out->putLInt($entry->buildPlatform);
-				$out->putSkin($entry->skinData);
-				$out->putBool($entry->isTeacher);
-				$out->putBool($entry->isHost);
-				$out->putBool($entry->isSubClient);
-				$out->putLInt(($entry->color ?? new Color(255, 255, 255))->toARGB());
+				CommonTypes::putUUID($out, $entry->uuid);
+				CommonTypes::putActorUniqueId($out, $entry->actorUniqueId);
+				CommonTypes::putString($out, $entry->username);
+				CommonTypes::putString($out, $entry->xboxUserId);
+				CommonTypes::putString($out, $entry->platformChatId);
+				LE::writeSignedInt($out, $entry->buildPlatform);
+				CommonTypes::putSkin($out, $entry->skinData);
+				CommonTypes::putBool($out, $entry->isTeacher);
+				CommonTypes::putBool($out, $entry->isHost);
+				CommonTypes::putBool($out, $entry->isSubClient);
+				LE::writeUnsignedInt($out, ($entry->color ?? new Color(255, 255, 255))->toARGB());
 			}else{
-				$out->putUUID($entry->uuid);
+				CommonTypes::putUUID($out, $entry->uuid);
 			}
 		}
 		if($this->type === self::TYPE_ADD){
 			foreach($this->entries as $entry){
-				$out->putBool($entry->skinData->isVerified());
+				CommonTypes::putBool($out, $entry->skinData->isVerified());
 			}
 		}
 	}

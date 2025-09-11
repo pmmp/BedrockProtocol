@@ -14,7 +14,10 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\VarInt;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 use pocketmine\network\mcpe\protocol\types\DimensionData;
 use pocketmine\network\mcpe\protocol\types\DimensionNameIds;
 use function count;
@@ -48,11 +51,11 @@ class DimensionDataPacket extends DataPacket implements ClientboundPacket{
 	 */
 	public function getDefinitions() : array{ return $this->definitions; }
 
-	protected function decodePayload(PacketSerializer $in) : void{
+	protected function decodePayload(ByteBufferReader $in) : void{
 		$this->definitions = [];
 
-		for($i = 0, $count = $in->getUnsignedVarInt(); $i < $count; $i++){
-			$dimensionNameId = $in->getString();
+		for($i = 0, $count = VarInt::readUnsignedInt($in); $i < $count; $i++){
+			$dimensionNameId = CommonTypes::getString($in);
 			$dimensionData = DimensionData::read($in);
 
 			if(isset($this->definitions[$dimensionNameId])){
@@ -65,11 +68,11 @@ class DimensionDataPacket extends DataPacket implements ClientboundPacket{
 		}
 	}
 
-	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putUnsignedVarInt(count($this->definitions));
+	protected function encodePayload(ByteBufferWriter $out) : void{
+		VarInt::writeUnsignedInt($out, count($this->definitions));
 
 		foreach($this->definitions as $dimensionNameId => $definition){
-			$out->putString((string) $dimensionNameId); //@phpstan-ignore-line
+			CommonTypes::putString($out, (string) $dimensionNameId); //@phpstan-ignore-line
 			$definition->write($out);
 		}
 	}

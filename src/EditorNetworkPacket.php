@@ -14,7 +14,9 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 use pocketmine\network\mcpe\protocol\types\CacheableNbt;
 
 /**
@@ -43,14 +45,14 @@ class EditorNetworkPacket extends DataPacket implements ClientboundPacket, Serve
 
 	public function isRouteToManager() : bool{ return $this->isRouteToManager; }
 
-	protected function decodePayload(PacketSerializer $in) : void{
-		$this->isRouteToManager = $in->getBool();
-		$this->payload = new CacheableNbt($in->getNbtCompoundRoot());
+	protected function decodePayload(ByteBufferReader $in) : void{
+		$this->isRouteToManager = CommonTypes::getBool($in);
+		$this->payload = new CacheableNbt(CommonTypes::getNbtCompoundRoot($in));
 	}
 
-	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putBool($this->isRouteToManager);
-		$out->put($this->payload->getEncodedNbt());
+	protected function encodePayload(ByteBufferWriter $out) : void{
+		CommonTypes::putBool($out, $this->isRouteToManager);
+		$out->writeByteArray($this->payload->getEncodedNbt());
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

@@ -14,7 +14,11 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol\types;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\LE;
+use pmmp\encoding\VarInt;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 
 final class SpawnSettings{
 	public const BIOME_TYPE_DEFAULT = 0;
@@ -41,17 +45,17 @@ final class SpawnSettings{
 		return $this->dimension;
 	}
 
-	public static function read(PacketSerializer $in) : self{
-		$biomeType = $in->getLShort();
-		$biomeName = $in->getString();
-		$dimension = $in->getVarInt();
+	public static function read(ByteBufferReader $in) : self{
+		$biomeType = LE::readUnsignedShort($in);
+		$biomeName = CommonTypes::getString($in);
+		$dimension = VarInt::readSignedInt($in);
 
 		return new self($biomeType, $biomeName, $dimension);
 	}
 
-	public function write(PacketSerializer $out) : void{
-		$out->putLShort($this->biomeType);
-		$out->putString($this->biomeName);
-		$out->putVarInt($this->dimension);
+	public function write(ByteBufferWriter $out) : void{
+		LE::writeUnsignedShort($out, $this->biomeType);
+		CommonTypes::putString($out, $this->biomeName);
+		VarInt::writeSignedInt($out, $this->dimension);
 	}
 }

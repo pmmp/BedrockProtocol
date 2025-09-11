@@ -14,8 +14,10 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
 use pocketmine\math\Vector3;
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 use pocketmine\network\mcpe\protocol\types\entity\MetadataProperty;
 use pocketmine\network\mcpe\protocol\types\inventory\ItemStackWrapper;
 
@@ -59,24 +61,24 @@ class AddItemActorPacket extends DataPacket implements ClientboundPacket{
 		return $result;
 	}
 
-	protected function decodePayload(PacketSerializer $in) : void{
-		$this->actorUniqueId = $in->getActorUniqueId();
-		$this->actorRuntimeId = $in->getActorRuntimeId();
-		$this->item = $in->getItemStackWrapper();
-		$this->position = $in->getVector3();
-		$this->motion = $in->getVector3();
-		$this->metadata = $in->getEntityMetadata();
-		$this->isFromFishing = $in->getBool();
+	protected function decodePayload(ByteBufferReader $in) : void{
+		$this->actorUniqueId = CommonTypes::getActorUniqueId($in);
+		$this->actorRuntimeId = CommonTypes::getActorRuntimeId($in);
+		$this->item = CommonTypes::getItemStackWrapper($in);
+		$this->position = CommonTypes::getVector3($in);
+		$this->motion = CommonTypes::getVector3($in);
+		$this->metadata = CommonTypes::getEntityMetadata($in);
+		$this->isFromFishing = CommonTypes::getBool($in);
 	}
 
-	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putActorUniqueId($this->actorUniqueId);
-		$out->putActorRuntimeId($this->actorRuntimeId);
-		$out->putItemStackWrapper($this->item);
-		$out->putVector3($this->position);
-		$out->putVector3Nullable($this->motion);
-		$out->putEntityMetadata($this->metadata);
-		$out->putBool($this->isFromFishing);
+	protected function encodePayload(ByteBufferWriter $out) : void{
+		CommonTypes::putActorUniqueId($out, $this->actorUniqueId);
+		CommonTypes::putActorRuntimeId($out, $this->actorRuntimeId);
+		CommonTypes::putItemStackWrapper($out, $this->item);
+		CommonTypes::putVector3($out, $this->position);
+		CommonTypes::putVector3Nullable($out, $this->motion);
+		CommonTypes::putEntityMetadata($out, $this->metadata);
+		CommonTypes::putBool($out, $this->isFromFishing);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

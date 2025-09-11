@@ -14,7 +14,9 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 
 class GameTestResultsPacket extends DataPacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::GAME_TEST_RESULTS_PACKET;
@@ -40,16 +42,16 @@ class GameTestResultsPacket extends DataPacket implements ClientboundPacket{
 
 	public function getTestName() : string{ return $this->testName; }
 
-	protected function decodePayload(PacketSerializer $in) : void{
-		$this->success = $in->getBool();
-		$this->error = $in->getString();
-		$this->testName = $in->getString();
+	protected function decodePayload(ByteBufferReader $in) : void{
+		$this->success = CommonTypes::getBool($in);
+		$this->error = CommonTypes::getString($in);
+		$this->testName = CommonTypes::getString($in);
 	}
 
-	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putBool($this->success);
-		$out->putString($this->error);
-		$out->putString($this->testName);
+	protected function encodePayload(ByteBufferWriter $out) : void{
+		CommonTypes::putBool($out, $this->success);
+		CommonTypes::putString($out, $this->error);
+		CommonTypes::putString($out, $this->testName);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

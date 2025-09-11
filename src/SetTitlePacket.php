@@ -14,7 +14,10 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\VarInt;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 
 class SetTitlePacket extends DataPacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::SET_TITLE_PACKET;
@@ -63,26 +66,26 @@ class SetTitlePacket extends DataPacket implements ClientboundPacket{
 		return $result;
 	}
 
-	protected function decodePayload(PacketSerializer $in) : void{
-		$this->type = $in->getVarInt();
-		$this->text = $in->getString();
-		$this->fadeInTime = $in->getVarInt();
-		$this->stayTime = $in->getVarInt();
-		$this->fadeOutTime = $in->getVarInt();
-		$this->xuid = $in->getString();
-		$this->platformOnlineId = $in->getString();
-		$this->filteredTitleText = $in->getString();
+	protected function decodePayload(ByteBufferReader $in) : void{
+		$this->type = VarInt::readSignedInt($in);
+		$this->text = CommonTypes::getString($in);
+		$this->fadeInTime = VarInt::readSignedInt($in);
+		$this->stayTime = VarInt::readSignedInt($in);
+		$this->fadeOutTime = VarInt::readSignedInt($in);
+		$this->xuid = CommonTypes::getString($in);
+		$this->platformOnlineId = CommonTypes::getString($in);
+		$this->filteredTitleText = CommonTypes::getString($in);
 	}
 
-	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putVarInt($this->type);
-		$out->putString($this->text);
-		$out->putVarInt($this->fadeInTime);
-		$out->putVarInt($this->stayTime);
-		$out->putVarInt($this->fadeOutTime);
-		$out->putString($this->xuid);
-		$out->putString($this->platformOnlineId);
-		$out->putString($this->filteredTitleText);
+	protected function encodePayload(ByteBufferWriter $out) : void{
+		VarInt::writeSignedInt($out, $this->type);
+		CommonTypes::putString($out, $this->text);
+		VarInt::writeSignedInt($out, $this->fadeInTime);
+		VarInt::writeSignedInt($out, $this->stayTime);
+		VarInt::writeSignedInt($out, $this->fadeOutTime);
+		CommonTypes::putString($out, $this->xuid);
+		CommonTypes::putString($out, $this->platformOnlineId);
+		CommonTypes::putString($out, $this->filteredTitleText);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

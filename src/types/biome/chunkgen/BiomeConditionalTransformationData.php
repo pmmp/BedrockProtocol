@@ -14,7 +14,10 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol\types\biome\chunkgen;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\LE;
+use pmmp\encoding\VarInt;
 use function count;
 
 final class BiomeConditionalTransformationData{
@@ -37,14 +40,14 @@ final class BiomeConditionalTransformationData{
 
 	public function getMinPassingNeighbors() : int{ return $this->minPassingNeighbors; }
 
-	public static function read(PacketSerializer $in) : self{
+	public static function read(ByteBufferReader $in) : self{
 		$weightedBiomes = [];
-		for($i = 0, $count = $in->getUnsignedVarInt(); $i < $count; ++$i){
+		for($i = 0, $count = VarInt::readUnsignedInt($in); $i < $count; ++$i){
 			$weightedBiomes[] = BiomeWeightedData::read($in);
 		}
 
-		$conditionJSON = $in->getLShort();
-		$minPassingNeighbors = $in->getLInt();
+		$conditionJSON = LE::readSignedShort($in);
+		$minPassingNeighbors = LE::readUnsignedInt($in);
 
 		return new self(
 			$weightedBiomes,
@@ -53,13 +56,13 @@ final class BiomeConditionalTransformationData{
 		);
 	}
 
-	public function write(PacketSerializer $out) : void{
-		$out->putUnsignedVarInt(count($this->weightedBiomes));
+	public function write(ByteBufferWriter $out) : void{
+		VarInt::writeUnsignedInt($out, count($this->weightedBiomes));
 		foreach($this->weightedBiomes as $biome){
 			$biome->write($out);
 		}
 
-		$out->putLShort($this->conditionJSON);
-		$out->putLInt($this->minPassingNeighbors);
+		LE::writeSignedShort($out, $this->conditionJSON);
+		LE::writeUnsignedInt($out, $this->minPassingNeighbors);
 	}
 }

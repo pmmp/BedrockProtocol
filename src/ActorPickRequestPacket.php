@@ -14,7 +14,11 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\Byte;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\LE;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 
 class ActorPickRequestPacket extends DataPacket implements ServerboundPacket{
 	public const NETWORK_ID = ProtocolInfo::ACTOR_PICK_REQUEST_PACKET;
@@ -34,16 +38,16 @@ class ActorPickRequestPacket extends DataPacket implements ServerboundPacket{
 		return $result;
 	}
 
-	protected function decodePayload(PacketSerializer $in) : void{
-		$this->actorUniqueId = $in->getLLong();
-		$this->hotbarSlot = $in->getByte();
-		$this->addUserData = $in->getBool();
+	protected function decodePayload(ByteBufferReader $in) : void{
+		$this->actorUniqueId = LE::readSignedLong($in);
+		$this->hotbarSlot = Byte::readUnsigned($in);
+		$this->addUserData = CommonTypes::getBool($in);
 	}
 
-	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putLLong($this->actorUniqueId);
-		$out->putByte($this->hotbarSlot);
-		$out->putBool($this->addUserData);
+	protected function encodePayload(ByteBufferWriter $out) : void{
+		LE::writeSignedLong($out, $this->actorUniqueId);
+		Byte::writeUnsigned($out, $this->hotbarSlot);
+		CommonTypes::putBool($out, $this->addUserData);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

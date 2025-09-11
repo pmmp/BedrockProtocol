@@ -14,7 +14,9 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 use pocketmine\network\mcpe\protocol\types\skin\SkinData;
 use Ramsey\Uuid\UuidInterface;
 
@@ -38,20 +40,20 @@ class PlayerSkinPacket extends DataPacket implements ClientboundPacket, Serverbo
 		return $result;
 	}
 
-	protected function decodePayload(PacketSerializer $in) : void{
-		$this->uuid = $in->getUUID();
-		$this->skin = $in->getSkin();
-		$this->newSkinName = $in->getString();
-		$this->oldSkinName = $in->getString();
-		$this->skin->setVerified($in->getBool());
+	protected function decodePayload(ByteBufferReader $in) : void{
+		$this->uuid = CommonTypes::getUUID($in);
+		$this->skin = CommonTypes::getSkin($in);
+		$this->newSkinName = CommonTypes::getString($in);
+		$this->oldSkinName = CommonTypes::getString($in);
+		$this->skin->setVerified(CommonTypes::getBool($in));
 	}
 
-	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putUUID($this->uuid);
-		$out->putSkin($this->skin);
-		$out->putString($this->newSkinName);
-		$out->putString($this->oldSkinName);
-		$out->putBool($this->skin->isVerified());
+	protected function encodePayload(ByteBufferWriter $out) : void{
+		CommonTypes::putUUID($out, $this->uuid);
+		CommonTypes::putSkin($out, $this->skin);
+		CommonTypes::putString($out, $this->newSkinName);
+		CommonTypes::putString($out, $this->oldSkinName);
+		CommonTypes::putBool($out, $this->skin->isVerified());
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

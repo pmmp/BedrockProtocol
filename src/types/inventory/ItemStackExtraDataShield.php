@@ -14,8 +14,10 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol\types\inventory;
 
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\LE;
 use pocketmine\nbt\tag\CompoundTag;
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 
 /**
  * Extension of ItemStackExtraData for shield items, which have an additional field for the blocking tick.
@@ -37,15 +39,16 @@ final class ItemStackExtraDataShield extends ItemStackExtraData{
 
 	public function getBlockingTick() : int{ return $this->blockingTick; }
 
-	public static function read(PacketSerializer $in) : self{
+	public static function read(ByteBufferReader $in) : self{
 		$base = parent::read($in);
-		$blockingTick = $in->getLLong();
+		//TODO: I don't know for sure if this is supposed to be signed or unsigned
+		$blockingTick = LE::readSignedLong($in);
 
 		return new self($base->getNbt(), $base->getCanPlaceOn(), $base->getCanDestroy(), $blockingTick);
 	}
 
-	public function write(PacketSerializer $out) : void{
+	public function write(ByteBufferWriter $out) : void{
 		parent::write($out);
-		$out->putLLong($this->blockingTick);
+		LE::writeSignedLong($out, $this->blockingTick);
 	}
 }

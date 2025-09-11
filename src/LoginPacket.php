@@ -14,8 +14,11 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
-use pocketmine\utils\BinaryStream;
+use pmmp\encoding\BE;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\LE;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 use function strlen;
 
 class LoginPacket extends DataPacket implements ServerboundPacket{
@@ -40,46 +43,36 @@ class LoginPacket extends DataPacket implements ServerboundPacket{
 		return true;
 	}
 
-	protected function decodePayload(PacketSerializer $in) : void{
-		$this->protocol = $in->getInt();
-		$this->decodeConnectionRequest($in->getString());
+	protected function decodePayload(ByteBufferReader $in) : void{
+		$this->protocol = BE::readUnsignedInt($in);
+		$this->decodeConnectionRequest(CommonTypes::getString($in));
 	}
 
 	protected function decodeConnectionRequest(string $binary) : void{
-		$connRequestReader = new BinaryStream($binary);
+		$connRequestReader = new ByteBufferReader($binary);
 
-		$authInfoJsonLength = $connRequestReader->getLInt();
-		if($authInfoJsonLength <= 0){
-			//technically this is always positive; the problem results because getLInt() is implicitly signed
-			//this is inconsistent with many other methods, but we can't do anything about that for now
-			throw new PacketDecodeException("Length of auth info JSON must be positive");
-		}
-		$this->authInfoJson = $connRequestReader->get($authInfoJsonLength);
+		$authInfoJsonLength = LE::readUnsignedInt($connRequestReader);
+		$this->authInfoJson = $connRequestReader->readByteArray($authInfoJsonLength);
 
-		$clientDataJwtLength = $connRequestReader->getLInt();
-		if($clientDataJwtLength <= 0){
-			//technically this is always positive; the problem results because getLInt() is implicitly signed
-			//this is inconsistent with many other methods, but we can't do anything about that for now
-			throw new PacketDecodeException("Length of clientData JWT must be positive");
-		}
-		$this->clientDataJwt = $connRequestReader->get($clientDataJwtLength);
+		$clientDataJwtLength = LE::readUnsignedInt($connRequestReader);
+		$this->clientDataJwt = $connRequestReader->readByteArray($clientDataJwtLength);
 	}
 
-	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putInt($this->protocol);
-		$out->putString($this->encodeConnectionRequest());
+	protected function encodePayload(ByteBufferWriter $out) : void{
+		BE::writeUnsignedInt($out, $this->protocol);
+		CommonTypes::putString($out, $this->encodeConnectionRequest());
 	}
 
 	protected function encodeConnectionRequest() : string{
-		$connRequestWriter = new BinaryStream();
+		$connRequestWriter = new ByteBufferWriter();
 
-		$connRequestWriter->putLInt(strlen($this->authInfoJson));
-		$connRequestWriter->put($this->authInfoJson);
+		LE::writeUnsignedInt($connRequestWriter, strlen($this->authInfoJson));
+		$connRequestWriter->writeByteArray($this->authInfoJson);
 
-		$connRequestWriter->putLInt(strlen($this->clientDataJwt));
-		$connRequestWriter->put($this->clientDataJwt);
+		LE::writeUnsignedInt($connRequestWriter, strlen($this->clientDataJwt));
+		$connRequestWriter->writeByteArray($this->clientDataJwt);
 
-		return $connRequestWriter->getBuffer();
+		return $connRequestWriter->getData();
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

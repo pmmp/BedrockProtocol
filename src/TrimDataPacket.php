@@ -14,7 +14,9 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\VarInt;
 use pocketmine\network\mcpe\protocol\types\TrimMaterial;
 use pocketmine\network\mcpe\protocol\types\TrimPattern;
 use function count;
@@ -59,23 +61,23 @@ class TrimDataPacket extends DataPacket implements ClientboundPacket{
 	 */
 	public function getTrimMaterials() : array{ return $this->trimMaterials; }
 
-	protected function decodePayload(PacketSerializer $in) : void{
+	protected function decodePayload(ByteBufferReader $in) : void{
 		$this->trimPatterns = [];
-		for($i = 0, $count = $in->getUnsignedVarInt(); $i < $count; ++$i){
+		for($i = 0, $count = VarInt::readUnsignedInt($in); $i < $count; ++$i){
 			$this->trimPatterns[] = TrimPattern::read($in);
 		}
 		$this->trimMaterials = [];
-		for($i = 0, $count = $in->getUnsignedVarInt(); $i < $count; ++$i){
+		for($i = 0, $count = VarInt::readUnsignedInt($in); $i < $count; ++$i){
 			$this->trimMaterials[] = TrimMaterial::read($in);
 		}
 	}
 
-	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putUnsignedVarInt(count($this->trimPatterns));
+	protected function encodePayload(ByteBufferWriter $out) : void{
+		VarInt::writeUnsignedInt($out, count($this->trimPatterns));
 		foreach($this->trimPatterns as $trimPattern){
 			$trimPattern->write($out);
 		}
-		$out->putUnsignedVarInt(count($this->trimMaterials));
+		VarInt::writeUnsignedInt($out, count($this->trimMaterials));
 		foreach($this->trimMaterials as $trimMaterial){
 			$trimMaterial->write($out);
 		}

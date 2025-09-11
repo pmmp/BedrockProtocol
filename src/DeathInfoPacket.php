@@ -14,7 +14,10 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\VarInt;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 use function count;
 
 /**
@@ -43,21 +46,21 @@ class DeathInfoPacket extends DataPacket implements ClientboundPacket{
 	/** @return string[] */
 	public function getMessageParameters() : array{ return $this->messageParameters; }
 
-	protected function decodePayload(PacketSerializer $in) : void{
-		$this->messageTranslationKey = $in->getString();
+	protected function decodePayload(ByteBufferReader $in) : void{
+		$this->messageTranslationKey = CommonTypes::getString($in);
 
 		$this->messageParameters = [];
-		for($i = 0, $len = $in->getUnsignedVarInt(); $i < $len; $i++){
-			$this->messageParameters[] = $in->getString();
+		for($i = 0, $len = VarInt::readUnsignedInt($in); $i < $len; $i++){
+			$this->messageParameters[] = CommonTypes::getString($in);
 		}
 	}
 
-	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putString($this->messageTranslationKey);
+	protected function encodePayload(ByteBufferWriter $out) : void{
+		CommonTypes::putString($out, $this->messageTranslationKey);
 
-		$out->putUnsignedVarInt(count($this->messageParameters));
+		VarInt::writeUnsignedInt($out, count($this->messageParameters));
 		foreach($this->messageParameters as $parameter){
-			$out->putString($parameter);
+			CommonTypes::putString($out, $parameter);
 		}
 	}
 

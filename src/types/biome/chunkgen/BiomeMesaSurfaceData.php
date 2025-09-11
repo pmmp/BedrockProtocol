@@ -14,7 +14,10 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol\types\biome\chunkgen;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\LE;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 
 final class BiomeMesaSurfaceData{
 
@@ -33,11 +36,11 @@ final class BiomeMesaSurfaceData{
 
 	public function hasForest() : bool{ return $this->forest; }
 
-	public static function read(PacketSerializer $in) : self{
-		$clayMaterial = $in->getLInt();
-		$hardClayMaterial = $in->getLInt();
-		$brycePillars = $in->getBool();
-		$forest = $in->getBool();
+	public static function read(ByteBufferReader $in) : self{
+		$clayMaterial = LE::readUnsignedInt($in);
+		$hardClayMaterial = LE::readUnsignedInt($in);
+		$brycePillars = CommonTypes::getBool($in);
+		$forest = CommonTypes::getBool($in);
 
 		return new self(
 			$clayMaterial,
@@ -47,10 +50,10 @@ final class BiomeMesaSurfaceData{
 		);
 	}
 
-	public function write(PacketSerializer $out) : void{
-		$out->putLInt($this->clayMaterial);
-		$out->putLInt($this->hardClayMaterial);
-		$out->putBool($this->brycePillars);
-		$out->putBool($this->forest);
+	public function write(ByteBufferWriter $out) : void{
+		LE::writeUnsignedInt($out, $this->clayMaterial);
+		LE::writeUnsignedInt($out, $this->hardClayMaterial);
+		CommonTypes::putBool($out, $this->brycePillars);
+		CommonTypes::putBool($out, $this->forest);
 	}
 }

@@ -14,7 +14,11 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol\types\camera;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\LE;
+use pmmp\encoding\VarInt;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 use function count;
 
 final class CameraAimAssistCategoryPriorities{
@@ -44,19 +48,19 @@ final class CameraAimAssistCategoryPriorities{
 
 	public function getDefaultBlockPriority() : ?int{ return $this->defaultBlockPriority; }
 
-	public static function read(PacketSerializer $in) : self{
+	public static function read(ByteBufferReader $in) : self{
 		$entities = [];
-		for($i = 0, $len = $in->getUnsignedVarInt(); $i < $len; ++$i){
+		for($i = 0, $len = VarInt::readUnsignedInt($in); $i < $len; ++$i){
 			$entities[] = CameraAimAssistCategoryEntityPriority::read($in);
 		}
 
 		$blocks = [];
-		for($i = 0, $len = $in->getUnsignedVarInt(); $i < $len; ++$i){
+		for($i = 0, $len = VarInt::readUnsignedInt($in); $i < $len; ++$i){
 			$blocks[] = CameraAimAssistCategoryBlockPriority::read($in);
 		}
 
-		$defaultEntityPriority = $in->readOptional(fn() => $in->getLInt());
-		$defaultBlockPriority = $in->readOptional(fn() => $in->getLInt());
+		$defaultEntityPriority = CommonTypes::readOptional($in, LE::readSignedInt(...));
+		$defaultBlockPriority = CommonTypes::readOptional($in, LE::readSignedInt(...));
 		return new self(
 			$entities,
 			$blocks,
@@ -65,18 +69,18 @@ final class CameraAimAssistCategoryPriorities{
 		);
 	}
 
-	public function write(PacketSerializer $out) : void{
-		$out->putUnsignedVarInt(count($this->entities));
+	public function write(ByteBufferWriter $out) : void{
+		VarInt::writeUnsignedInt($out, count($this->entities));
 		foreach($this->entities as $entity){
 			$entity->write($out);
 		}
 
-		$out->putUnsignedVarInt(count($this->blocks));
+		VarInt::writeUnsignedInt($out, count($this->blocks));
 		foreach($this->blocks as $block){
 			$block->write($out);
 		}
 
-		$out->writeOptional($this->defaultEntityPriority, fn(int $v) => $out->putLInt($v));
-		$out->writeOptional($this->defaultBlockPriority, fn(int $v) => $out->putLInt($v));
+		CommonTypes::writeOptional($out, $this->defaultEntityPriority, LE::writeSignedInt(...));
+		CommonTypes::writeOptional($out, $this->defaultBlockPriority, LE::writeSignedInt(...));
 	}
 }

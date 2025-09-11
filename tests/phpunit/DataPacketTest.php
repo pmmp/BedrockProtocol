@@ -15,7 +15,8 @@ declare(strict_types=1);
 namespace pocketmine\network\mcpe\protocol;
 
 use PHPUnit\Framework\TestCase;
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
 
 class DataPacketTest extends TestCase{
 
@@ -24,11 +25,11 @@ class DataPacketTest extends TestCase{
 		$pk->senderSubId = 3;
 		$pk->recipientSubId = 2;
 
-		$serializer = PacketSerializer::encoder();
+		$serializer = new ByteBufferWriter();
 		$pk->encode($serializer);
 
 		$pk2 = new TestPacket();
-		$pk2->decode(PacketSerializer::decoder($serializer->getBuffer(), 0));
+		$pk2->decode(new ByteBufferReader($serializer->getData()));
 		self::assertSame($pk2->senderSubId, 3);
 		self::assertSame($pk2->recipientSubId, 2);
 	}

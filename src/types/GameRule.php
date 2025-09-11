@@ -14,7 +14,7 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol\types;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\ByteBufferWriter;
 
 abstract class GameRule{
 	public function __construct(
@@ -25,5 +25,5 @@ abstract class GameRule{
 
 	abstract public function getTypeId() : int;
 
-	abstract public function encode(PacketSerializer $out) : void;
+	abstract public function encode(ByteBufferWriter $out) : void;
 }

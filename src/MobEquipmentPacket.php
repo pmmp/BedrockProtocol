@@ -14,7 +14,10 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\Byte;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 use pocketmine\network\mcpe\protocol\types\inventory\ItemStackWrapper;
 
 class MobEquipmentPacket extends DataPacket implements ClientboundPacket, ServerboundPacket{
@@ -39,20 +42,20 @@ class MobEquipmentPacket extends DataPacket implements ClientboundPacket, Server
 		return $result;
 	}
 
-	protected function decodePayload(PacketSerializer $in) : void{
-		$this->actorRuntimeId = $in->getActorRuntimeId();
-		$this->item = $in->getItemStackWrapper();
-		$this->inventorySlot = $in->getByte();
-		$this->hotbarSlot = $in->getByte();
-		$this->windowId = $in->getByte();
+	protected function decodePayload(ByteBufferReader $in) : void{
+		$this->actorRuntimeId = CommonTypes::getActorRuntimeId($in);
+		$this->item = CommonTypes::getItemStackWrapper($in);
+		$this->inventorySlot = Byte::readUnsigned($in);
+		$this->hotbarSlot = Byte::readUnsigned($in);
+		$this->windowId = Byte::readUnsigned($in);
 	}
 
-	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putActorRuntimeId($this->actorRuntimeId);
-		$out->putItemStackWrapper($this->item);
-		$out->putByte($this->inventorySlot);
-		$out->putByte($this->hotbarSlot);
-		$out->putByte($this->windowId);
+	protected function encodePayload(ByteBufferWriter $out) : void{
+		CommonTypes::putActorRuntimeId($out, $this->actorRuntimeId);
+		CommonTypes::putItemStackWrapper($out, $this->item);
+		Byte::writeUnsigned($out, $this->inventorySlot);
+		Byte::writeUnsigned($out, $this->hotbarSlot);
+		Byte::writeUnsigned($out, $this->windowId);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

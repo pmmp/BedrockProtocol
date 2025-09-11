@@ -14,7 +14,10 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\Byte;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\VarInt;
 
 class PositionTrackingDBClientRequestPacket extends DataPacket implements ServerboundPacket{
 	public const NETWORK_ID = ProtocolInfo::POSITION_TRACKING_D_B_CLIENT_REQUEST_PACKET;
@@ -38,14 +41,14 @@ class PositionTrackingDBClientRequestPacket extends DataPacket implements Server
 
 	public function getTrackingId() : int{ return $this->trackingId; }
 
-	protected function decodePayload(PacketSerializer $in) : void{
-		$this->action = $in->getByte();
-		$this->trackingId = $in->getVarInt();
+	protected function decodePayload(ByteBufferReader $in) : void{
+		$this->action = Byte::readUnsigned($in);
+		$this->trackingId = VarInt::readSignedInt($in);
 	}
 
-	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putByte($this->action);
-		$out->putVarInt($this->trackingId);
+	protected function encodePayload(ByteBufferWriter $out) : void{
+		Byte::writeUnsigned($out, $this->action);
+		VarInt::writeSignedInt($out, $this->trackingId);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

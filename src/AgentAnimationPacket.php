@@ -14,7 +14,10 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\Byte;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 
 class AgentAnimationPacket extends DataPacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::AGENT_ANIMATION_PACKET;
@@ -39,14 +42,14 @@ class AgentAnimationPacket extends DataPacket implements ClientboundPacket{
 
 	public function getActorRuntimeId() : int{ return $this->actorRuntimeId; }
 
-	protected function decodePayload(PacketSerializer $in) : void{
-		$this->animationType = $in->getByte();
-		$this->actorRuntimeId = $in->getActorRuntimeId();
+	protected function decodePayload(ByteBufferReader $in) : void{
+		$this->animationType = Byte::readUnsigned($in);
+		$this->actorRuntimeId = CommonTypes::getActorRuntimeId($in);
 	}
 
-	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putByte($this->animationType);
-		$out->putActorRuntimeId($this->actorRuntimeId);
+	protected function encodePayload(ByteBufferWriter $out) : void{
+		Byte::writeUnsigned($out, $this->animationType);
+		CommonTypes::putActorRuntimeId($out, $this->actorRuntimeId);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

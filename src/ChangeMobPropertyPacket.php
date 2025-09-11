@@ -14,7 +14,11 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\LE;
+use pmmp\encoding\VarInt;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 
 /**
  * This appears to be some kind of debug packet. Does nothing in release mode.
@@ -72,22 +76,22 @@ class ChangeMobPropertyPacket extends DataPacket implements ServerboundPacket{
 
 	public function getFloatValue() : float{ return $this->floatValue; }
 
-	protected function decodePayload(PacketSerializer $in) : void{
-		$this->actorUniqueId = $in->getActorUniqueId();
-		$this->propertyName = $in->getString();
-		$this->boolValue = $in->getBool();
-		$this->stringValue = $in->getString();
-		$this->intValue = $in->getVarInt();
-		$this->floatValue = $in->getLFloat();
+	protected function decodePayload(ByteBufferReader $in) : void{
+		$this->actorUniqueId = CommonTypes::getActorUniqueId($in);
+		$this->propertyName = CommonTypes::getString($in);
+		$this->boolValue = CommonTypes::getBool($in);
+		$this->stringValue = CommonTypes::getString($in);
+		$this->intValue = VarInt::readSignedInt($in);
+		$this->floatValue = LE::readFloat($in);
 	}
 
-	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putActorUniqueId($this->actorUniqueId);
-		$out->putString($this->propertyName);
-		$out->putBool($this->boolValue);
-		$out->putString($this->stringValue);
-		$out->putVarInt($this->intValue);
-		$out->putLFloat($this->floatValue);
+	protected function encodePayload(ByteBufferWriter $out) : void{
+		CommonTypes::putActorUniqueId($out, $this->actorUniqueId);
+		CommonTypes::putString($out, $this->propertyName);
+		CommonTypes::putBool($out, $this->boolValue);
+		CommonTypes::putString($out, $this->stringValue);
+		VarInt::writeSignedInt($out, $this->intValue);
+		LE::writeFloat($out, $this->floatValue);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

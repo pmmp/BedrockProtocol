@@ -14,7 +14,9 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 
 class CurrentStructureFeaturePacket extends DataPacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::CURRENT_STRUCTURE_FEATURE_PACKET;
@@ -30,12 +32,12 @@ class CurrentStructureFeaturePacket extends DataPacket implements ClientboundPac
 		return $result;
 	}
 
-	protected function decodePayload(PacketSerializer $in) : void{
-		$this->currentStructureFeature = $in->getString();
+	protected function decodePayload(ByteBufferReader $in) : void{
+		$this->currentStructureFeature = CommonTypes::getString($in);
 	}
 
-	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putString($this->currentStructureFeature);
+	protected function encodePayload(ByteBufferWriter $out) : void{
+		CommonTypes::putString($out, $this->currentStructureFeature);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

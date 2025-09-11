@@ -14,7 +14,10 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\VarInt;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 use pocketmine\network\mcpe\protocol\types\command\CommandOriginData;
 
 class CommandRequestPacket extends DataPacket implements ServerboundPacket{
@@ -37,18 +40,18 @@ class CommandRequestPacket extends DataPacket implements ServerboundPacket{
 		return $result;
 	}
 
-	protected function decodePayload(PacketSerializer $in) : void{
-		$this->command = $in->getString();
-		$this->originData = $in->getCommandOriginData();
-		$this->isInternal = $in->getBool();
-		$this->version = $in->getVarInt();
+	protected function decodePayload(ByteBufferReader $in) : void{
+		$this->command = CommonTypes::getString($in);
+		$this->originData = CommonTypes::getCommandOriginData($in);
+		$this->isInternal = CommonTypes::getBool($in);
+		$this->version = VarInt::readSignedInt($in);
 	}
 
-	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putString($this->command);
-		$out->putCommandOriginData($this->originData);
-		$out->putBool($this->isInternal);
-		$out->putVarInt($this->version);
+	protected function encodePayload(ByteBufferWriter $out) : void{
+		CommonTypes::putString($out, $this->command);
+		CommonTypes::putCommandOriginData($out, $this->originData);
+		CommonTypes::putBool($out, $this->isInternal);
+		VarInt::writeSignedInt($out, $this->version);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

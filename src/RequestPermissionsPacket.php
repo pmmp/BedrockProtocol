@@ -14,7 +14,10 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\LE;
+use pmmp\encoding\VarInt;
 use pocketmine\network\mcpe\protocol\types\PlayerPermissions;
 
 /**
@@ -56,16 +59,16 @@ class RequestPermissionsPacket extends DataPacket implements ServerboundPacket{
 
 	public function getCustomFlags() : int{ return $this->customFlags; }
 
-	protected function decodePayload(PacketSerializer $in) : void{
-		$this->targetActorUniqueId = $in->getLLong();
-		$this->playerPermission = $in->getVarInt();
-		$this->customFlags = $in->getLShort();
+	protected function decodePayload(ByteBufferReader $in) : void{
+		$this->targetActorUniqueId = LE::readSignedLong($in);
+		$this->playerPermission = VarInt::readSignedInt($in);
+		$this->customFlags = LE::readUnsignedShort($in);
 	}
 
-	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putLLong($this->targetActorUniqueId);
-		$out->putVarInt($this->playerPermission);
-		$out->putLShort($this->customFlags);
+	protected function encodePayload(ByteBufferWriter $out) : void{
+		LE::writeSignedLong($out, $this->targetActorUniqueId);
+		VarInt::writeSignedInt($out, $this->playerPermission);
+		LE::writeUnsignedShort($out, $this->customFlags);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

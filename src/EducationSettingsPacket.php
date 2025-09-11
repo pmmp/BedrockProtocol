@@ -14,7 +14,9 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 use pocketmine\network\mcpe\protocol\types\EducationSettingsAgentCapabilities;
 use pocketmine\network\mcpe\protocol\types\EducationSettingsExternalLinkSettings;
 
@@ -91,30 +93,30 @@ class EducationSettingsPacket extends DataPacket implements ClientboundPacket{
 
 	public function getLinkSettings() : ?EducationSettingsExternalLinkSettings{ return $this->linkSettings; }
 
-	protected function decodePayload(PacketSerializer $in) : void{
-		$this->codeBuilderDefaultUri = $in->getString();
-		$this->codeBuilderTitle = $in->getString();
-		$this->canResizeCodeBuilder = $in->getBool();
-		$this->disableLegacyTitleBar = $in->getBool();
-		$this->postProcessFilter = $in->getString();
-		$this->screenshotBorderResourcePath = $in->getString();
-		$this->agentCapabilities = $in->readOptional(fn() => EducationSettingsAgentCapabilities::read($in));
-		$this->codeBuilderOverrideUri = $in->readOptional($in->getString(...));
-		$this->hasQuiz = $in->getBool();
-		$this->linkSettings = $in->readOptional(fn() => EducationSettingsExternalLinkSettings::read($in));
+	protected function decodePayload(ByteBufferReader $in) : void{
+		$this->codeBuilderDefaultUri = CommonTypes::getString($in);
+		$this->codeBuilderTitle = CommonTypes::getString($in);
+		$this->canResizeCodeBuilder = CommonTypes::getBool($in);
+		$this->disableLegacyTitleBar = CommonTypes::getBool($in);
+		$this->postProcessFilter = CommonTypes::getString($in);
+		$this->screenshotBorderResourcePath = CommonTypes::getString($in);
+		$this->agentCapabilities = CommonTypes::readOptional($in, EducationSettingsAgentCapabilities::read(...));
+		$this->codeBuilderOverrideUri = CommonTypes::readOptional($in, CommonTypes::getString(...));
+		$this->hasQuiz = CommonTypes::getBool($in);
+		$this->linkSettings = CommonTypes::readOptional($in, EducationSettingsExternalLinkSettings::read(...));
 	}
 
-	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putString($this->codeBuilderDefaultUri);
-		$out->putString($this->codeBuilderTitle);
-		$out->putBool($this->canResizeCodeBuilder);
-		$out->putBool($this->disableLegacyTitleBar);
-		$out->putString($this->postProcessFilter);
-		$out->putString($this->screenshotBorderResourcePath);
-		$out->writeOptional($this->agentCapabilities, fn(EducationSettingsAgentCapabilities $v) => $v->write($out));
-		$out->writeOptional($this->codeBuilderOverrideUri, $out->putString(...));
-		$out->putBool($this->hasQuiz);
-		$out->writeOptional($this->linkSettings, fn(EducationSettingsExternalLinkSettings $v) => $v->write($out));
+	protected function encodePayload(ByteBufferWriter $out) : void{
+		CommonTypes::putString($out, $this->codeBuilderDefaultUri);
+		CommonTypes::putString($out, $this->codeBuilderTitle);
+		CommonTypes::putBool($out, $this->canResizeCodeBuilder);
+		CommonTypes::putBool($out, $this->disableLegacyTitleBar);
+		CommonTypes::putString($out, $this->postProcessFilter);
+		CommonTypes::putString($out, $this->screenshotBorderResourcePath);
+		CommonTypes::writeOptional($out, $this->agentCapabilities, fn(ByteBufferWriter $out, EducationSettingsAgentCapabilities $v) => $v->write($out));
+		CommonTypes::writeOptional($out, $this->codeBuilderOverrideUri, CommonTypes::putString(...));
+		CommonTypes::putBool($out, $this->hasQuiz);
+		CommonTypes::writeOptional($out, $this->linkSettings, fn(ByteBufferWriter $out, EducationSettingsExternalLinkSettings $v) => $v->write($out));
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

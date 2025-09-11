@@ -14,7 +14,11 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\LE;
+use pmmp\encoding\VarInt;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 
 class AnimatePacket extends DataPacket implements ClientboundPacket, ServerboundPacket{
 	public const NETWORK_ID = ProtocolInfo::ANIMATE_PACKET;
@@ -42,19 +46,19 @@ class AnimatePacket extends DataPacket implements ClientboundPacket, Serverbound
 		return $result;
 	}
 
-	protected function decodePayload(PacketSerializer $in) : void{
-		$this->action = $in->getVarInt();
-		$this->actorRuntimeId = $in->getActorRuntimeId();
+	protected function decodePayload(ByteBufferReader $in) : void{
+		$this->action = VarInt::readSignedInt($in);
+		$this->actorRuntimeId = CommonTypes::getActorRuntimeId($in);
 		if(($this->action & 0x80) !== 0){
-			$this->float = $in->getLFloat();
+			$this->float = LE::readFloat($in);
 		}
 	}
 
-	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putVarInt($this->action);
-		$out->putActorRuntimeId($this->actorRuntimeId);
+	protected function encodePayload(ByteBufferWriter $out) : void{
+		VarInt::writeSignedInt($out, $this->action);
+		CommonTypes::putActorRuntimeId($out, $this->actorRuntimeId);
 		if(($this->action & 0x80) !== 0){
-			$out->putLFloat($this->float);
+			LE::writeFloat($out, $this->float);
 		}
 	}
 

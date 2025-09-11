@@ -14,7 +14,9 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\VarInt;
 use pocketmine\network\mcpe\protocol\types\hud\HudElement;
 use pocketmine\network\mcpe\protocol\types\hud\HudVisibility;
 use function count;
@@ -42,20 +44,20 @@ class SetHudPacket extends DataPacket implements ClientboundPacket{
 
 	public function getVisibility() : HudVisibility{ return $this->visibility; }
 
-	protected function decodePayload(PacketSerializer $in) : void{
+	protected function decodePayload(ByteBufferReader $in) : void{
 		$this->hudElements = [];
-		for($i = 0, $count = $in->getUnsignedVarInt(); $i < $count; ++$i){
-			$this->hudElements[] = HudElement::fromPacket($in->getVarInt());
+		for($i = 0, $count = VarInt::readUnsignedInt($in); $i < $count; ++$i){
+			$this->hudElements[] = HudElement::fromPacket(VarInt::readSignedInt($in));
 		}
-		$this->visibility = HudVisibility::fromPacket($in->getVarInt());
+		$this->visibility = HudVisibility::fromPacket(VarInt::readSignedInt($in));
 	}
 
-	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putUnsignedVarInt(count($this->hudElements));
+	protected function encodePayload(ByteBufferWriter $out) : void{
+		VarInt::writeUnsignedInt($out, count($this->hudElements));
 		foreach($this->hudElements as $element){
-			$out->putVarInt($element->value);
+			VarInt::writeSignedInt($out, $element->value);
 		}
-		$out->putVarInt($this->visibility->value);
+		VarInt::writeSignedInt($out, $this->visibility->value);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

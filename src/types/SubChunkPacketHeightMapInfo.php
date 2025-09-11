@@ -14,8 +14,9 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol\types;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
-use pocketmine\utils\Binary;
+use pmmp\encoding\Byte;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
 use function array_fill;
 use function count;
 
@@ -38,17 +39,17 @@ class SubChunkPacketHeightMapInfo{
 		return $this->heights[(($z & 0xf) << 4) | ($x & 0xf)];
 	}
 
-	public static function read(PacketSerializer $in) : self{
+	public static function read(ByteBufferReader $in) : self{
 		$heights = [];
 		for($i = 0; $i < 256; ++$i){
-			$heights[] = Binary::signByte($in->getByte());
+			$heights[] = Byte::readSigned($in);
 		}
 		return new self($heights);
 	}
 
-	public function write(PacketSerializer $out) : void{
+	public function write(ByteBufferWriter $out) : void{
 		for($i = 0; $i < 256; ++$i){
-			$out->putByte(Binary::unsignByte($this->heights[$i]));
+			Byte::writeSigned($out, $this->heights[$i]);
 		}
 	}
 

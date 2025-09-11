@@ -14,7 +14,10 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol\types\camera;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\LE;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 
 final class CameraAimAssistCategoryEntityPriority{
 
@@ -27,17 +30,17 @@ final class CameraAimAssistCategoryEntityPriority{
 
 	public function getPriority() : int{ return $this->priority; }
 
-	public static function read(PacketSerializer $in) : self{
-		$identifier = $in->getString();
-		$priority = $in->getLInt();
+	public static function read(ByteBufferReader $in) : self{
+		$identifier = CommonTypes::getString($in);
+		$priority = LE::readSignedInt($in);
 		return new self(
 			$identifier,
 			$priority
 		);
 	}
 
-	public function write(PacketSerializer $out) : void{
-		$out->putString($this->identifier);
-		$out->putLInt($this->priority);
+	public function write(ByteBufferWriter $out) : void{
+		CommonTypes::putString($out, $this->identifier);
+		LE::writeSignedInt($out, $this->priority);
 	}
 }

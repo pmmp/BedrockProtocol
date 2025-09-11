@@ -14,7 +14,9 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 
 class ServerToClientHandshakePacket extends DataPacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::SERVER_TO_CLIENT_HANDSHAKE_PACKET;
@@ -35,12 +37,12 @@ class ServerToClientHandshakePacket extends DataPacket implements ClientboundPac
 		return true;
 	}
 
-	protected function decodePayload(PacketSerializer $in) : void{
-		$this->jwt = $in->getString();
+	protected function decodePayload(ByteBufferReader $in) : void{
+		$this->jwt = CommonTypes::getString($in);
 	}
 
-	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putString($this->jwt);
+	protected function encodePayload(ByteBufferWriter $out) : void{
+		CommonTypes::putString($out, $this->jwt);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

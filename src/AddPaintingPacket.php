@@ -14,8 +14,11 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\VarInt;
 use pocketmine\math\Vector3;
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 
 class AddPaintingPacket extends DataPacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::ADD_PAINTING_PACKET;
@@ -39,20 +42,20 @@ class AddPaintingPacket extends DataPacket implements ClientboundPacket{
 		return $result;
 	}
 
-	protected function decodePayload(PacketSerializer $in) : void{
-		$this->actorUniqueId = $in->getActorUniqueId();
-		$this->actorRuntimeId = $in->getActorRuntimeId();
-		$this->position = $in->getVector3();
-		$this->direction = $in->getVarInt();
-		$this->title = $in->getString();
+	protected function decodePayload(ByteBufferReader $in) : void{
+		$this->actorUniqueId = CommonTypes::getActorUniqueId($in);
+		$this->actorRuntimeId = CommonTypes::getActorRuntimeId($in);
+		$this->position = CommonTypes::getVector3($in);
+		$this->direction = VarInt::readSignedInt($in);
+		$this->title = CommonTypes::getString($in);
 	}
 
-	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putActorUniqueId($this->actorUniqueId);
-		$out->putActorRuntimeId($this->actorRuntimeId);
-		$out->putVector3($this->position);
-		$out->putVarInt($this->direction);
-		$out->putString($this->title);
+	protected function encodePayload(ByteBufferWriter $out) : void{
+		CommonTypes::putActorUniqueId($out, $this->actorUniqueId);
+		CommonTypes::putActorRuntimeId($out, $this->actorRuntimeId);
+		CommonTypes::putVector3($out, $this->position);
+		VarInt::writeSignedInt($out, $this->direction);
+		CommonTypes::putString($out, $this->title);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

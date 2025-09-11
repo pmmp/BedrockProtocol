@@ -14,8 +14,11 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\LE;
 use pocketmine\network\mcpe\protocol\serializer\BitSet;
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 use pocketmine\network\mcpe\protocol\types\entity\EntityMetadataFlags;
 
 class ClientMovementPredictionSyncPacket extends DataPacket implements ServerboundPacket{
@@ -117,34 +120,34 @@ class ClientMovementPredictionSyncPacket extends DataPacket implements Serverbou
 
 	public function getActorFlyingState() : bool{ return $this->actorFlyingState; }
 
-	protected function decodePayload(PacketSerializer $in) : void{
+	protected function decodePayload(ByteBufferReader $in) : void{
 		$this->flags = BitSet::read($in, self::FLAG_LENGTH);
-		$this->scale = $in->getLFloat();
-		$this->width = $in->getLFloat();
-		$this->height = $in->getLFloat();
-		$this->movementSpeed = $in->getLFloat();
-		$this->underwaterMovementSpeed = $in->getLFloat();
-		$this->lavaMovementSpeed = $in->getLFloat();
-		$this->jumpStrength = $in->getLFloat();
-		$this->health = $in->getLFloat();
-		$this->hunger = $in->getLFloat();
-		$this->actorUniqueId = $in->getActorUniqueId();
-		$this->actorFlyingState = $in->getBool();
+		$this->scale = LE::readFloat($in);
+		$this->width = LE::readFloat($in);
+		$this->height = LE::readFloat($in);
+		$this->movementSpeed = LE::readFloat($in);
+		$this->underwaterMovementSpeed = LE::readFloat($in);
+		$this->lavaMovementSpeed = LE::readFloat($in);
+		$this->jumpStrength = LE::readFloat($in);
+		$this->health = LE::readFloat($in);
+		$this->hunger = LE::readFloat($in);
+		$this->actorUniqueId = CommonTypes::getActorUniqueId($in);
+		$this->actorFlyingState = CommonTypes::getBool($in);
 	}
 
-	protected function encodePayload(PacketSerializer $out) : void{
+	protected function encodePayload(ByteBufferWriter $out) : void{
 		$this->flags->write($out);
-		$out->putLFloat($this->scale);
-		$out->putLFloat($this->width);
-		$out->putLFloat($this->height);
-		$out->putLFloat($this->movementSpeed);
-		$out->putLFloat($this->underwaterMovementSpeed);
-		$out->putLFloat($this->lavaMovementSpeed);
-		$out->putLFloat($this->jumpStrength);
-		$out->putLFloat($this->health);
-		$out->putLFloat($this->hunger);
-		$out->putActorUniqueId($this->actorUniqueId);
-		$out->putBool($this->actorFlyingState);
+		LE::writeFloat($out, $this->scale);
+		LE::writeFloat($out, $this->width);
+		LE::writeFloat($out, $this->height);
+		LE::writeFloat($out, $this->movementSpeed);
+		LE::writeFloat($out, $this->underwaterMovementSpeed);
+		LE::writeFloat($out, $this->lavaMovementSpeed);
+		LE::writeFloat($out, $this->jumpStrength);
+		LE::writeFloat($out, $this->health);
+		LE::writeFloat($out, $this->hunger);
+		CommonTypes::putActorUniqueId($out, $this->actorUniqueId);
+		CommonTypes::putBool($out, $this->actorFlyingState);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

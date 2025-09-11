@@ -14,7 +14,10 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\VarInt;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 use Ramsey\Uuid\UuidInterface;
 use function count;
 
@@ -41,19 +44,19 @@ class EmoteListPacket extends DataPacket implements ClientboundPacket, Serverbou
 	/** @return UuidInterface[] */
 	public function getEmoteIds() : array{ return $this->emoteIds; }
 
-	protected function decodePayload(PacketSerializer $in) : void{
-		$this->playerActorRuntimeId = $in->getActorRuntimeId();
+	protected function decodePayload(ByteBufferReader $in) : void{
+		$this->playerActorRuntimeId = CommonTypes::getActorRuntimeId($in);
 		$this->emoteIds = [];
-		for($i = 0, $len = $in->getUnsignedVarInt(); $i < $len; ++$i){
-			$this->emoteIds[] = $in->getUUID();
+		for($i = 0, $len = VarInt::readUnsignedInt($in); $i < $len; ++$i){
+			$this->emoteIds[] = CommonTypes::getUUID($in);
 		}
 	}
 
-	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putActorRuntimeId($this->playerActorRuntimeId);
-		$out->putUnsignedVarInt(count($this->emoteIds));
+	protected function encodePayload(ByteBufferWriter $out) : void{
+		CommonTypes::putActorRuntimeId($out, $this->playerActorRuntimeId);
+		VarInt::writeUnsignedInt($out, count($this->emoteIds));
 		foreach($this->emoteIds as $emoteId){
-			$out->putUUID($emoteId);
+			CommonTypes::putUUID($out, $emoteId);
 		}
 	}
 

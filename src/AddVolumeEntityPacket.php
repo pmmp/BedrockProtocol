@@ -14,7 +14,10 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\VarInt;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 use pocketmine\network\mcpe\protocol\types\BlockPosition;
 use pocketmine\network\mcpe\protocol\types\CacheableNbt;
 
@@ -74,26 +77,26 @@ class AddVolumeEntityPacket extends DataPacket implements ClientboundPacket{
 
 	public function getEngineVersion() : string{ return $this->engineVersion; }
 
-	protected function decodePayload(PacketSerializer $in) : void{
-		$this->entityNetId = $in->getUnsignedVarInt();
-		$this->data = new CacheableNbt($in->getNbtCompoundRoot());
-		$this->jsonIdentifier = $in->getString();
-		$this->instanceName = $in->getString();
-		$this->minBound = $in->getBlockPosition();
-		$this->maxBound = $in->getBlockPosition();
-		$this->dimension = $in->getVarInt();
-		$this->engineVersion = $in->getString();
+	protected function decodePayload(ByteBufferReader $in) : void{
+		$this->entityNetId = VarInt::readUnsignedInt($in);
+		$this->data = new CacheableNbt(CommonTypes::getNbtCompoundRoot($in));
+		$this->jsonIdentifier = CommonTypes::getString($in);
+		$this->instanceName = CommonTypes::getString($in);
+		$this->minBound = CommonTypes::getBlockPosition($in);
+		$this->maxBound = CommonTypes::getBlockPosition($in);
+		$this->dimension = VarInt::readSignedInt($in);
+		$this->engineVersion = CommonTypes::getString($in);
 	}
 
-	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putUnsignedVarInt($this->entityNetId);
-		$out->put($this->data->getEncodedNbt());
-		$out->putString($this->jsonIdentifier);
-		$out->putString($this->instanceName);
-		$out->putBlockPosition($this->minBound);
-		$out->putBlockPosition($this->maxBound);
-		$out->putVarInt($this->dimension);
-		$out->putString($this->engineVersion);
+	protected function encodePayload(ByteBufferWriter $out) : void{
+		VarInt::writeUnsignedInt($out, $this->entityNetId);
+		$out->writeByteArray($this->data->getEncodedNbt());
+		CommonTypes::putString($out, $this->jsonIdentifier);
+		CommonTypes::putString($out, $this->instanceName);
+		CommonTypes::putBlockPosition($out, $this->minBound);
+		CommonTypes::putBlockPosition($out, $this->maxBound);
+		VarInt::writeSignedInt($out, $this->dimension);
+		CommonTypes::putString($out, $this->engineVersion);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

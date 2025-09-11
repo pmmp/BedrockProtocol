@@ -14,7 +14,10 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\Byte;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 use pocketmine\network\mcpe\protocol\types\BlockPosition;
 
 class BlockPickRequestPacket extends DataPacket implements ServerboundPacket{
@@ -35,16 +38,16 @@ class BlockPickRequestPacket extends DataPacket implements ServerboundPacket{
 		return $result;
 	}
 
-	protected function decodePayload(PacketSerializer $in) : void{
-		$this->blockPosition = $in->getSignedBlockPosition();
-		$this->addUserData = $in->getBool();
-		$this->hotbarSlot = $in->getByte();
+	protected function decodePayload(ByteBufferReader $in) : void{
+		$this->blockPosition = CommonTypes::getSignedBlockPosition($in);
+		$this->addUserData = CommonTypes::getBool($in);
+		$this->hotbarSlot = Byte::readUnsigned($in);
 	}
 
-	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putSignedBlockPosition($this->blockPosition);
-		$out->putBool($this->addUserData);
-		$out->putByte($this->hotbarSlot);
+	protected function encodePayload(ByteBufferWriter $out) : void{
+		CommonTypes::putSignedBlockPosition($out, $this->blockPosition);
+		CommonTypes::putBool($out, $this->addUserData);
+		Byte::writeUnsigned($out, $this->hotbarSlot);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

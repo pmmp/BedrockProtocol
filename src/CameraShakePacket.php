@@ -14,7 +14,10 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\Byte;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\LE;
 
 class CameraShakePacket extends DataPacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::CAMERA_SHAKE_PACKET;
@@ -50,18 +53,18 @@ class CameraShakePacket extends DataPacket implements ClientboundPacket{
 
 	public function getShakeAction() : int{ return $this->shakeAction; }
 
-	protected function decodePayload(PacketSerializer $in) : void{
-		$this->intensity = $in->getLFloat();
-		$this->duration = $in->getLFloat();
-		$this->shakeType = $in->getByte();
-		$this->shakeAction = $in->getByte();
+	protected function decodePayload(ByteBufferReader $in) : void{
+		$this->intensity = LE::readFloat($in);
+		$this->duration = LE::readFloat($in);
+		$this->shakeType = Byte::readUnsigned($in);
+		$this->shakeAction = Byte::readUnsigned($in);
 	}
 
-	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putLFloat($this->intensity);
-		$out->putLFloat($this->duration);
-		$out->putByte($this->shakeType);
-		$out->putByte($this->shakeAction);
+	protected function encodePayload(ByteBufferWriter $out) : void{
+		LE::writeFloat($out, $this->intensity);
+		LE::writeFloat($out, $this->duration);
+		Byte::writeUnsigned($out, $this->shakeType);
+		Byte::writeUnsigned($out, $this->shakeAction);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

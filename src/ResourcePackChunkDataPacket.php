@@ -14,7 +14,10 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\LE;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 
 class ResourcePackChunkDataPacket extends DataPacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::RESOURCE_PACK_CHUNK_DATA_PACKET;
@@ -36,18 +39,18 @@ class ResourcePackChunkDataPacket extends DataPacket implements ClientboundPacke
 		return $result;
 	}
 
-	protected function decodePayload(PacketSerializer $in) : void{
-		$this->packId = $in->getString();
-		$this->chunkIndex = $in->getLInt();
-		$this->offset = $in->getLLong();
-		$this->data = $in->getString();
+	protected function decodePayload(ByteBufferReader $in) : void{
+		$this->packId = CommonTypes::getString($in);
+		$this->chunkIndex = LE::readUnsignedInt($in);
+		$this->offset = LE::readUnsignedLong($in);
+		$this->data = CommonTypes::getString($in);
 	}
 
-	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putString($this->packId);
-		$out->putLInt($this->chunkIndex);
-		$out->putLLong($this->offset);
-		$out->putString($this->data);
+	protected function encodePayload(ByteBufferWriter $out) : void{
+		CommonTypes::putString($out, $this->packId);
+		LE::writeUnsignedInt($out, $this->chunkIndex);
+		LE::writeUnsignedLong($out, $this->offset);
+		CommonTypes::putString($out, $this->data);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

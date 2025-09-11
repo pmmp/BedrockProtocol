@@ -14,8 +14,10 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol\types;
 
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\LE;
 use pocketmine\color\Color;
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 use function intdiv;
 
 final class MapInfoRequestPacketClientPixel{
@@ -34,9 +36,9 @@ final class MapInfoRequestPacketClientPixel{
 
 	public function getY() : int{ return $this->y; }
 
-	public static function read(PacketSerializer $in) : self{
-		$color = $in->getLInt();
-		$index = $in->getLShort();
+	public static function read(ByteBufferReader $in) : self{
+		$color = LE::readUnsignedInt($in);
+		$index = LE::readUnsignedShort($in);
 
 		$x = $index % self::Y_INDEX_MULTIPLIER;
 		$y = intdiv($index, self::Y_INDEX_MULTIPLIER);
@@ -44,8 +46,8 @@ final class MapInfoRequestPacketClientPixel{
 		return new self(Color::fromRGBA($color), $x, $y);
 	}
 
-	public function write(PacketSerializer $out) : void{
-		$out->putLInt($this->color->toRGBA());
-		$out->putLShort($this->x + ($this->y * self::Y_INDEX_MULTIPLIER));
+	public function write(ByteBufferWriter $out) : void{
+		LE::writeUnsignedInt($out, $this->color->toRGBA());
+		LE::writeUnsignedShort($out, $this->x + ($this->y * self::Y_INDEX_MULTIPLIER));
 	}
 }

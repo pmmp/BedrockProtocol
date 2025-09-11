@@ -14,7 +14,10 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\VarInt;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 use pocketmine\network\mcpe\protocol\types\BlockPosition;
 use pocketmine\network\mcpe\protocol\types\UpdateSubChunkBlocksPacketEntry;
 use function count;
@@ -50,25 +53,25 @@ class UpdateSubChunkBlocksPacket extends DataPacket implements ClientboundPacket
 	/** @return UpdateSubChunkBlocksPacketEntry[] */
 	public function getLayer1Updates() : array{ return $this->layer1Updates; }
 
-	protected function decodePayload(PacketSerializer $in) : void{
-		$this->baseBlockPosition = $in->getBlockPosition();
+	protected function decodePayload(ByteBufferReader $in) : void{
+		$this->baseBlockPosition = CommonTypes::getBlockPosition($in);
 		$this->layer0Updates = [];
-		for($i = 0, $count = $in->getUnsignedVarInt(); $i < $count; ++$i){
+		for($i = 0, $count = VarInt::readUnsignedInt($in); $i < $count; ++$i){
 			$this->layer0Updates[] = UpdateSubChunkBlocksPacketEntry::read($in);
 		}
 		$this->layer1Updates = [];
-		for($i = 0, $count = $in->getUnsignedVarInt(); $i < $count; ++$i){
+		for($i = 0, $count = VarInt::readUnsignedInt($in); $i < $count; ++$i){
 			$this->layer1Updates[] = UpdateSubChunkBlocksPacketEntry::read($in);
 		}
 	}
 
-	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putBlockPosition($this->baseBlockPosition);
-		$out->putUnsignedVarInt(count($this->layer0Updates));
+	protected function encodePayload(ByteBufferWriter $out) : void{
+		CommonTypes::putBlockPosition($out, $this->baseBlockPosition);
+		VarInt::writeUnsignedInt($out, count($this->layer0Updates));
 		foreach($this->layer0Updates as $update){
 			$update->write($out);
 		}
-		$out->putUnsignedVarInt(count($this->layer1Updates));
+		VarInt::writeUnsignedInt($out, count($this->layer1Updates));
 		foreach($this->layer1Updates as $update){
 			$update->write($out);
 		}

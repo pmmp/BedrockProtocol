@@ -14,8 +14,10 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol\types\entity;
 
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
 use pocketmine\network\mcpe\protocol\PacketDecodeException;
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 use pocketmine\network\mcpe\protocol\types\CacheableNbt;
 use pocketmine\network\mcpe\protocol\types\GetTypeIdFromConstTrait;
 
@@ -48,11 +50,11 @@ final class CompoundTagMetadataProperty implements MetadataProperty{
 	/**
 	 * @throws PacketDecodeException
 	 */
-	public static function read(PacketSerializer $in) : self{
-		return new self(new CacheableNbt($in->getNbtCompoundRoot()));
+	public static function read(ByteBufferReader $in) : self{
+		return new self(new CacheableNbt(CommonTypes::getNbtCompoundRoot($in)));
 	}
 
-	public function write(PacketSerializer $out) : void{
-		$out->put($this->value->getEncodedNbt());
+	public function write(ByteBufferWriter $out) : void{
+		$out->writeByteArray($this->value->getEncodedNbt());
 	}
 }

@@ -14,7 +14,10 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol\types\recipe;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\VarInt;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 use function count;
 
 final class RecipeUnlockingRequirement{
@@ -33,27 +36,27 @@ final class RecipeUnlockingRequirement{
 	 */
 	public function getUnlockingIngredients() : ?array{ return $this->unlockingIngredients; }
 
-	public static function read(PacketSerializer $in) : self{
+	public static function read(ByteBufferReader $in) : self{
 		//I don't know what the point of this structure is. It could easily have been a list<RecipeIngredient> instead.
 		//It's basically just an optional list, which could have been done by an empty list wherever it's not needed.
-		$unlockingContext = $in->getBool();
+		$unlockingContext = CommonTypes::getBool($in);
 		$unlockingIngredients = null;
 		if(!$unlockingContext){
 			$unlockingIngredients = [];
-			for($i = 0, $count = $in->getUnsignedVarInt(); $i < $count; $i++){
-				$unlockingIngredients[] = $in->getRecipeIngredient();
+			for($i = 0, $count = VarInt::readUnsignedInt($in); $i < $count; $i++){
+				$unlockingIngredients[] = CommonTypes::getRecipeIngredient($in);
 			}
 		}
 
 		return new self($unlockingIngredients);
 	}
 
-	public function write(PacketSerializer $out) : void{
-		$out->putBool($this->unlockingIngredients === null);
+	public function write(ByteBufferWriter $out) : void{
+		CommonTypes::putBool($out, $this->unlockingIngredients === null);
 		if($this->unlockingIngredients !== null){
-			$out->putUnsignedVarInt(count($this->unlockingIngredients));
+			VarInt::writeUnsignedInt($out, count($this->unlockingIngredients));
 			foreach($this->unlockingIngredients as $ingredient){
-				$out->putRecipeIngredient($ingredient);
+				CommonTypes::putRecipeIngredient($out, $ingredient);
 			}
 		}
 	}

@@ -14,7 +14,9 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol\types;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 
 final class EducationUriResource{
 	public function __construct(
@@ -26,14 +28,14 @@ final class EducationUriResource{
 
 	public function getLinkUri() : string{ return $this->linkUri; }
 
-	public static function read(PacketSerializer $in) : self{
-		$buttonName = $in->getString();
-		$linkUri = $in->getString();
+	public static function read(ByteBufferReader $in) : self{
+		$buttonName = CommonTypes::getString($in);
+		$linkUri = CommonTypes::getString($in);
 		return new self($buttonName, $linkUri);
 	}
 
-	public function write(PacketSerializer $out) : void{
-		$out->putString($this->buttonName);
-		$out->putString($this->linkUri);
+	public function write(ByteBufferWriter $out) : void{
+		CommonTypes::putString($out, $this->buttonName);
+		CommonTypes::putString($out, $this->linkUri);
 	}
 }

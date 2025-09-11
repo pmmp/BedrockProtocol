@@ -14,7 +14,9 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\Byte;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
 
 class CodeBuilderSourcePacket extends DataPacket implements ServerboundPacket{
 	public const NETWORK_ID = ProtocolInfo::CODE_BUILDER_SOURCE_PACKET;
@@ -40,16 +42,16 @@ class CodeBuilderSourcePacket extends DataPacket implements ServerboundPacket{
 
 	public function getCodeStatus() : int{ return $this->codeStatus; }
 
-	protected function decodePayload(PacketSerializer $in) : void{
-		$this->operation = $in->getByte();
-		$this->category = $in->getByte();
-		$this->codeStatus = $in->getByte();
+	protected function decodePayload(ByteBufferReader $in) : void{
+		$this->operation = Byte::readUnsigned($in);
+		$this->category = Byte::readUnsigned($in);
+		$this->codeStatus = Byte::readUnsigned($in);
 	}
 
-	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putByte($this->operation);
-		$out->putByte($this->category);
-		$out->putByte($this->codeStatus);
+	protected function encodePayload(ByteBufferWriter $out) : void{
+		Byte::writeUnsigned($out, $this->operation);
+		Byte::writeUnsigned($out, $this->category);
+		Byte::writeUnsigned($out, $this->codeStatus);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

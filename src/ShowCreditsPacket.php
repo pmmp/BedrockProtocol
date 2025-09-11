@@ -14,7 +14,10 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\VarInt;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 
 class ShowCreditsPacket extends DataPacket implements ClientboundPacket, ServerboundPacket{
 	public const NETWORK_ID = ProtocolInfo::SHOW_CREDITS_PACKET;
@@ -35,14 +38,14 @@ class ShowCreditsPacket extends DataPacket implements ClientboundPacket, Serverb
 		return $result;
 	}
 
-	protected function decodePayload(PacketSerializer $in) : void{
-		$this->playerActorRuntimeId = $in->getActorRuntimeId();
-		$this->status = $in->getVarInt();
+	protected function decodePayload(ByteBufferReader $in) : void{
+		$this->playerActorRuntimeId = CommonTypes::getActorRuntimeId($in);
+		$this->status = VarInt::readSignedInt($in);
 	}
 
-	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putActorRuntimeId($this->playerActorRuntimeId);
-		$out->putVarInt($this->status);
+	protected function encodePayload(ByteBufferWriter $out) : void{
+		CommonTypes::putActorRuntimeId($out, $this->playerActorRuntimeId);
+		VarInt::writeSignedInt($out, $this->status);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

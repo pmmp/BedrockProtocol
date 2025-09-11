@@ -14,7 +14,10 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol\types\inventory\stackrequest;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\Byte;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 use pocketmine\network\mcpe\protocol\types\GetTypeIdFromConstTrait;
 use pocketmine\network\mcpe\protocol\types\recipe\RecipeIngredient;
 use function count;
@@ -51,24 +54,24 @@ final class CraftRecipeAutoStackRequestAction extends ItemStackRequestAction{
 	 */
 	public function getIngredients() : array{ return $this->ingredients; }
 
-	public static function read(PacketSerializer $in) : self{
-		$recipeId = $in->readRecipeNetId();
-		$repetitions = $in->getByte();
-		$repetitions2 = $in->getByte(); //repetitions property is sent twice, mojang...
+	public static function read(ByteBufferReader $in) : self{
+		$recipeId = CommonTypes::readRecipeNetId($in);
+		$repetitions = Byte::readUnsigned($in);
+		$repetitions2 = Byte::readUnsigned($in); //repetitions property is sent twice, mojang...
 		$ingredients = [];
-		for($i = 0, $count = $in->getByte(); $i < $count; ++$i){
-			$ingredients[] = $in->getRecipeIngredient();
+		for($i = 0, $count = Byte::readUnsigned($in); $i < $count; ++$i){
+			$ingredients[] = CommonTypes::getRecipeIngredient($in);
 		}
 		return new self($recipeId, $repetitions, $repetitions2, $ingredients);
 	}
 
-	public function write(PacketSerializer $out) : void{
-		$out->writeRecipeNetId($this->recipeId);
-		$out->putByte($this->repetitions);
-		$out->putByte($this->repetitions2);
-		$out->putByte(count($this->ingredients));
+	public function write(ByteBufferWriter $out) : void{
+		CommonTypes::writeRecipeNetId($out, $this->recipeId);
+		Byte::writeUnsigned($out, $this->repetitions);
+		Byte::writeUnsigned($out, $this->repetitions2);
+		Byte::writeUnsigned($out, count($this->ingredients));
 		foreach($this->ingredients as $ingredient){
-			$out->putRecipeIngredient($ingredient);
+			CommonTypes::putRecipeIngredient($out, $ingredient);
 		}
 	}
 }

@@ -14,8 +14,9 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol\types\inventory;
 
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
 use pocketmine\network\mcpe\protocol\InventoryTransactionPacket;
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 use pocketmine\network\mcpe\protocol\types\GetTypeIdFromConstTrait;
 
 class NormalTransactionData extends TransactionData{
@@ -23,11 +24,11 @@ class NormalTransactionData extends TransactionData{
 
 	public const ID = InventoryTransactionPacket::TYPE_NORMAL;
 
-	protected function decodeData(PacketSerializer $stream) : void{
+	protected function decodeData(ByteBufferReader $in) : void{
 
 	}
 
-	protected function encodeData(PacketSerializer $stream) : void{
+	protected function encodeData(ByteBufferWriter $out) : void{
 
 	}
 

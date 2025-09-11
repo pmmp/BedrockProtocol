@@ -14,8 +14,12 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol\types\camera;
 
+use pmmp\encoding\Byte;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\LE;
 use pocketmine\math\Vector2;
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 
 final class CameraPresetAimAssist{
 
@@ -34,11 +38,11 @@ final class CameraPresetAimAssist{
 
 	public function getDistance() : ?float{ return $this->distance; }
 
-	public static function read(PacketSerializer $in) : self{
-		$presetId = $in->readOptional($in->getString(...));
-		$targetMode = $in->readOptional(fn() => CameraAimAssistTargetMode::fromPacket($in->getByte()));
-		$viewAngle = $in->readOptional($in->getVector2(...));
-		$distance = $in->readOptional($in->getLFloat(...));
+	public static function read(ByteBufferReader $in) : self{
+		$presetId = CommonTypes::readOptional($in, CommonTypes::getString(...));
+		$targetMode = CommonTypes::readOptional($in, fn() => CameraAimAssistTargetMode::fromPacket(Byte::readUnsigned($in)));
+		$viewAngle = CommonTypes::readOptional($in, CommonTypes::getVector2(...));
+		$distance = CommonTypes::readOptional($in, LE::readFloat(...));
 
 		return new self(
 			$presetId,
@@ -48,10 +52,10 @@ final class CameraPresetAimAssist{
 		);
 	}
 
-	public function write(PacketSerializer $out) : void{
-		$out->writeOptional($this->presetId, $out->putString(...));
-		$out->writeOptional($this->targetMode, fn(CameraAimAssistTargetMode $v) => $out->putByte($v->value));
-		$out->writeOptional($this->viewAngle, $out->putVector2(...));
-		$out->writeOptional($this->distance, $out->putLFloat(...));
+	public function write(ByteBufferWriter $out) : void{
+		CommonTypes::writeOptional($out, $this->presetId, CommonTypes::putString(...));
+		CommonTypes::writeOptional($out, $this->targetMode, fn(ByteBufferWriter $out, CameraAimAssistTargetMode $v) => Byte::writeUnsigned($out, $v->value));
+		CommonTypes::writeOptional($out, $this->viewAngle, CommonTypes::putVector2(...));
+		CommonTypes::writeOptional($out, $this->distance, LE::writeFloat(...));
 	}
 }

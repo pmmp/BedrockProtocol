@@ -14,7 +14,9 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 
 class TickingAreasLoadStatusPacket extends DataPacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::TICKING_AREAS_LOAD_STATUS_PACKET;
@@ -32,12 +34,12 @@ class TickingAreasLoadStatusPacket extends DataPacket implements ClientboundPack
 
 	public function isWaitingForPreload() : bool{ return $this->waitingForPreload; }
 
-	protected function decodePayload(PacketSerializer $in) : void{
-		$this->waitingForPreload = $in->getBool();
+	protected function decodePayload(ByteBufferReader $in) : void{
+		$this->waitingForPreload = CommonTypes::getBool($in);
 	}
 
-	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putBool($this->waitingForPreload);
+	protected function encodePayload(ByteBufferWriter $out) : void{
+		CommonTypes::putBool($out, $this->waitingForPreload);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

@@ -18,7 +18,6 @@ use pmmp\encoding\Byte;
 use pmmp\encoding\ByteBufferReader;
 use pmmp\encoding\ByteBufferWriter;
 use pocketmine\network\mcpe\protocol\types\GetTypeIdFromConstTrait;
-use pocketmine\utils\Binary;
 
 final class ByteMetadataProperty implements MetadataProperty{
 	use GetTypeIdFromConstTrait;
@@ -35,10 +34,10 @@ final class ByteMetadataProperty implements MetadataProperty{
 	}
 
 	public static function read(ByteBufferReader $in) : self{
-		return new self(Binary::signByte(Byte::readUnsigned($in)));
+		return new self(Byte::readSigned($in));
 	}
 
 	public function write(ByteBufferWriter $out) : void{
-		Byte::writeUnsigned($out, $this->value);
+		Byte::writeSigned($out, $this->value);
 	}
 }

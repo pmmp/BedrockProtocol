@@ -17,7 +17,6 @@ namespace pocketmine\network\mcpe\protocol\types;
 use pmmp\encoding\Byte;
 use pmmp\encoding\ByteBufferReader;
 use pmmp\encoding\ByteBufferWriter;
-use pocketmine\utils\Binary;
 use function array_fill;
 use function count;
 
@@ -43,14 +42,14 @@ class SubChunkPacketHeightMapInfo{
 	public static function read(ByteBufferReader $in) : self{
 		$heights = [];
 		for($i = 0; $i < 256; ++$i){
-			$heights[] = Binary::signByte(Byte::readUnsigned($in));
+			$heights[] = Byte::readSigned($in);
 		}
 		return new self($heights);
 	}
 
 	public function write(ByteBufferWriter $out) : void{
 		for($i = 0; $i < 256; ++$i){
-			Byte::writeUnsigned($out, Binary::unsignByte($this->heights[$i]));
+			Byte::writeSigned($out, $this->heights[$i]);
 		}
 	}
 

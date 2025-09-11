@@ -18,7 +18,7 @@ jobs:
         with:
           php-version: ${{ matrix.php }}
           ini-values: xdebug.max_nesting_level=3000
-          extensions: encoding-pmmp/ext-encoding@0.5.1
+          extensions: encoding-pmmp/ext-encoding@1.0.0
 
       - name: Load Composer package cache
         uses: actions/cache@v4

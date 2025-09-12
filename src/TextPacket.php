@@ -118,6 +118,9 @@ class TextPacket extends DataPacket implements ClientboundPacket, ServerboundPac
 			case self::TYPE_JUKEBOX_POPUP:
 				$this->message = $in->getString();
 				$count = $in->getUnsignedVarInt();
+				if ($count > 5){
+					throw new PacketDecodeException("Too many TextPacket::TYPE_JUKEBOX_POPUP");
+				}
 				for($i = 0; $i < $count; ++$i){
 					$this->parameters[] = $in->getString();
 				}

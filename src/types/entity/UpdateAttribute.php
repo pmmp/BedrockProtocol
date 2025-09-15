@@ -14,7 +14,11 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol\types\entity;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\LE;
+use pmmp\encoding\VarInt;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 use function count;
 
 final class UpdateAttribute{
@@ -51,33 +55,33 @@ final class UpdateAttribute{
 	 */
 	public function getModifiers() : array{ return $this->modifiers; }
 
-	public static function read(PacketSerializer $in) : self{
-		$min = $in->getLFloat();
-		$max = $in->getLFloat();
-		$current = $in->getLFloat();
-		$defaultMin = $in->getLFloat();
-		$defaultMax = $in->getLFloat();
-		$default = $in->getLFloat();
-		$id = $in->getString();
+	public static function read(ByteBufferReader $in) : self{
+		$min = LE::readFloat($in);
+		$max = LE::readFloat($in);
+		$current = LE::readFloat($in);
+		$defaultMin = LE::readFloat($in);
+		$defaultMax = LE::readFloat($in);
+		$default = LE::readFloat($in);
+		$id = CommonTypes::getString($in);
 
 		$modifiers = [];
-		for($j = 0, $modifierCount = $in->getUnsignedVarInt(); $j < $modifierCount; $j++){
+		for($j = 0, $modifierCount = VarInt::readUnsignedInt($in); $j < $modifierCount; $j++){
 			$modifiers[] = AttributeModifier::read($in);
 		}
 
 		return new self($id, $min, $max, $current, $defaultMin, $defaultMax, $default, $modifiers);
 	}
 
-	public function write(PacketSerializer $out) : void{
-		$out->putLFloat($this->min);
-		$out->putLFloat($this->max);
-		$out->putLFloat($this->current);
-		$out->putLFloat($this->defaultMin);
-		$out->putLFloat($this->defaultMax);
-		$out->putLFloat($this->default);
-		$out->putString($this->id);
+	public function write(ByteBufferWriter $out) : void{
+		LE::writeFloat($out, $this->min);
+		LE::writeFloat($out, $this->max);
+		LE::writeFloat($out, $this->current);
+		LE::writeFloat($out, $this->defaultMin);
+		LE::writeFloat($out, $this->defaultMax);
+		LE::writeFloat($out, $this->default);
+		CommonTypes::putString($out, $this->id);
 
-		$out->putUnsignedVarInt(count($this->modifiers));
+		VarInt::writeUnsignedInt($out, count($this->modifiers));
 		foreach($this->modifiers as $modifier){
 			$modifier->write($out);
 		}

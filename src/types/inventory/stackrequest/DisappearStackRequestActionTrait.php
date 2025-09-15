@@ -14,7 +14,9 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol\types\inventory\stackrequest;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\Byte;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
 
 trait DisappearStackRequestActionTrait{
 	final public function __construct(
@@ -26,14 +28,14 @@ trait DisappearStackRequestActionTrait{
 
 	final public function getSource() : ItemStackRequestSlotInfo{ return $this->source; }
 
-	public static function read(PacketSerializer $in) : self{
-		$count = $in->getByte();
+	public static function read(ByteBufferReader $in) : self{
+		$count = Byte::readUnsigned($in);
 		$source = ItemStackRequestSlotInfo::read($in);
 		return new self($count, $source);
 	}
 
-	public function write(PacketSerializer $out) : void{
-		$out->putByte($this->count);
+	public function write(ByteBufferWriter $out) : void{
+		Byte::writeUnsigned($out, $this->count);
 		$this->source->write($out);
 	}
 }

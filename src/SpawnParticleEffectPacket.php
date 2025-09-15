@@ -14,8 +14,11 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
+use pmmp\encoding\Byte;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
 use pocketmine\math\Vector3;
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 use pocketmine\network\mcpe\protocol\types\DimensionIds;
 
 class SpawnParticleEffectPacket extends DataPacket implements ClientboundPacket{
@@ -40,22 +43,22 @@ class SpawnParticleEffectPacket extends DataPacket implements ClientboundPacket{
 		return $result;
 	}
 
-	protected function decodePayload(PacketSerializer $in) : void{
-		$this->dimensionId = $in->getByte();
-		$this->actorUniqueId = $in->getActorUniqueId();
-		$this->position = $in->getVector3();
-		$this->particleName = $in->getString();
-		$this->molangVariablesJson = $in->getBool() ? $in->getString() : null;
+	protected function decodePayload(ByteBufferReader $in) : void{
+		$this->dimensionId = Byte::readUnsigned($in);
+		$this->actorUniqueId = CommonTypes::getActorUniqueId($in);
+		$this->position = CommonTypes::getVector3($in);
+		$this->particleName = CommonTypes::getString($in);
+		$this->molangVariablesJson = CommonTypes::getBool($in) ? CommonTypes::getString($in) : null;
 	}
 
-	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putByte($this->dimensionId);
-		$out->putActorUniqueId($this->actorUniqueId);
-		$out->putVector3($this->position);
-		$out->putString($this->particleName);
-		$out->putBool($this->molangVariablesJson !== null);
+	protected function encodePayload(ByteBufferWriter $out) : void{
+		Byte::writeUnsigned($out, $this->dimensionId);
+		CommonTypes::putActorUniqueId($out, $this->actorUniqueId);
+		CommonTypes::putVector3($out, $this->position);
+		CommonTypes::putString($out, $this->particleName);
+		CommonTypes::putBool($out, $this->molangVariablesJson !== null);
 		if($this->molangVariablesJson !== null){
-			$out->putString($this->molangVariablesJson);
+			CommonTypes::putString($out, $this->molangVariablesJson);
 		}
 	}
 

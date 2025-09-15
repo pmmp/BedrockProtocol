@@ -14,7 +14,11 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\LE;
+use pmmp\encoding\VarInt;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 use pocketmine\network\mcpe\protocol\types\hud\LoadingScreenType;
 
 class ServerboundLoadingScreenPacket extends DataPacket implements ServerboundPacket{
@@ -37,14 +41,14 @@ class ServerboundLoadingScreenPacket extends DataPacket implements ServerboundPa
 
 	public function getLoadingScreenId() : ?int{ return $this->loadingScreenId; }
 
-	protected function decodePayload(PacketSerializer $in) : void{
-		$this->loadingScreenType = LoadingScreenType::fromPacket($in->getVarInt());
-		$this->loadingScreenId = $in->readOptional(fn() => $in->getLInt());
+	protected function decodePayload(ByteBufferReader $in) : void{
+		$this->loadingScreenType = LoadingScreenType::fromPacket(VarInt::readSignedInt($in));
+		$this->loadingScreenId = CommonTypes::readOptional($in, LE::readUnsignedInt(...));
 	}
 
-	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putVarInt($this->loadingScreenType->value);
-		$out->writeOptional($this->loadingScreenId, $out->putLInt(...));
+	protected function encodePayload(ByteBufferWriter $out) : void{
+		VarInt::writeSignedInt($out, $this->loadingScreenType->value);
+		CommonTypes::writeOptional($out, $this->loadingScreenId, LE::writeUnsignedInt(...));
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

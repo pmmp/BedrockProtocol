@@ -14,7 +14,9 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 use pocketmine\network\mcpe\protocol\types\camera\CameraFadeInstruction;
 use pocketmine\network\mcpe\protocol\types\camera\CameraFovInstruction;
 use pocketmine\network\mcpe\protocol\types\camera\CameraSetInstruction;
@@ -56,22 +58,22 @@ class CameraInstructionPacket extends DataPacket implements ClientboundPacket{
 
 	public function getFieldOfView() : ?CameraFovInstruction{ return $this->fieldOfView; }
 
-	protected function decodePayload(PacketSerializer $in) : void{
-		$this->set = $in->readOptional(fn() => CameraSetInstruction::read($in));
-		$this->clear = $in->readOptional($in->getBool(...));
-		$this->fade = $in->readOptional(fn() => CameraFadeInstruction::read($in));
-		$this->target = $in->readOptional(fn() => CameraTargetInstruction::read($in));
-		$this->removeTarget = $in->readOptional($in->getBool(...));
-		$this->fieldOfView = $in->readOptional(fn() => CameraFovInstruction::read($in));
+	protected function decodePayload(ByteBufferReader $in) : void{
+		$this->set = CommonTypes::readOptional($in, CameraSetInstruction::read(...));
+		$this->clear = CommonTypes::readOptional($in, CommonTypes::getBool(...));
+		$this->fade = CommonTypes::readOptional($in, CameraFadeInstruction::read(...));
+		$this->target = CommonTypes::readOptional($in, CameraTargetInstruction::read(...));
+		$this->removeTarget = CommonTypes::readOptional($in, CommonTypes::getBool(...));
+		$this->fieldOfView = CommonTypes::readOptional($in, CameraFovInstruction::read(...));
 	}
 
-	protected function encodePayload(PacketSerializer $out) : void{
-		$out->writeOptional($this->set, fn(CameraSetInstruction $v) => $v->write($out));
-		$out->writeOptional($this->clear, $out->putBool(...));
-		$out->writeOptional($this->fade, fn(CameraFadeInstruction $v) => $v->write($out));
-		$out->writeOptional($this->target, fn(CameraTargetInstruction $v) => $v->write($out));
-		$out->writeOptional($this->removeTarget, $out->putBool(...));
-		$out->writeOptional($this->fieldOfView, fn(CameraFovInstruction $v) => $v->write($out));
+	protected function encodePayload(ByteBufferWriter $out) : void{
+		CommonTypes::writeOptional($out, $this->set, fn(ByteBufferWriter $out, CameraSetInstruction $v) => $v->write($out));
+		CommonTypes::writeOptional($out, $this->clear, CommonTypes::putBool(...));
+		CommonTypes::writeOptional($out, $this->fade, fn(ByteBufferWriter $out, CameraFadeInstruction $v) => $v->write($out));
+		CommonTypes::writeOptional($out, $this->target, fn(ByteBufferWriter $out, CameraTargetInstruction $v) => $v->write($out));
+		CommonTypes::writeOptional($out, $this->removeTarget, CommonTypes::putBool(...));
+		CommonTypes::writeOptional($out, $this->fieldOfView, fn(ByteBufferWriter $out, CameraFovInstruction $v) => $v->write($out));
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

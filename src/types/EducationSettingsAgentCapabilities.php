@@ -14,7 +14,9 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol\types;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 
 final class EducationSettingsAgentCapabilities{
 	public function __construct(
@@ -23,12 +25,12 @@ final class EducationSettingsAgentCapabilities{
 
 	public function getCanModifyBlocks() : ?bool{ return $this->canModifyBlocks; }
 
-	public static function read(PacketSerializer $in) : self{
-		$canModifyBlocks = $in->readOptional($in->getBool(...));
+	public static function read(ByteBufferReader $in) : self{
+		$canModifyBlocks = CommonTypes::readOptional($in, CommonTypes::getBool(...));
 		return new self($canModifyBlocks);
 	}
 
-	public function write(PacketSerializer $out) : void{
-		$out->writeOptional($this->canModifyBlocks, $out->putBool(...));
+	public function write(ByteBufferWriter $out) : void{
+		CommonTypes::writeOptional($out, $this->canModifyBlocks, CommonTypes::putBool(...));
 	}
 }

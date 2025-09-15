@@ -14,7 +14,10 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol\types\inventory;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\VarInt;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 
 final class CreativeItemEntry{
 	public function __construct(
@@ -29,16 +32,16 @@ final class CreativeItemEntry{
 
 	public function getGroupId() : int{ return $this->groupId; }
 
-	public static function read(PacketSerializer $in) : self{
-		$entryId = $in->readCreativeItemNetId();
-		$item = $in->getItemStackWithoutStackId();
-		$groupId = $in->getUnsignedVarInt();
+	public static function read(ByteBufferReader $in) : self{
+		$entryId = CommonTypes::readCreativeItemNetId($in);
+		$item = CommonTypes::getItemStackWithoutStackId($in);
+		$groupId = VarInt::readUnsignedInt($in);
 		return new self($entryId, $item, $groupId);
 	}
 
-	public function write(PacketSerializer $out) : void{
-		$out->writeCreativeItemNetId($this->entryId);
-		$out->putItemStackWithoutStackId($this->item);
-		$out->putUnsignedVarInt($this->groupId);
+	public function write(ByteBufferWriter $out) : void{
+		CommonTypes::writeCreativeItemNetId($out, $this->entryId);
+		CommonTypes::putItemStackWithoutStackId($out, $this->item);
+		VarInt::writeUnsignedInt($out, $this->groupId);
 	}
 }

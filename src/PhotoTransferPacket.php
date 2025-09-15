@@ -14,7 +14,11 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\Byte;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\LE;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 
 class PhotoTransferPacket extends DataPacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::PHOTO_TRANSFER_PACKET;
@@ -50,24 +54,24 @@ class PhotoTransferPacket extends DataPacket implements ClientboundPacket{
 		return $result;
 	}
 
-	protected function decodePayload(PacketSerializer $in) : void{
-		$this->photoName = $in->getString();
-		$this->photoData = $in->getString();
-		$this->bookId = $in->getString();
-		$this->type = $in->getByte();
-		$this->sourceType = $in->getByte();
-		$this->ownerActorUniqueId = $in->getLLong(); //...............
-		$this->newPhotoName = $in->getString();
+	protected function decodePayload(ByteBufferReader $in) : void{
+		$this->photoName = CommonTypes::getString($in);
+		$this->photoData = CommonTypes::getString($in);
+		$this->bookId = CommonTypes::getString($in);
+		$this->type = Byte::readUnsigned($in);
+		$this->sourceType = Byte::readUnsigned($in);
+		$this->ownerActorUniqueId = LE::readSignedLong($in); //...............
+		$this->newPhotoName = CommonTypes::getString($in);
 	}
 
-	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putString($this->photoName);
-		$out->putString($this->photoData);
-		$out->putString($this->bookId);
-		$out->putByte($this->type);
-		$out->putByte($this->sourceType);
-		$out->putLLong($this->ownerActorUniqueId);
-		$out->putString($this->newPhotoName);
+	protected function encodePayload(ByteBufferWriter $out) : void{
+		CommonTypes::putString($out, $this->photoName);
+		CommonTypes::putString($out, $this->photoData);
+		CommonTypes::putString($out, $this->bookId);
+		Byte::writeUnsigned($out, $this->type);
+		Byte::writeUnsigned($out, $this->sourceType);
+		LE::writeSignedLong($out, $this->ownerActorUniqueId);
+		CommonTypes::putString($out, $this->newPhotoName);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

@@ -14,7 +14,9 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\LE;
 
 class ServerboundDiagnosticsPacket extends DataPacket implements ServerboundPacket{
 	public const NETWORK_ID = ProtocolInfo::SERVERBOUND_DIAGNOSTICS_PACKET;
@@ -74,28 +76,28 @@ class ServerboundDiagnosticsPacket extends DataPacket implements ServerboundPack
 
 	public function getAvgUnaccountedTimePercent() : float{ return $this->avgUnaccountedTimePercent; }
 
-	protected function decodePayload(PacketSerializer $in) : void{
-		$this->avgFps = $in->getLFloat();
-		$this->avgServerSimTickTimeMS = $in->getLFloat();
-		$this->avgClientSimTickTimeMS = $in->getLFloat();
-		$this->avgBeginFrameTimeMS = $in->getLFloat();
-		$this->avgInputTimeMS = $in->getLFloat();
-		$this->avgRenderTimeMS = $in->getLFloat();
-		$this->avgEndFrameTimeMS = $in->getLFloat();
-		$this->avgRemainderTimePercent = $in->getLFloat();
-		$this->avgUnaccountedTimePercent = $in->getLFloat();
+	protected function decodePayload(ByteBufferReader $in) : void{
+		$this->avgFps = LE::readFloat($in);
+		$this->avgServerSimTickTimeMS = LE::readFloat($in);
+		$this->avgClientSimTickTimeMS = LE::readFloat($in);
+		$this->avgBeginFrameTimeMS = LE::readFloat($in);
+		$this->avgInputTimeMS = LE::readFloat($in);
+		$this->avgRenderTimeMS = LE::readFloat($in);
+		$this->avgEndFrameTimeMS = LE::readFloat($in);
+		$this->avgRemainderTimePercent = LE::readFloat($in);
+		$this->avgUnaccountedTimePercent = LE::readFloat($in);
 	}
 
-	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putLFloat($this->avgFps);
-		$out->putLFloat($this->avgServerSimTickTimeMS);
-		$out->putLFloat($this->avgClientSimTickTimeMS);
-		$out->putLFloat($this->avgBeginFrameTimeMS);
-		$out->putLFloat($this->avgInputTimeMS);
-		$out->putLFloat($this->avgRenderTimeMS);
-		$out->putLFloat($this->avgEndFrameTimeMS);
-		$out->putLFloat($this->avgRemainderTimePercent);
-		$out->putLFloat($this->avgUnaccountedTimePercent);
+	protected function encodePayload(ByteBufferWriter $out) : void{
+		LE::writeFloat($out, $this->avgFps);
+		LE::writeFloat($out, $this->avgServerSimTickTimeMS);
+		LE::writeFloat($out, $this->avgClientSimTickTimeMS);
+		LE::writeFloat($out, $this->avgBeginFrameTimeMS);
+		LE::writeFloat($out, $this->avgInputTimeMS);
+		LE::writeFloat($out, $this->avgRenderTimeMS);
+		LE::writeFloat($out, $this->avgEndFrameTimeMS);
+		LE::writeFloat($out, $this->avgRemainderTimePercent);
+		LE::writeFloat($out, $this->avgUnaccountedTimePercent);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

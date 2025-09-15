@@ -14,7 +14,10 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol\types\inventory\stackrequest;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\Byte;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 use pocketmine\network\mcpe\protocol\types\inventory\FullContainerName;
 
 final class ItemStackRequestSlotInfo{
@@ -30,16 +33,16 @@ final class ItemStackRequestSlotInfo{
 
 	public function getStackId() : int{ return $this->stackId; }
 
-	public static function read(PacketSerializer $in) : self{
+	public static function read(ByteBufferReader $in) : self{
 		$containerName = FullContainerName::read($in);
-		$slotId = $in->getByte();
-		$stackId = $in->readItemStackNetIdVariant();
+		$slotId = Byte::readUnsigned($in);
+		$stackId = CommonTypes::readItemStackNetIdVariant($in);
 		return new self($containerName, $slotId, $stackId);
 	}
 
-	public function write(PacketSerializer $out) : void{
+	public function write(ByteBufferWriter $out) : void{
 		$this->containerName->write($out);
-		$out->putByte($this->slotId);
-		$out->writeItemStackNetIdVariant($this->stackId);
+		Byte::writeUnsigned($out, $this->slotId);
+		CommonTypes::writeItemStackNetIdVariant($out, $this->stackId);
 	}
 }

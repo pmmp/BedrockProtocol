@@ -14,7 +14,10 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\VarInt;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 
 class SetDisplayObjectivePacket extends DataPacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::SET_DISPLAY_OBJECTIVE_PACKET;
@@ -45,20 +48,20 @@ class SetDisplayObjectivePacket extends DataPacket implements ClientboundPacket{
 		return $result;
 	}
 
-	protected function decodePayload(PacketSerializer $in) : void{
-		$this->displaySlot = $in->getString();
-		$this->objectiveName = $in->getString();
-		$this->displayName = $in->getString();
-		$this->criteriaName = $in->getString();
-		$this->sortOrder = $in->getVarInt();
+	protected function decodePayload(ByteBufferReader $in) : void{
+		$this->displaySlot = CommonTypes::getString($in);
+		$this->objectiveName = CommonTypes::getString($in);
+		$this->displayName = CommonTypes::getString($in);
+		$this->criteriaName = CommonTypes::getString($in);
+		$this->sortOrder = VarInt::readSignedInt($in);
 	}
 
-	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putString($this->displaySlot);
-		$out->putString($this->objectiveName);
-		$out->putString($this->displayName);
-		$out->putString($this->criteriaName);
-		$out->putVarInt($this->sortOrder);
+	protected function encodePayload(ByteBufferWriter $out) : void{
+		CommonTypes::putString($out, $this->displaySlot);
+		CommonTypes::putString($out, $this->objectiveName);
+		CommonTypes::putString($out, $this->displayName);
+		CommonTypes::putString($out, $this->criteriaName);
+		VarInt::writeSignedInt($out, $this->sortOrder);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

@@ -14,12 +14,12 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol\types;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\ByteBufferWriter;
 
 /** This is used for PlayerAuthInput packet when the flags include PERFORM_BLOCK_ACTIONS */
 interface PlayerBlockAction{
 
 	public function getActionType() : int;
 
-	public function write(PacketSerializer $out) : void;
+	public function write(ByteBufferWriter $out) : void;
 }

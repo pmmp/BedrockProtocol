@@ -14,7 +14,11 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\Byte;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\LE;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 use pocketmine\network\mcpe\protocol\types\CompressionAlgorithm;
 
 /**
@@ -66,20 +70,20 @@ class NetworkSettingsPacket extends DataPacket implements ClientboundPacket{
 
 	public function getClientThrottleScalar() : float{ return $this->clientThrottleScalar; }
 
-	protected function decodePayload(PacketSerializer $in) : void{
-		$this->compressionThreshold = $in->getLShort();
-		$this->compressionAlgorithm = $in->getLShort();
-		$this->enableClientThrottling = $in->getBool();
-		$this->clientThrottleThreshold = $in->getByte();
-		$this->clientThrottleScalar = $in->getLFloat();
+	protected function decodePayload(ByteBufferReader $in) : void{
+		$this->compressionThreshold = LE::readUnsignedShort($in);
+		$this->compressionAlgorithm = LE::readUnsignedShort($in);
+		$this->enableClientThrottling = CommonTypes::getBool($in);
+		$this->clientThrottleThreshold = Byte::readUnsigned($in);
+		$this->clientThrottleScalar = LE::readFloat($in);
 	}
 
-	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putLShort($this->compressionThreshold);
-		$out->putLShort($this->compressionAlgorithm);
-		$out->putBool($this->enableClientThrottling);
-		$out->putByte($this->clientThrottleThreshold);
-		$out->putLFloat($this->clientThrottleScalar);
+	protected function encodePayload(ByteBufferWriter $out) : void{
+		LE::writeUnsignedShort($out, $this->compressionThreshold);
+		LE::writeUnsignedShort($out, $this->compressionAlgorithm);
+		CommonTypes::putBool($out, $this->enableClientThrottling);
+		Byte::writeUnsigned($out, $this->clientThrottleThreshold);
+		LE::writeFloat($out, $this->clientThrottleScalar);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

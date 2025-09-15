@@ -14,7 +14,9 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol\types\inventory\stackresponse;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\VarInt;
 use pocketmine\network\mcpe\protocol\types\inventory\FullContainerName;
 use function count;
 
@@ -32,18 +34,18 @@ final class ItemStackResponseContainerInfo{
 	/** @return ItemStackResponseSlotInfo[] */
 	public function getSlots() : array{ return $this->slots; }
 
-	public static function read(PacketSerializer $in) : self{
+	public static function read(ByteBufferReader $in) : self{
 		$containerName = FullContainerName::read($in);
 		$slots = [];
-		for($i = 0, $len = $in->getUnsignedVarInt(); $i < $len; ++$i){
+		for($i = 0, $len = VarInt::readUnsignedInt($in); $i < $len; ++$i){
 			$slots[] = ItemStackResponseSlotInfo::read($in);
 		}
 		return new self($containerName, $slots);
 	}
 
-	public function write(PacketSerializer $out) : void{
+	public function write(ByteBufferWriter $out) : void{
 		$this->containerName->write($out);
-		$out->putUnsignedVarInt(count($this->slots));
+		VarInt::writeUnsignedInt($out, count($this->slots));
 		foreach($this->slots as $slot){
 			$slot->write($out);
 		}

@@ -14,7 +14,9 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol\types\entity;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\LE;
 use pocketmine\network\mcpe\protocol\types\GetTypeIdFromConstTrait;
 
 final class ShortMetadataProperty implements MetadataProperty{
@@ -31,11 +33,11 @@ final class ShortMetadataProperty implements MetadataProperty{
 		return 0x7fff;
 	}
 
-	public static function read(PacketSerializer $in) : self{
-		return new self($in->getSignedLShort());
+	public static function read(ByteBufferReader $in) : self{
+		return new self(LE::readSignedShort($in));
 	}
 
-	public function write(PacketSerializer $out) : void{
-		$out->putLShort($this->value);
+	public function write(ByteBufferWriter $out) : void{
+		LE::writeSignedShort($out, $this->value);
 	}
 }

@@ -14,8 +14,11 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\LE;
 use pocketmine\math\Vector3;
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 
 class ClientboundDebugRendererPacket extends DataPacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::CLIENTBOUND_DEBUG_RENDERER_PACKET;
@@ -70,42 +73,42 @@ class ClientboundDebugRendererPacket extends DataPacket implements ClientboundPa
 
 	public function getDurationMillis() : int{ return $this->durationMillis; }
 
-	protected function decodePayload(PacketSerializer $in) : void{
-		$this->type = $in->getLInt();
+	protected function decodePayload(ByteBufferReader $in) : void{
+		$this->type = LE::readUnsignedInt($in);
 
 		switch($this->type){
 			case self::TYPE_CLEAR:
 				//NOOP
 				break;
 			case self::TYPE_ADD_CUBE:
-				$this->text = $in->getString();
-				$this->position = $in->getVector3();
-				$this->red = $in->getLFloat();
-				$this->green = $in->getLFloat();
-				$this->blue = $in->getLFloat();
-				$this->alpha = $in->getLFloat();
-				$this->durationMillis = $in->getLLong();
+				$this->text = CommonTypes::getString($in);
+				$this->position = CommonTypes::getVector3($in);
+				$this->red = LE::readFloat($in);
+				$this->green = LE::readFloat($in);
+				$this->blue = LE::readFloat($in);
+				$this->alpha = LE::readFloat($in);
+				$this->durationMillis = LE::readUnsignedLong($in);
 				break;
 			default:
 				throw new PacketDecodeException("Unknown type " . $this->type);
 		}
 	}
 
-	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putLInt($this->type);
+	protected function encodePayload(ByteBufferWriter $out) : void{
+		LE::writeUnsignedInt($out, $this->type);
 
 		switch($this->type){
 			case self::TYPE_CLEAR:
 				//NOOP
 				break;
 			case self::TYPE_ADD_CUBE:
-				$out->putString($this->text);
-				$out->putVector3($this->position);
-				$out->putLFloat($this->red);
-				$out->putLFloat($this->green);
-				$out->putLFloat($this->blue);
-				$out->putLFloat($this->alpha);
-				$out->putLLong($this->durationMillis);
+				CommonTypes::putString($out, $this->text);
+				CommonTypes::putVector3($out, $this->position);
+				LE::writeFloat($out, $this->red);
+				LE::writeFloat($out, $this->green);
+				LE::writeFloat($out, $this->blue);
+				LE::writeFloat($out, $this->alpha);
+				LE::writeUnsignedLong($out, $this->durationMillis);
 				break;
 			default:
 				throw new \InvalidArgumentException("Unknown type " . $this->type);

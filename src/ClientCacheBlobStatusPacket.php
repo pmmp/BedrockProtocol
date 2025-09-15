@@ -14,7 +14,10 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\LE;
+use pmmp\encoding\VarInt;
 use function count;
 
 class ClientCacheBlobStatusPacket extends DataPacket implements ServerboundPacket{
@@ -51,25 +54,25 @@ class ClientCacheBlobStatusPacket extends DataPacket implements ServerboundPacke
 		return $this->missHashes;
 	}
 
-	protected function decodePayload(PacketSerializer $in) : void{
-		$missCount = $in->getUnsignedVarInt();
-		$hitCount = $in->getUnsignedVarInt();
+	protected function decodePayload(ByteBufferReader $in) : void{
+		$missCount = VarInt::readUnsignedInt($in);
+		$hitCount = VarInt::readUnsignedInt($in);
 		for($i = 0; $i < $missCount; ++$i){
-			$this->missHashes[] = $in->getLLong();
+			$this->missHashes[] = LE::readUnsignedLong($in);
 		}
 		for($i = 0; $i < $hitCount; ++$i){
-			$this->hitHashes[] = $in->getLLong();
+			$this->hitHashes[] = LE::readUnsignedLong($in);
 		}
 	}
 
-	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putUnsignedVarInt(count($this->missHashes));
-		$out->putUnsignedVarInt(count($this->hitHashes));
+	protected function encodePayload(ByteBufferWriter $out) : void{
+		VarInt::writeUnsignedInt($out, count($this->missHashes));
+		VarInt::writeUnsignedInt($out, count($this->hitHashes));
 		foreach($this->missHashes as $hash){
-			$out->putLLong($hash);
+			LE::writeUnsignedLong($out, $hash);
 		}
 		foreach($this->hitHashes as $hash){
-			$out->putLLong($hash);
+			LE::writeUnsignedLong($out, $hash);
 		}
 	}
 

@@ -14,7 +14,9 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 
 class CameraPacket extends DataPacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::CAMERA_PACKET;
@@ -32,14 +34,14 @@ class CameraPacket extends DataPacket implements ClientboundPacket{
 		return $result;
 	}
 
-	protected function decodePayload(PacketSerializer $in) : void{
-		$this->cameraActorUniqueId = $in->getActorUniqueId();
-		$this->playerActorUniqueId = $in->getActorUniqueId();
+	protected function decodePayload(ByteBufferReader $in) : void{
+		$this->cameraActorUniqueId = CommonTypes::getActorUniqueId($in);
+		$this->playerActorUniqueId = CommonTypes::getActorUniqueId($in);
 	}
 
-	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putActorUniqueId($this->cameraActorUniqueId);
-		$out->putActorUniqueId($this->playerActorUniqueId);
+	protected function encodePayload(ByteBufferWriter $out) : void{
+		CommonTypes::putActorUniqueId($out, $this->cameraActorUniqueId);
+		CommonTypes::putActorUniqueId($out, $this->playerActorUniqueId);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

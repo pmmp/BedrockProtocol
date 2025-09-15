@@ -14,7 +14,10 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\Byte;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 
 class BookEditPacket extends DataPacket implements ServerboundPacket{
 	public const NETWORK_ID = ProtocolInfo::BOOK_EDIT_PACKET;
@@ -35,56 +38,56 @@ class BookEditPacket extends DataPacket implements ServerboundPacket{
 	public string $author;
 	public string $xuid;
 
-	protected function decodePayload(PacketSerializer $in) : void{
-		$this->type = $in->getByte();
-		$this->inventorySlot = $in->getByte();
+	protected function decodePayload(ByteBufferReader $in) : void{
+		$this->type = Byte::readUnsigned($in);
+		$this->inventorySlot = Byte::readUnsigned($in);
 
 		switch($this->type){
 			case self::TYPE_REPLACE_PAGE:
 			case self::TYPE_ADD_PAGE:
-				$this->pageNumber = $in->getByte();
-				$this->text = $in->getString();
-				$this->photoName = $in->getString();
+				$this->pageNumber = Byte::readUnsigned($in);
+				$this->text = CommonTypes::getString($in);
+				$this->photoName = CommonTypes::getString($in);
 				break;
 			case self::TYPE_DELETE_PAGE:
-				$this->pageNumber = $in->getByte();
+				$this->pageNumber = Byte::readUnsigned($in);
 				break;
 			case self::TYPE_SWAP_PAGES:
-				$this->pageNumber = $in->getByte();
-				$this->secondaryPageNumber = $in->getByte();
+				$this->pageNumber = Byte::readUnsigned($in);
+				$this->secondaryPageNumber = Byte::readUnsigned($in);
 				break;
 			case self::TYPE_SIGN_BOOK:
-				$this->title = $in->getString();
-				$this->author = $in->getString();
-				$this->xuid = $in->getString();
+				$this->title = CommonTypes::getString($in);
+				$this->author = CommonTypes::getString($in);
+				$this->xuid = CommonTypes::getString($in);
 				break;
 			default:
 				throw new PacketDecodeException("Unknown book edit type $this->type!");
 		}
 	}
 
-	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putByte($this->type);
-		$out->putByte($this->inventorySlot);
+	protected function encodePayload(ByteBufferWriter $out) : void{
+		Byte::writeUnsigned($out, $this->type);
+		Byte::writeUnsigned($out, $this->inventorySlot);
 
 		switch($this->type){
 			case self::TYPE_REPLACE_PAGE:
 			case self::TYPE_ADD_PAGE:
-				$out->putByte($this->pageNumber);
-				$out->putString($this->text);
-				$out->putString($this->photoName);
+				Byte::writeUnsigned($out, $this->pageNumber);
+				CommonTypes::putString($out, $this->text);
+				CommonTypes::putString($out, $this->photoName);
 				break;
 			case self::TYPE_DELETE_PAGE:
-				$out->putByte($this->pageNumber);
+				Byte::writeUnsigned($out, $this->pageNumber);
 				break;
 			case self::TYPE_SWAP_PAGES:
-				$out->putByte($this->pageNumber);
-				$out->putByte($this->secondaryPageNumber);
+				Byte::writeUnsigned($out, $this->pageNumber);
+				Byte::writeUnsigned($out, $this->secondaryPageNumber);
 				break;
 			case self::TYPE_SIGN_BOOK:
-				$out->putString($this->title);
-				$out->putString($this->author);
-				$out->putString($this->xuid);
+				CommonTypes::putString($out, $this->title);
+				CommonTypes::putString($out, $this->author);
+				CommonTypes::putString($out, $this->xuid);
 				break;
 			default:
 				throw new \InvalidArgumentException("Unknown book edit type $this->type!");

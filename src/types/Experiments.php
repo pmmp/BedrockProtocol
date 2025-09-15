@@ -14,7 +14,10 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol\types;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\LE;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 use function count;
 
 final class Experiments{
@@ -32,23 +35,23 @@ final class Experiments{
 
 	public function hasPreviouslyUsedExperiments() : bool{ return $this->hasPreviouslyUsedExperiments; }
 
-	public static function read(PacketSerializer $in) : self{
+	public static function read(ByteBufferReader $in) : self{
 		$experiments = [];
-		for($i = 0, $len = $in->getLInt(); $i < $len; ++$i){
-			$experimentName = $in->getString();
-			$enabled = $in->getBool();
+		for($i = 0, $len = LE::readUnsignedInt($in); $i < $len; ++$i){
+			$experimentName = CommonTypes::getString($in);
+			$enabled = CommonTypes::getBool($in);
 			$experiments[$experimentName] = $enabled;
 		}
-		$hasPreviouslyUsedExperiments = $in->getBool();
+		$hasPreviouslyUsedExperiments = CommonTypes::getBool($in);
 		return new self($experiments, $hasPreviouslyUsedExperiments);
 	}
 
-	public function write(PacketSerializer $out) : void{
-		$out->putLInt(count($this->experiments));
+	public function write(ByteBufferWriter $out) : void{
+		LE::writeUnsignedInt($out, count($this->experiments));
 		foreach($this->experiments as $experimentName => $enabled){
-			$out->putString($experimentName);
-			$out->putBool($enabled);
+			CommonTypes::putString($out, $experimentName);
+			CommonTypes::putBool($out, $enabled);
 		}
-		$out->putBool($this->hasPreviouslyUsedExperiments);
+		CommonTypes::putBool($out, $this->hasPreviouslyUsedExperiments);
 	}
 }

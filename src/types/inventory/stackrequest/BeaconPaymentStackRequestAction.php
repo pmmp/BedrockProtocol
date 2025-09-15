@@ -14,7 +14,9 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol\types\inventory\stackrequest;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\VarInt;
 use pocketmine\network\mcpe\protocol\types\GetTypeIdFromConstTrait;
 
 /**
@@ -34,14 +36,14 @@ final class BeaconPaymentStackRequestAction extends ItemStackRequestAction{
 
 	public function getSecondaryEffectId() : int{ return $this->secondaryEffectId; }
 
-	public static function read(PacketSerializer $in) : self{
-		$primary = $in->getVarInt();
-		$secondary = $in->getVarInt();
+	public static function read(ByteBufferReader $in) : self{
+		$primary = VarInt::readSignedInt($in);
+		$secondary = VarInt::readSignedInt($in);
 		return new self($primary, $secondary);
 	}
 
-	public function write(PacketSerializer $out) : void{
-		$out->putVarInt($this->primaryEffectId);
-		$out->putVarInt($this->secondaryEffectId);
+	public function write(ByteBufferWriter $out) : void{
+		VarInt::writeSignedInt($out, $this->primaryEffectId);
+		VarInt::writeSignedInt($out, $this->secondaryEffectId);
 	}
 }

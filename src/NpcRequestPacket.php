@@ -14,7 +14,10 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\Byte;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 
 class NpcRequestPacket extends DataPacket implements ServerboundPacket{
 	public const NETWORK_ID = ProtocolInfo::NPC_REQUEST_PACKET;
@@ -46,20 +49,20 @@ class NpcRequestPacket extends DataPacket implements ServerboundPacket{
 		return $result;
 	}
 
-	protected function decodePayload(PacketSerializer $in) : void{
-		$this->actorRuntimeId = $in->getActorRuntimeId();
-		$this->requestType = $in->getByte();
-		$this->commandString = $in->getString();
-		$this->actionIndex = $in->getByte();
-		$this->sceneName = $in->getString();
+	protected function decodePayload(ByteBufferReader $in) : void{
+		$this->actorRuntimeId = CommonTypes::getActorRuntimeId($in);
+		$this->requestType = Byte::readUnsigned($in);
+		$this->commandString = CommonTypes::getString($in);
+		$this->actionIndex = Byte::readUnsigned($in);
+		$this->sceneName = CommonTypes::getString($in);
 	}
 
-	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putActorRuntimeId($this->actorRuntimeId);
-		$out->putByte($this->requestType);
-		$out->putString($this->commandString);
-		$out->putByte($this->actionIndex);
-		$out->putString($this->sceneName);
+	protected function encodePayload(ByteBufferWriter $out) : void{
+		CommonTypes::putActorRuntimeId($out, $this->actorRuntimeId);
+		Byte::writeUnsigned($out, $this->requestType);
+		CommonTypes::putString($out, $this->commandString);
+		Byte::writeUnsigned($out, $this->actionIndex);
+		CommonTypes::putString($out, $this->sceneName);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

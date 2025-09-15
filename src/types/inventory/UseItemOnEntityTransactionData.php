@@ -14,9 +14,12 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol\types\inventory;
 
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\VarInt;
 use pocketmine\math\Vector3;
 use pocketmine\network\mcpe\protocol\InventoryTransactionPacket;
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 use pocketmine\network\mcpe\protocol\types\GetTypeIdFromConstTrait;
 
 class UseItemOnEntityTransactionData extends TransactionData{
@@ -59,22 +62,22 @@ class UseItemOnEntityTransactionData extends TransactionData{
 		return $this->clickPosition;
 	}
 
-	protected function decodeData(PacketSerializer $stream) : void{
-		$this->actorRuntimeId = $stream->getActorRuntimeId();
-		$this->actionType = $stream->getUnsignedVarInt();
-		$this->hotbarSlot = $stream->getVarInt();
-		$this->itemInHand = $stream->getItemStackWrapper();
-		$this->playerPosition = $stream->getVector3();
-		$this->clickPosition = $stream->getVector3();
+	protected function decodeData(ByteBufferReader $in) : void{
+		$this->actorRuntimeId = CommonTypes::getActorRuntimeId($in);
+		$this->actionType = VarInt::readUnsignedInt($in);
+		$this->hotbarSlot = VarInt::readSignedInt($in);
+		$this->itemInHand = CommonTypes::getItemStackWrapper($in);
+		$this->playerPosition = CommonTypes::getVector3($in);
+		$this->clickPosition = CommonTypes::getVector3($in);
 	}
 
-	protected function encodeData(PacketSerializer $stream) : void{
-		$stream->putActorRuntimeId($this->actorRuntimeId);
-		$stream->putUnsignedVarInt($this->actionType);
-		$stream->putVarInt($this->hotbarSlot);
-		$stream->putItemStackWrapper($this->itemInHand);
-		$stream->putVector3($this->playerPosition);
-		$stream->putVector3($this->clickPosition);
+	protected function encodeData(ByteBufferWriter $out) : void{
+		CommonTypes::putActorRuntimeId($out, $this->actorRuntimeId);
+		VarInt::writeUnsignedInt($out, $this->actionType);
+		VarInt::writeSignedInt($out, $this->hotbarSlot);
+		CommonTypes::putItemStackWrapper($out, $this->itemInHand);
+		CommonTypes::putVector3($out, $this->playerPosition);
+		CommonTypes::putVector3($out, $this->clickPosition);
 	}
 
 	/**

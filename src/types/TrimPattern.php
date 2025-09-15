@@ -14,7 +14,9 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol\types;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 
 final class TrimPattern{
 
@@ -27,14 +29,14 @@ final class TrimPattern{
 
 	public function getPatternId() : string{ return $this->patternId; }
 
-	public static function read(PacketSerializer $in) : self{
-		$itemId = $in->getString();
-		$patternId = $in->getString();
+	public static function read(ByteBufferReader $in) : self{
+		$itemId = CommonTypes::getString($in);
+		$patternId = CommonTypes::getString($in);
 		return new self($itemId, $patternId);
 	}
 
-	public function write(PacketSerializer $out) : void{
-		$out->putString($this->itemId);
-		$out->putString($this->patternId);
+	public function write(ByteBufferWriter $out) : void{
+		CommonTypes::putString($out, $this->itemId);
+		CommonTypes::putString($out, $this->patternId);
 	}
 }

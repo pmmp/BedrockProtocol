@@ -14,7 +14,9 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol\types;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\VarInt;
 
 final class DimensionData{
 
@@ -30,17 +32,17 @@ final class DimensionData{
 
 	public function getGenerator() : int{ return $this->generator; }
 
-	public static function read(PacketSerializer $in) : self{
-		$maxHeight = $in->getVarInt();
-		$minHeight = $in->getVarInt();
-		$generator = $in->getVarInt();
+	public static function read(ByteBufferReader $in) : self{
+		$maxHeight = VarInt::readSignedInt($in);
+		$minHeight = VarInt::readSignedInt($in);
+		$generator = VarInt::readSignedInt($in);
 
 		return new self($maxHeight, $minHeight, $generator);
 	}
 
-	public function write(PacketSerializer $out) : void{
-		$out->putVarInt($this->maxHeight);
-		$out->putVarInt($this->minHeight);
-		$out->putVarInt($this->generator);
+	public function write(ByteBufferWriter $out) : void{
+		VarInt::writeSignedInt($out, $this->maxHeight);
+		VarInt::writeSignedInt($out, $this->minHeight);
+		VarInt::writeSignedInt($out, $this->generator);
 	}
 }

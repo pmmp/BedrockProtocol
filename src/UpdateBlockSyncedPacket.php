@@ -14,7 +14,9 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\VarInt;
 
 class UpdateBlockSyncedPacket extends UpdateBlockPacket{
 	public const NETWORK_ID = ProtocolInfo::UPDATE_BLOCK_SYNCED_PACKET;
@@ -26,16 +28,16 @@ class UpdateBlockSyncedPacket extends UpdateBlockPacket{
 	public int $actorUniqueId;
 	public int $updateType;
 
-	protected function decodePayload(PacketSerializer $in) : void{
+	protected function decodePayload(ByteBufferReader $in) : void{
 		parent::decodePayload($in);
-		$this->actorUniqueId = $in->getUnsignedVarLong();
-		$this->updateType = $in->getUnsignedVarLong();
+		$this->actorUniqueId = VarInt::readUnsignedLong($in);
+		$this->updateType = VarInt::readUnsignedLong($in);
 	}
 
-	protected function encodePayload(PacketSerializer $out) : void{
+	protected function encodePayload(ByteBufferWriter $out) : void{
 		parent::encodePayload($out);
-		$out->putUnsignedVarLong($this->actorUniqueId);
-		$out->putUnsignedVarLong($this->updateType);
+		VarInt::writeUnsignedLong($out, $this->actorUniqueId);
+		VarInt::writeUnsignedLong($out, $this->updateType);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

@@ -14,7 +14,10 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\VarInt;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 use pocketmine\network\mcpe\protocol\types\inventory\InventoryTransactionChangedSlotsHack;
 use pocketmine\network\mcpe\protocol\types\inventory\MismatchTransactionData;
 use pocketmine\network\mcpe\protocol\types\inventory\NormalTransactionData;
@@ -53,16 +56,16 @@ class InventoryTransactionPacket extends DataPacket implements ClientboundPacket
 		return $result;
 	}
 
-	protected function decodePayload(PacketSerializer $in) : void{
-		$this->requestId = $in->readLegacyItemStackRequestId();
+	protected function decodePayload(ByteBufferReader $in) : void{
+		$this->requestId = CommonTypes::readLegacyItemStackRequestId($in);
 		$this->requestChangedSlots = [];
 		if($this->requestId !== 0){
-			for($i = 0, $len = $in->getUnsignedVarInt(); $i < $len; ++$i){
+			for($i = 0, $len = VarInt::readUnsignedInt($in); $i < $len; ++$i){
 				$this->requestChangedSlots[] = InventoryTransactionChangedSlotsHack::read($in);
 			}
 		}
 
-		$transactionType = $in->getUnsignedVarInt();
+		$transactionType = VarInt::readUnsignedInt($in);
 
 		$this->trData = match($transactionType){
 			NormalTransactionData::ID => new NormalTransactionData(),
@@ -76,16 +79,16 @@ class InventoryTransactionPacket extends DataPacket implements ClientboundPacket
 		$this->trData->decode($in);
 	}
 
-	protected function encodePayload(PacketSerializer $out) : void{
-		$out->writeLegacyItemStackRequestId($this->requestId);
+	protected function encodePayload(ByteBufferWriter $out) : void{
+		CommonTypes::writeLegacyItemStackRequestId($out, $this->requestId);
 		if($this->requestId !== 0){
-			$out->putUnsignedVarInt(count($this->requestChangedSlots));
+			VarInt::writeUnsignedInt($out, count($this->requestChangedSlots));
 			foreach($this->requestChangedSlots as $changedSlots){
 				$changedSlots->write($out);
 			}
 		}
 
-		$out->putUnsignedVarInt($this->trData->getTypeId());
+		VarInt::writeUnsignedInt($out, $this->trData->getTypeId());
 
 		$this->trData->encode($out);
 	}

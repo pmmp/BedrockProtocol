@@ -14,7 +14,10 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\LE;
+use pmmp\encoding\VarInt;
 use pocketmine\network\mcpe\protocol\types\SubChunkPosition;
 use pocketmine\network\mcpe\protocol\types\SubChunkPositionOffset;
 use function count;
@@ -53,21 +56,21 @@ class SubChunkRequestPacket extends DataPacket implements ServerboundPacket{
 	 */
 	public function getEntries() : array{ return $this->entries; }
 
-	protected function decodePayload(PacketSerializer $in) : void{
-		$this->dimension = $in->getVarInt();
+	protected function decodePayload(ByteBufferReader $in) : void{
+		$this->dimension = VarInt::readSignedInt($in);
 		$this->basePosition = SubChunkPosition::read($in);
 
 		$this->entries = [];
-		for($i = 0, $count = $in->getLInt(); $i < $count; $i++){
+		for($i = 0, $count = LE::readUnsignedInt($in); $i < $count; $i++){
 			$this->entries[] = SubChunkPositionOffset::read($in);
 		}
 	}
 
-	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putVarInt($this->dimension);
+	protected function encodePayload(ByteBufferWriter $out) : void{
+		VarInt::writeSignedInt($out, $this->dimension);
 		$this->basePosition->write($out);
 
-		$out->putLInt(count($this->entries));
+		LE::writeUnsignedInt($out, count($this->entries));
 		foreach($this->entries as $entry){
 			$entry->write($out);
 		}

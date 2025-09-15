@@ -14,7 +14,9 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol\types\entity;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 use pocketmine\network\mcpe\protocol\types\BlockPosition;
 use pocketmine\network\mcpe\protocol\types\GetTypeIdFromConstTrait;
 
@@ -31,12 +33,12 @@ final class BlockPosMetadataProperty implements MetadataProperty{
 		return $this->value;
 	}
 
-	public static function read(PacketSerializer $in) : self{
-		return new self($in->getSignedBlockPosition());
+	public static function read(ByteBufferReader $in) : self{
+		return new self(CommonTypes::getSignedBlockPosition($in));
 	}
 
-	public function write(PacketSerializer $out) : void{
-		$out->putSignedBlockPosition($this->value);
+	public function write(ByteBufferWriter $out) : void{
+		CommonTypes::putSignedBlockPosition($out, $this->value);
 	}
 
 	public function equals(MetadataProperty $other) : bool{

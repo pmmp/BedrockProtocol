@@ -14,7 +14,9 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 
 class SettingsCommandPacket extends DataPacket implements ServerboundPacket{
 	public const NETWORK_ID = ProtocolInfo::SETTINGS_COMMAND_PACKET;
@@ -40,14 +42,14 @@ class SettingsCommandPacket extends DataPacket implements ServerboundPacket{
 		return $this->suppressOutput;
 	}
 
-	protected function decodePayload(PacketSerializer $in) : void{
-		$this->command = $in->getString();
-		$this->suppressOutput = $in->getBool();
+	protected function decodePayload(ByteBufferReader $in) : void{
+		$this->command = CommonTypes::getString($in);
+		$this->suppressOutput = CommonTypes::getBool($in);
 	}
 
-	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putString($this->command);
-		$out->putBool($this->suppressOutput);
+	protected function encodePayload(ByteBufferWriter $out) : void{
+		CommonTypes::putString($out, $this->command);
+		CommonTypes::putBool($out, $this->suppressOutput);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

@@ -14,7 +14,10 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\VarInt;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 use pocketmine\network\mcpe\protocol\types\Experiments;
 use pocketmine\network\mcpe\protocol\types\resourcepacks\ResourcePackStackEntry;
 use function count;
@@ -47,39 +50,39 @@ class ResourcePackStackPacket extends DataPacket implements ClientboundPacket{
 		return $result;
 	}
 
-	protected function decodePayload(PacketSerializer $in) : void{
-		$this->mustAccept = $in->getBool();
-		$behaviorPackCount = $in->getUnsignedVarInt();
+	protected function decodePayload(ByteBufferReader $in) : void{
+		$this->mustAccept = CommonTypes::getBool($in);
+		$behaviorPackCount = VarInt::readUnsignedInt($in);
 		while($behaviorPackCount-- > 0){
 			$this->behaviorPackStack[] = ResourcePackStackEntry::read($in);
 		}
 
-		$resourcePackCount = $in->getUnsignedVarInt();
+		$resourcePackCount = VarInt::readUnsignedInt($in);
 		while($resourcePackCount-- > 0){
 			$this->resourcePackStack[] = ResourcePackStackEntry::read($in);
 		}
 
-		$this->baseGameVersion = $in->getString();
+		$this->baseGameVersion = CommonTypes::getString($in);
 		$this->experiments = Experiments::read($in);
-		$this->useVanillaEditorPacks = $in->getBool();
+		$this->useVanillaEditorPacks = CommonTypes::getBool($in);
 	}
 
-	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putBool($this->mustAccept);
+	protected function encodePayload(ByteBufferWriter $out) : void{
+		CommonTypes::putBool($out, $this->mustAccept);
 
-		$out->putUnsignedVarInt(count($this->behaviorPackStack));
+		VarInt::writeUnsignedInt($out, count($this->behaviorPackStack));
 		foreach($this->behaviorPackStack as $entry){
 			$entry->write($out);
 		}
 
-		$out->putUnsignedVarInt(count($this->resourcePackStack));
+		VarInt::writeUnsignedInt($out, count($this->resourcePackStack));
 		foreach($this->resourcePackStack as $entry){
 			$entry->write($out);
 		}
 
-		$out->putString($this->baseGameVersion);
+		CommonTypes::putString($out, $this->baseGameVersion);
 		$this->experiments->write($out);
-		$out->putBool($this->useVanillaEditorPacks);
+		CommonTypes::putBool($out, $this->useVanillaEditorPacks);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

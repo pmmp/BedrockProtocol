@@ -14,7 +14,11 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\Byte;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\VarInt;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 use pocketmine\network\mcpe\protocol\types\CacheableNbt;
 
 class PositionTrackingDBServerBroadcastPacket extends DataPacket implements ClientboundPacket{
@@ -48,16 +52,16 @@ class PositionTrackingDBServerBroadcastPacket extends DataPacket implements Clie
 	/** @phpstan-return CacheableNbt<\pocketmine\nbt\tag\CompoundTag> */
 	public function getNbt() : CacheableNbt{ return $this->nbt; }
 
-	protected function decodePayload(PacketSerializer $in) : void{
-		$this->action = $in->getByte();
-		$this->trackingId = $in->getVarInt();
-		$this->nbt = new CacheableNbt($in->getNbtCompoundRoot());
+	protected function decodePayload(ByteBufferReader $in) : void{
+		$this->action = Byte::readUnsigned($in);
+		$this->trackingId = VarInt::readSignedInt($in);
+		$this->nbt = new CacheableNbt(CommonTypes::getNbtCompoundRoot($in));
 	}
 
-	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putByte($this->action);
-		$out->putVarInt($this->trackingId);
-		$out->put($this->nbt->getEncodedNbt());
+	protected function encodePayload(ByteBufferWriter $out) : void{
+		Byte::writeUnsigned($out, $this->action);
+		VarInt::writeSignedInt($out, $this->trackingId);
+		$out->writeByteArray($this->nbt->getEncodedNbt());
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

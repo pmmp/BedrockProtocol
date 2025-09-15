@@ -14,9 +14,12 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol\types\inventory;
 
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\DataDecodeException;
+use pmmp\encoding\VarInt;
 use pocketmine\network\mcpe\protocol\PacketDecodeException;
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
-use pocketmine\utils\BinaryDataException;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 
 class NetworkInventoryAction{
 	public const SOURCE_CONTAINER = 0;
@@ -65,31 +68,31 @@ class NetworkInventoryAction{
 	/**
 	 * @return $this
 	 *
-	 * @throws BinaryDataException
+	 * @throws DataDecodeException
 	 * @throws PacketDecodeException
 	 */
-	public function read(PacketSerializer $packet) : NetworkInventoryAction{
-		$this->sourceType = $packet->getUnsignedVarInt();
+	public function read(ByteBufferReader $in) : NetworkInventoryAction{
+		$this->sourceType = VarInt::readUnsignedInt($in);
 
 		switch($this->sourceType){
 			case self::SOURCE_CONTAINER:
-				$this->windowId = $packet->getVarInt();
+				$this->windowId = VarInt::readSignedInt($in);
 				break;
 			case self::SOURCE_WORLD:
-				$this->sourceFlags = $packet->getUnsignedVarInt();
+				$this->sourceFlags = VarInt::readUnsignedInt($in);
 				break;
 			case self::SOURCE_CREATIVE:
 				break;
 			case self::SOURCE_TODO:
-				$this->windowId = $packet->getVarInt();
+				$this->windowId = VarInt::readSignedInt($in);
 				break;
 			default:
 				throw new PacketDecodeException("Unknown inventory action source type $this->sourceType");
 		}
 
-		$this->inventorySlot = $packet->getUnsignedVarInt();
-		$this->oldItem = $packet->getItemStackWrapper();
-		$this->newItem = $packet->getItemStackWrapper();
+		$this->inventorySlot = VarInt::readUnsignedInt($in);
+		$this->oldItem = CommonTypes::getItemStackWrapper($in);
+		$this->newItem = CommonTypes::getItemStackWrapper($in);
 
 		return $this;
 	}
@@ -97,27 +100,27 @@ class NetworkInventoryAction{
 	/**
 	 * @throws \InvalidArgumentException
 	 */
-	public function write(PacketSerializer $packet) : void{
-		$packet->putUnsignedVarInt($this->sourceType);
+	public function write(ByteBufferWriter $out) : void{
+		VarInt::writeUnsignedInt($out, $this->sourceType);
 
 		switch($this->sourceType){
 			case self::SOURCE_CONTAINER:
-				$packet->putVarInt($this->windowId);
+				VarInt::writeSignedInt($out, $this->windowId);
 				break;
 			case self::SOURCE_WORLD:
-				$packet->putUnsignedVarInt($this->sourceFlags);
+				VarInt::writeUnsignedInt($out, $this->sourceFlags);
 				break;
 			case self::SOURCE_CREATIVE:
 				break;
 			case self::SOURCE_TODO:
-				$packet->putVarInt($this->windowId);
+				VarInt::writeSignedInt($out, $this->windowId);
 				break;
 			default:
 				throw new \InvalidArgumentException("Unknown inventory action source type $this->sourceType");
 		}
 
-		$packet->putUnsignedVarInt($this->inventorySlot);
-		$packet->putItemStackWrapper($this->oldItem);
-		$packet->putItemStackWrapper($this->newItem);
+		VarInt::writeUnsignedInt($out, $this->inventorySlot);
+		CommonTypes::putItemStackWrapper($out, $this->oldItem);
+		CommonTypes::putItemStackWrapper($out, $this->newItem);
 	}
 }

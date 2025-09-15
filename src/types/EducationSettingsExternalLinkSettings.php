@@ -14,7 +14,9 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol\types;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 
 final class EducationSettingsExternalLinkSettings{
 	public function __construct(
@@ -26,14 +28,14 @@ final class EducationSettingsExternalLinkSettings{
 
 	public function getDisplayName() : string{ return $this->displayName; }
 
-	public static function read(PacketSerializer $in) : self{
-		$url = $in->getString();
-		$displayName = $in->getString();
+	public static function read(ByteBufferReader $in) : self{
+		$url = CommonTypes::getString($in);
+		$displayName = CommonTypes::getString($in);
 		return new self($displayName, $url);
 	}
 
-	public function write(PacketSerializer $out) : void{
-		$out->putString($this->url);
-		$out->putString($this->displayName);
+	public function write(ByteBufferWriter $out) : void{
+		CommonTypes::putString($out, $this->url);
+		CommonTypes::putString($out, $this->displayName);
 	}
 }

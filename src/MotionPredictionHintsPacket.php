@@ -14,8 +14,10 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
 use pocketmine\math\Vector3;
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 
 class MotionPredictionHintsPacket extends DataPacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::MOTION_PREDICTION_HINTS_PACKET;
@@ -41,16 +43,16 @@ class MotionPredictionHintsPacket extends DataPacket implements ClientboundPacke
 
 	public function isOnGround() : bool{ return $this->onGround; }
 
-	protected function decodePayload(PacketSerializer $in) : void{
-		$this->actorRuntimeId = $in->getActorRuntimeId();
-		$this->motion = $in->getVector3();
-		$this->onGround = $in->getBool();
+	protected function decodePayload(ByteBufferReader $in) : void{
+		$this->actorRuntimeId = CommonTypes::getActorRuntimeId($in);
+		$this->motion = CommonTypes::getVector3($in);
+		$this->onGround = CommonTypes::getBool($in);
 	}
 
-	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putActorRuntimeId($this->actorRuntimeId);
-		$out->putVector3($this->motion);
-		$out->putBool($this->onGround);
+	protected function encodePayload(ByteBufferWriter $out) : void{
+		CommonTypes::putActorRuntimeId($out, $this->actorRuntimeId);
+		CommonTypes::putVector3($out, $this->motion);
+		CommonTypes::putBool($out, $this->onGround);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

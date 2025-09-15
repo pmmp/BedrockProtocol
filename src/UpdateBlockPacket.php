@@ -14,7 +14,10 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\VarInt;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 use pocketmine\network\mcpe\protocol\types\BlockPosition;
 
 class UpdateBlockPacket extends DataPacket implements ClientboundPacket{
@@ -51,18 +54,18 @@ class UpdateBlockPacket extends DataPacket implements ClientboundPacket{
 		return $result;
 	}
 
-	protected function decodePayload(PacketSerializer $in) : void{
-		$this->blockPosition = $in->getBlockPosition();
-		$this->blockRuntimeId = $in->getUnsignedVarInt();
-		$this->flags = $in->getUnsignedVarInt();
-		$this->dataLayerId = $in->getUnsignedVarInt();
+	protected function decodePayload(ByteBufferReader $in) : void{
+		$this->blockPosition = CommonTypes::getBlockPosition($in);
+		$this->blockRuntimeId = VarInt::readUnsignedInt($in);
+		$this->flags = VarInt::readUnsignedInt($in);
+		$this->dataLayerId = VarInt::readUnsignedInt($in);
 	}
 
-	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putBlockPosition($this->blockPosition);
-		$out->putUnsignedVarInt($this->blockRuntimeId);
-		$out->putUnsignedVarInt($this->flags);
-		$out->putUnsignedVarInt($this->dataLayerId);
+	protected function encodePayload(ByteBufferWriter $out) : void{
+		CommonTypes::putBlockPosition($out, $this->blockPosition);
+		VarInt::writeUnsignedInt($out, $this->blockRuntimeId);
+		VarInt::writeUnsignedInt($out, $this->flags);
+		VarInt::writeUnsignedInt($out, $this->dataLayerId);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

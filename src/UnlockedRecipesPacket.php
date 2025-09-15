@@ -14,7 +14,11 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\LE;
+use pmmp\encoding\VarInt;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 use function count;
 
 class UnlockedRecipesPacket extends DataPacket implements ClientboundPacket{
@@ -48,19 +52,19 @@ class UnlockedRecipesPacket extends DataPacket implements ClientboundPacket{
 	 */
 	public function getRecipes() : array{ return $this->recipes; }
 
-	protected function decodePayload(PacketSerializer $in) : void{
-		$this->type = $in->getLInt();
+	protected function decodePayload(ByteBufferReader $in) : void{
+		$this->type = LE::readUnsignedInt($in);
 		$this->recipes = [];
-		for($i = 0, $count = $in->getUnsignedVarInt(); $i < $count; $i++){
-			$this->recipes[] = $in->getString();
+		for($i = 0, $count = VarInt::readUnsignedInt($in); $i < $count; $i++){
+			$this->recipes[] = CommonTypes::getString($in);
 		}
 	}
 
-	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putLInt($this->type);
-		$out->putUnsignedVarInt(count($this->recipes));
+	protected function encodePayload(ByteBufferWriter $out) : void{
+		LE::writeUnsignedInt($out, $this->type);
+		VarInt::writeUnsignedInt($out, count($this->recipes));
 		foreach($this->recipes as $recipe){
-			$out->putString($recipe);
+			CommonTypes::putString($out, $recipe);
 		}
 	}
 

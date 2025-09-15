@@ -14,7 +14,9 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\VarInt;
 
 class HurtArmorPacket extends DataPacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::HURT_ARMOR_PACKET;
@@ -34,16 +36,16 @@ class HurtArmorPacket extends DataPacket implements ClientboundPacket{
 		return $result;
 	}
 
-	protected function decodePayload(PacketSerializer $in) : void{
-		$this->cause = $in->getVarInt();
-		$this->health = $in->getVarInt();
-		$this->armorSlotFlags = $in->getUnsignedVarLong();
+	protected function decodePayload(ByteBufferReader $in) : void{
+		$this->cause = VarInt::readSignedInt($in);
+		$this->health = VarInt::readSignedInt($in);
+		$this->armorSlotFlags = VarInt::readUnsignedLong($in);
 	}
 
-	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putVarInt($this->cause);
-		$out->putVarInt($this->health);
-		$out->putUnsignedVarLong($this->armorSlotFlags);
+	protected function encodePayload(ByteBufferWriter $out) : void{
+		VarInt::writeSignedInt($out, $this->cause);
+		VarInt::writeSignedInt($out, $this->health);
+		VarInt::writeUnsignedLong($out, $this->armorSlotFlags);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

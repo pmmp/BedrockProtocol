@@ -14,7 +14,10 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol\types;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\VarInt;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 use pocketmine\network\mcpe\protocol\UpdateBlockPacket;
 
 final class UpdateSubChunkBlocksPacketEntry{
@@ -41,21 +44,21 @@ final class UpdateSubChunkBlocksPacketEntry{
 
 	public function getSyncedUpdateType() : int{ return $this->syncedUpdateType; }
 
-	public static function read(PacketSerializer $in) : self{
-		$blockPosition = $in->getBlockPosition();
-		$blockRuntimeId = $in->getUnsignedVarInt();
-		$updateFlags = $in->getUnsignedVarInt();
-		$syncedUpdateActorUniqueId = $in->getUnsignedVarLong(); //this can't use the standard method because it's unsigned as opposed to the usual signed... !!!!!!
-		$syncedUpdateType = $in->getUnsignedVarInt(); //this isn't even consistent with UpdateBlockSyncedPacket?!
+	public static function read(ByteBufferReader $in) : self{
+		$blockPosition = CommonTypes::getBlockPosition($in);
+		$blockRuntimeId = VarInt::readUnsignedInt($in);
+		$updateFlags = VarInt::readUnsignedInt($in);
+		$syncedUpdateActorUniqueId = VarInt::readUnsignedLong($in); //this can't use the standard method because it's unsigned as opposed to the usual signed... !!!!!!
+		$syncedUpdateType = VarInt::readUnsignedInt($in); //this isn't even consistent with UpdateBlockSyncedPacket?!
 
 		return new self($blockPosition, $blockRuntimeId, $updateFlags, $syncedUpdateActorUniqueId, $syncedUpdateType);
 	}
 
-	public function write(PacketSerializer $out) : void{
-		$out->putBlockPosition($this->blockPosition);
-		$out->putUnsignedVarInt($this->blockRuntimeId);
-		$out->putUnsignedVarInt($this->flags);
-		$out->putUnsignedVarLong($this->syncedUpdateActorUniqueId);
-		$out->putUnsignedVarInt($this->syncedUpdateType);
+	public function write(ByteBufferWriter $out) : void{
+		CommonTypes::putBlockPosition($out, $this->blockPosition);
+		VarInt::writeUnsignedInt($out, $this->blockRuntimeId);
+		VarInt::writeUnsignedInt($out, $this->flags);
+		VarInt::writeUnsignedLong($out, $this->syncedUpdateActorUniqueId);
+		VarInt::writeUnsignedInt($out, $this->syncedUpdateType);
 	}
 }

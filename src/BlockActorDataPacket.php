@@ -14,7 +14,9 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 use pocketmine\network\mcpe\protocol\types\BlockPosition;
 use pocketmine\network\mcpe\protocol\types\CacheableNbt;
 
@@ -36,14 +38,14 @@ class BlockActorDataPacket extends DataPacket implements ClientboundPacket, Serv
 		return $result;
 	}
 
-	protected function decodePayload(PacketSerializer $in) : void{
-		$this->blockPosition = $in->getBlockPosition();
-		$this->nbt = new CacheableNbt($in->getNbtCompoundRoot());
+	protected function decodePayload(ByteBufferReader $in) : void{
+		$this->blockPosition = CommonTypes::getBlockPosition($in);
+		$this->nbt = new CacheableNbt(CommonTypes::getNbtCompoundRoot($in));
 	}
 
-	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putBlockPosition($this->blockPosition);
-		$out->put($this->nbt->getEncodedNbt());
+	protected function encodePayload(ByteBufferWriter $out) : void{
+		CommonTypes::putBlockPosition($out, $this->blockPosition);
+		$out->writeByteArray($this->nbt->getEncodedNbt());
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

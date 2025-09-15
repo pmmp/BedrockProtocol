@@ -14,7 +14,9 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\VarInt;
 use pocketmine\network\mcpe\protocol\types\camera\CameraPreset;
 use function count;
 
@@ -39,15 +41,15 @@ class CameraPresetsPacket extends DataPacket implements ClientboundPacket{
 	 */
 	public function getPresets() : array{ return $this->presets; }
 
-	protected function decodePayload(PacketSerializer $in) : void{
+	protected function decodePayload(ByteBufferReader $in) : void{
 		$this->presets = [];
-		for($i = 0, $count = $in->getUnsignedVarInt(); $i < $count; $i++){
+		for($i = 0, $count = VarInt::readUnsignedInt($in); $i < $count; $i++){
 			$this->presets[] = CameraPreset::read($in);
 		}
 	}
 
-	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putUnsignedVarInt(count($this->presets));
+	protected function encodePayload(ByteBufferWriter $out) : void{
+		VarInt::writeUnsignedInt($out, count($this->presets));
 		foreach($this->presets as $preset){
 			$preset->write($out);
 		}

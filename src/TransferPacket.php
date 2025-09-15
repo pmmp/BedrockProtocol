@@ -14,7 +14,10 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\LE;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 
 class TransferPacket extends DataPacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::TRANSFER_PACKET;
@@ -34,16 +37,16 @@ class TransferPacket extends DataPacket implements ClientboundPacket{
 		return $result;
 	}
 
-	protected function decodePayload(PacketSerializer $in) : void{
-		$this->address = $in->getString();
-		$this->port = $in->getLShort();
-		$this->reloadWorld = $in->getBool();
+	protected function decodePayload(ByteBufferReader $in) : void{
+		$this->address = CommonTypes::getString($in);
+		$this->port = LE::readUnsignedShort($in);
+		$this->reloadWorld = CommonTypes::getBool($in);
 	}
 
-	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putString($this->address);
-		$out->putLShort($this->port);
-		$out->putBool($this->reloadWorld);
+	protected function encodePayload(ByteBufferWriter $out) : void{
+		CommonTypes::putString($out, $this->address);
+		LE::writeUnsignedShort($out, $this->port);
+		CommonTypes::putBool($out, $this->reloadWorld);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

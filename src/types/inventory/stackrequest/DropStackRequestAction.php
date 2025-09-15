@@ -14,7 +14,10 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol\types\inventory\stackrequest;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\Byte;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 use pocketmine\network\mcpe\protocol\types\GetTypeIdFromConstTrait;
 
 /**
@@ -37,16 +40,16 @@ final class DropStackRequestAction extends ItemStackRequestAction{
 
 	public function isRandomly() : bool{ return $this->randomly; }
 
-	public static function read(PacketSerializer $in) : self{
-		$count = $in->getByte();
+	public static function read(ByteBufferReader $in) : self{
+		$count = Byte::readUnsigned($in);
 		$source = ItemStackRequestSlotInfo::read($in);
-		$random = $in->getBool();
+		$random = CommonTypes::getBool($in);
 		return new self($count, $source, $random);
 	}
 
-	public function write(PacketSerializer $out) : void{
-		$out->putByte($this->count);
+	public function write(ByteBufferWriter $out) : void{
+		Byte::writeUnsigned($out, $this->count);
 		$this->source->write($out);
-		$out->putBool($this->randomly);
+		CommonTypes::putBool($out, $this->randomly);
 	}
 }

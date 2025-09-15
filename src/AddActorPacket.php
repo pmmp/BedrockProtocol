@@ -14,8 +14,12 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\LE;
+use pmmp\encoding\VarInt;
 use pocketmine\math\Vector3;
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 use pocketmine\network\mcpe\protocol\types\entity\Attribute;
 use pocketmine\network\mcpe\protocol\types\entity\EntityLink;
 use pocketmine\network\mcpe\protocol\types\entity\MetadataProperty;
@@ -85,60 +89,60 @@ class AddActorPacket extends DataPacket implements ClientboundPacket{
 		return $result;
 	}
 
-	protected function decodePayload(PacketSerializer $in) : void{
-		$this->actorUniqueId = $in->getActorUniqueId();
-		$this->actorRuntimeId = $in->getActorRuntimeId();
-		$this->type = $in->getString();
-		$this->position = $in->getVector3();
-		$this->motion = $in->getVector3();
-		$this->pitch = $in->getLFloat();
-		$this->yaw = $in->getLFloat();
-		$this->headYaw = $in->getLFloat();
-		$this->bodyYaw = $in->getLFloat();
+	protected function decodePayload(ByteBufferReader $in) : void{
+		$this->actorUniqueId = CommonTypes::getActorUniqueId($in);
+		$this->actorRuntimeId = CommonTypes::getActorRuntimeId($in);
+		$this->type = CommonTypes::getString($in);
+		$this->position = CommonTypes::getVector3($in);
+		$this->motion = CommonTypes::getVector3($in);
+		$this->pitch = LE::readFloat($in);
+		$this->yaw = LE::readFloat($in);
+		$this->headYaw = LE::readFloat($in);
+		$this->bodyYaw = LE::readFloat($in);
 
-		$attrCount = $in->getUnsignedVarInt();
+		$attrCount = VarInt::readUnsignedInt($in);
 		for($i = 0; $i < $attrCount; ++$i){
-			$id = $in->getString();
-			$min = $in->getLFloat();
-			$current = $in->getLFloat();
-			$max = $in->getLFloat();
+			$id = CommonTypes::getString($in);
+			$min = LE::readFloat($in);
+			$current = LE::readFloat($in);
+			$max = LE::readFloat($in);
 			$this->attributes[] = new Attribute($id, $min, $max, $current, $current, []);
 		}
 
-		$this->metadata = $in->getEntityMetadata();
+		$this->metadata = CommonTypes::getEntityMetadata($in);
 		$this->syncedProperties = PropertySyncData::read($in);
 
-		$linkCount = $in->getUnsignedVarInt();
+		$linkCount = VarInt::readUnsignedInt($in);
 		for($i = 0; $i < $linkCount; ++$i){
-			$this->links[] = $in->getEntityLink();
+			$this->links[] = CommonTypes::getEntityLink($in);
 		}
 	}
 
-	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putActorUniqueId($this->actorUniqueId);
-		$out->putActorRuntimeId($this->actorRuntimeId);
-		$out->putString($this->type);
-		$out->putVector3($this->position);
-		$out->putVector3Nullable($this->motion);
-		$out->putLFloat($this->pitch);
-		$out->putLFloat($this->yaw);
-		$out->putLFloat($this->headYaw);
-		$out->putLFloat($this->bodyYaw);
+	protected function encodePayload(ByteBufferWriter $out) : void{
+		CommonTypes::putActorUniqueId($out, $this->actorUniqueId);
+		CommonTypes::putActorRuntimeId($out, $this->actorRuntimeId);
+		CommonTypes::putString($out, $this->type);
+		CommonTypes::putVector3($out, $this->position);
+		CommonTypes::putVector3Nullable($out, $this->motion);
+		LE::writeFloat($out, $this->pitch);
+		LE::writeFloat($out, $this->yaw);
+		LE::writeFloat($out, $this->headYaw);
+		LE::writeFloat($out, $this->bodyYaw);
 
-		$out->putUnsignedVarInt(count($this->attributes));
+		VarInt::writeUnsignedInt($out, count($this->attributes));
 		foreach($this->attributes as $attribute){
-			$out->putString($attribute->getId());
-			$out->putLFloat($attribute->getMin());
-			$out->putLFloat($attribute->getCurrent());
-			$out->putLFloat($attribute->getMax());
+			CommonTypes::putString($out, $attribute->getId());
+			LE::writeFloat($out, $attribute->getMin());
+			LE::writeFloat($out, $attribute->getCurrent());
+			LE::writeFloat($out, $attribute->getMax());
 		}
 
-		$out->putEntityMetadata($this->metadata);
+		CommonTypes::putEntityMetadata($out, $this->metadata);
 		$this->syncedProperties->write($out);
 
-		$out->putUnsignedVarInt(count($this->links));
+		VarInt::writeUnsignedInt($out, count($this->links));
 		foreach($this->links as $link){
-			$out->putEntityLink($link);
+			CommonTypes::putEntityLink($out, $link);
 		}
 	}
 

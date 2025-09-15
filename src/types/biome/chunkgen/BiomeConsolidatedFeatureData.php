@@ -14,7 +14,10 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol\types\biome\chunkgen;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\LE;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 
 final class BiomeConsolidatedFeatureData{
 
@@ -36,12 +39,12 @@ final class BiomeConsolidatedFeatureData{
 
 	public function canUseInternal() : bool{ return $this->useInternal; }
 
-	public static function read(PacketSerializer $in) : self{
+	public static function read(ByteBufferReader $in) : self{
 		$scatter = BiomeScatterParamData::read($in);
-		$feature = $in->getLShort();
-		$identifier = $in->getLShort();
-		$pass = $in->getLShort();
-		$useInternal = $in->getBool();
+		$feature = LE::readSignedShort($in);
+		$identifier = LE::readSignedShort($in);
+		$pass = LE::readSignedShort($in);
+		$useInternal = CommonTypes::getBool($in);
 
 		return new self(
 			$scatter,
@@ -52,11 +55,11 @@ final class BiomeConsolidatedFeatureData{
 		);
 	}
 
-	public function write(PacketSerializer $out) : void{
+	public function write(ByteBufferWriter $out) : void{
 		$this->scatter->write($out);
-		$out->putLShort($this->feature);
-		$out->putLShort($this->identifier);
-		$out->putLShort($this->pass);
-		$out->putBool($this->useInternal);
+		LE::writeSignedShort($out, $this->feature);
+		LE::writeSignedShort($out, $this->identifier);
+		LE::writeSignedShort($out, $this->pass);
+		CommonTypes::putBool($out, $this->useInternal);
 	}
 }

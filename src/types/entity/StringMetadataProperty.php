@@ -14,7 +14,9 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol\types\entity;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 use pocketmine\network\mcpe\protocol\types\GetTypeIdFromConstTrait;
 
 final class StringMetadataProperty implements MetadataProperty{
@@ -28,12 +30,12 @@ final class StringMetadataProperty implements MetadataProperty{
 
 	public function getValue() : string{ return $this->value; }
 
-	public static function read(PacketSerializer $in) : self{
-		return new self($in->getString());
+	public static function read(ByteBufferReader $in) : self{
+		return new self(CommonTypes::getString($in));
 	}
 
-	public function write(PacketSerializer $out) : void{
-		$out->putString($this->value);
+	public function write(ByteBufferWriter $out) : void{
+		CommonTypes::putString($out, $this->value);
 	}
 
 	public function equals(MetadataProperty $other) : bool{

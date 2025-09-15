@@ -35,7 +35,7 @@ class CorrectPlayerMovePredictionPacket extends DataPacket implements Clientboun
 	private int $tick;
 	private int $predictionType;
 	private Vector2 $vehicleRotation;
-	private float $vehicleAngularVelocity;
+	private ?float $vehicleAngularVelocity;
 
 	/**
 	 * @generate-create-func
@@ -47,7 +47,7 @@ class CorrectPlayerMovePredictionPacket extends DataPacket implements Clientboun
 		int $tick,
 		int $predictionType,
 		Vector2 $vehicleRotation,
-		float $vehicleAngularVelocity,
+		?float $vehicleAngularVelocity,
 	) : self{
 		$result = new self;
 		$result->position = $position;
@@ -72,14 +72,14 @@ class CorrectPlayerMovePredictionPacket extends DataPacket implements Clientboun
 
 	public function getVehicleRotation() : Vector2{ return $this->vehicleRotation; }
 
-	public function getVehicleAngularVelocity() : float{ return $this->vehicleAngularVelocity; }
+	public function getVehicleAngularVelocity() : ?float{ return $this->vehicleAngularVelocity; }
 
 	protected function decodePayload(ByteBufferReader $in) : void{
 		$this->predictionType = Byte::readUnsigned($in);
 		$this->position = CommonTypes::getVector3($in);
 		$this->delta = CommonTypes::getVector3($in);
 		$this->vehicleRotation = new Vector2(LE::readFloat($in), LE::readFloat($in));
-		$this->vehicleAngularVelocity = LE::readFloat($in);
+		$this->vehicleAngularVelocity = CommonTypes::readOptional($in, LE::readFloat(...));
 		$this->onGround = CommonTypes::getBool($in);
 		$this->tick = VarInt::readUnsignedLong($in);
 	}
@@ -90,7 +90,7 @@ class CorrectPlayerMovePredictionPacket extends DataPacket implements Clientboun
 		CommonTypes::putVector3($out, $this->delta);
 		LE::writeFloat($out, $this->vehicleRotation->getX());
 		LE::writeFloat($out, $this->vehicleRotation->getY());
-		LE::writeFloat($out, $this->vehicleAngularVelocity);
+		CommonTypes::writeOptional($out, $this->vehicleAngularVelocity, LE::writeFloat(...));
 		CommonTypes::putBool($out, $this->onGround);
 		VarInt::writeUnsignedLong($out, $this->tick);
 	}

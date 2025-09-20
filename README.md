@@ -14,7 +14,11 @@ Assuming you've decrypted and decompressed a Minecraft packet successfully, you'
 With this library, that's currently done using `PacketBatch`, like so:
 
 ```php
-foreach(PacketBatch::decodePackets(new BinaryStream($payload), PacketPool::getInstance()) as $packetObject){
+use pocketmine\network\mcpe\protocol\serializer\PacketBatch;
+use pocketmine\network\mcpe\protocol\PacketPool;
+use pmmp\encoding\ByteBufferReader;
+
+foreach(PacketBatch::decodePackets(new ByteBufferReader($payload), PacketPool::getInstance()) as $packetObject){
     var_dump($packetObject); //tada
 }
 ```
@@ -23,10 +27,13 @@ foreach(PacketBatch::decodePackets(new BinaryStream($payload), PacketPool::getIn
 This is easy:
 
 ```php
+use pocketmine\network\mcpe\protocol\serializer\PacketBatch;
+use pmmp\encoding\ByteBufferWriter;
+
 /** @var Packet[] $packets */
-$stream = new BinaryStream();
+$stream = new ByteBufferWriter();
 PacketBatch::encodePackets($stream, $packets);
-$batchPayload = $stream->getBuffer();
+$batchPayload = $stream->getData();
 ```
 
 ## Footnotes

@@ -35,8 +35,7 @@ class PacketBatch{
 	 */
 	final public static function decodeRaw(ByteBufferReader $in) : \Generator{
 		$c = 0;
-		$batchLength = strlen($in->getData());
-		while($in->getOffset() < $batchLength){
+		while($in->getUnreadLength() > 0){
 			try{
 				$length = VarInt::readUnsignedInt($in);
 				$buffer = $in->readByteArray($length);

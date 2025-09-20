@@ -45,9 +45,9 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Setup PHP
-        uses: shivammathur/setup-php@2.32.0
+        uses: shivammathur/setup-php@2.35.5
         with:
-          php-version: 8.1
+          php-version: 8.2
           ini-values: xdebug.max_nesting_level=3000
           tools: php-cs-fixer:3
           extensions: encoding-pmmp/ext-encoding@1.0.0
@@ -79,7 +79,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Setup PHP
-        uses: shivammathur/setup-php@2.32.0
+        uses: shivammathur/setup-php@2.35.5
         with:
           php-version: 8.2
           ini-values: xdebug.max_nesting_level=3000

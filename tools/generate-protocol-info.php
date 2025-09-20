@@ -75,7 +75,8 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
 
 class %s extends DataPacket{
 	public const NETWORK_ID = ProtocolInfo::%s;
@@ -89,11 +90,11 @@ class %s extends DataPacket{
 		return $result;
 	}
 
-	protected function decodePayload(PacketSerializer $in) : void{
+	protected function decodePayload(ByteBufferReader $in) : void{
 		//TODO
 	}
 
-	protected function encodePayload(PacketSerializer $out) : void{
+	protected function encodePayload(ByteBufferWriter $out) : void{
 		//TODO
 	}
 
@@ -177,8 +178,8 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\utils\Binary;
-use pocketmine\utils\BinaryDataException;
+use pmmp\encoding\DataDecodeException;
+use pmmp\encoding\VarInt;
 
 class PacketPool{
 	protected static ?PacketPool $instance = null;
@@ -207,11 +208,10 @@ class PacketPool{
 	}
 
 	/**
-	 * @throws BinaryDataException
+	 * @throws DataDecodeException
 	 */
 	public function getPacket(string $buffer) : ?Packet{
-		$offset = 0;
-		return $this->getPacketById(Binary::readUnsignedVarInt($buffer, $offset) & DataPacket::PID_MASK);
+		return $this->getPacketById(VarInt::unpackUnsignedInt($buffer) & DataPacket::PID_MASK);
 	}
 }
 

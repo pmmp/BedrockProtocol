@@ -14,7 +14,10 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\VarInt;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 use pocketmine\network\mcpe\protocol\types\BlockPosition;
 use pocketmine\network\mcpe\protocol\types\PlayerAction;
 
@@ -41,20 +44,20 @@ class PlayerActionPacket extends DataPacket implements ClientboundPacket, Server
 		return $result;
 	}
 
-	protected function decodePayload(PacketSerializer $in) : void{
-		$this->actorRuntimeId = $in->getActorRuntimeId();
-		$this->action = $in->getVarInt();
-		$this->blockPosition = $in->getBlockPosition();
-		$this->resultPosition = $in->getBlockPosition();
-		$this->face = $in->getVarInt();
+	protected function decodePayload(ByteBufferReader $in) : void{
+		$this->actorRuntimeId = CommonTypes::getActorRuntimeId($in);
+		$this->action = VarInt::readSignedInt($in);
+		$this->blockPosition = CommonTypes::getBlockPosition($in);
+		$this->resultPosition = CommonTypes::getBlockPosition($in);
+		$this->face = VarInt::readSignedInt($in);
 	}
 
-	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putActorRuntimeId($this->actorRuntimeId);
-		$out->putVarInt($this->action);
-		$out->putBlockPosition($this->blockPosition);
-		$out->putBlockPosition($this->resultPosition);
-		$out->putVarInt($this->face);
+	protected function encodePayload(ByteBufferWriter $out) : void{
+		CommonTypes::putActorRuntimeId($out, $this->actorRuntimeId);
+		VarInt::writeSignedInt($out, $this->action);
+		CommonTypes::putBlockPosition($out, $this->blockPosition);
+		CommonTypes::putBlockPosition($out, $this->resultPosition);
+		VarInt::writeSignedInt($out, $this->face);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

@@ -14,7 +14,11 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\Byte;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\LE;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 use function count;
 
 class ResourcePackClientResponsePacket extends DataPacket implements ServerboundPacket{
@@ -40,20 +44,20 @@ class ResourcePackClientResponsePacket extends DataPacket implements Serverbound
 		return $result;
 	}
 
-	protected function decodePayload(PacketSerializer $in) : void{
-		$this->status = $in->getByte();
-		$entryCount = $in->getLShort();
+	protected function decodePayload(ByteBufferReader $in) : void{
+		$this->status = Byte::readUnsigned($in);
+		$entryCount = LE::readUnsignedShort($in);
 		$this->packIds = [];
 		while($entryCount-- > 0){
-			$this->packIds[] = $in->getString();
+			$this->packIds[] = CommonTypes::getString($in);
 		}
 	}
 
-	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putByte($this->status);
-		$out->putLShort(count($this->packIds));
+	protected function encodePayload(ByteBufferWriter $out) : void{
+		Byte::writeUnsigned($out, $this->status);
+		LE::writeUnsignedShort($out, count($this->packIds));
 		foreach($this->packIds as $id){
-			$out->putString($id);
+			CommonTypes::putString($out, $id);
 		}
 	}
 

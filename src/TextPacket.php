@@ -14,7 +14,11 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\Byte;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\VarInt;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 use function count;
 
 class TextPacket extends DataPacket implements ClientboundPacket, ServerboundPacket{
@@ -95,72 +99,72 @@ class TextPacket extends DataPacket implements ClientboundPacket, ServerboundPac
 		return self::messageOnly(self::TYPE_TIP, $message);
 	}
 
-	protected function decodePayload(PacketSerializer $in) : void{
-		$this->type = $in->getByte();
-		$this->needsTranslation = $in->getBool();
+	protected function decodePayload(ByteBufferReader $in) : void{
+		$this->type = Byte::readUnsigned($in);
+		$this->needsTranslation = CommonTypes::getBool($in);
 		switch($this->type){
 			case self::TYPE_CHAT:
 			case self::TYPE_WHISPER:
 			/** @noinspection PhpMissingBreakStatementInspection */
 			case self::TYPE_ANNOUNCEMENT:
-				$this->sourceName = $in->getString();
+				$this->sourceName = CommonTypes::getString($in);
 			case self::TYPE_RAW:
 			case self::TYPE_TIP:
 			case self::TYPE_SYSTEM:
 			case self::TYPE_JSON_WHISPER:
 			case self::TYPE_JSON:
 			case self::TYPE_JSON_ANNOUNCEMENT:
-				$this->message = $in->getString();
+				$this->message = CommonTypes::getString($in);
 				break;
 
 			case self::TYPE_TRANSLATION:
 			case self::TYPE_POPUP:
 			case self::TYPE_JUKEBOX_POPUP:
-				$this->message = $in->getString();
-				$count = $in->getUnsignedVarInt();
+				$this->message = CommonTypes::getString($in);
+				$count = VarInt::readUnsignedInt($in);
 				for($i = 0; $i < $count; ++$i){
-					$this->parameters[] = $in->getString();
+					$this->parameters[] = CommonTypes::getString($in);
 				}
 				break;
 		}
 
-		$this->xboxUserId = $in->getString();
-		$this->platformChatId = $in->getString();
-		$this->filteredMessage = $in->getString();
+		$this->xboxUserId = CommonTypes::getString($in);
+		$this->platformChatId = CommonTypes::getString($in);
+		$this->filteredMessage = CommonTypes::getString($in);
 	}
 
-	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putByte($this->type);
-		$out->putBool($this->needsTranslation);
+	protected function encodePayload(ByteBufferWriter $out) : void{
+		Byte::writeUnsigned($out, $this->type);
+		CommonTypes::putBool($out, $this->needsTranslation);
 		switch($this->type){
 			case self::TYPE_CHAT:
 			case self::TYPE_WHISPER:
 			/** @noinspection PhpMissingBreakStatementInspection */
 			case self::TYPE_ANNOUNCEMENT:
-				$out->putString($this->sourceName);
+				CommonTypes::putString($out, $this->sourceName);
 			case self::TYPE_RAW:
 			case self::TYPE_TIP:
 			case self::TYPE_SYSTEM:
 			case self::TYPE_JSON_WHISPER:
 			case self::TYPE_JSON:
 			case self::TYPE_JSON_ANNOUNCEMENT:
-				$out->putString($this->message);
+				CommonTypes::putString($out, $this->message);
 				break;
 
 			case self::TYPE_TRANSLATION:
 			case self::TYPE_POPUP:
 			case self::TYPE_JUKEBOX_POPUP:
-				$out->putString($this->message);
-				$out->putUnsignedVarInt(count($this->parameters));
+				CommonTypes::putString($out, $this->message);
+				VarInt::writeUnsignedInt($out, count($this->parameters));
 				foreach($this->parameters as $p){
-					$out->putString($p);
+					CommonTypes::putString($out, $p);
 				}
 				break;
 		}
 
-		$out->putString($this->xboxUserId);
-		$out->putString($this->platformChatId);
-		$out->putString($this->filteredMessage);
+		CommonTypes::putString($out, $this->xboxUserId);
+		CommonTypes::putString($out, $this->platformChatId);
+		CommonTypes::putString($out, $this->filteredMessage);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

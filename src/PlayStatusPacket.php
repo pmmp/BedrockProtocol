@@ -14,7 +14,9 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\BE;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
 
 class PlayStatusPacket extends DataPacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::PLAY_STATUS_PACKET;
@@ -41,16 +43,16 @@ class PlayStatusPacket extends DataPacket implements ClientboundPacket{
 		return $result;
 	}
 
-	protected function decodePayload(PacketSerializer $in) : void{
-		$this->status = $in->getInt();
+	protected function decodePayload(ByteBufferReader $in) : void{
+		$this->status = BE::readUnsignedInt($in);
 	}
 
 	public function canBeSentBeforeLogin() : bool{
 		return true;
 	}
 
-	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putInt($this->status);
+	protected function encodePayload(ByteBufferWriter $out) : void{
+		BE::writeUnsignedInt($out, $this->status);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

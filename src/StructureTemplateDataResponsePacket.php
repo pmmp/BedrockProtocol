@@ -14,7 +14,10 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\Byte;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 use pocketmine\network\mcpe\protocol\types\CacheableNbt;
 
 class StructureTemplateDataResponsePacket extends DataPacket implements ClientboundPacket{
@@ -41,21 +44,21 @@ class StructureTemplateDataResponsePacket extends DataPacket implements Clientbo
 		return $result;
 	}
 
-	protected function decodePayload(PacketSerializer $in) : void{
-		$this->structureTemplateName = $in->getString();
-		if($in->getBool()){
-			$this->nbt = new CacheableNbt($in->getNbtCompoundRoot());
+	protected function decodePayload(ByteBufferReader $in) : void{
+		$this->structureTemplateName = CommonTypes::getString($in);
+		if(CommonTypes::getBool($in)){
+			$this->nbt = new CacheableNbt(CommonTypes::getNbtCompoundRoot($in));
 		}
-		$this->responseType = $in->getByte();
+		$this->responseType = Byte::readUnsigned($in);
 	}
 
-	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putString($this->structureTemplateName);
-		$out->putBool($this->nbt !== null);
+	protected function encodePayload(ByteBufferWriter $out) : void{
+		CommonTypes::putString($out, $this->structureTemplateName);
+		CommonTypes::putBool($out, $this->nbt !== null);
 		if($this->nbt !== null){
-			$out->put($this->nbt->getEncodedNbt());
+			$out->writeByteArray($this->nbt->getEncodedNbt());
 		}
-		$out->putByte($this->responseType);
+		Byte::writeUnsigned($out, $this->responseType);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

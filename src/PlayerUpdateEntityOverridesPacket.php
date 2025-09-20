@@ -14,7 +14,12 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\Byte;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\LE;
+use pmmp\encoding\VarInt;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 use pocketmine\network\mcpe\protocol\types\OverrideUpdateType;
 
 class PlayerUpdateEntityOverridesPacket extends DataPacket implements ClientboundPacket{
@@ -65,31 +70,31 @@ class PlayerUpdateEntityOverridesPacket extends DataPacket implements Clientboun
 
 	public function getFloatOverrideValue() : ?float{ return $this->floatOverrideValue; }
 
-	protected function decodePayload(PacketSerializer $in) : void{
-		$this->actorRuntimeId = $in->getActorRuntimeId();
-		$this->propertyIndex = $in->getUnsignedVarInt();
-		$this->updateType = OverrideUpdateType::fromPacket($in->getByte());
+	protected function decodePayload(ByteBufferReader $in) : void{
+		$this->actorRuntimeId = CommonTypes::getActorRuntimeId($in);
+		$this->propertyIndex = VarInt::readUnsignedInt($in);
+		$this->updateType = OverrideUpdateType::fromPacket(Byte::readUnsigned($in));
 		if($this->updateType === OverrideUpdateType::SET_INT_OVERRIDE){
-			$this->intOverrideValue = $in->getLInt();
+			$this->intOverrideValue = LE::readSignedInt($in);
 		}elseif($this->updateType === OverrideUpdateType::SET_FLOAT_OVERRIDE){
-			$this->floatOverrideValue = $in->getLFloat();
+			$this->floatOverrideValue = LE::readFloat($in);
 		}
 	}
 
-	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putActorRuntimeId($this->actorRuntimeId);
-		$out->putUnsignedVarInt($this->propertyIndex);
-		$out->putByte($this->updateType->value);
+	protected function encodePayload(ByteBufferWriter $out) : void{
+		CommonTypes::putActorRuntimeId($out, $this->actorRuntimeId);
+		VarInt::writeUnsignedInt($out, $this->propertyIndex);
+		Byte::writeUnsigned($out, $this->updateType->value);
 		if($this->updateType === OverrideUpdateType::SET_INT_OVERRIDE){
 			if($this->intOverrideValue === null){ // this should never be the case
 				throw new \LogicException("PlayerUpdateEntityOverridesPacket with type SET_INT_OVERRIDE requires intOverrideValue to be provided");
 			}
-			$out->putLInt($this->intOverrideValue);
+			LE::writeSignedInt($out, $this->intOverrideValue);
 		}elseif($this->updateType === OverrideUpdateType::SET_FLOAT_OVERRIDE){
 			if($this->floatOverrideValue === null){ // this should never be the case
 				throw new \LogicException("PlayerUpdateEntityOverridesPacket with type SET_FLOAT_OVERRIDE requires floatOverrideValue to be provided");
 			}
-			$out->putLFloat($this->floatOverrideValue);
+			LE::writeFloat($out, $this->floatOverrideValue);
 		}
 	}
 

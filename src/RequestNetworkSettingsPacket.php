@@ -14,7 +14,9 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\BE;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
 
 /**
  * This is the first packet sent in a game session. It contains the client's protocol version.
@@ -41,12 +43,12 @@ class RequestNetworkSettingsPacket extends DataPacket implements ServerboundPack
 
 	public function getProtocolVersion() : int{ return $this->protocolVersion; }
 
-	protected function decodePayload(PacketSerializer $in) : void{
-		$this->protocolVersion = $in->getInt();
+	protected function decodePayload(ByteBufferReader $in) : void{
+		$this->protocolVersion = BE::readUnsignedInt($in);
 	}
 
-	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putInt($this->protocolVersion);
+	protected function encodePayload(ByteBufferWriter $out) : void{
+		BE::writeUnsignedInt($out, $this->protocolVersion);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

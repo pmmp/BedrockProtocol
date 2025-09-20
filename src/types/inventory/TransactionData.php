@@ -14,9 +14,11 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol\types\inventory;
 
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\DataDecodeException;
+use pmmp\encoding\VarInt;
 use pocketmine\network\mcpe\protocol\PacketDecodeException;
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
-use pocketmine\utils\BinaryDataException;
 use function count;
 
 abstract class TransactionData{
@@ -33,30 +35,30 @@ abstract class TransactionData{
 	abstract public function getTypeId() : int;
 
 	/**
-	 * @throws BinaryDataException
+	 * @throws DataDecodeException
 	 * @throws PacketDecodeException
 	 */
-	final public function decode(PacketSerializer $stream) : void{
-		$actionCount = $stream->getUnsignedVarInt();
+	final public function decode(ByteBufferReader $in) : void{
+		$actionCount = VarInt::readUnsignedInt($in);
 		for($i = 0; $i < $actionCount; ++$i){
-			$this->actions[] = (new NetworkInventoryAction())->read($stream);
+			$this->actions[] = (new NetworkInventoryAction())->read($in);
 		}
-		$this->decodeData($stream);
+		$this->decodeData($in);
 	}
 
 	/**
-	 * @throws BinaryDataException
+	 * @throws DataDecodeException
 	 * @throws PacketDecodeException
 	 */
-	abstract protected function decodeData(PacketSerializer $stream) : void;
+	abstract protected function decodeData(ByteBufferReader $in) : void;
 
-	final public function encode(PacketSerializer $stream) : void{
-		$stream->putUnsignedVarInt(count($this->actions));
+	final public function encode(ByteBufferWriter $out) : void{
+		VarInt::writeUnsignedInt($out, count($this->actions));
 		foreach($this->actions as $action){
-			$action->write($stream);
+			$action->write($out);
 		}
-		$this->encodeData($stream);
+		$this->encodeData($out);
 	}
 
-	abstract protected function encodeData(PacketSerializer $stream) : void;
+	abstract protected function encodeData(ByteBufferWriter $out) : void;
 }

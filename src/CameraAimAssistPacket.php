@@ -14,8 +14,12 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
+use pmmp\encoding\Byte;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\LE;
 use pocketmine\math\Vector2;
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 use pocketmine\network\mcpe\protocol\types\camera\CameraAimAssistActionType;
 use pocketmine\network\mcpe\protocol\types\camera\CameraAimAssistTargetMode;
 
@@ -55,22 +59,22 @@ class CameraAimAssistPacket extends DataPacket implements ClientboundPacket{
 
 	public function getShowDebugRender() : bool{ return $this->showDebugRender; }
 
-	protected function decodePayload(PacketSerializer $in) : void{
-		$this->presetId = $in->getString();
-		$this->viewAngle = $in->getVector2();
-		$this->distance = $in->getLFloat();
-		$this->targetMode = CameraAimAssistTargetMode::fromPacket($in->getByte());
-		$this->actionType = CameraAimAssistActionType::fromPacket($in->getByte());
-		$this->showDebugRender = $in->getBool();
+	protected function decodePayload(ByteBufferReader $in) : void{
+		$this->presetId = CommonTypes::getString($in);
+		$this->viewAngle = CommonTypes::getVector2($in);
+		$this->distance = LE::readFloat($in);
+		$this->targetMode = CameraAimAssistTargetMode::fromPacket(Byte::readUnsigned($in));
+		$this->actionType = CameraAimAssistActionType::fromPacket(Byte::readUnsigned($in));
+		$this->showDebugRender = CommonTypes::getBool($in);
 	}
 
-	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putString($this->presetId);
-		$out->putVector2($this->viewAngle);
-		$out->putLFloat($this->distance);
-		$out->putByte($this->targetMode->value);
-		$out->putByte($this->actionType->value);
-		$out->putBool($this->showDebugRender);
+	protected function encodePayload(ByteBufferWriter $out) : void{
+		CommonTypes::putString($out, $this->presetId);
+		CommonTypes::putVector2($out, $this->viewAngle);
+		LE::writeFloat($out, $this->distance);
+		Byte::writeUnsigned($out, $this->targetMode->value);
+		Byte::writeUnsigned($out, $this->actionType->value);
+		CommonTypes::putBool($out, $this->showDebugRender);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

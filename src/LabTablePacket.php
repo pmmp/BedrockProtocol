@@ -14,7 +14,10 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\Byte;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 use pocketmine\network\mcpe\protocol\types\BlockPosition;
 
 class LabTablePacket extends DataPacket implements ClientboundPacket, ServerboundPacket{
@@ -39,16 +42,16 @@ class LabTablePacket extends DataPacket implements ClientboundPacket, Serverboun
 		return $result;
 	}
 
-	protected function decodePayload(PacketSerializer $in) : void{
-		$this->actionType = $in->getByte();
-		$this->blockPosition = $in->getSignedBlockPosition();
-		$this->reactionType = $in->getByte();
+	protected function decodePayload(ByteBufferReader $in) : void{
+		$this->actionType = Byte::readUnsigned($in);
+		$this->blockPosition = CommonTypes::getSignedBlockPosition($in);
+		$this->reactionType = Byte::readUnsigned($in);
 	}
 
-	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putByte($this->actionType);
-		$out->putSignedBlockPosition($this->blockPosition);
-		$out->putByte($this->reactionType);
+	protected function encodePayload(ByteBufferWriter $out) : void{
+		Byte::writeUnsigned($out, $this->actionType);
+		CommonTypes::putSignedBlockPosition($out, $this->blockPosition);
+		Byte::writeUnsigned($out, $this->reactionType);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

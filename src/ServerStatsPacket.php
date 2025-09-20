@@ -14,7 +14,9 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\LE;
 
 /**
  * Relays server performance statistics to the client.
@@ -40,14 +42,14 @@ class ServerStatsPacket extends DataPacket implements ClientboundPacket{
 
 	public function getNetworkTime() : float{ return $this->networkTime; }
 
-	protected function decodePayload(PacketSerializer $in) : void{
-		$this->serverTime = $in->getLFloat();
-		$this->networkTime = $in->getLFloat();
+	protected function decodePayload(ByteBufferReader $in) : void{
+		$this->serverTime = LE::readFloat($in);
+		$this->networkTime = LE::readFloat($in);
 	}
 
-	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putLFloat($this->serverTime);
-		$out->putLFloat($this->networkTime);
+	protected function encodePayload(ByteBufferWriter $out) : void{
+		LE::writeFloat($out, $this->serverTime);
+		LE::writeFloat($out, $this->networkTime);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

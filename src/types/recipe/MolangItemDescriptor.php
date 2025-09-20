@@ -14,7 +14,10 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol\types\recipe;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\Byte;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 use pocketmine\network\mcpe\protocol\types\GetTypeIdFromConstTrait;
 
 final class MolangItemDescriptor implements ItemDescriptor{
@@ -31,15 +34,15 @@ final class MolangItemDescriptor implements ItemDescriptor{
 
 	public function getMolangVersion() : int{ return $this->molangVersion; }
 
-	public static function read(PacketSerializer $in) : self{
-		$expression = $in->getString();
-		$version = $in->getByte();
+	public static function read(ByteBufferReader $in) : self{
+		$expression = CommonTypes::getString($in);
+		$version = Byte::readUnsigned($in);
 
 		return new self($expression, $version);
 	}
 
-	public function write(PacketSerializer $out) : void{
-		$out->putString($this->molangExpression);
-		$out->putByte($this->molangVersion);
+	public function write(ByteBufferWriter $out) : void{
+		CommonTypes::putString($out, $this->molangExpression);
+		Byte::writeUnsigned($out, $this->molangVersion);
 	}
 }

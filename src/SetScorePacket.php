@@ -14,7 +14,12 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\Byte;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\LE;
+use pmmp\encoding\VarInt;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 use pocketmine\network\mcpe\protocol\types\ScorePacketEntry;
 use function count;
 
@@ -39,22 +44,22 @@ class SetScorePacket extends DataPacket implements ClientboundPacket{
 		return $result;
 	}
 
-	protected function decodePayload(PacketSerializer $in) : void{
-		$this->type = $in->getByte();
-		for($i = 0, $i2 = $in->getUnsignedVarInt(); $i < $i2; ++$i){
+	protected function decodePayload(ByteBufferReader $in) : void{
+		$this->type = Byte::readUnsigned($in);
+		for($i = 0, $i2 = VarInt::readUnsignedInt($in); $i < $i2; ++$i){
 			$entry = new ScorePacketEntry();
-			$entry->scoreboardId = $in->getVarLong();
-			$entry->objectiveName = $in->getString();
-			$entry->score = $in->getLInt();
+			$entry->scoreboardId = VarInt::readSignedLong($in);
+			$entry->objectiveName = CommonTypes::getString($in);
+			$entry->score = LE::readSignedInt($in);
 			if($this->type !== self::TYPE_REMOVE){
-				$entry->type = $in->getByte();
+				$entry->type = Byte::readUnsigned($in);
 				switch($entry->type){
 					case ScorePacketEntry::TYPE_PLAYER:
 					case ScorePacketEntry::TYPE_ENTITY:
-						$entry->actorUniqueId = $in->getActorUniqueId();
+						$entry->actorUniqueId = CommonTypes::getActorUniqueId($in);
 						break;
 					case ScorePacketEntry::TYPE_FAKE_PLAYER:
-						$entry->customName = $in->getString();
+						$entry->customName = CommonTypes::getString($in);
 						break;
 					default:
 						throw new PacketDecodeException("Unknown entry type $entry->type");
@@ -64,22 +69,22 @@ class SetScorePacket extends DataPacket implements ClientboundPacket{
 		}
 	}
 
-	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putByte($this->type);
-		$out->putUnsignedVarInt(count($this->entries));
+	protected function encodePayload(ByteBufferWriter $out) : void{
+		Byte::writeUnsigned($out, $this->type);
+		VarInt::writeUnsignedInt($out, count($this->entries));
 		foreach($this->entries as $entry){
-			$out->putVarLong($entry->scoreboardId);
-			$out->putString($entry->objectiveName);
-			$out->putLInt($entry->score);
+			VarInt::writeSignedLong($out, $entry->scoreboardId);
+			CommonTypes::putString($out, $entry->objectiveName);
+			LE::writeSignedInt($out, $entry->score);
 			if($this->type !== self::TYPE_REMOVE){
-				$out->putByte($entry->type);
+				Byte::writeUnsigned($out, $entry->type);
 				switch($entry->type){
 					case ScorePacketEntry::TYPE_PLAYER:
 					case ScorePacketEntry::TYPE_ENTITY:
-						$out->putActorUniqueId($entry->actorUniqueId);
+						CommonTypes::putActorUniqueId($out, $entry->actorUniqueId);
 						break;
 					case ScorePacketEntry::TYPE_FAKE_PLAYER:
-						$out->putString($entry->customName);
+						CommonTypes::putString($out, $entry->customName);
 						break;
 					default:
 						throw new \InvalidArgumentException("Unknown entry type $entry->type");

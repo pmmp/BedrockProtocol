@@ -14,7 +14,11 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\Byte;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\VarInt;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 
 class ModalFormResponsePacket extends DataPacket implements ServerboundPacket{
 	public const NETWORK_ID = ProtocolInfo::MODAL_FORM_RESPONSE_PACKET;
@@ -46,17 +50,17 @@ class ModalFormResponsePacket extends DataPacket implements ServerboundPacket{
 		return self::create($formId, null, $cancelReason);
 	}
 
-	protected function decodePayload(PacketSerializer $in) : void{
-		$this->formId = $in->getUnsignedVarInt();
-		$this->formData = $in->readOptional($in->getString(...));
-		$this->cancelReason = $in->readOptional($in->getByte(...));
+	protected function decodePayload(ByteBufferReader $in) : void{
+		$this->formId = VarInt::readUnsignedInt($in);
+		$this->formData = CommonTypes::readOptional($in, CommonTypes::getString(...));
+		$this->cancelReason = CommonTypes::readOptional($in, Byte::readUnsigned(...));
 	}
 
-	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putUnsignedVarInt($this->formId);
+	protected function encodePayload(ByteBufferWriter $out) : void{
+		VarInt::writeUnsignedInt($out, $this->formId);
 
-		$out->writeOptional($this->formData, $out->putString(...));
-		$out->writeOptional($this->cancelReason, $out->putByte(...));
+		CommonTypes::writeOptional($out, $this->formData, CommonTypes::putString(...));
+		CommonTypes::writeOptional($out, $this->cancelReason, Byte::writeUnsigned(...));
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

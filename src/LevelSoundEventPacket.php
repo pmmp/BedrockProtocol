@@ -14,8 +14,12 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\LE;
+use pmmp\encoding\VarInt;
 use pocketmine\math\Vector3;
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 use pocketmine\network\mcpe\protocol\types\LevelSoundEvent;
 
 class LevelSoundEventPacket extends DataPacket implements ClientboundPacket, ServerboundPacket{
@@ -57,24 +61,24 @@ class LevelSoundEventPacket extends DataPacket implements ClientboundPacket, Ser
 		return self::create($sound, $position, $extraData, ":", false, $disableRelativeVolume, -1);
 	}
 
-	protected function decodePayload(PacketSerializer $in) : void{
-		$this->sound = $in->getUnsignedVarInt();
-		$this->position = $in->getVector3();
-		$this->extraData = $in->getVarInt();
-		$this->entityType = $in->getString();
-		$this->isBabyMob = $in->getBool();
-		$this->disableRelativeVolume = $in->getBool();
-		$this->actorUniqueId = $in->getLLong(); //WHY IS THIS NON-STANDARD?
+	protected function decodePayload(ByteBufferReader $in) : void{
+		$this->sound = VarInt::readUnsignedInt($in);
+		$this->position = CommonTypes::getVector3($in);
+		$this->extraData = VarInt::readSignedInt($in);
+		$this->entityType = CommonTypes::getString($in);
+		$this->isBabyMob = CommonTypes::getBool($in);
+		$this->disableRelativeVolume = CommonTypes::getBool($in);
+		$this->actorUniqueId = LE::readSignedLong($in); //WHY IS THIS NON-STANDARD?
 	}
 
-	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putUnsignedVarInt($this->sound);
-		$out->putVector3($this->position);
-		$out->putVarInt($this->extraData);
-		$out->putString($this->entityType);
-		$out->putBool($this->isBabyMob);
-		$out->putBool($this->disableRelativeVolume);
-		$out->putLLong($this->actorUniqueId);
+	protected function encodePayload(ByteBufferWriter $out) : void{
+		VarInt::writeUnsignedInt($out, $this->sound);
+		CommonTypes::putVector3($out, $this->position);
+		VarInt::writeSignedInt($out, $this->extraData);
+		CommonTypes::putString($out, $this->entityType);
+		CommonTypes::putBool($out, $this->isBabyMob);
+		CommonTypes::putBool($out, $this->disableRelativeVolume);
+		LE::writeSignedLong($out, $this->actorUniqueId);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

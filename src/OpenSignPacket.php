@@ -14,7 +14,9 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 use pocketmine\network\mcpe\protocol\types\BlockPosition;
 
 /**
@@ -40,14 +42,14 @@ class OpenSignPacket extends DataPacket implements ClientboundPacket{
 
 	public function isFront() : bool{ return $this->front; }
 
-	protected function decodePayload(PacketSerializer $in) : void{
-		$this->blockPosition = $in->getBlockPosition();
-		$this->front = $in->getBool();
+	protected function decodePayload(ByteBufferReader $in) : void{
+		$this->blockPosition = CommonTypes::getBlockPosition($in);
+		$this->front = CommonTypes::getBool($in);
 	}
 
-	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putBlockPosition($this->blockPosition);
-		$out->putBool($this->front);
+	protected function encodePayload(ByteBufferWriter $out) : void{
+		CommonTypes::putBlockPosition($out, $this->blockPosition);
+		CommonTypes::putBool($out, $this->front);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

@@ -14,7 +14,9 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol\types\camera;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 use pocketmine\network\mcpe\protocol\types\camera\CameraFadeInstructionColor as Color;
 use pocketmine\network\mcpe\protocol\types\camera\CameraFadeInstructionTime as Time;
 
@@ -29,17 +31,17 @@ final class CameraFadeInstruction{
 
 	public function getColor() : ?Color{ return $this->color; }
 
-	public static function read(PacketSerializer $in) : self{
-		$time = $in->readOptional(fn() => Time::read($in));
-		$color = $in->readOptional(fn() => Color::read($in));
+	public static function read(ByteBufferReader $in) : self{
+		$time = CommonTypes::readOptional($in, fn() => Time::read($in));
+		$color = CommonTypes::readOptional($in, fn() => Color::read($in));
 		return new self(
 			$time,
 			$color
 		);
 	}
 
-	public function write(PacketSerializer $out) : void{
-		$out->writeOptional($this->time, fn(Time $v) => $v->write($out));
-		$out->writeOptional($this->color, fn(Color $v) => $v->write($out));
+	public function write(ByteBufferWriter $out) : void{
+		CommonTypes::writeOptional($out, $this->time, fn(ByteBufferWriter $out, Time $v) => $v->write($out));
+		CommonTypes::writeOptional($out, $this->color, fn(ByteBufferWriter $out, Color $v) => $v->write($out));
 	}
 }

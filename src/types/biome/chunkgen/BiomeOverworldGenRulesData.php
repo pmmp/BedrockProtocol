@@ -14,7 +14,9 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol\types\biome\chunkgen;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\VarInt;
 use function count;
 
 final class BiomeOverworldGenRulesData{
@@ -73,39 +75,39 @@ final class BiomeOverworldGenRulesData{
 	 */
 	public function getClimates() : array{ return $this->climates; }
 
-	public static function read(PacketSerializer $in) : self{
+	public static function read(ByteBufferReader $in) : self{
 		$hillTransformations = [];
-		for($i = 0, $count = $in->getUnsignedVarInt(); $i < $count; ++$i){
+		for($i = 0, $count = VarInt::readUnsignedInt($in); $i < $count; ++$i){
 			$hillTransformations[] = BiomeWeightedData::read($in);
 		}
 
 		$mutateTransformations = [];
-		for($i = 0, $count = $in->getUnsignedVarInt(); $i < $count; ++$i){
+		for($i = 0, $count = VarInt::readUnsignedInt($in); $i < $count; ++$i){
 			$mutateTransformations[] = BiomeWeightedData::read($in);
 		}
 
 		$riverTransformations = [];
-		for($i = 0, $count = $in->getUnsignedVarInt(); $i < $count; ++$i){
+		for($i = 0, $count = VarInt::readUnsignedInt($in); $i < $count; ++$i){
 			$riverTransformations[] = BiomeWeightedData::read($in);
 		}
 
 		$shoreTransformations = [];
-		for($i = 0, $count = $in->getUnsignedVarInt(); $i < $count; ++$i){
+		for($i = 0, $count = VarInt::readUnsignedInt($in); $i < $count; ++$i){
 			$shoreTransformations[] = BiomeWeightedData::read($in);
 		}
 
 		$preHillsEdges = [];
-		for($i = 0, $count = $in->getUnsignedVarInt(); $i < $count; ++$i){
+		for($i = 0, $count = VarInt::readUnsignedInt($in); $i < $count; ++$i){
 			$preHillsEdges[] = BiomeConditionalTransformationData::read($in);
 		}
 
 		$postShoreEdges = [];
-		for($i = 0, $count = $in->getUnsignedVarInt(); $i < $count; ++$i){
+		for($i = 0, $count = VarInt::readUnsignedInt($in); $i < $count; ++$i){
 			$postShoreEdges[] = BiomeConditionalTransformationData::read($in);
 		}
 
 		$climates = [];
-		for($i = 0, $count = $in->getUnsignedVarInt(); $i < $count; ++$i){
+		for($i = 0, $count = VarInt::readUnsignedInt($in); $i < $count; ++$i){
 			$climates[] = BiomeWeightedTemperatureData::read($in);
 		}
 
@@ -120,38 +122,38 @@ final class BiomeOverworldGenRulesData{
 		);
 	}
 
-	public function write(PacketSerializer $out) : void{
-		$out->putUnsignedVarInt(count($this->hillTransformations));
+	public function write(ByteBufferWriter $out) : void{
+		VarInt::writeUnsignedInt($out, count($this->hillTransformations));
 		foreach($this->hillTransformations as $transformation){
 			$transformation->write($out);
 		}
 
-		$out->putUnsignedVarInt(count($this->mutateTransformations));
+		VarInt::writeUnsignedInt($out, count($this->mutateTransformations));
 		foreach($this->mutateTransformations as $transformation){
 			$transformation->write($out);
 		}
 
-		$out->putUnsignedVarInt(count($this->riverTransformations));
+		VarInt::writeUnsignedInt($out, count($this->riverTransformations));
 		foreach($this->riverTransformations as $transformation){
 			$transformation->write($out);
 		}
 
-		$out->putUnsignedVarInt(count($this->shoreTransformations));
+		VarInt::writeUnsignedInt($out, count($this->shoreTransformations));
 		foreach($this->shoreTransformations as $transformation){
 			$transformation->write($out);
 		}
 
-		$out->putUnsignedVarInt(count($this->preHillsEdges));
+		VarInt::writeUnsignedInt($out, count($this->preHillsEdges));
 		foreach($this->preHillsEdges as $edge){
 			$edge->write($out);
 		}
 
-		$out->putUnsignedVarInt(count($this->postShoreEdges));
+		VarInt::writeUnsignedInt($out, count($this->postShoreEdges));
 		foreach($this->postShoreEdges as $edge){
 			$edge->write($out);
 		}
 
-		$out->putUnsignedVarInt(count($this->climates));
+		VarInt::writeUnsignedInt($out, count($this->climates));
 		foreach($this->climates as $climate){
 			$climate->write($out);
 		}

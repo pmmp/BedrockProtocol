@@ -14,7 +14,12 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\Byte;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\LE;
+use pmmp\encoding\VarInt;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 use function is_bool;
 use function is_float;
 
@@ -49,15 +54,15 @@ class RequestAbilityPacket extends DataPacket implements ServerboundPacket{
 
 	public function getAbilityValue() : float|bool{ return $this->abilityValue; }
 
-	protected function decodePayload(PacketSerializer $in) : void{
-		$this->abilityId = $in->getVarInt();
+	protected function decodePayload(ByteBufferReader $in) : void{
+		$this->abilityId = VarInt::readSignedInt($in);
 
-		$valueType = $in->getByte();
+		$valueType = Byte::readUnsigned($in);
 
 		//what is the point of having a type ID if you just write all the types anyway ??? mojang ...
 		//only one of these values is ever used; the other(s) are discarded
-		$boolValue = $in->getBool();
-		$floatValue = $in->getLFloat();
+		$boolValue = CommonTypes::getBool($in);
+		$floatValue = LE::readFloat($in);
 
 		$this->abilityValue = match($valueType){
 			self::VALUE_TYPE_BOOL => $boolValue,
@@ -66,17 +71,17 @@ class RequestAbilityPacket extends DataPacket implements ServerboundPacket{
 		};
 	}
 
-	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putVarInt($this->abilityId);
+	protected function encodePayload(ByteBufferWriter $out) : void{
+		VarInt::writeSignedInt($out, $this->abilityId);
 
 		[$valueType, $boolValue, $floatValue] = match(true){
 			is_bool($this->abilityValue) => [self::VALUE_TYPE_BOOL, $this->abilityValue, 0.0],
 			is_float($this->abilityValue) => [self::VALUE_TYPE_FLOAT, false, $this->abilityValue],
 			default => throw new \LogicException("Unreachable")
 		};
-		$out->putByte($valueType);
-		$out->putBool($boolValue);
-		$out->putLFloat($floatValue);
+		Byte::writeUnsigned($out, $valueType);
+		CommonTypes::putBool($out, $boolValue);
+		LE::writeFloat($out, $floatValue);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

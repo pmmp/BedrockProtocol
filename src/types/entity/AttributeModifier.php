@@ -14,7 +14,10 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol\types\entity;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\LE;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 
 final class AttributeModifier{
 
@@ -43,23 +46,23 @@ final class AttributeModifier{
 
 	public function isSerializable() : bool{ return $this->serializable; }
 
-	public static function read(PacketSerializer $in) : self{
-		$id = $in->getString();
-		$name = $in->getString();
-		$amount = $in->getLFloat();
-		$operation = $in->getLInt();
-		$operand = $in->getLInt();
-		$serializable = $in->getBool();
+	public static function read(ByteBufferReader $in) : self{
+		$id = CommonTypes::getString($in);
+		$name = CommonTypes::getString($in);
+		$amount = LE::readFloat($in);
+		$operation = LE::readSignedInt($in);
+		$operand = LE::readSignedInt($in);
+		$serializable = CommonTypes::getBool($in);
 
 		return new self($id, $name, $amount, $operation, $operand, $serializable);
 	}
 
-	public function write(PacketSerializer $out) : void{
-		$out->putString($this->id);
-		$out->putString($this->name);
-		$out->putLFloat($this->amount);
-		$out->putLInt($this->operation);
-		$out->putLInt($this->operand);
-		$out->putBool($this->serializable);
+	public function write(ByteBufferWriter $out) : void{
+		CommonTypes::putString($out, $this->id);
+		CommonTypes::putString($out, $this->name);
+		LE::writeFloat($out, $this->amount);
+		LE::writeSignedInt($out, $this->operation);
+		LE::writeSignedInt($out, $this->operand);
+		CommonTypes::putBool($out, $this->serializable);
 	}
 }

@@ -14,7 +14,9 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol\types\biome\chunkgen;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\VarInt;
 use function count;
 
 final class BiomeLegacyWorldGenRulesData{
@@ -31,9 +33,9 @@ final class BiomeLegacyWorldGenRulesData{
 	 */
 	public function getLegacyPreHills() : array{ return $this->legacyPreHills; }
 
-	public static function read(PacketSerializer $in) : self{
+	public static function read(ByteBufferReader $in) : self{
 		$legacyPreHills = [];
-		for($i = 0, $count = $in->getUnsignedVarInt(); $i < $count; ++$i){
+		for($i = 0, $count = VarInt::readUnsignedInt($in); $i < $count; ++$i){
 			$legacyPreHills[] = BiomeConditionalTransformationData::read($in);
 		}
 
@@ -42,8 +44,8 @@ final class BiomeLegacyWorldGenRulesData{
 		);
 	}
 
-	public function write(PacketSerializer $out) : void{
-		$out->putUnsignedVarInt(count($this->legacyPreHills));
+	public function write(ByteBufferWriter $out) : void{
+		VarInt::writeUnsignedInt($out, count($this->legacyPreHills));
 		foreach($this->legacyPreHills as $biome){
 			$biome->write($out);
 		}

@@ -14,7 +14,10 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol\types\biome\chunkgen;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\LE;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 
 final class BiomeMountainParamsData{
 
@@ -39,13 +42,13 @@ final class BiomeMountainParamsData{
 
 	public function hasTopSlideEnabled() : bool{ return $this->topSlideEnabled; }
 
-	public static function read(PacketSerializer $in) : self{
-		$steepBlock = $in->getLInt();
-		$northSlopes = $in->getBool();
-		$southSlopes = $in->getBool();
-		$westSlopes = $in->getBool();
-		$eastSlopes = $in->getBool();
-		$topSlideEnabled = $in->getBool();
+	public static function read(ByteBufferReader $in) : self{
+		$steepBlock = LE::readUnsignedInt($in);
+		$northSlopes = CommonTypes::getBool($in);
+		$southSlopes = CommonTypes::getBool($in);
+		$westSlopes = CommonTypes::getBool($in);
+		$eastSlopes = CommonTypes::getBool($in);
+		$topSlideEnabled = CommonTypes::getBool($in);
 
 		return new self(
 			$steepBlock,
@@ -57,12 +60,12 @@ final class BiomeMountainParamsData{
 		);
 	}
 
-	public function write(PacketSerializer $out) : void{
-		$out->putLInt($this->steepBlock);
-		$out->putBool($this->northSlopes);
-		$out->putBool($this->southSlopes);
-		$out->putBool($this->westSlopes);
-		$out->putBool($this->eastSlopes);
-		$out->putBool($this->topSlideEnabled);
+	public function write(ByteBufferWriter $out) : void{
+		LE::writeUnsignedInt($out, $this->steepBlock);
+		CommonTypes::putBool($out, $this->northSlopes);
+		CommonTypes::putBool($out, $this->southSlopes);
+		CommonTypes::putBool($out, $this->westSlopes);
+		CommonTypes::putBool($out, $this->eastSlopes);
+		CommonTypes::putBool($out, $this->topSlideEnabled);
 	}
 }

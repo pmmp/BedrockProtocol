@@ -15,26 +15,32 @@ declare(strict_types=1);
 namespace pocketmine\network\mcpe\protocol;
 
 use PHPUnit\Framework\TestCase;
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\BE;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\LE;
+use pmmp\encoding\VarInt;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 use function strlen;
 
 class LoginPacketTest extends TestCase{
 
 	public function testInvalidChainDataJsonHandling() : void{
-		$stream = PacketSerializer::encoder();
-		$stream->putUnsignedVarInt(ProtocolInfo::LOGIN_PACKET);
+		$stream = new ByteBufferWriter();
+		VarInt::writeUnsignedInt($stream, ProtocolInfo::LOGIN_PACKET);
+		BE::writeUnsignedInt($stream, ProtocolInfo::CURRENT_PROTOCOL);
+
 		$payload = '{"chain":[]'; //intentionally malformed
-		$stream->putInt(ProtocolInfo::CURRENT_PROTOCOL);
+		$stream2 = new ByteBufferWriter();
+		LE::writeUnsignedInt($stream2, strlen($payload));
+		$stream2->writeByteArray($payload);
 
-		$stream2 = PacketSerializer::encoder();
-		$stream2->putLInt(strlen($payload));
-		$stream2->put($payload);
-		$stream->putString($stream2->getBuffer());
+		CommonTypes::putString($stream, $stream2->getData());
 
-		$pk = PacketPool::getInstance()->getPacket($stream->getBuffer());
+		$pk = PacketPool::getInstance()->getPacket($stream->getData());
 		self::assertInstanceOf(LoginPacket::class, $pk);
 
 		$this->expectException(PacketDecodeException::class);
-		$pk->decode(PacketSerializer::decoder($stream->getBuffer(), 0)); //bang
+		$pk->decode(new ByteBufferReader($stream->getData())); //bang
 	}
 }

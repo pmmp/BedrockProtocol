@@ -14,7 +14,11 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\LE;
+use pmmp\encoding\VarInt;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 
 class NpcDialoguePacket extends DataPacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::NPC_DIALOGUE_PACKET;
@@ -55,22 +59,22 @@ class NpcDialoguePacket extends DataPacket implements ClientboundPacket{
 
 	public function getActionJson() : string{ return $this->actionJson; }
 
-	protected function decodePayload(PacketSerializer $in) : void{
-		$this->npcActorUniqueId = $in->getLLong(); //WHY NOT USING STANDARD METHODS, MOJANG
-		$this->actionType = $in->getVarInt();
-		$this->dialogue = $in->getString();
-		$this->sceneName = $in->getString();
-		$this->npcName = $in->getString();
-		$this->actionJson = $in->getString();
+	protected function decodePayload(ByteBufferReader $in) : void{
+		$this->npcActorUniqueId = LE::readSignedLong($in); //WHY NOT USING STANDARD METHODS, MOJANG
+		$this->actionType = VarInt::readSignedInt($in);
+		$this->dialogue = CommonTypes::getString($in);
+		$this->sceneName = CommonTypes::getString($in);
+		$this->npcName = CommonTypes::getString($in);
+		$this->actionJson = CommonTypes::getString($in);
 	}
 
-	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putLLong($this->npcActorUniqueId);
-		$out->putVarInt($this->actionType);
-		$out->putString($this->dialogue);
-		$out->putString($this->sceneName);
-		$out->putString($this->npcName);
-		$out->putString($this->actionJson);
+	protected function encodePayload(ByteBufferWriter $out) : void{
+		LE::writeSignedLong($out, $this->npcActorUniqueId);
+		VarInt::writeSignedInt($out, $this->actionType);
+		CommonTypes::putString($out, $this->dialogue);
+		CommonTypes::putString($out, $this->sceneName);
+		CommonTypes::putString($out, $this->npcName);
+		CommonTypes::putString($out, $this->actionJson);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

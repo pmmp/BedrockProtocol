@@ -14,7 +14,10 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\Byte;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 
 class ContainerClosePacket extends DataPacket implements ClientboundPacket, ServerboundPacket{
 	public const NETWORK_ID = ProtocolInfo::CONTAINER_CLOSE_PACKET;
@@ -34,16 +37,16 @@ class ContainerClosePacket extends DataPacket implements ClientboundPacket, Serv
 		return $result;
 	}
 
-	protected function decodePayload(PacketSerializer $in) : void{
-		$this->windowId = $in->getByte();
-		$this->windowType = $in->getByte();
-		$this->server = $in->getBool();
+	protected function decodePayload(ByteBufferReader $in) : void{
+		$this->windowId = Byte::readUnsigned($in);
+		$this->windowType = Byte::readUnsigned($in);
+		$this->server = CommonTypes::getBool($in);
 	}
 
-	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putByte($this->windowId);
-		$out->putByte($this->windowType);
-		$out->putBool($this->server);
+	protected function encodePayload(ByteBufferWriter $out) : void{
+		Byte::writeUnsigned($out, $this->windowId);
+		Byte::writeUnsigned($out, $this->windowType);
+		CommonTypes::putBool($out, $this->server);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

@@ -14,7 +14,11 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol\types;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\LE;
+use pmmp\encoding\VarInt;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 use function count;
 
 final class EnchantOption{
@@ -53,9 +57,9 @@ final class EnchantOption{
 	/**
 	 * @return Enchant[]
 	 */
-	private static function readEnchantList(PacketSerializer $in) : array{
+	private static function readEnchantList(ByteBufferReader $in) : array{
 		$result = [];
-		for($i = 0, $len = $in->getUnsignedVarInt(); $i < $len; ++$i){
+		for($i = 0, $len = VarInt::readUnsignedInt($in); $i < $len; ++$i){
 			$result[] = Enchant::read($in);
 		}
 		return $result;
@@ -64,36 +68,36 @@ final class EnchantOption{
 	/**
 	 * @param Enchant[] $list
 	 */
-	private static function writeEnchantList(PacketSerializer $out, array $list) : void{
-		$out->putUnsignedVarInt(count($list));
+	private static function writeEnchantList(ByteBufferWriter $out, array $list) : void{
+		VarInt::writeUnsignedInt($out, count($list));
 		foreach($list as $item){
 			$item->write($out);
 		}
 	}
 
-	public static function read(PacketSerializer $in) : self{
-		$cost = $in->getUnsignedVarInt();
+	public static function read(ByteBufferReader $in) : self{
+		$cost = VarInt::readUnsignedInt($in);
 
-		$slotFlags = $in->getLInt();
+		$slotFlags = LE::readUnsignedInt($in);
 		$equipActivatedEnchants = self::readEnchantList($in);
 		$heldActivatedEnchants = self::readEnchantList($in);
 		$selfActivatedEnchants = self::readEnchantList($in);
 
-		$name = $in->getString();
-		$optionId = $in->readRecipeNetId();
+		$name = CommonTypes::getString($in);
+		$optionId = CommonTypes::readRecipeNetId($in);
 
 		return new self($cost, $slotFlags, $equipActivatedEnchants, $heldActivatedEnchants, $selfActivatedEnchants, $name, $optionId);
 	}
 
-	public function write(PacketSerializer $out) : void{
-		$out->putUnsignedVarInt($this->cost);
+	public function write(ByteBufferWriter $out) : void{
+		VarInt::writeUnsignedInt($out, $this->cost);
 
-		$out->putLInt($this->slotFlags);
+		LE::writeUnsignedInt($out, $this->slotFlags);
 		self::writeEnchantList($out, $this->equipActivatedEnchantments);
 		self::writeEnchantList($out, $this->heldActivatedEnchantments);
 		self::writeEnchantList($out, $this->selfActivatedEnchantments);
 
-		$out->putString($this->name);
-		$out->writeRecipeNetId($this->optionId);
+		CommonTypes::putString($out, $this->name);
+		CommonTypes::writeRecipeNetId($out, $this->optionId);
 	}
 }

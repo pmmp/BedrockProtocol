@@ -14,11 +14,13 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol\serializer;
 
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\DataDecodeException;
+use pmmp\encoding\VarInt;
 use pocketmine\network\mcpe\protocol\Packet;
 use pocketmine\network\mcpe\protocol\PacketDecodeException;
 use pocketmine\network\mcpe\protocol\PacketPool;
-use pocketmine\utils\BinaryDataException;
-use pocketmine\utils\BinaryStream;
 use function strlen;
 
 class PacketBatch{
@@ -31,13 +33,13 @@ class PacketBatch{
 	 * @phpstan-return \Generator<int, string, void, void>
 	 * @throws PacketDecodeException
 	 */
-	final public static function decodeRaw(BinaryStream $stream) : \Generator{
+	final public static function decodeRaw(ByteBufferReader $in) : \Generator{
 		$c = 0;
-		while(!$stream->feof()){
+		while($in->getUnreadLength() > 0){
 			try{
-				$length = $stream->getUnsignedVarInt();
-				$buffer = $stream->get($length);
-			}catch(BinaryDataException $e){
+				$length = VarInt::readUnsignedInt($in);
+				$buffer = $in->readByteArray($length);
+			}catch(DataDecodeException $e){
 				throw new PacketDecodeException("Error decoding packet $c in batch: " . $e->getMessage(), 0, $e);
 			}
 			yield $buffer;
@@ -49,10 +51,10 @@ class PacketBatch{
 	 * @param string[] $packets
 	 * @phpstan-param list<string> $packets
 	 */
-	final public static function encodeRaw(BinaryStream $stream, array $packets) : void{
+	final public static function encodeRaw(ByteBufferWriter $out, array $packets) : void{
 		foreach($packets as $packet){
-			$stream->putUnsignedVarInt(strlen($packet));
-			$stream->put($packet);
+			VarInt::writeUnsignedInt($out, strlen($packet));
+			$out->writeByteArray($packet);
 		}
 	}
 
@@ -60,13 +62,15 @@ class PacketBatch{
 	 * @phpstan-return \Generator<int, Packet, void, void>
 	 * @throws PacketDecodeException
 	 */
-	final public static function decodePackets(BinaryStream $stream, PacketPool $packetPool) : \Generator{
+	final public static function decodePackets(ByteBufferReader $in, PacketPool $packetPool) : \Generator{
 		$c = 0;
-		foreach(self::decodeRaw($stream) as $packetBuffer){
+		foreach(self::decodeRaw($in) as $packetBuffer){
 			$packet = $packetPool->getPacket($packetBuffer);
 			if($packet !== null){
 				try{
-					$packet->decode(PacketSerializer::decoder($packetBuffer, 0));
+					//TODO: this could use a view with a start and end offset to avoid extra string allocations
+					//currently ByteBufferReader doesn't support this
+					$packet->decode(new ByteBufferReader($packetBuffer));
 				}catch(PacketDecodeException $e){
 					throw new PacketDecodeException("Error decoding packet $c in batch: " . $e->getMessage(), 0, $e);
 				}
@@ -82,12 +86,14 @@ class PacketBatch{
 	 * @param Packet[]       $packets
 	 * @phpstan-param list<Packet> $packets
 	 */
-	final public static function encodePackets(BinaryStream $stream, array $packets) : void{
+	final public static function encodePackets(ByteBufferWriter $out, array $packets) : void{
 		foreach($packets as $packet){
-			$serializer = PacketSerializer::encoder();
+			$serializer = new ByteBufferWriter();
 			$packet->encode($serializer);
-			$stream->putUnsignedVarInt(strlen($serializer->getBuffer()));
-			$stream->put($serializer->getBuffer());
+			//this may require a copy, so don't call it twice
+			$packetBuffer = $serializer->getData();
+			VarInt::writeUnsignedInt($out, strlen($packetBuffer));
+			$out->writeByteArray($packetBuffer);
 		}
 	}
 }

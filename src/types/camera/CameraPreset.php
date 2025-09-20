@@ -14,9 +14,13 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol\types\camera;
 
+use pmmp\encoding\Byte;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\LE;
 use pocketmine\math\Vector2;
 use pocketmine\math\Vector3;
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 use pocketmine\network\mcpe\protocol\types\ControlScheme;
 
 final class CameraPreset{
@@ -92,29 +96,29 @@ final class CameraPreset{
 
 	public function getControlScheme() : ?ControlScheme{ return $this->controlScheme; }
 
-	public static function read(PacketSerializer $in) : self{
-		$name = $in->getString();
-		$parent = $in->getString();
-		$xPosition = $in->readOptional($in->getLFloat(...));
-		$yPosition = $in->readOptional($in->getLFloat(...));
-		$zPosition = $in->readOptional($in->getLFloat(...));
-		$pitch = $in->readOptional($in->getLFloat(...));
-		$yaw = $in->readOptional($in->getLFloat(...));
-		$rotationSpeed = $in->readOptional($in->getLFloat(...));
-		$snapToTarget = $in->readOptional($in->getBool(...));
-		$horizontalRotationLimit = $in->readOptional($in->getVector2(...));
-		$verticalRotationLimit = $in->readOptional($in->getVector2(...));
-		$continueTargeting = $in->readOptional($in->getBool(...));
-		$blockListeningRadius = $in->readOptional($in->getLFloat(...));
-		$viewOffset = $in->readOptional($in->getVector2(...));
-		$entityOffset = $in->readOptional($in->getVector3(...));
-		$radius = $in->readOptional($in->getLFloat(...));
-		$yawLimitMin = $in->readOptional($in->getLFloat(...));
-		$yawLimitMax = $in->readOptional($in->getLFloat(...));
-		$audioListenerType = $in->readOptional($in->getByte(...));
-		$playerEffects = $in->readOptional($in->getBool(...));
-		$aimAssist = $in->readOptional(fn() => CameraPresetAimAssist::read($in));
-		$controlScheme = $in->readOptional(fn() => ControlScheme::fromPacket($in->getByte()));
+	public static function read(ByteBufferReader $in) : self{
+		$name = CommonTypes::getString($in);
+		$parent = CommonTypes::getString($in);
+		$xPosition = CommonTypes::readOptional($in, LE::readFloat(...));
+		$yPosition = CommonTypes::readOptional($in, LE::readFloat(...));
+		$zPosition = CommonTypes::readOptional($in, LE::readFloat(...));
+		$pitch = CommonTypes::readOptional($in, LE::readFloat(...));
+		$yaw = CommonTypes::readOptional($in, LE::readFloat(...));
+		$rotationSpeed = CommonTypes::readOptional($in, LE::readFloat(...));
+		$snapToTarget = CommonTypes::readOptional($in, CommonTypes::getBool(...));
+		$horizontalRotationLimit = CommonTypes::readOptional($in, CommonTypes::getVector2(...));
+		$verticalRotationLimit = CommonTypes::readOptional($in, CommonTypes::getVector2(...));
+		$continueTargeting = CommonTypes::readOptional($in, CommonTypes::getBool(...));
+		$blockListeningRadius = CommonTypes::readOptional($in, LE::readFloat(...));
+		$viewOffset = CommonTypes::readOptional($in, CommonTypes::getVector2(...));
+		$entityOffset = CommonTypes::readOptional($in, CommonTypes::getVector3(...));
+		$radius = CommonTypes::readOptional($in, LE::readFloat(...));
+		$yawLimitMin = CommonTypes::readOptional($in, LE::readFloat(...));
+		$yawLimitMax = CommonTypes::readOptional($in, LE::readFloat(...));
+		$audioListenerType = CommonTypes::readOptional($in, Byte::readUnsigned(...));
+		$playerEffects = CommonTypes::readOptional($in, CommonTypes::getBool(...));
+		$aimAssist = CommonTypes::readOptional($in, fn() => CameraPresetAimAssist::read($in));
+		$controlScheme = CommonTypes::readOptional($in, fn() => ControlScheme::fromPacket(Byte::readUnsigned($in)));
 
 		return new self(
 			$name,
@@ -142,28 +146,28 @@ final class CameraPreset{
 		);
 	}
 
-	public function write(PacketSerializer $out) : void{
-		$out->putString($this->name);
-		$out->putString($this->parent);
-		$out->writeOptional($this->xPosition, $out->putLFloat(...));
-		$out->writeOptional($this->yPosition, $out->putLFloat(...));
-		$out->writeOptional($this->zPosition, $out->putLFloat(...));
-		$out->writeOptional($this->pitch, $out->putLFloat(...));
-		$out->writeOptional($this->yaw, $out->putLFloat(...));
-		$out->writeOptional($this->rotationSpeed, $out->putLFloat(...));
-		$out->writeOptional($this->snapToTarget, $out->putBool(...));
-		$out->writeOptional($this->horizontalRotationLimit, $out->putVector2(...));
-		$out->writeOptional($this->verticalRotationLimit, $out->putVector2(...));
-		$out->writeOptional($this->continueTargeting, $out->putBool(...));
-		$out->writeOptional($this->blockListeningRadius, $out->putLFloat(...));
-		$out->writeOptional($this->viewOffset, $out->putVector2(...));
-		$out->writeOptional($this->entityOffset, $out->putVector3(...));
-		$out->writeOptional($this->radius, $out->putLFloat(...));
-		$out->writeOptional($this->yawLimitMin, $out->putLFloat(...));
-		$out->writeOptional($this->yawLimitMax, $out->putLFloat(...));
-		$out->writeOptional($this->audioListenerType, $out->putByte(...));
-		$out->writeOptional($this->playerEffects, $out->putBool(...));
-		$out->writeOptional($this->aimAssist, fn(CameraPresetAimAssist $v) => $v->write($out));
-		$out->writeOptional($this->controlScheme, fn(ControlScheme $v) => $out->putByte($v->value));
+	public function write(ByteBufferWriter $out) : void{
+		CommonTypes::putString($out, $this->name);
+		CommonTypes::putString($out, $this->parent);
+		CommonTypes::writeOptional($out, $this->xPosition, LE::writeFloat(...));
+		CommonTypes::writeOptional($out, $this->yPosition, LE::writeFloat(...));
+		CommonTypes::writeOptional($out, $this->zPosition, LE::writeFloat(...));
+		CommonTypes::writeOptional($out, $this->pitch, LE::writeFloat(...));
+		CommonTypes::writeOptional($out, $this->yaw, LE::writeFloat(...));
+		CommonTypes::writeOptional($out, $this->rotationSpeed, LE::writeFloat(...));
+		CommonTypes::writeOptional($out, $this->snapToTarget, CommonTypes::putBool(...));
+		CommonTypes::writeOptional($out, $this->horizontalRotationLimit, CommonTypes::putVector2(...));
+		CommonTypes::writeOptional($out, $this->verticalRotationLimit, CommonTypes::putVector2(...));
+		CommonTypes::writeOptional($out, $this->continueTargeting, CommonTypes::putBool(...));
+		CommonTypes::writeOptional($out, $this->blockListeningRadius, LE::writeFloat(...));
+		CommonTypes::writeOptional($out, $this->viewOffset, CommonTypes::putVector2(...));
+		CommonTypes::writeOptional($out, $this->entityOffset, CommonTypes::putVector3(...));
+		CommonTypes::writeOptional($out, $this->radius, LE::writeFloat(...));
+		CommonTypes::writeOptional($out, $this->yawLimitMin, LE::writeFloat(...));
+		CommonTypes::writeOptional($out, $this->yawLimitMax, LE::writeFloat(...));
+		CommonTypes::writeOptional($out, $this->audioListenerType, Byte::writeUnsigned(...));
+		CommonTypes::writeOptional($out, $this->playerEffects, CommonTypes::putBool(...));
+		CommonTypes::writeOptional($out, $this->aimAssist, fn(ByteBufferWriter $out, CameraPresetAimAssist $v) => $v->write($out));
+		CommonTypes::writeOptional($out, $this->controlScheme, fn(ByteBufferWriter $out, ControlScheme $v) => Byte::writeUnsigned($out, $v->value));
 	}
 }

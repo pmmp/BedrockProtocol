@@ -14,8 +14,11 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
-use pocketmine\utils\BinaryDataException;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\DataDecodeException;
+use pmmp\encoding\LE;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 
 class MoveActorDeltaPacket extends DataPacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::MOVE_ACTOR_DELTA_PACKET;
@@ -39,29 +42,25 @@ class MoveActorDeltaPacket extends DataPacket implements ClientboundPacket{
 	public float $yaw = 0.0;
 	public float $headYaw = 0.0;
 
-	/**
-	 * @throws BinaryDataException
-	 */
-	private function maybeReadCoord(int $flag, PacketSerializer $in) : float{
+	/** @throws DataDecodeException */
+	private function maybeReadCoord(int $flag, ByteBufferReader $in) : float{
 		if(($this->flags & $flag) !== 0){
-			return $in->getLFloat();
+			return LE::readFloat($in);
 		}
 		return 0;
 	}
 
-	/**
-	 * @throws BinaryDataException
-	 */
-	private function maybeReadRotation(int $flag, PacketSerializer $in) : float{
+	/** @throws DataDecodeException */
+	private function maybeReadRotation(int $flag, ByteBufferReader $in) : float{
 		if(($this->flags & $flag) !== 0){
-			return $in->getRotationByte();
+			return CommonTypes::getRotationByte($in);
 		}
 		return 0.0;
 	}
 
-	protected function decodePayload(PacketSerializer $in) : void{
-		$this->actorRuntimeId = $in->getActorRuntimeId();
-		$this->flags = $in->getLShort();
+	protected function decodePayload(ByteBufferReader $in) : void{
+		$this->actorRuntimeId = CommonTypes::getActorRuntimeId($in);
+		$this->flags = LE::readUnsignedShort($in);
 		$this->xPos = $this->maybeReadCoord(self::FLAG_HAS_X, $in);
 		$this->yPos = $this->maybeReadCoord(self::FLAG_HAS_Y, $in);
 		$this->zPos = $this->maybeReadCoord(self::FLAG_HAS_Z, $in);
@@ -70,21 +69,21 @@ class MoveActorDeltaPacket extends DataPacket implements ClientboundPacket{
 		$this->headYaw = $this->maybeReadRotation(self::FLAG_HAS_HEAD_YAW, $in);
 	}
 
-	private function maybeWriteCoord(int $flag, float $val, PacketSerializer $out) : void{
+	private function maybeWriteCoord(int $flag, float $val, ByteBufferWriter $out) : void{
 		if(($this->flags & $flag) !== 0){
-			$out->putLFloat($val);
+			LE::writeFloat($out, $val);
 		}
 	}
 
-	private function maybeWriteRotation(int $flag, float $val, PacketSerializer $out) : void{
+	private function maybeWriteRotation(int $flag, float $val, ByteBufferWriter $out) : void{
 		if(($this->flags & $flag) !== 0){
-			$out->putRotationByte($val);
+			CommonTypes::putRotationByte($out, $val);
 		}
 	}
 
-	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putActorRuntimeId($this->actorRuntimeId);
-		$out->putLShort($this->flags);
+	protected function encodePayload(ByteBufferWriter $out) : void{
+		CommonTypes::putActorRuntimeId($out, $this->actorRuntimeId);
+		LE::writeUnsignedShort($out, $this->flags);
 		$this->maybeWriteCoord(self::FLAG_HAS_X, $this->xPos, $out);
 		$this->maybeWriteCoord(self::FLAG_HAS_Y, $this->yPos, $out);
 		$this->maybeWriteCoord(self::FLAG_HAS_Z, $this->zPos, $out);

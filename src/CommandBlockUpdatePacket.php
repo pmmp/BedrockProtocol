@@ -14,7 +14,11 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\LE;
+use pmmp\encoding\VarInt;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 use pocketmine\network\mcpe\protocol\types\BlockPosition;
 
 class CommandBlockUpdatePacket extends DataPacket implements ServerboundPacket{
@@ -37,47 +41,47 @@ class CommandBlockUpdatePacket extends DataPacket implements ServerboundPacket{
 	public int $tickDelay;
 	public bool $executeOnFirstTick;
 
-	protected function decodePayload(PacketSerializer $in) : void{
-		$this->isBlock = $in->getBool();
+	protected function decodePayload(ByteBufferReader $in) : void{
+		$this->isBlock = CommonTypes::getBool($in);
 
 		if($this->isBlock){
-			$this->blockPosition = $in->getBlockPosition();
-			$this->commandBlockMode = $in->getUnsignedVarInt();
-			$this->isRedstoneMode = $in->getBool();
-			$this->isConditional = $in->getBool();
+			$this->blockPosition = CommonTypes::getBlockPosition($in);
+			$this->commandBlockMode = VarInt::readUnsignedInt($in);
+			$this->isRedstoneMode = CommonTypes::getBool($in);
+			$this->isConditional = CommonTypes::getBool($in);
 		}else{
 			//Minecart with command block
-			$this->minecartActorRuntimeId = $in->getActorRuntimeId();
+			$this->minecartActorRuntimeId = CommonTypes::getActorRuntimeId($in);
 		}
 
-		$this->command = $in->getString();
-		$this->lastOutput = $in->getString();
-		$this->name = $in->getString();
-		$this->filteredName = $in->getString();
-		$this->shouldTrackOutput = $in->getBool();
-		$this->tickDelay = $in->getLInt();
-		$this->executeOnFirstTick = $in->getBool();
+		$this->command = CommonTypes::getString($in);
+		$this->lastOutput = CommonTypes::getString($in);
+		$this->name = CommonTypes::getString($in);
+		$this->filteredName = CommonTypes::getString($in);
+		$this->shouldTrackOutput = CommonTypes::getBool($in);
+		$this->tickDelay = LE::readUnsignedInt($in);
+		$this->executeOnFirstTick = CommonTypes::getBool($in);
 	}
 
-	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putBool($this->isBlock);
+	protected function encodePayload(ByteBufferWriter $out) : void{
+		CommonTypes::putBool($out, $this->isBlock);
 
 		if($this->isBlock){
-			$out->putBlockPosition($this->blockPosition);
-			$out->putUnsignedVarInt($this->commandBlockMode);
-			$out->putBool($this->isRedstoneMode);
-			$out->putBool($this->isConditional);
+			CommonTypes::putBlockPosition($out, $this->blockPosition);
+			VarInt::writeUnsignedInt($out, $this->commandBlockMode);
+			CommonTypes::putBool($out, $this->isRedstoneMode);
+			CommonTypes::putBool($out, $this->isConditional);
 		}else{
-			$out->putActorRuntimeId($this->minecartActorRuntimeId);
+			CommonTypes::putActorRuntimeId($out, $this->minecartActorRuntimeId);
 		}
 
-		$out->putString($this->command);
-		$out->putString($this->lastOutput);
-		$out->putString($this->name);
-		$out->putString($this->filteredName);
-		$out->putBool($this->shouldTrackOutput);
-		$out->putLInt($this->tickDelay);
-		$out->putBool($this->executeOnFirstTick);
+		CommonTypes::putString($out, $this->command);
+		CommonTypes::putString($out, $this->lastOutput);
+		CommonTypes::putString($out, $this->name);
+		CommonTypes::putString($out, $this->filteredName);
+		CommonTypes::putBool($out, $this->shouldTrackOutput);
+		LE::writeUnsignedInt($out, $this->tickDelay);
+		CommonTypes::putBool($out, $this->executeOnFirstTick);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

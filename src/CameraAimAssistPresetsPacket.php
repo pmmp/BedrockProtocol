@@ -14,7 +14,10 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\Byte;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\VarInt;
 use pocketmine\network\mcpe\protocol\types\camera\CameraAimAssistCategory;
 use pocketmine\network\mcpe\protocol\types\camera\CameraAimAssistPreset;
 use function count;
@@ -53,32 +56,32 @@ class CameraAimAssistPresetsPacket extends DataPacket implements ClientboundPack
 
 	public function getOperation() : int{ return $this->operation; }
 
-	protected function decodePayload(PacketSerializer $in) : void{
+	protected function decodePayload(ByteBufferReader $in) : void{
 		$this->categories = [];
-		for($i = 0, $count = $in->getUnsignedVarInt(); $i < $count; ++$i){
+		for($i = 0, $count = VarInt::readUnsignedInt($in); $i < $count; ++$i){
 			$this->categories[] = CameraAimAssistCategory::read($in);
 		}
 
 		$this->presets = [];
-		for($i = 0, $count = $in->getUnsignedVarInt(); $i < $count; ++$i){
+		for($i = 0, $count = VarInt::readUnsignedInt($in); $i < $count; ++$i){
 			$this->presets[] = CameraAimAssistPreset::read($in);
 		}
 
-		$this->operation = $in->getByte();
+		$this->operation = Byte::readUnsigned($in);
 	}
 
-	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putUnsignedVarInt(count($this->categories));
+	protected function encodePayload(ByteBufferWriter $out) : void{
+		VarInt::writeUnsignedInt($out, count($this->categories));
 		foreach($this->categories as $category){
 			$category->write($out);
 		}
 
-		$out->putUnsignedVarInt(count($this->presets));
+		VarInt::writeUnsignedInt($out, count($this->presets));
 		foreach($this->presets as $preset){
 			$preset->write($out);
 		}
 
-		$out->putByte($this->operation);
+		Byte::writeUnsigned($out, $this->operation);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

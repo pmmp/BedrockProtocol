@@ -14,7 +14,10 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\LE;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 use pocketmine\network\mcpe\protocol\types\AgentActionType;
 
 /**
@@ -46,16 +49,16 @@ class AgentActionEventPacket extends DataPacket implements ClientboundPacket{
 
 	public function getResponseJson() : string{ return $this->responseJson; }
 
-	protected function decodePayload(PacketSerializer $in) : void{
-		$this->requestId = $in->getString();
-		$this->action = $in->getLInt();
-		$this->responseJson = $in->getString();
+	protected function decodePayload(ByteBufferReader $in) : void{
+		$this->requestId = CommonTypes::getString($in);
+		$this->action = LE::readUnsignedInt($in);
+		$this->responseJson = CommonTypes::getString($in);
 	}
 
-	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putString($this->requestId);
-		$out->putLInt($this->action);
-		$out->putString($this->responseJson);
+	protected function encodePayload(ByteBufferWriter $out) : void{
+		CommonTypes::putString($out, $this->requestId);
+		LE::writeUnsignedInt($out, $this->action);
+		CommonTypes::putString($out, $this->responseJson);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

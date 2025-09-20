@@ -14,8 +14,10 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
-use pocketmine\utils\BinaryDataException;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\DataDecodeException;
+use pmmp\encoding\VarInt;
 use function get_class;
 
 abstract class DataPacket implements Packet{
@@ -46,21 +48,21 @@ abstract class DataPacket implements Packet{
 	/**
 	 * @throws PacketDecodeException
 	 */
-	final public function decode(PacketSerializer $in) : void{
+	final public function decode(ByteBufferReader $in) : void{
 		try{
 			$this->decodeHeader($in);
 			$this->decodePayload($in);
-		}catch(BinaryDataException | PacketDecodeException $e){
+		}catch(DataDecodeException | PacketDecodeException $e){
 			throw PacketDecodeException::wrap($e, $this->getName());
 		}
 	}
 
 	/**
-	 * @throws BinaryDataException
+	 * @throws DataDecodeException
 	 * @throws PacketDecodeException
 	 */
-	protected function decodeHeader(PacketSerializer $in) : void{
-		$header = $in->getUnsignedVarInt();
+	protected function decodeHeader(ByteBufferReader $in) : void{
+		$header = VarInt::readUnsignedInt($in);
 		$pid = $header & self::PID_MASK;
 		if($pid !== static::NETWORK_ID){
 			//TODO: this means a logical error in the code, but how to prevent it from happening?
@@ -75,17 +77,17 @@ abstract class DataPacket implements Packet{
 	 * Decodes the packet body, without the packet ID or other generic header fields.
 	 *
 	 * @throws PacketDecodeException
-	 * @throws BinaryDataException
+	 * @throws DataDecodeException
 	 */
-	abstract protected function decodePayload(PacketSerializer $in) : void;
+	abstract protected function decodePayload(ByteBufferReader $in) : void;
 
-	final public function encode(PacketSerializer $out) : void{
+	final public function encode(ByteBufferWriter $out) : void{
 		$this->encodeHeader($out);
 		$this->encodePayload($out);
 	}
 
-	protected function encodeHeader(PacketSerializer $out) : void{
-		$out->putUnsignedVarInt(
+	protected function encodeHeader(ByteBufferWriter $out) : void{
+		VarInt::writeUnsignedInt($out,
 			static::NETWORK_ID |
 			($this->senderSubId << self::SENDER_SUBCLIENT_ID_SHIFT) |
 			($this->recipientSubId << self::RECIPIENT_SUBCLIENT_ID_SHIFT)
@@ -95,7 +97,7 @@ abstract class DataPacket implements Packet{
 	/**
 	 * Encodes the packet body, without the packet ID or other generic header fields.
 	 */
-	abstract protected function encodePayload(PacketSerializer $out) : void;
+	abstract protected function encodePayload(ByteBufferWriter $out) : void;
 
 	/**
 	 * @param string $name

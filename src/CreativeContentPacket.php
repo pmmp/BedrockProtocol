@@ -14,7 +14,9 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\VarInt;
 use pocketmine\network\mcpe\protocol\types\inventory\CreativeGroupEntry;
 use pocketmine\network\mcpe\protocol\types\inventory\CreativeItemEntry;
 use function count;
@@ -50,25 +52,25 @@ class CreativeContentPacket extends DataPacket implements ClientboundPacket{
 	/** @return CreativeItemEntry[] */
 	public function getItems() : array{ return $this->items; }
 
-	protected function decodePayload(PacketSerializer $in) : void{
+	protected function decodePayload(ByteBufferReader $in) : void{
 		$this->groups = [];
-		for($i = 0, $len = $in->getUnsignedVarInt(); $i < $len; ++$i){
+		for($i = 0, $len = VarInt::readUnsignedInt($in); $i < $len; ++$i){
 			$this->groups[] = CreativeGroupEntry::read($in);
 		}
 
 		$this->items = [];
-		for($i = 0, $len = $in->getUnsignedVarInt(); $i < $len; ++$i){
+		for($i = 0, $len = VarInt::readUnsignedInt($in); $i < $len; ++$i){
 			$this->items[] = CreativeItemEntry::read($in);
 		}
 	}
 
-	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putUnsignedVarInt(count($this->groups));
+	protected function encodePayload(ByteBufferWriter $out) : void{
+		VarInt::writeUnsignedInt($out, count($this->groups));
 		foreach($this->groups as $entry){
 			$entry->write($out);
 		}
 
-		$out->putUnsignedVarInt(count($this->items));
+		VarInt::writeUnsignedInt($out, count($this->items));
 		foreach($this->items as $entry){
 			$entry->write($out);
 		}

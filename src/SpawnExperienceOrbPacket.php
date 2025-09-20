@@ -14,8 +14,11 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\VarInt;
 use pocketmine\math\Vector3;
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 
 class SpawnExperienceOrbPacket extends DataPacket implements ServerboundPacket{
 	public const NETWORK_ID = ProtocolInfo::SPAWN_EXPERIENCE_ORB_PACKET;
@@ -33,14 +36,14 @@ class SpawnExperienceOrbPacket extends DataPacket implements ServerboundPacket{
 		return $result;
 	}
 
-	protected function decodePayload(PacketSerializer $in) : void{
-		$this->position = $in->getVector3();
-		$this->amount = $in->getVarInt();
+	protected function decodePayload(ByteBufferReader $in) : void{
+		$this->position = CommonTypes::getVector3($in);
+		$this->amount = VarInt::readSignedInt($in);
 	}
 
-	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putVector3($this->position);
-		$out->putVarInt($this->amount);
+	protected function encodePayload(ByteBufferWriter $out) : void{
+		CommonTypes::putVector3($out, $this->position);
+		VarInt::writeSignedInt($out, $this->amount);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

@@ -14,7 +14,9 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol\types\camera;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 
 final class CameraAimAssistPresetItemSettings{
 
@@ -27,17 +29,17 @@ final class CameraAimAssistPresetItemSettings{
 
 	public function getCategoryName() : string{ return $this->categoryName; }
 
-	public static function read(PacketSerializer $in) : self{
-		$itemIdentifier = $in->getString();
-		$categoryName = $in->getString();
+	public static function read(ByteBufferReader $in) : self{
+		$itemIdentifier = CommonTypes::getString($in);
+		$categoryName = CommonTypes::getString($in);
 		return new self(
 			$itemIdentifier,
 			$categoryName
 		);
 	}
 
-	public function write(PacketSerializer $out) : void{
-		$out->putString($this->itemIdentifier);
-		$out->putString($this->categoryName);
+	public function write(ByteBufferWriter $out) : void{
+		CommonTypes::putString($out, $this->itemIdentifier);
+		CommonTypes::putString($out, $this->categoryName);
 	}
 }

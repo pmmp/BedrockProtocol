@@ -14,7 +14,9 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 
 class StopSoundPacket extends DataPacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::STOP_SOUND_PACKET;
@@ -34,16 +36,16 @@ class StopSoundPacket extends DataPacket implements ClientboundPacket{
 		return $result;
 	}
 
-	protected function decodePayload(PacketSerializer $in) : void{
-		$this->soundName = $in->getString();
-		$this->stopAll = $in->getBool();
-		$this->stopLegacyMusic = $in->getBool();
+	protected function decodePayload(ByteBufferReader $in) : void{
+		$this->soundName = CommonTypes::getString($in);
+		$this->stopAll = CommonTypes::getBool($in);
+		$this->stopLegacyMusic = CommonTypes::getBool($in);
 	}
 
-	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putString($this->soundName);
-		$out->putBool($this->stopAll);
-		$out->putBool($this->stopLegacyMusic);
+	protected function encodePayload(ByteBufferWriter $out) : void{
+		CommonTypes::putString($out, $this->soundName);
+		CommonTypes::putBool($out, $this->stopAll);
+		CommonTypes::putBool($out, $this->stopLegacyMusic);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

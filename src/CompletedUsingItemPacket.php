@@ -14,7 +14,9 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\LE;
 
 class CompletedUsingItemPacket extends DataPacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::COMPLETED_USING_ITEM_PACKET;
@@ -50,14 +52,14 @@ class CompletedUsingItemPacket extends DataPacket implements ClientboundPacket{
 		return $result;
 	}
 
-	public function decodePayload(PacketSerializer $in) : void{
-		$this->itemId = $in->getShort();
-		$this->action = $in->getLInt();
+	public function decodePayload(ByteBufferReader $in) : void{
+		$this->itemId = LE::readSignedShort($in);
+		$this->action = LE::readSignedInt($in);
 	}
 
-	public function encodePayload(PacketSerializer $out) : void{
-		$out->putShort($this->itemId);
-		$out->putLInt($this->action);
+	public function encodePayload(ByteBufferWriter $out) : void{
+		LE::writeSignedShort($out, $this->itemId);
+		LE::writeSignedInt($out, $this->action);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

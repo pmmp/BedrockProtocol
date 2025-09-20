@@ -14,7 +14,10 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\VarInt;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 use function count;
 
 class PurchaseReceiptPacket extends DataPacket implements ServerboundPacket{
@@ -33,17 +36,17 @@ class PurchaseReceiptPacket extends DataPacket implements ServerboundPacket{
 		return $result;
 	}
 
-	protected function decodePayload(PacketSerializer $in) : void{
-		$count = $in->getUnsignedVarInt();
+	protected function decodePayload(ByteBufferReader $in) : void{
+		$count = VarInt::readUnsignedInt($in);
 		for($i = 0; $i < $count; ++$i){
-			$this->entries[] = $in->getString();
+			$this->entries[] = CommonTypes::getString($in);
 		}
 	}
 
-	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putUnsignedVarInt(count($this->entries));
+	protected function encodePayload(ByteBufferWriter $out) : void{
+		VarInt::writeUnsignedInt($out, count($this->entries));
 		foreach($this->entries as $entry){
-			$out->putString($entry);
+			CommonTypes::putString($out, $entry);
 		}
 	}
 

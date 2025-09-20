@@ -14,7 +14,11 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\LE;
+use pmmp\encoding\VarInt;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 use function count;
 
 class AnimateEntityPacket extends DataPacket implements ClientboundPacket{
@@ -75,29 +79,29 @@ class AnimateEntityPacket extends DataPacket implements ClientboundPacket{
 	 */
 	public function getActorRuntimeIds() : array{ return $this->actorRuntimeIds; }
 
-	protected function decodePayload(PacketSerializer $in) : void{
-		$this->animation = $in->getString();
-		$this->nextState = $in->getString();
-		$this->stopExpression = $in->getString();
-		$this->stopExpressionVersion = $in->getLInt();
-		$this->controller = $in->getString();
-		$this->blendOutTime = $in->getLFloat();
+	protected function decodePayload(ByteBufferReader $in) : void{
+		$this->animation = CommonTypes::getString($in);
+		$this->nextState = CommonTypes::getString($in);
+		$this->stopExpression = CommonTypes::getString($in);
+		$this->stopExpressionVersion = LE::readSignedInt($in);
+		$this->controller = CommonTypes::getString($in);
+		$this->blendOutTime = LE::readFloat($in);
 		$this->actorRuntimeIds = [];
-		for($i = 0, $len = $in->getUnsignedVarInt(); $i < $len; ++$i){
-			$this->actorRuntimeIds[] = $in->getActorRuntimeId();
+		for($i = 0, $len = VarInt::readUnsignedInt($in); $i < $len; ++$i){
+			$this->actorRuntimeIds[] = CommonTypes::getActorRuntimeId($in);
 		}
 	}
 
-	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putString($this->animation);
-		$out->putString($this->nextState);
-		$out->putString($this->stopExpression);
-		$out->putLInt($this->stopExpressionVersion);
-		$out->putString($this->controller);
-		$out->putLFloat($this->blendOutTime);
-		$out->putUnsignedVarInt(count($this->actorRuntimeIds));
+	protected function encodePayload(ByteBufferWriter $out) : void{
+		CommonTypes::putString($out, $this->animation);
+		CommonTypes::putString($out, $this->nextState);
+		CommonTypes::putString($out, $this->stopExpression);
+		LE::writeSignedInt($out, $this->stopExpressionVersion);
+		CommonTypes::putString($out, $this->controller);
+		LE::writeFloat($out, $this->blendOutTime);
+		VarInt::writeUnsignedInt($out, count($this->actorRuntimeIds));
 		foreach($this->actorRuntimeIds as $id){
-			$out->putActorRuntimeId($id);
+			CommonTypes::putActorRuntimeId($out, $id);
 		}
 	}
 

@@ -14,7 +14,10 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\VarInt;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 use pocketmine\network\mcpe\protocol\types\MovementEffectType;
 
 class MovementEffectPacket extends DataPacket implements ClientboundPacket{
@@ -45,18 +48,18 @@ class MovementEffectPacket extends DataPacket implements ClientboundPacket{
 
 	public function getTick() : int{ return $this->tick; }
 
-	protected function decodePayload(PacketSerializer $in) : void{
-		$this->actorRuntimeId = $in->getActorRuntimeId();
-		$this->effectType = MovementEffectType::fromPacket($in->getUnsignedVarInt());
-		$this->duration = $in->getUnsignedVarInt();
-		$this->tick = $in->getUnsignedVarLong();
+	protected function decodePayload(ByteBufferReader $in) : void{
+		$this->actorRuntimeId = CommonTypes::getActorRuntimeId($in);
+		$this->effectType = MovementEffectType::fromPacket(VarInt::readUnsignedInt($in));
+		$this->duration = VarInt::readUnsignedInt($in);
+		$this->tick = VarInt::readUnsignedLong($in);
 	}
 
-	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putActorRuntimeId($this->actorRuntimeId);
-		$out->putUnsignedVarInt($this->effectType->value);
-		$out->putUnsignedVarInt($this->duration);
-		$out->putUnsignedVarLong($this->tick);
+	protected function encodePayload(ByteBufferWriter $out) : void{
+		CommonTypes::putActorRuntimeId($out, $this->actorRuntimeId);
+		VarInt::writeUnsignedInt($out, $this->effectType->value);
+		VarInt::writeUnsignedInt($out, $this->duration);
+		VarInt::writeUnsignedLong($out, $this->tick);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

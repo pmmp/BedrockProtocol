@@ -14,7 +14,9 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\VarInt;
 
 class RemoveVolumeEntityPacket extends DataPacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::REMOVE_VOLUME_ENTITY_PACKET;
@@ -36,14 +38,14 @@ class RemoveVolumeEntityPacket extends DataPacket implements ClientboundPacket{
 
 	public function getDimension() : int{ return $this->dimension; }
 
-	protected function decodePayload(PacketSerializer $in) : void{
-		$this->entityNetId = $in->getUnsignedVarInt();
-		$this->dimension = $in->getVarInt();
+	protected function decodePayload(ByteBufferReader $in) : void{
+		$this->entityNetId = VarInt::readUnsignedInt($in);
+		$this->dimension = VarInt::readSignedInt($in);
 	}
 
-	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putUnsignedVarInt($this->entityNetId);
-		$out->putVarInt($this->dimension);
+	protected function encodePayload(ByteBufferWriter $out) : void{
+		VarInt::writeUnsignedInt($out, $this->entityNetId);
+		VarInt::writeSignedInt($out, $this->dimension);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

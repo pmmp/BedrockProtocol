@@ -14,7 +14,10 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\VarInt;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 use pocketmine\network\mcpe\protocol\types\BlockPosition;
 use pocketmine\utils\Limits;
 
@@ -54,18 +57,18 @@ class SetSpawnPositionPacket extends DataPacket implements ClientboundPacket{
 		return self::create(self::TYPE_WORLD_SPAWN, $spawnPosition, $dimension, new BlockPosition(Limits::INT32_MIN, Limits::INT32_MIN, Limits::INT32_MIN));
 	}
 
-	protected function decodePayload(PacketSerializer $in) : void{
-		$this->spawnType = $in->getVarInt();
-		$this->spawnPosition = $in->getBlockPosition();
-		$this->dimension = $in->getVarInt();
-		$this->causingBlockPosition = $in->getBlockPosition();
+	protected function decodePayload(ByteBufferReader $in) : void{
+		$this->spawnType = VarInt::readSignedInt($in);
+		$this->spawnPosition = CommonTypes::getBlockPosition($in);
+		$this->dimension = VarInt::readSignedInt($in);
+		$this->causingBlockPosition = CommonTypes::getBlockPosition($in);
 	}
 
-	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putVarInt($this->spawnType);
-		$out->putBlockPosition($this->spawnPosition);
-		$out->putVarInt($this->dimension);
-		$out->putBlockPosition($this->causingBlockPosition);
+	protected function encodePayload(ByteBufferWriter $out) : void{
+		VarInt::writeSignedInt($out, $this->spawnType);
+		CommonTypes::putBlockPosition($out, $this->spawnPosition);
+		VarInt::writeSignedInt($out, $this->dimension);
+		CommonTypes::putBlockPosition($out, $this->causingBlockPosition);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

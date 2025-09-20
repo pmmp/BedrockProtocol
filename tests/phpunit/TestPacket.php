@@ -14,16 +14,17 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
 
 class TestPacket extends DataPacket{
 	public const NETWORK_ID = 1023;
 
-	protected function decodePayload(PacketSerializer $in) : void{
+	protected function decodePayload(ByteBufferReader $in) : void{
 
 	}
 
-	protected function encodePayload(PacketSerializer $out) : void{
+	protected function encodePayload(ByteBufferWriter $out) : void{
 
 	}
 

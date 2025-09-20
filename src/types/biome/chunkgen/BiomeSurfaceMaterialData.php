@@ -14,7 +14,9 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol\types\biome\chunkgen;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\LE;
 
 final class BiomeSurfaceMaterialData{
 
@@ -39,13 +41,13 @@ final class BiomeSurfaceMaterialData{
 
 	public function getSeaFloorDepth() : int{ return $this->seaFloorDepth; }
 
-	public static function read(PacketSerializer $in) : self{
-		$topBlock = $in->getLInt();
-		$midBlock = $in->getLInt();
-		$seaFloorBlock = $in->getLInt();
-		$foundationBlock = $in->getLInt();
-		$seaBlock = $in->getLInt();
-		$seaFloorDepth = $in->getLInt();
+	public static function read(ByteBufferReader $in) : self{
+		$topBlock = LE::readUnsignedInt($in);
+		$midBlock = LE::readUnsignedInt($in);
+		$seaFloorBlock = LE::readUnsignedInt($in);
+		$foundationBlock = LE::readUnsignedInt($in);
+		$seaBlock = LE::readUnsignedInt($in);
+		$seaFloorDepth = LE::readSignedInt($in);
 
 		return new self(
 			$topBlock,
@@ -57,12 +59,12 @@ final class BiomeSurfaceMaterialData{
 		);
 	}
 
-	public function write(PacketSerializer $out) : void{
-		$out->putLInt($this->topBlock);
-		$out->putLInt($this->midBlock);
-		$out->putLInt($this->seaFloorBlock);
-		$out->putLInt($this->foundationBlock);
-		$out->putLInt($this->seaBlock);
-		$out->putLInt($this->seaFloorDepth);
+	public function write(ByteBufferWriter $out) : void{
+		LE::writeUnsignedInt($out, $this->topBlock);
+		LE::writeUnsignedInt($out, $this->midBlock);
+		LE::writeUnsignedInt($out, $this->seaFloorBlock);
+		LE::writeUnsignedInt($out, $this->foundationBlock);
+		LE::writeUnsignedInt($out, $this->seaBlock);
+		LE::writeSignedInt($out, $this->seaFloorDepth);
 	}
 }

@@ -14,7 +14,9 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\LE;
 
 class SimpleEventPacket extends DataPacket implements ClientboundPacket, ServerboundPacket{
 	public const NETWORK_ID = ProtocolInfo::SIMPLE_EVENT_PACKET;
@@ -34,12 +36,12 @@ class SimpleEventPacket extends DataPacket implements ClientboundPacket, Serverb
 		return $result;
 	}
 
-	protected function decodePayload(PacketSerializer $in) : void{
-		$this->eventType = $in->getLShort();
+	protected function decodePayload(ByteBufferReader $in) : void{
+		$this->eventType = LE::readUnsignedShort($in);
 	}
 
-	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putLShort($this->eventType);
+	protected function encodePayload(ByteBufferWriter $out) : void{
+		LE::writeUnsignedShort($out, $this->eventType);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

@@ -14,7 +14,10 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\VarInt;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 
 /**
  * Handled only in Education mode. Used to fire telemetry reporting on the client.
@@ -47,16 +50,16 @@ class LessonProgressPacket extends DataPacket implements ClientboundPacket{
 
 	public function getActivityId() : string{ return $this->activityId; }
 
-	protected function decodePayload(PacketSerializer $in) : void{
-		$this->action = $in->getVarInt();
-		$this->score = $in->getVarInt();
-		$this->activityId = $in->getString();
+	protected function decodePayload(ByteBufferReader $in) : void{
+		$this->action = VarInt::readSignedInt($in);
+		$this->score = VarInt::readSignedInt($in);
+		$this->activityId = CommonTypes::getString($in);
 	}
 
-	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putVarInt($this->action);
-		$out->putVarInt($this->score);
-		$out->putString($this->activityId);
+	protected function encodePayload(ByteBufferWriter $out) : void{
+		VarInt::writeSignedInt($out, $this->action);
+		VarInt::writeSignedInt($out, $this->score);
+		CommonTypes::putString($out, $this->activityId);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

@@ -14,7 +14,9 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol\types\biome\chunkgen;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\LE;
 
 final class BiomeWeightedData{
 
@@ -27,9 +29,9 @@ final class BiomeWeightedData{
 
 	public function getWeight() : int{ return $this->weight; }
 
-	public static function read(PacketSerializer $in) : self{
-		$biome = $in->getLShort();
-		$weight = $in->getLInt();
+	public static function read(ByteBufferReader $in) : self{
+		$biome = LE::readSignedShort($in);
+		$weight = LE::readUnsignedInt($in);
 
 		return new self(
 			$biome,
@@ -37,8 +39,8 @@ final class BiomeWeightedData{
 		);
 	}
 
-	public function write(PacketSerializer $out) : void{
-		$out->putLShort($this->biome);
-		$out->putLInt($this->weight);
+	public function write(ByteBufferWriter $out) : void{
+		LE::writeSignedShort($out, $this->biome);
+		LE::writeUnsignedInt($out, $this->weight);
 	}
 }

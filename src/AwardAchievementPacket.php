@@ -14,7 +14,9 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\LE;
 
 class AwardAchievementPacket extends DataPacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::AWARD_ACHIEVEMENT_PACKET;
@@ -32,12 +34,12 @@ class AwardAchievementPacket extends DataPacket implements ClientboundPacket{
 
 	public function getAchievementId() : int{ return $this->achievementId; }
 
-	protected function decodePayload(PacketSerializer $in) : void{
-		$this->achievementId = $in->getLInt();
+	protected function decodePayload(ByteBufferReader $in) : void{
+		$this->achievementId = LE::readSignedInt($in);
 	}
 
-	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putLInt($this->achievementId);
+	protected function encodePayload(ByteBufferWriter $out) : void{
+		LE::writeSignedInt($out, $this->achievementId);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

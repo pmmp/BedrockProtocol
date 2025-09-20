@@ -14,7 +14,9 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\VarInt;
 
 class SetDefaultGameTypePacket extends DataPacket implements ClientboundPacket, ServerboundPacket{
 	public const NETWORK_ID = ProtocolInfo::SET_DEFAULT_GAME_TYPE_PACKET;
@@ -30,12 +32,12 @@ class SetDefaultGameTypePacket extends DataPacket implements ClientboundPacket, 
 		return $result;
 	}
 
-	protected function decodePayload(PacketSerializer $in) : void{
-		$this->gamemode = $in->getVarInt();
+	protected function decodePayload(ByteBufferReader $in) : void{
+		$this->gamemode = VarInt::readSignedInt($in);
 	}
 
-	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putUnsignedVarInt($this->gamemode);
+	protected function encodePayload(ByteBufferWriter $out) : void{
+		VarInt::writeSignedInt($out, $this->gamemode);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

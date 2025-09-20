@@ -14,7 +14,11 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\Byte;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\VarInt;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 use pocketmine\network\mcpe\protocol\types\CacheableNbt;
 use pocketmine\network\mcpe\protocol\types\inventory\WindowTypes;
 
@@ -63,30 +67,30 @@ class UpdateTradePacket extends DataPacket implements ClientboundPacket{
 		return $result;
 	}
 
-	protected function decodePayload(PacketSerializer $in) : void{
-		$this->windowId = $in->getByte();
-		$this->windowType = $in->getByte();
-		$this->windowSlotCount = $in->getVarInt();
-		$this->tradeTier = $in->getVarInt();
-		$this->traderActorUniqueId = $in->getActorUniqueId();
-		$this->playerActorUniqueId = $in->getActorUniqueId();
-		$this->displayName = $in->getString();
-		$this->isV2Trading = $in->getBool();
-		$this->isEconomyTrading = $in->getBool();
-		$this->offers = new CacheableNbt($in->getNbtCompoundRoot());
+	protected function decodePayload(ByteBufferReader $in) : void{
+		$this->windowId = Byte::readUnsigned($in);
+		$this->windowType = Byte::readUnsigned($in);
+		$this->windowSlotCount = VarInt::readSignedInt($in);
+		$this->tradeTier = VarInt::readSignedInt($in);
+		$this->traderActorUniqueId = CommonTypes::getActorUniqueId($in);
+		$this->playerActorUniqueId = CommonTypes::getActorUniqueId($in);
+		$this->displayName = CommonTypes::getString($in);
+		$this->isV2Trading = CommonTypes::getBool($in);
+		$this->isEconomyTrading = CommonTypes::getBool($in);
+		$this->offers = new CacheableNbt(CommonTypes::getNbtCompoundRoot($in));
 	}
 
-	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putByte($this->windowId);
-		$out->putByte($this->windowType);
-		$out->putVarInt($this->windowSlotCount);
-		$out->putVarInt($this->tradeTier);
-		$out->putActorUniqueId($this->traderActorUniqueId);
-		$out->putActorUniqueId($this->playerActorUniqueId);
-		$out->putString($this->displayName);
-		$out->putBool($this->isV2Trading);
-		$out->putBool($this->isEconomyTrading);
-		$out->put($this->offers->getEncodedNbt());
+	protected function encodePayload(ByteBufferWriter $out) : void{
+		Byte::writeUnsigned($out, $this->windowId);
+		Byte::writeUnsigned($out, $this->windowType);
+		VarInt::writeSignedInt($out, $this->windowSlotCount);
+		VarInt::writeSignedInt($out, $this->tradeTier);
+		CommonTypes::putActorUniqueId($out, $this->traderActorUniqueId);
+		CommonTypes::putActorUniqueId($out, $this->playerActorUniqueId);
+		CommonTypes::putString($out, $this->displayName);
+		CommonTypes::putBool($out, $this->isV2Trading);
+		CommonTypes::putBool($out, $this->isEconomyTrading);
+		$out->writeByteArray($this->offers->getEncodedNbt());
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

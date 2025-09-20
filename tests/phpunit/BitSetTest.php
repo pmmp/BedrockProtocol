@@ -15,8 +15,10 @@ declare(strict_types=1);
 namespace pocketmine\network\mcpe\protocol;
 
 use PHPUnit\Framework\TestCase;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\VarInt;
 use pocketmine\network\mcpe\protocol\serializer\BitSet;
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 
 class BitSetTest extends TestCase{
 
@@ -26,11 +28,11 @@ class BitSetTest extends TestCase{
 		$writeTest->set(0, true);
 		$writeTest->set(64, true);
 
-		$packetSerializer = PacketSerializer::encoder();
-		$writeTest->write($packetSerializer);
+		$out = new ByteBufferWriter();
+		$writeTest->write($out);
 
-		$packetSerializer = PacketSerializer::decoder($packetSerializer->getBuffer(), 0);
-		$readTest = BitSet::read($packetSerializer, 65);
+		$in = new ByteBufferReader($out->getData());
+		$readTest = BitSet::read($in, 65);
 
 		self::assertEqualBitSets($writeTest, $readTest);
 	}
@@ -41,34 +43,34 @@ class BitSetTest extends TestCase{
 
 		$test2->set(64, true);
 
-		$packetSerializer = PacketSerializer::encoder();
-		$test->write($packetSerializer);
+		$out1 = new ByteBufferWriter();
+		$test->write($out1);
 
-		$packetSerializer2 = PacketSerializer::encoder();
-		$test2->write($packetSerializer2);
+		$out2 = new ByteBufferWriter();
+		$test2->write($out2);
 
-		self::assertEquals($packetSerializer->getBuffer(), $packetSerializer2->getBuffer());
+		self::assertEquals($out1->getData(), $out2->getData());
 	}
 
 	public function testBitSetParts() : void{
 		$writeTest = new BitSet(128);
 		$writeTest->set(127, true);
 
-		$packetSerializer = PacketSerializer::encoder();
-		$writeTest->write($packetSerializer);
+		$out = new ByteBufferWriter();
+		$writeTest->write($out);
 
-		$packetSerializer = PacketSerializer::decoder($packetSerializer->getBuffer(), 0);
-		$readTest = BitSet::read($packetSerializer, 128);
+		$in = new ByteBufferReader($out->getData());
+		$readTest = BitSet::read($in, 128);
 
 		self::assertEqualBitSets($writeTest, $readTest);
 	}
 
 	public function testVarUnsignedLongCompatibility() : void{
-		$packetSerializer = PacketSerializer::encoder();
-		$packetSerializer->putUnsignedVarLong(0 | 1 << 63);
+		$out = new ByteBufferWriter();
+		VarInt::writeUnsignedLong($out, 1 << 63);
 
-		$packetSerializer = PacketSerializer::decoder($packetSerializer->getBuffer(), 0);
-		$readTest = BitSet::read($packetSerializer, 64);
+		$in = new ByteBufferReader($out->getData());
+		$readTest = BitSet::read($in, 64);
 
 		$expectedResult = new BitSet(64);
 		$expectedResult->set(63, true);

@@ -14,8 +14,11 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
+use pmmp\encoding\Byte;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
 use pocketmine\math\Vector3;
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 
 class MoveActorAbsolutePacket extends DataPacket implements ClientboundPacket, ServerboundPacket{
 	public const NETWORK_ID = ProtocolInfo::MOVE_ACTOR_ABSOLUTE_PACKET;
@@ -45,22 +48,22 @@ class MoveActorAbsolutePacket extends DataPacket implements ClientboundPacket, S
 		return $result;
 	}
 
-	protected function decodePayload(PacketSerializer $in) : void{
-		$this->actorRuntimeId = $in->getActorRuntimeId();
-		$this->flags = $in->getByte();
-		$this->position = $in->getVector3();
-		$this->pitch = $in->getRotationByte();
-		$this->yaw = $in->getRotationByte();
-		$this->headYaw = $in->getRotationByte();
+	protected function decodePayload(ByteBufferReader $in) : void{
+		$this->actorRuntimeId = CommonTypes::getActorRuntimeId($in);
+		$this->flags = Byte::readUnsigned($in);
+		$this->position = CommonTypes::getVector3($in);
+		$this->pitch = CommonTypes::getRotationByte($in);
+		$this->yaw = CommonTypes::getRotationByte($in);
+		$this->headYaw = CommonTypes::getRotationByte($in);
 	}
 
-	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putActorRuntimeId($this->actorRuntimeId);
-		$out->putByte($this->flags);
-		$out->putVector3($this->position);
-		$out->putRotationByte($this->pitch);
-		$out->putRotationByte($this->yaw);
-		$out->putRotationByte($this->headYaw);
+	protected function encodePayload(ByteBufferWriter $out) : void{
+		CommonTypes::putActorRuntimeId($out, $this->actorRuntimeId);
+		Byte::writeUnsigned($out, $this->flags);
+		CommonTypes::putVector3($out, $this->position);
+		CommonTypes::putRotationByte($out, $this->pitch);
+		CommonTypes::putRotationByte($out, $this->yaw);
+		CommonTypes::putRotationByte($out, $this->headYaw);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

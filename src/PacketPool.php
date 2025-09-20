@@ -14,8 +14,8 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\utils\Binary;
-use pocketmine\utils\BinaryDataException;
+use pmmp\encoding\DataDecodeException;
+use pmmp\encoding\VarInt;
 
 class PacketPool{
 	protected static ?PacketPool $instance = null;
@@ -251,10 +251,9 @@ class PacketPool{
 	}
 
 	/**
-	 * @throws BinaryDataException
+	 * @throws DataDecodeException
 	 */
 	public function getPacket(string $buffer) : ?Packet{
-		$offset = 0;
-		return $this->getPacketById(Binary::readUnsignedVarInt($buffer, $offset) & DataPacket::PID_MASK);
+		return $this->getPacketById(VarInt::unpackUnsignedInt($buffer) & DataPacket::PID_MASK);
 	}
 }

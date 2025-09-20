@@ -14,7 +14,9 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 
 /**
  * Updates "adventure settings". In vanilla, these flags apply to the whole world. This differs from abilities, which
@@ -54,20 +56,20 @@ class UpdateAdventureSettingsPacket extends DataPacket implements ClientboundPac
 
 	public function isAutoJump() : bool{ return $this->autoJump; }
 
-	protected function decodePayload(PacketSerializer $in) : void{
-		$this->noAttackingMobs = $in->getBool();
-		$this->noAttackingPlayers = $in->getBool();
-		$this->worldImmutable = $in->getBool();
-		$this->showNameTags = $in->getBool();
-		$this->autoJump = $in->getBool();
+	protected function decodePayload(ByteBufferReader $in) : void{
+		$this->noAttackingMobs = CommonTypes::getBool($in);
+		$this->noAttackingPlayers = CommonTypes::getBool($in);
+		$this->worldImmutable = CommonTypes::getBool($in);
+		$this->showNameTags = CommonTypes::getBool($in);
+		$this->autoJump = CommonTypes::getBool($in);
 	}
 
-	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putBool($this->noAttackingMobs);
-		$out->putBool($this->noAttackingPlayers);
-		$out->putBool($this->worldImmutable);
-		$out->putBool($this->showNameTags);
-		$out->putBool($this->autoJump);
+	protected function encodePayload(ByteBufferWriter $out) : void{
+		CommonTypes::putBool($out, $this->noAttackingMobs);
+		CommonTypes::putBool($out, $this->noAttackingPlayers);
+		CommonTypes::putBool($out, $this->worldImmutable);
+		CommonTypes::putBool($out, $this->showNameTags);
+		CommonTypes::putBool($out, $this->autoJump);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

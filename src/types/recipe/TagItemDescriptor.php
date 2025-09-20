@@ -14,7 +14,9 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol\types\recipe;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 use pocketmine\network\mcpe\protocol\types\GetTypeIdFromConstTrait;
 
 final class TagItemDescriptor implements ItemDescriptor{
@@ -28,13 +30,13 @@ final class TagItemDescriptor implements ItemDescriptor{
 
 	public function getTag() : string{ return $this->tag; }
 
-	public static function read(PacketSerializer $in) : self{
-		$tag = $in->getString();
+	public static function read(ByteBufferReader $in) : self{
+		$tag = CommonTypes::getString($in);
 
 		return new self($tag);
 	}
 
-	public function write(PacketSerializer $out) : void{
-		$out->putString($this->tag);
+	public function write(ByteBufferWriter $out) : void{
+		CommonTypes::putString($out, $this->tag);
 	}
 }

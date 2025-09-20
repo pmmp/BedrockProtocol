@@ -14,7 +14,10 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\Byte;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\VarInt;
 
 class ContainerSetDataPacket extends DataPacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::CONTAINER_SET_DATA_PACKET;
@@ -44,16 +47,16 @@ class ContainerSetDataPacket extends DataPacket implements ClientboundPacket{
 		return $result;
 	}
 
-	protected function decodePayload(PacketSerializer $in) : void{
-		$this->windowId = $in->getByte();
-		$this->property = $in->getVarInt();
-		$this->value = $in->getVarInt();
+	protected function decodePayload(ByteBufferReader $in) : void{
+		$this->windowId = Byte::readUnsigned($in);
+		$this->property = VarInt::readSignedInt($in);
+		$this->value = VarInt::readSignedInt($in);
 	}
 
-	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putByte($this->windowId);
-		$out->putVarInt($this->property);
-		$out->putVarInt($this->value);
+	protected function encodePayload(ByteBufferWriter $out) : void{
+		Byte::writeUnsigned($out, $this->windowId);
+		VarInt::writeSignedInt($out, $this->property);
+		VarInt::writeSignedInt($out, $this->value);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

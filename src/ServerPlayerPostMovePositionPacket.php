@@ -14,8 +14,10 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
 use pocketmine\math\Vector3;
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 
 class ServerPlayerPostMovePositionPacket extends DataPacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::SERVER_PLAYER_POST_MOVE_POSITION_PACKET;
@@ -33,12 +35,12 @@ class ServerPlayerPostMovePositionPacket extends DataPacket implements Clientbou
 
 	public function getPosition() : Vector3{ return $this->position; }
 
-	protected function decodePayload(PacketSerializer $in) : void{
-		$this->position = $in->getVector3();
+	protected function decodePayload(ByteBufferReader $in) : void{
+		$this->position = CommonTypes::getVector3($in);
 	}
 
-	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putVector3($this->position);
+	protected function encodePayload(ByteBufferWriter $out) : void{
+		CommonTypes::putVector3($out, $this->position);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

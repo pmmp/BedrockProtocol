@@ -14,8 +14,12 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol\types\biome;
 
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\LE;
+use pmmp\encoding\VarInt;
 use pocketmine\color\Color;
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 use pocketmine\network\mcpe\protocol\types\biome\chunkgen\BiomeDefinitionChunkGenData;
 use function count;
 
@@ -74,29 +78,29 @@ final class BiomeDefinitionData{
 
 	public function getChunkGenData() : ?BiomeDefinitionChunkGenData{ return $this->chunkGenData; }
 
-	public static function read(PacketSerializer $in) : self{
-		$nameIndex = $in->getLShort();
-		$id = $in->getLShort();
-		$temperature = $in->getLFloat();
-		$downfall = $in->getLFloat();
-		$redSporeDensity = $in->getLFloat();
-		$blueSporeDensity = $in->getLFloat();
-		$ashDensity = $in->getLFloat();
-		$whiteAshDensity = $in->getLFloat();
-		$depth = $in->getLFloat();
-		$scale = $in->getLFloat();
-		$mapWaterColor = Color::fromARGB($in->getLInt());
-		$rain = $in->getBool();
-		$tags = $in->readOptional(function() use ($in) : array{
+	public static function read(ByteBufferReader $in) : self{
+		$nameIndex = LE::readUnsignedShort($in);
+		$id = LE::readUnsignedShort($in);
+		$temperature = LE::readFloat($in);
+		$downfall = LE::readFloat($in);
+		$redSporeDensity = LE::readFloat($in);
+		$blueSporeDensity = LE::readFloat($in);
+		$ashDensity = LE::readFloat($in);
+		$whiteAshDensity = LE::readFloat($in);
+		$depth = LE::readFloat($in);
+		$scale = LE::readFloat($in);
+		$mapWaterColor = Color::fromARGB(LE::readUnsignedInt($in));
+		$rain = CommonTypes::getBool($in);
+		$tags = CommonTypes::readOptional($in, function() use ($in) : array{
 			$tagIndexes = [];
 
-			for($i = 0, $count = $in->getUnsignedVarInt(); $i < $count; ++$i){
-				$tagIndexes[] = $in->getLShort();
+			for($i = 0, $count = VarInt::readUnsignedInt($in); $i < $count; ++$i){
+				$tagIndexes[] = LE::readUnsignedShort($in);
 			}
 
 			return $tagIndexes;
 		});
-		$chunkGenData = $in->readOptional(fn() => BiomeDefinitionChunkGenData::read($in));
+		$chunkGenData = CommonTypes::readOptional($in, fn() => BiomeDefinitionChunkGenData::read($in));
 
 		return new self(
 			$nameIndex,
@@ -116,25 +120,25 @@ final class BiomeDefinitionData{
 		);
 	}
 
-	public function write(PacketSerializer $out) : void{
-		$out->putLShort($this->nameIndex);
-		$out->putLShort($this->id);
-		$out->putLFloat($this->temperature);
-		$out->putLFloat($this->downfall);
-		$out->putLFloat($this->redSporeDensity);
-		$out->putLFloat($this->blueSporeDensity);
-		$out->putLFloat($this->ashDensity);
-		$out->putLFloat($this->whiteAshDensity);
-		$out->putLFloat($this->depth);
-		$out->putLFloat($this->scale);
-		$out->putLInt($this->mapWaterColor->toARGB());
-		$out->putBool($this->rain);
-		$out->writeOptional($this->tagIndexes, function(array $tagIndexes) use ($out) : void{
-			$out->putUnsignedVarInt(count($tagIndexes));
+	public function write(ByteBufferWriter $out) : void{
+		LE::writeUnsignedShort($out, $this->nameIndex);
+		LE::writeUnsignedShort($out, $this->id);
+		LE::writeFloat($out, $this->temperature);
+		LE::writeFloat($out, $this->downfall);
+		LE::writeFloat($out, $this->redSporeDensity);
+		LE::writeFloat($out, $this->blueSporeDensity);
+		LE::writeFloat($out, $this->ashDensity);
+		LE::writeFloat($out, $this->whiteAshDensity);
+		LE::writeFloat($out, $this->depth);
+		LE::writeFloat($out, $this->scale);
+		LE::writeUnsignedInt($out, $this->mapWaterColor->toARGB());
+		CommonTypes::putBool($out, $this->rain);
+		CommonTypes::writeOptional($out, $this->tagIndexes, function(ByteBufferWriter $out, array $tagIndexes) : void{
+			VarInt::writeUnsignedInt($out, count($tagIndexes));
 			foreach($tagIndexes as $tag){
-				$out->putLShort($tag);
+				LE::writeUnsignedShort($out, $tag);
 			}
 		});
-		$out->writeOptional($this->chunkGenData, fn(BiomeDefinitionChunkGenData $chunkGenData) => $chunkGenData->write($out));
+		CommonTypes::writeOptional($out, $this->chunkGenData, fn(ByteBufferWriter $out, BiomeDefinitionChunkGenData $v) => $v->write($out));
 	}
 }

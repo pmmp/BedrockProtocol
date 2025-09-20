@@ -14,7 +14,11 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\Byte;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\VarInt;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 use pocketmine\network\mcpe\protocol\types\BlockPosition;
 
 class GameTestRequestPacket extends DataPacket implements ServerboundPacket{
@@ -73,24 +77,24 @@ class GameTestRequestPacket extends DataPacket implements ServerboundPacket{
 
 	public function getTestName() : string{ return $this->testName; }
 
-	protected function decodePayload(PacketSerializer $in) : void{
-		$this->maxTestsPerBatch = $in->getVarInt();
-		$this->repeatCount = $in->getVarInt();
-		$this->rotation = $in->getByte();
-		$this->stopOnFailure = $in->getBool();
-		$this->testPosition = $in->getSignedBlockPosition();
-		$this->testsPerRow = $in->getVarInt();
-		$this->testName = $in->getString();
+	protected function decodePayload(ByteBufferReader $in) : void{
+		$this->maxTestsPerBatch = VarInt::readSignedInt($in);
+		$this->repeatCount = VarInt::readSignedInt($in);
+		$this->rotation = Byte::readUnsigned($in);
+		$this->stopOnFailure = CommonTypes::getBool($in);
+		$this->testPosition = CommonTypes::getSignedBlockPosition($in);
+		$this->testsPerRow = VarInt::readSignedInt($in);
+		$this->testName = CommonTypes::getString($in);
 	}
 
-	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putVarInt($this->maxTestsPerBatch);
-		$out->putVarInt($this->repeatCount);
-		$out->putByte($this->rotation);
-		$out->putBool($this->stopOnFailure);
-		$out->putSignedBlockPosition($this->testPosition);
-		$out->putVarInt($this->testsPerRow);
-		$out->putString($this->testName);
+	protected function encodePayload(ByteBufferWriter $out) : void{
+		VarInt::writeSignedInt($out, $this->maxTestsPerBatch);
+		VarInt::writeSignedInt($out, $this->repeatCount);
+		Byte::writeUnsigned($out, $this->rotation);
+		CommonTypes::putBool($out, $this->stopOnFailure);
+		CommonTypes::putSignedBlockPosition($out, $this->testPosition);
+		VarInt::writeSignedInt($out, $this->testsPerRow);
+		CommonTypes::putString($out, $this->testName);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

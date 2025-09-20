@@ -14,7 +14,9 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 
 /**
  * Displays a toast notification on the client's screen (usually a little box at the top, like the one shown when
@@ -40,14 +42,14 @@ class ToastRequestPacket extends DataPacket implements ClientboundPacket{
 
 	public function getBody() : string{ return $this->body; }
 
-	protected function decodePayload(PacketSerializer $in) : void{
-		$this->title = $in->getString();
-		$this->body = $in->getString();
+	protected function decodePayload(ByteBufferReader $in) : void{
+		$this->title = CommonTypes::getString($in);
+		$this->body = CommonTypes::getString($in);
 	}
 
-	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putString($this->title);
-		$out->putString($this->body);
+	protected function encodePayload(ByteBufferWriter $out) : void{
+		CommonTypes::putString($out, $this->title);
+		CommonTypes::putString($out, $this->body);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

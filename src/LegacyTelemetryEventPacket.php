@@ -52,22 +52,22 @@ class LegacyTelemetryEventPacket extends DataPacket implements ClientboundPacket
 	public const TYPE_CAREFUL_RESTORATION = 30;
 	public const TYPE_ITEM_USED = 31;
 
-	public int $playerRuntimeId;
-	public int $eventData;
-	public int $type;
+	public int $playerUniqueId;
+	public int $eventType;
+	public int $usePlayerId;
 
 	protected function decodePayload(PacketSerializer $in) : void{
-		$this->playerRuntimeId = $in->getActorRuntimeId();
-		$this->eventData = $in->getVarInt();
-		$this->type = $in->getByte();
+		$this->playerUniqueId = $in->getActorUniqueId();
+		$this->eventType = $in->getVarInt();
+		$this->usePlayerId = $in->getByte();
 
 		//TODO: nice confusing mess
 	}
 
 	protected function encodePayload(PacketSerializer $out) : void{
-		$out->putActorRuntimeId($this->playerRuntimeId);
-		$out->putVarInt($this->eventData);
-		$out->putByte($this->type);
+		$out->putActorUniqueId($this->playerUniqueId);
+		$out->putVarInt($this->eventType);
+		$out->putByte($this->usePlayerId);
 
 		//TODO: also nice confusing mess
 	}

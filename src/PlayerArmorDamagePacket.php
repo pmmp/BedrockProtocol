@@ -40,6 +40,14 @@ class PlayerArmorDamagePacket extends DataPacket implements ClientboundPacket{
 		return $result;
 	}
 
+	/**
+	 * @return ArmorSlotAndDamagePair[]
+	 * @phpstan-return list<ArmorSlotAndDamagePair>
+	 */
+	public function getArmorSlotAndDamagePairs() : array{
+		return $this->armorSlotAndDamagePairs;
+	}
+
 	protected function decodePayload(ByteBufferReader $in) : void{
 		for($i = 0, $count = VarInt::readUnsignedInt($in); $i < $count; ++$i){
 			$this->armorSlotAndDamagePairs[] = ArmorSlotAndDamagePair::read($in);

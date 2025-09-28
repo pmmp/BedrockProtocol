@@ -16,14 +16,14 @@ namespace pocketmine\network\mcpe\protocol\types;
 
 use pmmp\encoding\ByteBufferWriter;
 
-abstract class GameRule{
+abstract class PackSetting{
 	public function __construct(
-		private bool $isPlayerModifiable
+		private readonly string $name,
 	){}
 
-	public function isPlayerModifiable() : bool{ return $this->isPlayerModifiable; }
+	public function getName() : string{ return $this->name; }
 
-	abstract public function getTypeId() : int;
+	abstract public function getTypeId() : PackSettingType;
 
-	abstract public function encode(ByteBufferWriter $out, bool $isStartGame) : void;
+	abstract public function write(ByteBufferWriter $out) : void;
 }

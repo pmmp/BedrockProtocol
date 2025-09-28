@@ -34,10 +34,7 @@ final class BiomeDefinitionData{
 		private int $id,
 		private float $temperature,
 		private float $downfall,
-		private float $redSporeDensity,
-		private float $blueSporeDensity,
-		private float $ashDensity,
-		private float $whiteAshDensity,
+		private float $foliageSnow,
 		private float $depth,
 		private float $scale,
 		private Color $mapWaterColor,
@@ -54,13 +51,7 @@ final class BiomeDefinitionData{
 
 	public function getDownfall() : float{ return $this->downfall; }
 
-	public function getRedSporeDensity() : float{ return $this->redSporeDensity; }
-
-	public function getBlueSporeDensity() : float{ return $this->blueSporeDensity; }
-
-	public function getAshDensity() : float{ return $this->ashDensity; }
-
-	public function getWhiteAshDensity() : float{ return $this->whiteAshDensity; }
+	public function getFoliageSnow() : float{ return $this->foliageSnow; }
 
 	public function getDepth() : float{ return $this->depth; }
 
@@ -83,10 +74,7 @@ final class BiomeDefinitionData{
 		$id = LE::readUnsignedShort($in);
 		$temperature = LE::readFloat($in);
 		$downfall = LE::readFloat($in);
-		$redSporeDensity = LE::readFloat($in);
-		$blueSporeDensity = LE::readFloat($in);
-		$ashDensity = LE::readFloat($in);
-		$whiteAshDensity = LE::readFloat($in);
+		$foliageSnow = LE::readFloat($in);
 		$depth = LE::readFloat($in);
 		$scale = LE::readFloat($in);
 		$mapWaterColor = Color::fromARGB(LE::readUnsignedInt($in));
@@ -107,10 +95,7 @@ final class BiomeDefinitionData{
 			$id,
 			$temperature,
 			$downfall,
-			$redSporeDensity,
-			$blueSporeDensity,
-			$ashDensity,
-			$whiteAshDensity,
+			$foliageSnow,
 			$depth,
 			$scale,
 			$mapWaterColor,
@@ -125,10 +110,7 @@ final class BiomeDefinitionData{
 		LE::writeUnsignedShort($out, $this->id);
 		LE::writeFloat($out, $this->temperature);
 		LE::writeFloat($out, $this->downfall);
-		LE::writeFloat($out, $this->redSporeDensity);
-		LE::writeFloat($out, $this->blueSporeDensity);
-		LE::writeFloat($out, $this->ashDensity);
-		LE::writeFloat($out, $this->whiteAshDensity);
+		LE::writeFloat($out, $this->foliageSnow);
 		LE::writeFloat($out, $this->depth);
 		LE::writeFloat($out, $this->scale);
 		LE::writeUnsignedInt($out, $this->mapWaterColor->toARGB());

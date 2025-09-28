@@ -116,4 +116,5 @@ final class ParticleIds{
 	public const PALE_OAK_LEAVES = 95;
 	public const EYEBLOSSOM_OPEN = 96;
 	public const EYEBLOSSOM_CLOSE = 97;
+	public const GREEN_FLAME = 98;
 }

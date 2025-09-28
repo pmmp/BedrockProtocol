@@ -31,6 +31,7 @@ class UseItemTransactionData extends TransactionData{
 	public const ACTION_CLICK_BLOCK = 0;
 	public const ACTION_CLICK_AIR = 1;
 	public const ACTION_BREAK_BLOCK = 2;
+	public const ACTION_USE_AS_ATTACK = 3;
 
 	private int $actionType;
 	private TriggerType $triggerType;

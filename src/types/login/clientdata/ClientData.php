@@ -114,9 +114,6 @@ final class ClientData{
 	public string $PlatformUserId = ""; //xbox-only, apparently
 
 	/** @required */
-	public string $PlayFabId;
-
-	/** @required */
 	public bool $PremiumSkin = false;
 
 	/** @required */

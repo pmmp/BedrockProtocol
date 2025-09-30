@@ -55,6 +55,7 @@ final class ClientDataToSkinDataHelper{
 		}
 		return new SkinData(
 			$clientData->SkinId,
+			"",
 			self::safeB64Decode($clientData->SkinResourcePatch, "SkinResourcePatch"),
 			new SkinImage($clientData->SkinImageHeight, $clientData->SkinImageWidth, self::safeB64Decode($clientData->SkinData, "SkinData")),
 			$animations,

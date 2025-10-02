@@ -14,16 +14,12 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol\types;
 
-use pmmp\encoding\ByteBufferWriter;
+enum ArmorSlot : int{
+	use PacketIntEnumTrait;
 
-abstract class GameRule{
-	public function __construct(
-		private bool $isPlayerModifiable
-	){}
-
-	public function isPlayerModifiable() : bool{ return $this->isPlayerModifiable; }
-
-	abstract public function getTypeId() : int;
-
-	abstract public function encode(ByteBufferWriter $out, bool $isStartGame) : void;
+	case HEAD = 0;
+	case TORSO = 1;
+	case LEGS = 2;
+	case FEET = 3;
+	case BODY = 4;
 }

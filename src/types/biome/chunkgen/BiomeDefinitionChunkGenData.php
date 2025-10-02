@@ -26,6 +26,7 @@ final class BiomeDefinitionChunkGenData{
 		private ?BiomeMountainParamsData $mountainParams,
 		private ?BiomeSurfaceMaterialAdjustmentData $surfaceMaterialAdjustment,
 		private ?BiomeSurfaceMaterialData $surfaceMaterial,
+		private bool $defaultOverworldSurface,
 		private bool $swampSurface,
 		private bool $frozenOceanSurface,
 		private bool $theEndSurface,
@@ -45,6 +46,8 @@ final class BiomeDefinitionChunkGenData{
 	public function getSurfaceMaterialAdjustment() : ?BiomeSurfaceMaterialAdjustmentData{ return $this->surfaceMaterialAdjustment; }
 
 	public function getSurfaceMaterial() : ?BiomeSurfaceMaterialData{ return $this->surfaceMaterial; }
+
+	public function hasDefaultOverworldSurface() : bool{ return $this->defaultOverworldSurface; }
 
 	public function hasSwampSurface() : bool{ return $this->swampSurface; }
 
@@ -68,6 +71,7 @@ final class BiomeDefinitionChunkGenData{
 		$mountainParams = CommonTypes::readOptional($in, fn() => BiomeMountainParamsData::read($in));
 		$surfaceMaterialAdjustment = CommonTypes::readOptional($in, fn() => BiomeSurfaceMaterialAdjustmentData::read($in));
 		$surfaceMaterial = CommonTypes::readOptional($in, fn() => BiomeSurfaceMaterialData::read($in));
+		$defaultOverworldSurface = CommonTypes::getBool($in);
 		$swampSurface = CommonTypes::getBool($in);
 		$frozenOceanSurface = CommonTypes::getBool($in);
 		$theEndSurface = CommonTypes::getBool($in);
@@ -83,6 +87,7 @@ final class BiomeDefinitionChunkGenData{
 			$mountainParams,
 			$surfaceMaterialAdjustment,
 			$surfaceMaterial,
+			$defaultOverworldSurface,
 			$swampSurface,
 			$frozenOceanSurface,
 			$theEndSurface,
@@ -100,6 +105,7 @@ final class BiomeDefinitionChunkGenData{
 		CommonTypes::writeOptional($out, $this->mountainParams, fn(ByteBufferWriter $out, BiomeMountainParamsData $v) => $v->write($out));
 		CommonTypes::writeOptional($out, $this->surfaceMaterialAdjustment, fn(ByteBufferWriter $out, BiomeSurfaceMaterialAdjustmentData $v) => $v->write($out));
 		CommonTypes::writeOptional($out, $this->surfaceMaterial, fn(ByteBufferWriter $out, BiomeSurfaceMaterialData $v) => $v->write($out));
+		CommonTypes::putBool($out, $this->defaultOverworldSurface);
 		CommonTypes::putBool($out, $this->swampSurface);
 		CommonTypes::putBool($out, $this->frozenOceanSurface);
 		CommonTypes::putBool($out, $this->theEndSurface);

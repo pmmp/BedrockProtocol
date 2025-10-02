@@ -552,6 +552,9 @@ final class LevelSoundEvent{
 	public const UNSADDLE = 560;
 	public const ARMOR_EQUIP_COPPER = 561;
 	public const RECORD_LAVA_CHICKEN = 562;
+	public const PLACE_ITEM = 563;
+	public const SINGLE_ITEM_SWAP = 564;
+	public const MULTI_ITEM_SWAP = 565;
 
 	//The following aliases are kept for backwards compatibility only
 	public const SCULK_SENSOR_POWER_ON = self::POWER_ON_SCULK_SENSOR;

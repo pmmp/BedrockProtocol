@@ -40,11 +40,11 @@ class GameRulesChangedPacket extends DataPacket implements ClientboundPacket{
 	}
 
 	protected function decodePayload(ByteBufferReader $in) : void{
-		$this->gameRules = CommonTypes::getGameRules($in);
+		$this->gameRules = CommonTypes::getGameRules($in, false);
 	}
 
 	protected function encodePayload(ByteBufferWriter $out) : void{
-		CommonTypes::putGameRules($out, $this->gameRules);
+		CommonTypes::putGameRules($out, $this->gameRules, false);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

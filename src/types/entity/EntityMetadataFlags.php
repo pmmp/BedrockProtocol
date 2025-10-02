@@ -141,9 +141,13 @@ final class EntityMetadataFlags{
 	public const RENDER_WHEN_INVISIBLE = 119;
 	public const ROTATION_AXIS_ALIGNED = 120;
 	public const COLLIDABLE = 121;
-	public const WASD_AIR_CONTROLLED = 122;
+	public const WASD_FREE_CAMERA_CONTROLLED = 122;
 	public const DOES_SERVER_AUTH_ONLY_DISMOUNT = 123;
 	public const BODY_ROTATION_ALWAYS_FOLLOWS_HEAD = 124;
+	public const CAN_USE_VERTICAL_MOVEMENT_ACTION = 125;
 
-	public const NUMBER_OF_FLAGS = 125;
+	public const NUMBER_OF_FLAGS = 126;
+
+	//The following aliases are kept for backwards compatibility only
+	public const WASD_AIR_CONTROLLED = self::WASD_FREE_CAMERA_CONTROLLED;
 }

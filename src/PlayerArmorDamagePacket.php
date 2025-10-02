@@ -14,90 +14,51 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pmmp\encoding\Byte;
 use pmmp\encoding\ByteBufferReader;
 use pmmp\encoding\ByteBufferWriter;
 use pmmp\encoding\VarInt;
+use pocketmine\network\mcpe\protocol\types\ArmorSlotAndDamagePair;
+use function count;
 
 class PlayerArmorDamagePacket extends DataPacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::PLAYER_ARMOR_DAMAGE_PACKET;
 
-	private const FLAG_HEAD = 0;
-	private const FLAG_CHEST = 1;
-	private const FLAG_LEGS = 2;
-	private const FLAG_FEET = 3;
-	private const FLAG_BODY = 4;
-
-	private ?int $headSlotDamage;
-	private ?int $chestSlotDamage;
-	private ?int $legsSlotDamage;
-	private ?int $feetSlotDamage;
-	private ?int $bodySlotDamage;
+	/**
+	 * @var ArmorSlotAndDamagePair[]
+	 * @phpstan-var list<ArmorSlotAndDamagePair>
+	 */
+	private array $armorSlotAndDamagePairs = [];
 
 	/**
 	 * @generate-create-func
+	 * @param ArmorSlotAndDamagePair[] $armorSlotAndDamagePairs
+	 * @phpstan-param list<ArmorSlotAndDamagePair> $armorSlotAndDamagePairs
 	 */
-	public static function create(?int $headSlotDamage, ?int $chestSlotDamage, ?int $legsSlotDamage, ?int $feetSlotDamage, ?int $bodySlotDamage) : self{
+	public static function create(array $armorSlotAndDamagePairs) : self{
 		$result = new self;
-		$result->headSlotDamage = $headSlotDamage;
-		$result->chestSlotDamage = $chestSlotDamage;
-		$result->legsSlotDamage = $legsSlotDamage;
-		$result->feetSlotDamage = $feetSlotDamage;
-		$result->bodySlotDamage = $bodySlotDamage;
+		$result->armorSlotAndDamagePairs = $armorSlotAndDamagePairs;
 		return $result;
 	}
 
-	public function getHeadSlotDamage() : ?int{ return $this->headSlotDamage; }
-
-	public function getChestSlotDamage() : ?int{ return $this->chestSlotDamage; }
-
-	public function getLegsSlotDamage() : ?int{ return $this->legsSlotDamage; }
-
-	public function getFeetSlotDamage() : ?int{ return $this->feetSlotDamage; }
-
-	public function getBodySlotDamage() : ?int{ return $this->bodySlotDamage; }
-
-	private function maybeReadDamage(int $flags, int $flag, ByteBufferReader $in) : ?int{
-		if(($flags & (1 << $flag)) !== 0){
-			return VarInt::readSignedInt($in);
-		}
-		return null;
+	/**
+	 * @return ArmorSlotAndDamagePair[]
+	 * @phpstan-return list<ArmorSlotAndDamagePair>
+	 */
+	public function getArmorSlotAndDamagePairs() : array{
+		return $this->armorSlotAndDamagePairs;
 	}
 
 	protected function decodePayload(ByteBufferReader $in) : void{
-		$flags = Byte::readUnsigned($in);
-
-		$this->headSlotDamage = $this->maybeReadDamage($flags, self::FLAG_HEAD, $in);
-		$this->chestSlotDamage = $this->maybeReadDamage($flags, self::FLAG_CHEST, $in);
-		$this->legsSlotDamage = $this->maybeReadDamage($flags, self::FLAG_LEGS, $in);
-		$this->feetSlotDamage = $this->maybeReadDamage($flags, self::FLAG_FEET, $in);
-		$this->bodySlotDamage = $this->maybeReadDamage($flags, self::FLAG_BODY, $in);
-	}
-
-	private function composeFlag(?int $field, int $flag) : int{
-		return $field !== null ? (1 << $flag) : 0;
-	}
-
-	private function maybeWriteDamage(?int $field, ByteBufferWriter $out) : void{
-		if($field !== null){
-			VarInt::writeSignedInt($out, $field);
+		for($i = 0, $count = VarInt::readUnsignedInt($in); $i < $count; ++$i){
+			$this->armorSlotAndDamagePairs[] = ArmorSlotAndDamagePair::read($in);
 		}
 	}
 
 	protected function encodePayload(ByteBufferWriter $out) : void{
-		Byte::writeUnsigned($out,
-			$this->composeFlag($this->headSlotDamage, self::FLAG_HEAD) |
-			$this->composeFlag($this->chestSlotDamage, self::FLAG_CHEST) |
-			$this->composeFlag($this->legsSlotDamage, self::FLAG_LEGS) |
-			$this->composeFlag($this->feetSlotDamage, self::FLAG_FEET) |
-			$this->composeFlag($this->bodySlotDamage, self::FLAG_BODY)
-		);
-
-		$this->maybeWriteDamage($this->headSlotDamage, $out);
-		$this->maybeWriteDamage($this->chestSlotDamage, $out);
-		$this->maybeWriteDamage($this->legsSlotDamage, $out);
-		$this->maybeWriteDamage($this->feetSlotDamage, $out);
-		$this->maybeWriteDamage($this->bodySlotDamage, $out);
+		VarInt::writeUnsignedInt($out, count($this->armorSlotAndDamagePairs));
+		foreach($this->armorSlotAndDamagePairs as $pair){
+			$pair->write($out);
+		}
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

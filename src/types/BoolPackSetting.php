@@ -18,15 +18,13 @@ use pmmp\encoding\ByteBufferReader;
 use pmmp\encoding\ByteBufferWriter;
 use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 
-final class BoolGameRule extends GameRule{
-	use GetTypeIdFromConstTrait;
-
-	public const ID = GameRuleType::BOOL;
+final class BoolPackSetting extends PackSetting{
+	public const ID = PackSettingType::BOOL;
 
 	private bool $value;
 
-	public function __construct(bool $value, bool $isPlayerModifiable){
-		parent::__construct($isPlayerModifiable);
+	public function __construct(string $name, bool $value){
+		parent::__construct($name);
 		$this->value = $value;
 	}
 
@@ -34,11 +32,15 @@ final class BoolGameRule extends GameRule{
 		return $this->value;
 	}
 
-	public function encode(ByteBufferWriter $out, bool $isStartGame) : void{
+	public function getTypeId() : PackSettingType{
+		return self::ID;
+	}
+
+	public function write(ByteBufferWriter $out) : void{
 		CommonTypes::putBool($out, $this->value);
 	}
 
-	public static function decode(ByteBufferReader $in, bool $isPlayerModifiable) : self{
-		return new self(CommonTypes::getBool($in), $isPlayerModifiable);
+	public static function read(ByteBufferReader $in, string $name) : self{
+		return new self($name, CommonTypes::getBool($in));
 	}
 }

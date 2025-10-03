@@ -147,7 +147,4 @@ final class EntityMetadataFlags{
 	public const CAN_USE_VERTICAL_MOVEMENT_ACTION = 125;
 
 	public const NUMBER_OF_FLAGS = 126;
-
-	//The following aliases are kept for backwards compatibility only
-	public const WASD_AIR_CONTROLLED = self::WASD_FREE_CAMERA_CONTROLLED;
 }

@@ -55,71 +55,6 @@ const MISSING = [
 	198 => "lt.reaction.salt",
 	222 => "spawn.baby",
 ];
-const ALIASES = [
-	"POWER_ON_SCULK_SENSOR" => [
-		"SCULK_SENSOR_POWER_ON"
-	],
-	"POWER_OFF_SCULK_SENSOR" => [
-		"SCULK_SENSOR_POWER_OFF"
-	],
-	"CAULDRON_DRIP_WATER_POINTED_DRIPSTONE" => [
-		"POINTED_DRIPSTONE_CAULDRON_DRIP_WATER"
-	],
-	"CAULDRON_DRIP_LAVA_POINTED_DRIPSTONE" => [
-		"POINTED_DRIPSTONE_CAULDRON_DRIP_LAVA"
-	],
-	"DRIP_WATER_POINTED_DRIPSTONE" => [
-		"POINTED_DRIPSTONE_DRIP_WATER"
-	],
-	"DRIP_LAVA_POINTED_DRIPSTONE" => [
-		"POINTED_DRIPSTONE_DRIP_LAVA"
-	],
-	"PICK_BERRIES_CAVE_VINES" => [
-		"CAVE_VINES_PICK_BERRIES"
-	],
-	"TILT_DOWN_BIG_DRIPLEAF" => [
-		"BIG_DRIPLEAF_TILT_DOWN"
-	],
-	"TILT_UP_BIG_DRIPLEAF" => [
-		"BIG_DRIPLEAF_TILT_UP"
-	],
-	"MOB_PLAYER_HURT_DROWN" => [
-		"PLAYER_HURT_DROWN"
-	],
-	"MOB_PLAYER_HURT_ON_FIRE" => [
-		"PLAYER_HURT_ON_FIRE"
-	],
-	"MOB_PLAYER_HURT_FREEZE" => [
-		"PLAYER_HURT_FREEZE"
-	],
-	"ITEM_SPYGLASS_USE" => [
-		"USE_SPYGLASS"
-	],
-	"ITEM_SPYGLASS_STOP_USING" => [
-		"STOP_USING_SPYGLASS"
-	],
-	"CHIME_AMETHYST_BLOCK" => [
-		"AMETHYST_BLOCK_CHIME"
-	],
-	"BLOCK_SCULK_CATALYST_BLOOM" => [
-		"SCULK_CATALYST_BLOOM"
-	],
-	"BLOCK_SCULK_SHRIEKER_SHRIEK" => [
-		"SCULK_SHRIEKER_SHRIEK"
-	],
-	"NEARBY_CLOSE" => [
-		"WARDEN_NEARBY_CLOSE"
-	],
-	"NEARBY_CLOSER" => [
-		"WARDEN_NEARBY_CLOSER"
-	],
-	"NEARBY_CLOSEST" => [
-		"WARDEN_NEARBY_CLOSEST"
-	],
-	"AGITATED" => [
-		"WARDEN_SLIGHTLY_ANGRY"
-	]
-];
 
 foreach(MISSING as $id => $name){
 	if(!isset($list[$id])){
@@ -173,12 +108,6 @@ foreach($list as $id => $name){
 	fwrite($output, "\tpublic const $constantName = $id;\n");
 }
 fwrite($output, "\n");
-fwrite($output, "\t//The following aliases are kept for backwards compatibility only\n");
-foreach(ALIASES as $origin => $aliases){
-	foreach($aliases as $alias){
-		fwrite($output, "\tpublic const $alias = self::$origin;\n");
-	}
-}
 
 fwrite($output, "}\n");
 fclose($output);

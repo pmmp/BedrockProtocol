@@ -82,6 +82,7 @@ final class EntityIds{
 	public const HUSK = "minecraft:husk";
 	public const ICE_BOMB = "minecraft:ice_bomb";
 	public const IRON_GOLEM = "minecraft:iron_golem";
+	public const COPPER_GOLEM = "minecraft:copper_golem";
 	public const ITEM = "minecraft:item";
 	public const LEASH_KNOT = "minecraft:leash_knot";
 	public const LIGHTNING_BOLT = "minecraft:lightning_bolt";

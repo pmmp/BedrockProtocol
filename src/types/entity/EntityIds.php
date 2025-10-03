@@ -47,6 +47,7 @@ final class EntityIds{
 	public const CHICKEN = "minecraft:chicken";
 	public const COD = "minecraft:cod";
 	public const COMMAND_BLOCK_MINECART = "minecraft:command_block_minecart";
+	public const COPPER_GOLEM = "minecraft:copper_golem";
 	public const COW = "minecraft:cow";
 	public const CREAKING = "minecraft:creaking";
 	public const CREEPER = "minecraft:creeper";

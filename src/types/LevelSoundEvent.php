@@ -553,8 +553,8 @@ final class LevelSoundEvent{
 	public const ARMOR_EQUIP_COPPER = 561;
 	public const RECORD_LAVA_CHICKEN = 562;
 	public const PLACE_ITEM = 563;
-	public const SINGLE_ITEM_SWAP = 564;
-	public const MULTI_ITEM_SWAP = 565;
+	public const SINGLE_SWAP = 564;
+	public const MULTI_SWAP = 565;
 
 	//The following aliases are kept for backwards compatibility only
 	public const SCULK_SENSOR_POWER_ON = self::POWER_ON_SCULK_SENSOR;
@@ -578,4 +578,6 @@ final class LevelSoundEvent{
 	public const WARDEN_NEARBY_CLOSER = self::NEARBY_CLOSER;
 	public const WARDEN_NEARBY_CLOSEST = self::NEARBY_CLOSEST;
 	public const WARDEN_SLIGHTLY_ANGRY = self::AGITATED;
+	public const SINGLE_ITEM_SWAP = self::SINGLE_SWAP;
+	public const MULTI_ITEM_SWAP = self::MULTI_SWAP;
 }

@@ -40,4 +40,8 @@ final class XboxAuthJwtBody extends JwtBodyRfc7519{
 
 	/** @required */
 	public string $cpk; // the public key that was used to sign the "client properties" token
+
+	public string $pid = ""; // PlayStation Network user ID
+
+	public string $pname = ""; // PlayStation Network username
 }

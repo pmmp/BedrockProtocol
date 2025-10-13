@@ -51,4 +51,18 @@ class CommandParameter{
 		$result->enum = $enum;
 		return $result;
 	}
+
+	/**
+	 * @generate-create-func
+	 */
+	public static function allFields(string $paramName, int $paramType, bool $isOptional, int $flags, ?CommandEnum $enum, ?string $postfix) : self{
+		$result = new self;
+		$result->paramName = $paramName;
+		$result->paramType = $paramType;
+		$result->isOptional = $isOptional;
+		$result->flags = $flags;
+		$result->enum = $enum;
+		$result->postfix = $postfix;
+		return $result;
+	}
 }

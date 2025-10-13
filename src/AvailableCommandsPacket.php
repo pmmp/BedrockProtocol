@@ -29,9 +29,11 @@ use pocketmine\network\mcpe\protocol\types\command\raw\CommandSoftEnumRawData;
 use function count;
 
 /**
- * Note: This packet is very complex to build.
- * Consider using {@link AvailableCommandsPacketAssembler} for a more intuitive API, or
- * {@link AvailableCommandsPacketDisassembler} to link decoded data together into an intuitive API.
+ * Note: It's not recommended to work with this packet directly. It's very complicated, and it's very easy to crash the
+ * client if the packet data is incorrect in any way.
+ *
+ * To assemble a packet for sending from high-level structures, use {@link AvailableCommandsPacketAssembler}.
+ * To disassemble a received packet into high-level structures, use {@link AvailableCommandsPacketDisassembler}.
  */
 final class AvailableCommandsPacket extends DataPacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::AVAILABLE_COMMANDS_PACKET;

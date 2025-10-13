@@ -15,7 +15,6 @@ declare(strict_types=1);
 namespace pocketmine\network\mcpe\protocol\types\command;
 
 use function count;
-use function is_array;
 use function is_int;
 
 class CommandEnum{

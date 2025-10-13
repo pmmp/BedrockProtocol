@@ -41,18 +41,13 @@ class CommandEnum{
 		if($this->isSoft && count($this->constraints) > 0){
 			throw new \InvalidArgumentException("Cannot add constraints for the values of a soft enum");
 		}
-		foreach($this->constraints as $valueOffset => $eachConstraints){
+		foreach($this->constraints as $valueOffset => $constraintSet){
 			if(!isset($this->enumValues[$valueOffset])){
 				throw new \InvalidArgumentException("No such enum value offset $valueOffset");
 			}
-			foreach($eachConstraints as $constraintSetOffset => $constraintSet){
-				if(!is_array($constraintSet)){
-					throw new \InvalidArgumentException("Expected an array of ints for constraints[$valueOffset][$constraintSetOffset]");
-				}
-				foreach($constraintSet as $constraintOffset => $constraint){
-					if(!is_int($constraint)){
-						throw new \InvalidArgumentException("Expected int for constraints[$valueOffset][$constraintSetOffset][$constraintOffset]");
-					}
+			foreach($constraintSet as $constraintOffset => $constraint){
+				if(!is_int($constraint)){
+					throw new \InvalidArgumentException("Expected int for constraints[$valueOffset][$constraintOffset]");
 				}
 			}
 		}

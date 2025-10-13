@@ -22,12 +22,12 @@ use pocketmine\network\mcpe\protocol\types\command\CommandData;
 use pocketmine\network\mcpe\protocol\types\command\CommandHardEnum;
 use pocketmine\network\mcpe\protocol\types\command\CommandOverload;
 use pocketmine\network\mcpe\protocol\types\command\CommandParameter;
+use pocketmine\network\mcpe\protocol\types\command\CommandSoftEnum;
 use pocketmine\network\mcpe\protocol\types\command\ConstrainedEnumValue;
 use pocketmine\network\mcpe\protocol\types\command\raw\ChainedSubCommandRawData;
 use pocketmine\network\mcpe\protocol\types\command\raw\CommandEnumConstraintRawData;
 use pocketmine\network\mcpe\protocol\types\command\raw\CommandEnumRawData;
 use pocketmine\network\mcpe\protocol\types\command\raw\CommandRawData;
-use pocketmine\network\mcpe\protocol\types\command\CommandSoftEnum;
 
 /**
  * Disassembles low-level AvailableCommandsPacket structures into high-level commands data that can be operated on more

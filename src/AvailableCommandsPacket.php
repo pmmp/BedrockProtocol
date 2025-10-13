@@ -21,11 +21,11 @@ use pocketmine\network\mcpe\protocol\serializer\AvailableCommandsPacketAssembler
 use pocketmine\network\mcpe\protocol\serializer\AvailableCommandsPacketDisassembler;
 use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 use pocketmine\network\mcpe\protocol\types\command\CommandParameterTypes as ArgTypes;
+use pocketmine\network\mcpe\protocol\types\command\CommandSoftEnum;
 use pocketmine\network\mcpe\protocol\types\command\raw\ChainedSubCommandRawData;
 use pocketmine\network\mcpe\protocol\types\command\raw\CommandEnumConstraintRawData;
 use pocketmine\network\mcpe\protocol\types\command\raw\CommandEnumRawData;
 use pocketmine\network\mcpe\protocol\types\command\raw\CommandRawData;
-use pocketmine\network\mcpe\protocol\types\command\CommandSoftEnum;
 use function count;
 
 /**

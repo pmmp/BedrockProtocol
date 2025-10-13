@@ -37,14 +37,8 @@ final class AvailableCommandsPacketDisassembler{
 	private AvailableCommandsPacket $packet;
 
 	/**
-	 * @var CommandData[]
-	 * @phpstan-var list<CommandData>
-	 */
-	private array $commandData = [];
-
-	/**
-	 * @var CommandEnumConstraintRawData[][][]
-	 * @phpstan-var array<int, array<int, list<CommandEnumConstraintRawData>>>
+	 * @var CommandEnumConstraintRawData[][]
+	 * @phpstan-var array<int, array<int, CommandEnumConstraintRawData>>
 	 */
 	private array $enumConstraintIndex = [];
 
@@ -68,7 +62,7 @@ final class AvailableCommandsPacketDisassembler{
 	 * @var string[]
 	 * @phpstan-var array<int, string>
 	 */
-	private array $unusedEnumValues;
+	private array $unusedHardEnumValues;
 	/**
 	 * @var string[]
 	 * @phpstan-var array<int, string>
@@ -98,7 +92,7 @@ final class AvailableCommandsPacketDisassembler{
 
 	private function __construct(AvailableCommandsPacket $packet){
 		$this->packet = $packet;
-		$this->unusedEnumValues = $packet->getEnumValues();
+		$this->unusedHardEnumValues = $packet->getEnumValues();
 		$this->unusedHardEnums = $packet->getEnums();
 		$this->unusedSoftEnums = $packet->getSoftEnums();
 		$this->unusedPostfixes = $packet->getPostfixes();
@@ -110,22 +104,45 @@ final class AvailableCommandsPacketDisassembler{
 		$result = new self($packet);
 
 		//this lets us put the data for the constraints inside the CommandEnum objects directly
-		foreach($packet->getEnumConstraints() as $rawConstraintData){
-			$result->enumConstraintIndex[$rawConstraintData->getEnumIndex()][$rawConstraintData->getAffectedValueIndex()][] = $rawConstraintData;
+		$repeatedEnumConstraints = [];
+		foreach($packet->getEnumConstraints() as $index => $rawConstraintData){
+			$enumIndex = $rawConstraintData->getEnumIndex();
+			$affectedValueIndex = $rawConstraintData->getAffectedValueIndex();
+			if(isset($result->enumConstraintIndex[$enumIndex][$affectedValueIndex])){
+				$repeatedEnumConstraints[$index] = $rawConstraintData;
+			}else{
+				$result->enumConstraintIndex[$rawConstraintData->getEnumIndex()][$rawConstraintData->getAffectedValueIndex()] = $rawConstraintData;
+			}
 		}
 
+		$highCommandData = [];
 		foreach($packet->getCommandData() as $rawData){
-			$result->commandData[] = $result->processCommandData($rawData);
+			$highCommandData[] = $result->processCommandData($rawData);
+		}
+		$highUnusedHardEnums = [];
+		foreach($result->unusedHardEnums as $index => $rawData){
+			$highUnusedHardEnums[$index] = $result->lookupHardEnum($index);
+		}
+		//TODO: we don't really need to separate the high and low versions of soft enums (they're fully self contained),
+		//but this stays to avoid breaking stuff that used high-level CommandEnum for soft enums in the past
+		$highUnusedSoftEnums = [];
+		foreach($result->unusedSoftEnums as $index => $rawData){
+			$highUnusedSoftEnums[$index] = $result->lookupSoftEnum($index);
+		}
+		$highUnusedChainedSubCommandData = [];
+		foreach($result->unusedChainedSubCommandData as $index => $rawData){
+			$highUnusedChainedSubCommandData[$index] = $result->lookupChainedSubCommandData($index);
 		}
 
 		return new DisassembledAvailableCommandsData(
-			$result->commandData,
-			$result->unusedEnumValues,
+			$highCommandData,
+			$result->unusedHardEnumValues,
 			$result->unusedPostfixes,
-			$result->unusedHardEnums,
-			$result->unusedSoftEnums,
-			$result->unusedChainedSubCommandData,
-			$result->unusedChainedSubCommandValues
+			$highUnusedHardEnums,
+			$highUnusedSoftEnums,
+			$highUnusedChainedSubCommandData,
+			$result->unusedChainedSubCommandValues,
+			$repeatedEnumConstraints
 		);
 	}
 
@@ -134,7 +151,7 @@ final class AvailableCommandsPacketDisassembler{
 	 */
 	private function lookupHardEnumValue(int $index) : string{
 		$value = $this->packet->getEnumValues()[$index] ?? throw new PacketDecodeException("No such enum value index $index");
-		unset($this->unusedEnumValues[$index]);
+		unset($this->unusedHardEnumValues[$index]);
 		return $value;
 	}
 
@@ -150,13 +167,9 @@ final class AvailableCommandsPacketDisassembler{
 			foreach($rawEnum->getValueIndexes() as $valueOffset => $valueIndex){
 				$enumValues[] = $this->lookupHardEnumValue($valueIndex);
 
-				$rawConstraints = $this->enumConstraintIndex[$index][$valueIndex] ?? null;
-				if($rawConstraints !== null){
-					foreach($rawConstraints as $constraint){
-						//technically it's possible for multiple constraints to be specified on the same parameter, so
-						//this has to be kept as a 2D array :<
-						$enumValueConstraints[$valueOffset][] = $constraint->getConstraints();
-					}
+				$rawConstraint = $this->enumConstraintIndex[$index][$valueIndex] ?? null;
+				if($rawConstraint !== null){
+					$enumValueConstraints[$valueOffset] = $rawConstraint->getConstraints();
 				}
 			}
 

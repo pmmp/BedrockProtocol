@@ -169,9 +169,7 @@ final class AvailableCommandsPacketAssembler{
 			foreach($enum->getConstraints() as $valueOffset => $constraintList){
 				$affectedValue = $enum->getValues()[$valueOffset] ?? throw new \LogicException("CommandEnum's constructor should've checked this");
 				$affectedValueIndex = $this->enumValueIndexes[$affectedValue] ?? throw new \LogicException("We just added this value to the enum value index, it should always be set");
-				foreach($constraintList as $constraints){
-					$this->enumConstraints[] = new CommandEnumConstraintRawData($affectedValueIndex, $this->enumIndexes[$key], $constraints);
-				}
+				$this->enumConstraints[] = new CommandEnumConstraintRawData($affectedValueIndex, $this->enumIndexes[$key], $constraintList);
 			}
 		}
 

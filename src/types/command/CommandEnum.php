@@ -25,12 +25,12 @@ class CommandEnum{
 	public const CONSTRAINT_REQUIRES_ALLOW_ALIASES = 1 << 3;
 
 	/**
-	 * @param string[]  $enumValues
-	 * @param bool      $isSoft Whether the enum is dynamic, i.e. can be updated during the game session
-	 * @param int[][][] $constraints Technically possible to have the same value mentioned by two independent constraints :<
+	 * @param string[] $enumValues
+	 * @param bool     $isSoft Whether the enum is dynamic, i.e. can be updated during the game session
+	 * @param int[][]  $constraints
 	 *
 	 * @phpstan-param list<string> $enumValues
-	 * @phpstan-param array<int, list<list<int>>> $constraints
+	 * @phpstan-param array<int, list<int>> $constraints
 	 */
 	public function __construct(
 		private string $enumName,
@@ -71,8 +71,8 @@ class CommandEnum{
 	}
 
 	/**
-	 * @return int[][][] Technically possible to have the same value mentioned by two independent constraints :<
-	 * @phpstan-return array<int, list<list<int>>>
+	 * @return int[][]
+	 * @phpstan-return array<int, list<int>>
 	 */
 	public function getConstraints() : array{ return $this->constraints; }
 

@@ -24,7 +24,7 @@ class CommandData{
 		public string $description,
 		public int $flags,
 		public int $permission,
-		public ?CommandEnum $aliases,
+		public ?CommandHardEnum $aliases,
 		public array $overloads,
 		public array $chainedSubCommandData
 	){
@@ -48,7 +48,7 @@ class CommandData{
 		return $this->permission;
 	}
 
-	public function getAliases() : ?CommandEnum{
+	public function getAliases() : ?CommandHardEnum{
 		return $this->aliases;
 	}
 

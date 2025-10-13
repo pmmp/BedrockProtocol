@@ -25,7 +25,7 @@ use pocketmine\network\mcpe\protocol\types\command\raw\ChainedSubCommandRawData;
 use pocketmine\network\mcpe\protocol\types\command\raw\CommandEnumConstraintRawData;
 use pocketmine\network\mcpe\protocol\types\command\raw\CommandEnumRawData;
 use pocketmine\network\mcpe\protocol\types\command\raw\CommandRawData;
-use pocketmine\network\mcpe\protocol\types\command\raw\CommandSoftEnumRawData;
+use pocketmine\network\mcpe\protocol\types\command\CommandSoftEnum;
 use function count;
 
 /**
@@ -120,8 +120,8 @@ final class AvailableCommandsPacket extends DataPacket implements ClientboundPac
 	 */
 	public array $commandData = [];
 	/**
-	 * @var CommandSoftEnumRawData[]
-	 * @phpstan-var list<CommandSoftEnumRawData>
+	 * @var CommandSoftEnum[]
+	 * @phpstan-var list<CommandSoftEnum>
 	 */
 	public array $softEnums = [];
 	/**
@@ -132,21 +132,23 @@ final class AvailableCommandsPacket extends DataPacket implements ClientboundPac
 
 	/**
 	 * @generate-create-func
-	 * @param string[]                       $enumValues
-	 * @param string[]                       $chainedSubCommandValues
-	 * @param string[]                       $postfixes
-	 * @param CommandEnumRawData[]           $enums
-	 * @param ChainedSubCommandRawData[]     $chainedSubCommandData
-	 * @param CommandRawData[]               $commandData
-	 * @param CommandSoftEnumRawData[]       $softEnums
-	 * @param CommandEnumConstraintRawData[] $enumConstraints
+	 *
+	 * @param string[]                                   $enumValues
+	 * @param string[]                                   $chainedSubCommandValues
+	 * @param string[]                                   $postfixes
+	 * @param CommandEnumRawData[]                       $enums
+	 * @param ChainedSubCommandRawData[]                 $chainedSubCommandData
+	 * @param CommandRawData[]                           $commandData
+	 * @param CommandSoftEnum[]                          $softEnums
+	 * @param CommandEnumConstraintRawData[]             $enumConstraints
+	 *
 	 * @phpstan-param list<string>                       $enumValues
 	 * @phpstan-param list<string>                       $chainedSubCommandValues
 	 * @phpstan-param list<string>                       $postfixes
 	 * @phpstan-param list<CommandEnumRawData>           $enums
 	 * @phpstan-param list<ChainedSubCommandRawData>     $chainedSubCommandData
 	 * @phpstan-param list<CommandRawData>               $commandData
-	 * @phpstan-param list<CommandSoftEnumRawData>       $softEnums
+	 * @phpstan-param list<CommandSoftEnum>              $softEnums
 	 * @phpstan-param list<CommandEnumConstraintRawData> $enumConstraints
 	 */
 	public static function create(
@@ -205,7 +207,7 @@ final class AvailableCommandsPacket extends DataPacket implements ClientboundPac
 
 		$this->softEnums = [];
 		for($i = 0, $size = VarInt::readUnsignedInt($in); $i < $size; $i++){
-			$this->softEnums[] = CommandSoftEnumRawData::read($in);
+			$this->softEnums[] = CommandSoftEnum::read($in);
 		}
 
 		$this->enumConstraints = [];

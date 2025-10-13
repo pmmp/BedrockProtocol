@@ -17,7 +17,9 @@ namespace pocketmine\network\mcpe\protocol\serializer;
 use pocketmine\network\mcpe\protocol\AvailableCommandsPacket;
 use pocketmine\network\mcpe\protocol\types\command\ChainedSubCommandData;
 use pocketmine\network\mcpe\protocol\types\command\CommandData;
-use pocketmine\network\mcpe\protocol\types\command\CommandEnum;
+use pocketmine\network\mcpe\protocol\types\command\CommandHardEnum;
+use pocketmine\network\mcpe\protocol\types\command\CommandSoftEnum;
+use pocketmine\network\mcpe\protocol\types\command\ConstrainedEnumValue;
 use pocketmine\network\mcpe\protocol\types\command\raw\ChainedSubCommandRawData;
 use pocketmine\network\mcpe\protocol\types\command\raw\ChainedSubCommandValueRawData;
 use pocketmine\network\mcpe\protocol\types\command\raw\CommandEnumConstraintRawData;
@@ -25,7 +27,7 @@ use pocketmine\network\mcpe\protocol\types\command\raw\CommandEnumRawData;
 use pocketmine\network\mcpe\protocol\types\command\raw\CommandOverloadRawData;
 use pocketmine\network\mcpe\protocol\types\command\raw\CommandParameterRawData;
 use pocketmine\network\mcpe\protocol\types\command\raw\CommandRawData;
-use pocketmine\network\mcpe\protocol\types\command\raw\CommandSoftEnumRawData;
+use function array_push;
 use function count;
 use function spl_object_id;
 
@@ -96,8 +98,8 @@ final class AvailableCommandsPacketAssembler{
 	 */
 	private array $commandData = [];
 	/**
-	 * @var CommandSoftEnumRawData[]
-	 * @phpstan-var list<CommandSoftEnumRawData>
+	 * @var CommandSoftEnum[]
+	 * @phpstan-var list<CommandSoftEnum>
 	 */
 	private array $softEnums = [];
 	/**
@@ -107,13 +109,13 @@ final class AvailableCommandsPacketAssembler{
 	private array $enumConstraints = [];
 
 	/**
-	 * @param CommandData[]                       $commandData
-	 * @param CommandEnum[]                       $hardcodedEnums
-	 * @param CommandEnum[]                       $hardcodedSoftEnums
+	 * @param CommandData[]                 $commandData
+	 * @param CommandHardEnum[]             $hardcodedEnums
+	 * @param CommandHardEnum[]             $hardcodedSoftEnums
 	 *
-	 * @phpstan-param list<CommandData>           $commandData
-	 * @phpstan-param list<CommandEnum>           $hardcodedEnums
-	 * @phpstan-param list<CommandEnum>           $hardcodedSoftEnums
+	 * @phpstan-param list<CommandData>     $commandData
+	 * @phpstan-param list<CommandHardEnum> $hardcodedEnums
+	 * @phpstan-param list<CommandSoftEnum> $hardcodedSoftEnums
 	 */
 	public static function assemble(
 		array $commandData,
@@ -151,40 +153,39 @@ final class AvailableCommandsPacketAssembler{
 		return $this->enumValueIndexes[$str];
 	}
 
-	private function addHardEnum(CommandEnum $enum) : int{
-		if($enum->isSoft()){
-			//TODO: shitty API design
-			throw new \InvalidArgumentException("Can't pass a soft enum here");
-		}
-
+	private function addHardEnum(CommandHardEnum $enum) : int{
 		$key = spl_object_id($enum);
 		if(!isset($this->enumIndexes[$key])){
 			$valueIndexes = [];
-			foreach($enum->getValues() as $str){
-				$valueIndexes[] = $this->addEnumValue($str);
-			}
-			$this->enumIndexes[$key] = count($this->enums);
-			$this->enums[] = new CommandEnumRawData($enum->getName(), $valueIndexes);
 
-			foreach($enum->getConstraints() as $valueOffset => $constraintList){
-				$affectedValue = $enum->getValues()[$valueOffset] ?? throw new \LogicException("CommandEnum's constructor should've checked this");
-				$affectedValueIndex = $this->enumValueIndexes[$affectedValue] ?? throw new \LogicException("We just added this value to the enum value index, it should always be set");
-				$this->enumConstraints[] = new CommandEnumConstraintRawData($affectedValueIndex, $this->enumIndexes[$key], $constraintList);
+			$enumIndex = $this->enumIndexes[$key] = count($this->enums);
+
+			$constraints = [];
+			foreach($enum->getValues() as $value){
+				if($value instanceof ConstrainedEnumValue){
+					$valueIndex = $this->addEnumValue($value->getValue());
+					$constraints[] = new CommandEnumConstraintRawData($valueIndex, $enumIndex, $value->getConstraints());
+				}else{
+					$valueIndex = $this->addEnumValue($value);
+				}
+				$valueIndexes[] = $valueIndex;
 			}
+			if(count($this->enums) !== $enumIndex){
+				throw new \LogicException("Didn't expect enum list to be modified while compiling values");
+			}
+			$this->enums[] = new CommandEnumRawData($enum->getName(), $valueIndexes);
+			array_push($this->enumConstraints, ...$constraints);
 		}
 
 		return $this->enumIndexes[$key];
 	}
 
-	private function addSoftEnum(CommandEnum $enum) : int{
-		if(!$enum->isSoft()){
-			throw new \InvalidArgumentException("Can't pass a hard enum here");
-		}
+	private function addSoftEnum(CommandSoftEnum $enum) : int{
 		$key = spl_object_id($enum);
 
 		if(!isset($this->softEnumIndexes[$key])){
 			$this->softEnumIndexes[$key] = count($this->softEnums);
-			$this->softEnums[] = new CommandSoftEnumRawData($enum->getName(), $enum->getValues());
+			$this->softEnums[] = $enum;
 		}
 
 		return $this->softEnumIndexes[$key];
@@ -237,7 +238,7 @@ final class AvailableCommandsPacketAssembler{
 
 			foreach($overload->getParameters() as $parameter){
 				if($parameter->enum !== null){
-					if($parameter->enum->isSoft()){
+					if($parameter->enum instanceof CommandSoftEnum){
 						$enumIndex = $this->addSoftEnum($parameter->enum);
 						$typeInfo = AvailableCommandsPacket::ARG_FLAG_SOFT_ENUM | AvailableCommandsPacket::ARG_FLAG_VALID | $enumIndex;
 					}else{

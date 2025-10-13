@@ -19,14 +19,15 @@ use pocketmine\network\mcpe\protocol\PacketDecodeException;
 use pocketmine\network\mcpe\protocol\types\command\ChainedSubCommandData;
 use pocketmine\network\mcpe\protocol\types\command\ChainedSubCommandValue;
 use pocketmine\network\mcpe\protocol\types\command\CommandData;
-use pocketmine\network\mcpe\protocol\types\command\CommandEnum;
+use pocketmine\network\mcpe\protocol\types\command\CommandHardEnum;
 use pocketmine\network\mcpe\protocol\types\command\CommandOverload;
 use pocketmine\network\mcpe\protocol\types\command\CommandParameter;
+use pocketmine\network\mcpe\protocol\types\command\ConstrainedEnumValue;
 use pocketmine\network\mcpe\protocol\types\command\raw\ChainedSubCommandRawData;
 use pocketmine\network\mcpe\protocol\types\command\raw\CommandEnumConstraintRawData;
 use pocketmine\network\mcpe\protocol\types\command\raw\CommandEnumRawData;
 use pocketmine\network\mcpe\protocol\types\command\raw\CommandRawData;
-use pocketmine\network\mcpe\protocol\types\command\raw\CommandSoftEnumRawData;
+use pocketmine\network\mcpe\protocol\types\command\CommandSoftEnum;
 
 /**
  * Disassembles low-level AvailableCommandsPacket structures into high-level commands data that can be operated on more
@@ -43,20 +44,15 @@ final class AvailableCommandsPacketDisassembler{
 	private array $enumConstraintIndex = [];
 
 	/**
-	 * @var CommandEnum[]
-	 * @phpstan-var array<int, CommandEnum>
+	 * @var CommandHardEnum[]
+	 * @phpstan-var array<int, CommandHardEnum>
 	 */
-	private array $highEnumCache = [];
-	/**
-	 * @var CommandEnum[]
-	 * @phpstan-var array<int, CommandEnum>
-	 */
-	private array $highSoftEnumCache = [];
+	private array $linkedEnumCache = [];
 	/**
 	 * @var ChainedSubCommandData[]
 	 * @phpstan-var array<int, ChainedSubCommandData>
 	 */
-	private array $highChainedSubCommandDataCache = [];
+	private array $linkedChainedSubCommandDataCache = [];
 
 	/**
 	 * @var string[]
@@ -73,17 +69,17 @@ final class AvailableCommandsPacketDisassembler{
 	 * @var CommandEnumRawData[]
 	 * @phpstan-var array<int, CommandEnumRawData>
 	 */
-	private array $unusedHardEnums;
+	private array $unusedHardEnumRawData;
 	/**
-	 * @var CommandSoftEnumRawData[]
-	 * @phpstan-var array<int, CommandSoftEnumRawData>
+	 * @var CommandSoftEnum[]
+	 * @phpstan-var array<int, CommandSoftEnum>
 	 */
 	private array $unusedSoftEnums;
 	/**
 	 * @var ChainedSubCommandRawData[]
 	 * @phpstan-var array<int, ChainedSubCommandRawData>
 	 */
-	private array $unusedChainedSubCommandData;
+	private array $unusedChainedSubCommandRawData;
 	/**
 	 * @var string[]
 	 * @phpstan-var array<int, string>
@@ -92,12 +88,12 @@ final class AvailableCommandsPacketDisassembler{
 
 	private function __construct(AvailableCommandsPacket $packet){
 		$this->packet = $packet;
-		$this->unusedHardEnumValues = $packet->getEnumValues();
-		$this->unusedHardEnums = $packet->getEnums();
-		$this->unusedSoftEnums = $packet->getSoftEnums();
-		$this->unusedPostfixes = $packet->getPostfixes();
-		$this->unusedChainedSubCommandData = $packet->getChainedSubCommandData();
-		$this->unusedChainedSubCommandValues = $packet->getChainedSubCommandValues();
+		$this->unusedHardEnumValues = $packet->enumValues;
+		$this->unusedHardEnumRawData = $packet->enums;
+		$this->unusedSoftEnums = $packet->softEnums;
+		$this->unusedPostfixes = $packet->postfixes;
+		$this->unusedChainedSubCommandRawData = $packet->chainedSubCommandData;
+		$this->unusedChainedSubCommandValues = $packet->chainedSubCommandValues;
 	}
 
 	public static function disassemble(AvailableCommandsPacket $packet) : DisassembledAvailableCommandsData{
@@ -105,7 +101,7 @@ final class AvailableCommandsPacketDisassembler{
 
 		//this lets us put the data for the constraints inside the CommandEnum objects directly
 		$repeatedEnumConstraints = [];
-		foreach($packet->getEnumConstraints() as $index => $rawConstraintData){
+		foreach($packet->enumConstraints as $index => $rawConstraintData){
 			$enumIndex = $rawConstraintData->getEnumIndex();
 			$affectedValueIndex = $rawConstraintData->getAffectedValueIndex();
 			if(isset($result->enumConstraintIndex[$enumIndex][$affectedValueIndex])){
@@ -115,32 +111,26 @@ final class AvailableCommandsPacketDisassembler{
 			}
 		}
 
-		$highCommandData = [];
-		foreach($packet->getCommandData() as $rawData){
-			$highCommandData[] = $result->processCommandData($rawData);
+		$unusedCommandData = [];
+		foreach($packet->commandData as $rawData){
+			$unusedCommandData[] = $result->processCommandData($rawData);
 		}
-		$highUnusedHardEnums = [];
-		foreach($result->unusedHardEnums as $index => $rawData){
-			$highUnusedHardEnums[$index] = $result->lookupHardEnum($index);
+		$unusedHardEnums = [];
+		foreach($result->unusedHardEnumRawData as $index => $rawData){
+			$unusedHardEnums[$index] = $result->lookupHardEnum($index);
 		}
-		//TODO: we don't really need to separate the high and low versions of soft enums (they're fully self contained),
-		//but this stays to avoid breaking stuff that used high-level CommandEnum for soft enums in the past
-		$highUnusedSoftEnums = [];
-		foreach($result->unusedSoftEnums as $index => $rawData){
-			$highUnusedSoftEnums[$index] = $result->lookupSoftEnum($index);
-		}
-		$highUnusedChainedSubCommandData = [];
-		foreach($result->unusedChainedSubCommandData as $index => $rawData){
-			$highUnusedChainedSubCommandData[$index] = $result->lookupChainedSubCommandData($index);
+		$unusedChainedSubCommandData = [];
+		foreach($result->unusedChainedSubCommandRawData as $index => $rawData){
+			$unusedChainedSubCommandData[$index] = $result->lookupChainedSubCommandData($index);
 		}
 
 		return new DisassembledAvailableCommandsData(
-			$highCommandData,
+			$unusedCommandData,
 			$result->unusedHardEnumValues,
 			$result->unusedPostfixes,
-			$highUnusedHardEnums,
-			$highUnusedSoftEnums,
-			$highUnusedChainedSubCommandData,
+			$unusedHardEnums,
+			$result->unusedSoftEnums,
+			$unusedChainedSubCommandData,
 			$result->unusedChainedSubCommandValues,
 			$repeatedEnumConstraints
 		);
@@ -150,7 +140,7 @@ final class AvailableCommandsPacketDisassembler{
 	 * @throws PacketDecodeException
 	 */
 	private function lookupHardEnumValue(int $index) : string{
-		$value = $this->packet->getEnumValues()[$index] ?? throw new PacketDecodeException("No such enum value index $index");
+		$value = $this->packet->enumValues[$index] ?? throw new PacketDecodeException("No such enum value index $index");
 		unset($this->unusedHardEnumValues[$index]);
 		return $value;
 	}
@@ -158,47 +148,42 @@ final class AvailableCommandsPacketDisassembler{
 	/**
 	 * @throws PacketDecodeException
 	 */
-	private function lookupHardEnum(int $index) : CommandEnum{
-		if(!isset($this->highEnumCache[$index])){
-			$rawEnum = $this->packet->getEnums()[$index] ?? throw new PacketDecodeException("No such enum index $index");
+	private function lookupHardEnum(int $index) : CommandHardEnum{
+		if(!isset($this->linkedEnumCache[$index])){
+			$rawEnum = $this->packet->enums[$index] ?? throw new PacketDecodeException("No such enum index $index");
 
 			$enumValues = [];
-			$enumValueConstraints = [];
-			foreach($rawEnum->getValueIndexes() as $valueOffset => $valueIndex){
-				$enumValues[] = $this->lookupHardEnumValue($valueIndex);
+			foreach($rawEnum->getValueIndexes() as $valueIndex){
+				$value = $this->lookupHardEnumValue($valueIndex);
 
 				$rawConstraint = $this->enumConstraintIndex[$index][$valueIndex] ?? null;
 				if($rawConstraint !== null){
-					$enumValueConstraints[$valueOffset] = $rawConstraint->getConstraints();
+					$enumValues[] = new ConstrainedEnumValue($value, $rawConstraint->getConstraints());
+				}else{
+					$enumValues[] = $value;
 				}
 			}
 
-			$this->highEnumCache[$index] = new CommandEnum($rawEnum->getName(), $enumValues, isSoft: false, constraints: $enumValueConstraints);
-			unset($this->unusedHardEnums[$index]);
+			$this->linkedEnumCache[$index] = new CommandHardEnum($rawEnum->getName(), $enumValues);
+			unset($this->unusedHardEnumRawData[$index]);
 		}
 
-		return $this->highEnumCache[$index];
+		return $this->linkedEnumCache[$index];
 	}
 
 	/**
 	 * @throws PacketDecodeException
 	 */
-	private function lookupSoftEnum(int $index) : CommandEnum{
-		if(!isset($this->highSoftEnumCache[$index])){
-			$rawEnum = $this->packet->getSoftEnums()[$index] ?? throw new PacketDecodeException("No such soft enum index $index");
-
-			$this->highSoftEnumCache[$index] = new CommandEnum($rawEnum->getName(), $rawEnum->getValues(), isSoft: true, constraints: []);
-			unset($this->unusedSoftEnums[$index]);
-		}
-
-		return $this->highSoftEnumCache[$index];
+	private function lookupSoftEnum(int $index) : CommandSoftEnum{
+		//no conversion needed - these are fully self-contained
+		return $this->packet->softEnums[$index] ?? throw new PacketDecodeException("No such soft enum index $index");
 	}
 
 	/**
 	 * @throws PacketDecodeException
 	 */
 	private function lookupChainedSubCommandValue(int $index) : string{
-		$value = $this->packet->getChainedSubCommandValues()[$index] ?? throw new PacketDecodeException("No such chained subcommand value index $index");
+		$value = $this->packet->chainedSubCommandValues[$index] ?? throw new PacketDecodeException("No such chained subcommand value index $index");
 		unset($this->unusedChainedSubCommandValues[$index]);
 		return $value;
 	}
@@ -207,8 +192,8 @@ final class AvailableCommandsPacketDisassembler{
 	 * @throws PacketDecodeException
 	 */
 	private function lookupChainedSubCommandData(int $index) : ChainedSubCommandData{
-		if(!isset($this->highChainedSubCommandDataCache[$index])){
-			$rawData = $this->packet->getChainedSubCommandData()[$index] ?? throw new PacketDecodeException("No such chained subcommand index $index");
+		if(!isset($this->linkedChainedSubCommandDataCache[$index])){
+			$rawData = $this->packet->chainedSubCommandData[$index] ?? throw new PacketDecodeException("No such chained subcommand index $index");
 
 			$values = [];
 			foreach($rawData->getValueData() as $rawValueData){
@@ -216,18 +201,18 @@ final class AvailableCommandsPacketDisassembler{
 				$values[] = new ChainedSubCommandValue($valueName, $rawValueData->getType());
 			}
 
-			$this->highChainedSubCommandDataCache[$index] = new ChainedSubCommandData($rawData->getName(), $values);
-			unset($this->unusedChainedSubCommandData[$index]);
+			$this->linkedChainedSubCommandDataCache[$index] = new ChainedSubCommandData($rawData->getName(), $values);
+			unset($this->unusedChainedSubCommandRawData[$index]);
 		}
 
-		return $this->highChainedSubCommandDataCache[$index];
+		return $this->linkedChainedSubCommandDataCache[$index];
 	}
 
 	/**
 	 * @throws PacketDecodeException
 	 */
 	private function lookupPostfix(int $index) : string{
-		$value = $this->packet->getPostfixes()[$index] ?? throw new PacketDecodeException("No such postfix index $index");
+		$value = $this->packet->postfixes[$index] ?? throw new PacketDecodeException("No such postfix index $index");
 		unset($this->unusedPostfixes[$index]);
 		return $value;
 	}
@@ -255,7 +240,7 @@ final class AvailableCommandsPacketDisassembler{
 				//these flags are mutually exclusive - more than one is an error
 				$enum = null;
 				$postfix = null;
-				$highTypeInfo = 0;
+				$highLevelTypeInfo = 0;
 				if($flags === (AvailableCommandsPacket::ARG_FLAG_ENUM | AvailableCommandsPacket::ARG_FLAG_VALID)){
 					$index = $typeInfo & (AvailableCommandsPacket::ARG_FLAG_VALID - 1);
 					$enum = $this->lookupHardEnum($index);
@@ -266,14 +251,14 @@ final class AvailableCommandsPacketDisassembler{
 					$index = $typeInfo & (AvailableCommandsPacket::ARG_FLAG_POSTFIX - 1);
 					$postfix = $this->lookupPostfix($index);
 				}elseif($flags === AvailableCommandsPacket::ARG_FLAG_VALID){
-					$highTypeInfo = $typeInfo & (AvailableCommandsPacket::ARG_FLAG_VALID - 1);
+					$highLevelTypeInfo = $typeInfo & (AvailableCommandsPacket::ARG_FLAG_VALID - 1);
 				}else{
 					throw new PacketDecodeException("Unrecognized arg flag combination $typeInfo for command " . $rawData->getName() . ", overload $overloadIndex, parameter $parameterIndex");
 				}
 
 				$parameters[] = CommandParameter::allFields(
 					paramName: $rawParameterData->getName(),
-					paramType: $highTypeInfo,
+					paramType: $highLevelTypeInfo,
 					isOptional: $rawParameterData->isOptional(),
 					flags: $rawParameterData->getFlags(),
 					enum: $enum,

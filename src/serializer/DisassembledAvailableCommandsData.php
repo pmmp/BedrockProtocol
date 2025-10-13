@@ -16,7 +16,8 @@ namespace pocketmine\network\mcpe\protocol\serializer;
 
 use pocketmine\network\mcpe\protocol\types\command\ChainedSubCommandData;
 use pocketmine\network\mcpe\protocol\types\command\CommandData;
-use pocketmine\network\mcpe\protocol\types\command\CommandEnum;
+use pocketmine\network\mcpe\protocol\types\command\CommandHardEnum;
+use pocketmine\network\mcpe\protocol\types\command\CommandSoftEnum;
 use pocketmine\network\mcpe\protocol\types\command\raw\CommandEnumConstraintRawData;
 
 /**
@@ -28,8 +29,8 @@ final class DisassembledAvailableCommandsData{
 	 * @param CommandData[]                                    $commandData
 	 * @param string[]                                         $unusedHardEnumValues
 	 * @param string[]                                         $unusedPostfixes
-	 * @param CommandEnum[]                                    $unusedHardEnums
-	 * @param CommandEnum[]                                    $unusedSoftEnums
+	 * @param CommandHardEnum[]                                $unusedHardEnums
+	 * @param CommandHardEnum[]                                $unusedSoftEnums
 	 * @param ChainedSubCommandData[]                          $unusedChainedSubCommandData
 	 * @param string[]                                         $unusedChainedSubCommandValues
 	 * @param CommandEnumConstraintRawData[]                   $repeatedEnumConstraints
@@ -37,8 +38,8 @@ final class DisassembledAvailableCommandsData{
 	 * @phpstan-param list<CommandData>                        $commandData
 	 * @phpstan-param array<int, string>                       $unusedHardEnumValues
 	 * @phpstan-param array<int, string>                       $unusedPostfixes
-	 * @phpstan-param array<int, CommandEnum>                  $unusedHardEnums
-	 * @phpstan-param array<int, CommandEnum>                  $unusedSoftEnums
+	 * @phpstan-param array<int, CommandHardEnum>              $unusedHardEnums
+	 * @phpstan-param array<int, CommandSoftEnum>              $unusedSoftEnums
 	 * @phpstan-param array<int, ChainedSubCommandData>        $unusedChainedSubCommandData
 	 * @phpstan-param array<int, string>                       $unusedChainedSubCommandValues
 	 * @phpstan-param array<int, CommandEnumConstraintRawData> $repeatedEnumConstraints

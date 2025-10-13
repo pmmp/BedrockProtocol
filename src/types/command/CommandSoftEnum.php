@@ -12,7 +12,7 @@
 
 declare(strict_types=1);
 
-namespace pocketmine\network\mcpe\protocol\types\command\raw;
+namespace pocketmine\network\mcpe\protocol\types\command;
 
 use pmmp\encoding\ByteBufferReader;
 use pmmp\encoding\ByteBufferWriter;
@@ -20,7 +20,7 @@ use pmmp\encoding\VarInt;
 use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 use function count;
 
-final class CommandSoftEnumRawData{
+final class CommandSoftEnum{
 
 	/**
 	 * @param string[] $values
@@ -29,7 +29,13 @@ final class CommandSoftEnumRawData{
 	public function __construct(
 		private string $name,
 		private array $values
-	){}
+	){
+		self::stringArrayCheck(...$this->values);
+	}
+
+	private static function stringArrayCheck(string ...$values) : void{
+		//NOOP
+	}
 
 	public function getName() : string{ return $this->name; }
 

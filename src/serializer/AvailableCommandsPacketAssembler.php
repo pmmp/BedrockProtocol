@@ -115,7 +115,7 @@ final class AvailableCommandsPacketAssembler{
 	 * @phpstan-param list<CommandEnum>           $hardcodedEnums
 	 * @phpstan-param list<CommandEnum>           $hardcodedSoftEnums
 	 */
-	public static function pack(
+	public static function assemble(
 		array $commandData,
 		array $hardcodedEnums,
 		array $hardcodedSoftEnums

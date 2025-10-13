@@ -171,54 +171,6 @@ final class AvailableCommandsPacket extends DataPacket implements ClientboundPac
 		return $result;
 	}
 
-	/**
-	 * @return string[]
-	 * @phpstan-return list<string>
-	 */
-	public function getEnumValues() : array{ return $this->enumValues; }
-
-	/**
-	 * @return string[]
-	 * @phpstan-return list<string>
-	 */
-	public function getChainedSubCommandValues() : array{ return $this->chainedSubCommandValues; }
-
-	/**
-	 * @return string[]
-	 * @phpstan-return list<string>
-	 */
-	public function getPostfixes() : array{ return $this->postfixes; }
-
-	/**
-	 * @return CommandEnumRawData[]
-	 * @phpstan-return list<CommandEnumRawData>
-	 */
-	public function getEnums() : array{ return $this->enums; }
-
-	/**
-	 * @return ChainedSubCommandRawData[]
-	 * @phpstan-return list<ChainedSubCommandRawData>
-	 */
-	public function getChainedSubCommandData() : array{ return $this->chainedSubCommandData; }
-
-	/**
-	 * @return CommandRawData[]
-	 * @phpstan-return list<CommandRawData>
-	 */
-	public function getCommandData() : array{ return $this->commandData; }
-
-	/**
-	 * @return CommandSoftEnumRawData[]
-	 * @phpstan-return list<CommandSoftEnumRawData>
-	 */
-	public function getSoftEnums() : array{ return $this->softEnums; }
-
-	/**
-	 * @return CommandEnumConstraintRawData[]
-	 * @phpstan-return list<CommandEnumConstraintRawData>
-	 */
-	public function getEnumConstraints() : array{ return $this->enumConstraints; }
-
 	protected function decodePayload(ByteBufferReader $in) : void{
 		$this->enumValues = [];
 		for($i = 0, $size = VarInt::readUnsignedInt($in); $i < $size; $i++){

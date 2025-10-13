@@ -132,16 +132,14 @@ final class AvailableCommandsPacket extends DataPacket implements ClientboundPac
 
 	/**
 	 * @generate-create-func
-	 *
-	 * @param string[]                                   $enumValues
-	 * @param string[]                                   $chainedSubCommandValues
-	 * @param string[]                                   $postfixes
-	 * @param CommandEnumRawData[]                       $enums
-	 * @param ChainedSubCommandRawData[]                 $chainedSubCommandData
-	 * @param CommandRawData[]                           $commandData
-	 * @param CommandSoftEnum[]                          $softEnums
-	 * @param CommandEnumConstraintRawData[]             $enumConstraints
-	 *
+	 * @param string[]                       $enumValues
+	 * @param string[]                       $chainedSubCommandValues
+	 * @param string[]                       $postfixes
+	 * @param CommandEnumRawData[]           $enums
+	 * @param ChainedSubCommandRawData[]     $chainedSubCommandData
+	 * @param CommandRawData[]               $commandData
+	 * @param CommandSoftEnum[]              $softEnums
+	 * @param CommandEnumConstraintRawData[] $enumConstraints
 	 * @phpstan-param list<string>                       $enumValues
 	 * @phpstan-param list<string>                       $chainedSubCommandValues
 	 * @phpstan-param list<string>                       $postfixes

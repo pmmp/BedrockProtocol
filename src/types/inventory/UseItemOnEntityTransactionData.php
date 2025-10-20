@@ -81,17 +81,25 @@ class UseItemOnEntityTransactionData extends TransactionData{
 	}
 
 	/**
-	 * @param NetworkInventoryAction[] $actions
+	 * @generate-create-func
 	 */
-	public static function new(array $actions, int $actorRuntimeId, int $actionType, int $hotbarSlot, ItemStackWrapper $itemInHand, Vector3 $playerPosition, Vector3 $clickPosition) : self{
+	private static function initSelf(int $actorRuntimeId, int $actionType, int $hotbarSlot, ItemStackWrapper $itemInHand, Vector3 $playerPosition, Vector3 $clickPosition) : self{
 		$result = new self;
-		$result->actions = $actions;
 		$result->actorRuntimeId = $actorRuntimeId;
 		$result->actionType = $actionType;
 		$result->hotbarSlot = $hotbarSlot;
 		$result->itemInHand = $itemInHand;
 		$result->playerPosition = $playerPosition;
 		$result->clickPosition = $clickPosition;
+		return $result;
+	}
+
+	/**
+	 * @param NetworkInventoryAction[] $actions
+	 */
+	public static function new(array $actions, int $actorRuntimeId, int $actionType, int $hotbarSlot, ItemStackWrapper $itemInHand, Vector3 $playerPosition, Vector3 $clickPosition) : self{
+		$result = self::initSelf($actorRuntimeId, $actionType, $hotbarSlot, $itemInHand, $playerPosition, $clickPosition);
+		$result->actions = $actions;
 		return $result;
 	}
 }

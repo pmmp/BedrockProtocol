@@ -66,16 +66,23 @@ class ReleaseItemTransactionData extends TransactionData{
 	}
 
 	/**
-	 * @param NetworkInventoryAction[] $actions
+	 * @generate-create-func
 	 */
-	public static function new(array $actions, int $actionType, int $hotbarSlot, ItemStackWrapper $itemInHand, Vector3 $headPosition) : self{
+	private static function initSelf(int $actionType, int $hotbarSlot, ItemStackWrapper $itemInHand, Vector3 $headPosition) : self{
 		$result = new self;
-		$result->actions = $actions;
 		$result->actionType = $actionType;
 		$result->hotbarSlot = $hotbarSlot;
 		$result->itemInHand = $itemInHand;
 		$result->headPosition = $headPosition;
+		return $result;
+	}
 
+	/**
+	 * @param NetworkInventoryAction[] $actions
+	 */
+	public static function new(array $actions, int $actionType, int $hotbarSlot, ItemStackWrapper $itemInHand, Vector3 $headPosition) : self{
+		$result = self::initSelf($actionType, $hotbarSlot, $itemInHand, $headPosition);
+		$result->actions = $actions;
 		return $result;
 	}
 }

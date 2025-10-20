@@ -107,11 +107,21 @@ class UseItemTransactionData extends TransactionData{
 	}
 
 	/**
-	 * @param NetworkInventoryAction[] $actions
+	 * @generate-create-func
 	 */
-	public static function new(array $actions, int $actionType, TriggerType $triggerType, BlockPosition $blockPosition, int $face, int $hotbarSlot, ItemStackWrapper $itemInHand, Vector3 $playerPosition, Vector3 $clickPosition, int $blockRuntimeId, PredictedResult $clientInteractPrediction) : self{
+	private static function initSelf(
+		int $actionType,
+		TriggerType $triggerType,
+		BlockPosition $blockPosition,
+		int $face,
+		int $hotbarSlot,
+		ItemStackWrapper $itemInHand,
+		Vector3 $playerPosition,
+		Vector3 $clickPosition,
+		int $blockRuntimeId,
+		PredictedResult $clientInteractPrediction,
+	) : self{
 		$result = new self;
-		$result->actions = $actions;
 		$result->actionType = $actionType;
 		$result->triggerType = $triggerType;
 		$result->blockPosition = $blockPosition;
@@ -122,6 +132,15 @@ class UseItemTransactionData extends TransactionData{
 		$result->clickPosition = $clickPosition;
 		$result->blockRuntimeId = $blockRuntimeId;
 		$result->clientInteractPrediction = $clientInteractPrediction;
+		return $result;
+	}
+
+	/**
+	 * @param NetworkInventoryAction[] $actions
+	 */
+	public static function new(array $actions, int $actionType, TriggerType $triggerType, BlockPosition $blockPosition, int $face, int $hotbarSlot, ItemStackWrapper $itemInHand, Vector3 $playerPosition, Vector3 $clickPosition, int $blockRuntimeId, PredictedResult $clientInteractPrediction) : self{
+		$result = self::initSelf($actionType, $triggerType, $blockPosition, $face, $hotbarSlot, $itemInHand, $playerPosition, $clickPosition, $blockRuntimeId, $clientInteractPrediction);
+		$result->actions = $actions;
 		return $result;
 	}
 }

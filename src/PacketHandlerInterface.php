@@ -430,7 +430,11 @@ interface PacketHandlerInterface{
 
 	public function handleClientboundControlSchemeSet(ClientboundControlSchemeSetPacket $packet) : bool;
 
-	public function handleServerScriptDebugDrawer(ServerScriptDebugDrawerPacket $packet) : bool;
+	public function handleDebugDrawer(DebugDrawerPacket $packet) : bool;
 
 	public function handleServerboundPackSettingChange(ServerboundPackSettingChangePacket $packet) : bool;
+
+	public function handleDataStoreSync(DataStoreSyncPacket $packet) : bool;
+
+	public function handleGraphicsOverrideParameter(GraphicsOverrideParameterPacket $packet) : bool;
 }

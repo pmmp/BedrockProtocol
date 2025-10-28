@@ -19,17 +19,18 @@ use pmmp\encoding\ByteBufferReader;
 use pmmp\encoding\ByteBufferWriter;
 use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 use pocketmine\network\mcpe\protocol\types\ShowStoreOfferRedirectType;
+use Ramsey\Uuid\UuidInterface;
 
 class ShowStoreOfferPacket extends DataPacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::SHOW_STORE_OFFER_PACKET;
 
-	public string $offerId;
+	public UuidInterface $offerId;
 	public ShowStoreOfferRedirectType $redirectType;
 
 	/**
 	 * @generate-create-func
 	 */
-	public static function create(string $offerId, ShowStoreOfferRedirectType $redirectType) : self{
+	public static function create(UuidInterface $offerId, ShowStoreOfferRedirectType $redirectType) : self{
 		$result = new self;
 		$result->offerId = $offerId;
 		$result->redirectType = $redirectType;
@@ -37,12 +38,12 @@ class ShowStoreOfferPacket extends DataPacket implements ClientboundPacket{
 	}
 
 	protected function decodePayload(ByteBufferReader $in) : void{
-		$this->offerId = CommonTypes::getString($in);
+		$this->offerId = CommonTypes::getUUID($in);
 		$this->redirectType = ShowStoreOfferRedirectType::fromPacket(Byte::readUnsigned($in));
 	}
 
 	protected function encodePayload(ByteBufferWriter $out) : void{
-		CommonTypes::putString($out, $this->offerId);
+		CommonTypes::putUUID($out, $this->offerId);
 		Byte::writeUnsigned($out, $this->redirectType->value);
 	}
 

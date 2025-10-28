@@ -16,10 +16,15 @@ namespace pocketmine\network\mcpe\protocol\types\biome\chunkgen;
 
 use pmmp\encoding\ByteBufferReader;
 use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\VarInt;
 use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
+use function count;
 
 final class BiomeDefinitionChunkGenData{
 
+	/**
+	 * @param BiomeReplacementData[] $replacementsData
+	 */
 	public function __construct(
 		private ?BiomeClimateData $climate,
 		private ?BiomeConsolidatedFeaturesData $consolidatedFeatures,
@@ -35,6 +40,7 @@ final class BiomeDefinitionChunkGenData{
 		private ?BiomeOverworldGenRulesData $overworldGenRules,
 		private ?BiomeMultinoiseGenRulesData $multinoiseGenRules,
 		private ?BiomeLegacyWorldGenRulesData $legacyWorldGenRules,
+		private ?array $replacementsData,
 	){}
 
 	public function getClimate() : ?BiomeClimateData{ return $this->climate; }
@@ -65,6 +71,11 @@ final class BiomeDefinitionChunkGenData{
 
 	public function getLegacyWorldGenRules() : ?BiomeLegacyWorldGenRulesData{ return $this->legacyWorldGenRules; }
 
+	/**
+	 * @return BiomeReplacementData[]
+	 */
+	public function getReplacementsData() : ?array{ return $this->replacementsData; }
+
 	public static function read(ByteBufferReader $in) : self{
 		$climate = CommonTypes::readOptional($in, fn() => BiomeClimateData::read($in));
 		$consolidatedFeatures = CommonTypes::readOptional($in, fn() => BiomeConsolidatedFeaturesData::read($in));
@@ -80,6 +91,14 @@ final class BiomeDefinitionChunkGenData{
 		$overworldGenRules = CommonTypes::readOptional($in, fn() => BiomeOverworldGenRulesData::read($in));
 		$multinoiseGenRules = CommonTypes::readOptional($in, fn() => BiomeMultinoiseGenRulesData::read($in));
 		$legacyWorldGenRules = CommonTypes::readOptional($in, fn() => BiomeLegacyWorldGenRulesData::read($in));
+		$replacementsData = CommonTypes::readOptional($in, function(ByteBufferReader $in) : array{
+			$count = VarInt::readUnsignedInt($in);
+			$result = [];
+			for($i = 0; $i < $count; ++$i){
+				$result[] = BiomeReplacementData::read($in);
+			}
+			return $result;
+		});
 
 		return new self(
 			$climate,
@@ -95,7 +114,8 @@ final class BiomeDefinitionChunkGenData{
 			$cappedSurface,
 			$overworldGenRules,
 			$multinoiseGenRules,
-			$legacyWorldGenRules
+			$legacyWorldGenRules,
+			$replacementsData,
 		);
 	}
 
@@ -114,5 +134,11 @@ final class BiomeDefinitionChunkGenData{
 		CommonTypes::writeOptional($out, $this->overworldGenRules, fn(ByteBufferWriter $out, BiomeOverworldGenRulesData $v) => $v->write($out));
 		CommonTypes::writeOptional($out, $this->multinoiseGenRules, fn(ByteBufferWriter $out, BiomeMultinoiseGenRulesData $v) => $v->write($out));
 		CommonTypes::writeOptional($out, $this->legacyWorldGenRules, fn(ByteBufferWriter $out, BiomeLegacyWorldGenRulesData $v) => $v->write($out));
+		CommonTypes::writeOptional($out, $this->replacementsData, function(ByteBufferWriter $out, array $v) : void{
+			VarInt::writeUnsignedInt($out, count($v));
+			foreach($v as $item){
+				$item->write($out);
+			}
+		});
 	}
 }

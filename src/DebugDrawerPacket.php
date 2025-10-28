@@ -20,8 +20,8 @@ use pmmp\encoding\VarInt;
 use pocketmine\network\mcpe\protocol\types\PacketShapeData;
 use function count;
 
-class ServerScriptDebugDrawerPacket extends DataPacket implements ClientboundPacket{
-	public const NETWORK_ID = ProtocolInfo::SERVER_SCRIPT_DEBUG_DRAWER_PACKET;
+class DebugDrawerPacket extends DataPacket implements ClientboundPacket{
+	public const NETWORK_ID = ProtocolInfo::DEBUG_DRAWER_PACKET;
 
 	/**
 	 * @var PacketShapeData[]
@@ -61,6 +61,6 @@ class ServerScriptDebugDrawerPacket extends DataPacket implements ClientboundPac
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{
-		return $handler->handleServerScriptDebugDrawer($this);
+		return $handler->handleDebugDrawer($this);
 	}
 }

@@ -846,11 +846,19 @@ trait PacketHandlerDefaultImplTrait{
 		return false;
 	}
 
-	public function handleServerScriptDebugDrawer(ServerScriptDebugDrawerPacket $packet) : bool{
+	public function handleDebugDrawer(DebugDrawerPacket $packet) : bool{
 		return false;
 	}
 
 	public function handleServerboundPackSettingChange(ServerboundPackSettingChangePacket $packet) : bool{
+		return false;
+	}
+
+	public function handleDataStoreSync(DataStoreSyncPacket $packet) : bool{
+		return false;
+	}
+
+	public function handleGraphicsOverrideParameter(GraphicsOverrideParameterPacket $packet) : bool{
 		return false;
 	}
 }

@@ -28,37 +28,47 @@ class AnimatePacket extends DataPacket implements ClientboundPacket, Serverbound
 	public const ACTION_STOP_SLEEP = 3;
 	public const ACTION_CRITICAL_HIT = 4;
 	public const ACTION_MAGICAL_CRITICAL_HIT = 5;
+	public const ACTION_ROW_RIGHT = 128;
+	public const ACTION_ROW_LEFT = 129;
 
 	public int $action;
 	public int $actorRuntimeId;
-	public float $float = 0.0; //TODO (Boat rowing time?)
+	public float $data = 0.0;
+	public float $rowingTime = 0.0;
 
-	public static function create(int $actorRuntimeId, int $actionId) : self{
+	public static function create(int $actorRuntimeId, int $actionId, float $data = 0.0) : self{
 		$result = new self;
 		$result->actorRuntimeId = $actorRuntimeId;
 		$result->action = $actionId;
+		$result->data = $data;
 		return $result;
 	}
 
-	public static function boatHack(int $actorRuntimeId, int $actionId, float $data) : self{
+	public static function boatHack(int $actorRuntimeId, int $actionId, float $rowingTime) : self{
+		if($actionId !== self::ACTION_ROW_LEFT && $actionId !== self::ACTION_ROW_RIGHT){
+			throw new \InvalidArgumentException("Invalid actionId for boatHack: $actionId");
+		}
+
 		$result = self::create($actorRuntimeId, $actionId);
-		$result->float = $data;
+		$result->rowingTime = $rowingTime;
 		return $result;
 	}
 
 	protected function decodePayload(ByteBufferReader $in) : void{
 		$this->action = VarInt::readSignedInt($in);
 		$this->actorRuntimeId = CommonTypes::getActorRuntimeId($in);
-		if(($this->action & 0x80) !== 0){
-			$this->float = LE::readFloat($in);
+		$this->data = LE::readFloat($in);
+		if($this->action === self::ACTION_ROW_LEFT || $this->action === self::ACTION_ROW_RIGHT){
+			$this->rowingTime = LE::readFloat($in);
 		}
 	}
 
 	protected function encodePayload(ByteBufferWriter $out) : void{
 		VarInt::writeSignedInt($out, $this->action);
 		CommonTypes::putActorRuntimeId($out, $this->actorRuntimeId);
-		if(($this->action & 0x80) !== 0){
-			LE::writeFloat($out, $this->float);
+		LE::writeFloat($out, $this->data);
+		if($this->action === self::ACTION_ROW_LEFT || $this->action === self::ACTION_ROW_RIGHT){
+			LE::writeFloat($out, $this->rowingTime);
 		}
 	}
 

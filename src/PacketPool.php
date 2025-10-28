@@ -239,8 +239,10 @@ class PacketPool{
 		$this->registerPacket(new PlayerUpdateEntityOverridesPacket());
 		$this->registerPacket(new PlayerLocationPacket());
 		$this->registerPacket(new ClientboundControlSchemeSetPacket());
-		$this->registerPacket(new ServerScriptDebugDrawerPacket());
+		$this->registerPacket(new DebugDrawerPacket());
 		$this->registerPacket(new ServerboundPackSettingChangePacket());
+		$this->registerPacket(new DataStoreSyncPacket());
+		$this->registerPacket(new GraphicsOverrideParameterPacket());
 	}
 
 	public function registerPacket(Packet $packet) : void{

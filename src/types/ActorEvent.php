@@ -80,6 +80,7 @@ final class ActorEvent{
 	public const GROW_UP = 76;
 	public const VIBRATION_DETECTED = 77;
 	public const DRINK_MILK = 78;
+	public const SHAKE_WETNESS_STOP = 79;
 
 	//TODO: add more events
 }

@@ -26,4 +26,24 @@ enum ScriptDebugShapeType : int{
 
 	/** @deprecated */
 	const TEST = self::TEXT;
+
+	public const PAYLOAD_TYPE_NONE = 0;
+	public const PAYLOAD_TYPE_ARROW = 1;
+	public const PAYLOAD_TYPE_TEXT = 2;
+	public const PAYLOAD_TYPE_BOX = 3;
+	public const PAYLOAD_TYPE_LINE = 4;
+	public const PAYLOAD_TYPE_CIRCLE_OR_SPHERE = 5;
+
+	/**
+	 * UGH
+	 */
+	public function getPayloadType() : int{
+		return match($this){
+			self::ARROW => self::PAYLOAD_TYPE_ARROW,
+			self::TEXT => self::PAYLOAD_TYPE_TEXT,
+			self::BOX => self::PAYLOAD_TYPE_BOX,
+			self::LINE => self::PAYLOAD_TYPE_LINE,
+			self::CIRCLE, self::SPHERE => self::PAYLOAD_TYPE_CIRCLE_OR_SPHERE
+		};
+	}
 }

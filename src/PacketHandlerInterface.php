@@ -434,7 +434,9 @@ interface PacketHandlerInterface{
 
 	public function handleServerboundPackSettingChange(ServerboundPackSettingChangePacket $packet) : bool;
 
-	public function handleDataStoreSync(DataStoreSyncPacket $packet) : bool;
+	public function handleClientboundDataStore(ClientboundDataStorePacket $packet) : bool;
 
 	public function handleGraphicsOverrideParameter(GraphicsOverrideParameterPacket $packet) : bool;
+
+	public function handleServerboundDataStore(ServerboundDataStorePacket $packet) : bool;
 }

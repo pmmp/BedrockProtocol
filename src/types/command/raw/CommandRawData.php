@@ -14,12 +14,12 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol\types\command\raw;
 
-use pmmp\encoding\Byte;
 use pmmp\encoding\ByteBufferReader;
 use pmmp\encoding\ByteBufferWriter;
 use pmmp\encoding\LE;
 use pmmp\encoding\VarInt;
 use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
+use pocketmine\network\mcpe\protocol\types\command\CommandPermissions;
 use function count;
 
 final class CommandRawData{
@@ -34,7 +34,7 @@ final class CommandRawData{
 		private string $name,
 		private string $description,
 		private int $flags,
-		private int $permission,
+		private CommandPermissions $permission,
 		private int $aliasEnumIndex,
 		private array $chainedSubCommandDataIndexes,
 		private array $overloads,
@@ -46,7 +46,7 @@ final class CommandRawData{
 
 	public function getFlags() : int{ return $this->flags; }
 
-	public function getPermission() : int{ return $this->permission; }
+	public function getPermission() : CommandPermissions{ return $this->permission; }
 
 	public function getAliasEnumIndex() : int{ return $this->aliasEnumIndex; }
 
@@ -66,12 +66,12 @@ final class CommandRawData{
 		$name = CommonTypes::getString($in);
 		$description = CommonTypes::getString($in);
 		$flags = LE::readUnsignedShort($in);
-		$permission = Byte::readUnsigned($in);
+		$permission = CommandPermissions::fromPermissionName(CommonTypes::getString($in));
 		$aliasEnumIndex = LE::readSignedInt($in); //may be -1 for not set
 
 		$chainedSubCommandDataIndexes = [];
 		for($i = 0, $size = VarInt::readUnsignedInt($in); $i < $size; $i++){
-			$chainedSubCommandDataIndexes[] = LE::readUnsignedShort($in);
+			$chainedSubCommandDataIndexes[] = LE::readUnsignedInt($in);
 		}
 
 		$overloads = [];
@@ -94,12 +94,12 @@ final class CommandRawData{
 		CommonTypes::putString($out, $this->name);
 		CommonTypes::putString($out, $this->description);
 		LE::writeUnsignedShort($out, $this->flags);
-		Byte::writeUnsigned($out, $this->permission);
+		CommonTypes::putString($out, $this->permission->getPermissionName());
 		LE::writeSignedInt($out, $this->aliasEnumIndex);
 
 		VarInt::writeUnsignedInt($out, count($this->chainedSubCommandDataIndexes));
 		foreach($this->chainedSubCommandDataIndexes as $index){
-			LE::writeUnsignedShort($out, $index);
+			LE::writeUnsignedInt($out, $index);
 		}
 
 		VarInt::writeUnsignedInt($out, count($this->overloads));

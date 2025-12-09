@@ -23,13 +23,12 @@ use function count;
 final class CameraAimAssistPreset{
 
 	/**
-	 * @param string[] $exclusionList
 	 * @param string[] $liquidTargetingList
 	 * @param CameraAimAssistPresetItemSettings[] $itemSettings
 	 */
 	public function __construct(
 		private string $identifier,
-		private array $exclusionList,
+		private CameraAimAssistPresetExclusionDefinition $exclusionSettings,
 		private array $liquidTargetingList,
 		private array $itemSettings,
 		private ?string $defaultItemSettings,
@@ -38,10 +37,7 @@ final class CameraAimAssistPreset{
 
 	public function getIdentifier() : string{ return $this->identifier; }
 
-	/**
-	 * @return string[]
-	 */
-	public function getExclusionList() : array{ return $this->exclusionList; }
+	public function getExclusionSettings() : CameraAimAssistPresetExclusionDefinition{ return $this->exclusionSettings; }
 
 	/**
 	 * @return string[]
@@ -59,11 +55,7 @@ final class CameraAimAssistPreset{
 
 	public static function read(ByteBufferReader $in) : self{
 		$identifier = CommonTypes::getString($in);
-
-		$exclusionList = [];
-		for($i = 0, $len = VarInt::readUnsignedInt($in); $i < $len; ++$i){
-			$exclusionList[] = CommonTypes::getString($in);
-		}
+		$exclusionList = CameraAimAssistPresetExclusionDefinition::read($in);
 
 		$liquidTargetingList = [];
 		for($i = 0, $len = VarInt::readUnsignedInt($in); $i < $len; ++$i){
@@ -90,11 +82,7 @@ final class CameraAimAssistPreset{
 
 	public function write(ByteBufferWriter $out) : void{
 		CommonTypes::putString($out, $this->identifier);
-
-		VarInt::writeUnsignedInt($out, count($this->exclusionList));
-		foreach($this->exclusionList as $exclusion){
-			CommonTypes::putString($out, $exclusion);
-		}
+		$this->exclusionSettings->write($out);
 
 		VarInt::writeUnsignedInt($out, count($this->liquidTargetingList));
 		foreach($this->liquidTargetingList as $liquidTargeting){

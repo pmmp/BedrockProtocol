@@ -241,8 +241,9 @@ class PacketPool{
 		$this->registerPacket(new ClientboundControlSchemeSetPacket());
 		$this->registerPacket(new DebugDrawerPacket());
 		$this->registerPacket(new ServerboundPackSettingChangePacket());
-		$this->registerPacket(new DataStoreSyncPacket());
+		$this->registerPacket(new ClientboundDataStorePacket());
 		$this->registerPacket(new GraphicsOverrideParameterPacket());
+		$this->registerPacket(new ServerboundDataStorePacket());
 	}
 
 	public function registerPacket(Packet $packet) : void{

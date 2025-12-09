@@ -20,6 +20,7 @@ use pmmp\encoding\ByteBufferWriter;
 use pmmp\encoding\VarInt;
 use pocketmine\network\mcpe\protocol\types\camera\CameraAimAssistCategory;
 use pocketmine\network\mcpe\protocol\types\camera\CameraAimAssistPreset;
+use pocketmine\network\mcpe\protocol\types\camera\CameraAimAssistPresetsPacketOperation;
 use function count;
 
 class CameraAimAssistPresetsPacket extends DataPacket implements ClientboundPacket{
@@ -29,14 +30,14 @@ class CameraAimAssistPresetsPacket extends DataPacket implements ClientboundPack
 	private array $categories;
 	/** @var CameraAimAssistPreset[] */
 	private array $presets;
-	private int $operation;
+	private CameraAimAssistPresetsPacketOperation $operation;
 
 	/**
 	 * @generate-create-func
 	 * @param CameraAimAssistCategory[] $categories
 	 * @param CameraAimAssistPreset[]   $presets
 	 */
-	public static function create(array $categories, array $presets, int $operation) : self{
+	public static function create(array $categories, array $presets, CameraAimAssistPresetsPacketOperation $operation) : self{
 		$result = new self;
 		$result->categories = $categories;
 		$result->presets = $presets;
@@ -54,7 +55,7 @@ class CameraAimAssistPresetsPacket extends DataPacket implements ClientboundPack
 	 */
 	public function getPresets() : array{ return $this->presets; }
 
-	public function getOperation() : int{ return $this->operation; }
+	public function getOperation() : CameraAimAssistPresetsPacketOperation{ return $this->operation; }
 
 	protected function decodePayload(ByteBufferReader $in) : void{
 		$this->categories = [];
@@ -67,7 +68,7 @@ class CameraAimAssistPresetsPacket extends DataPacket implements ClientboundPack
 			$this->presets[] = CameraAimAssistPreset::read($in);
 		}
 
-		$this->operation = Byte::readUnsigned($in);
+		$this->operation = CameraAimAssistPresetsPacketOperation::fromPacket(Byte::readUnsigned($in));
 	}
 
 	protected function encodePayload(ByteBufferWriter $out) : void{
@@ -81,7 +82,7 @@ class CameraAimAssistPresetsPacket extends DataPacket implements ClientboundPack
 			$preset->write($out);
 		}
 
-		Byte::writeUnsigned($out, $this->operation);
+		Byte::writeUnsigned($out, $this->operation->value);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

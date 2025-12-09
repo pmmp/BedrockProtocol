@@ -854,11 +854,15 @@ trait PacketHandlerDefaultImplTrait{
 		return false;
 	}
 
-	public function handleDataStoreSync(DataStoreSyncPacket $packet) : bool{
+	public function handleClientboundDataStore(ClientboundDataStorePacket $packet) : bool{
 		return false;
 	}
 
 	public function handleGraphicsOverrideParameter(GraphicsOverrideParameterPacket $packet) : bool{
+		return false;
+	}
+
+	public function handleServerboundDataStore(ServerboundDataStorePacket $packet) : bool{
 		return false;
 	}
 }

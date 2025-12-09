@@ -188,9 +188,8 @@ final class AvailableCommandsPacket extends DataPacket implements ClientboundPac
 		}
 
 		$this->enums = [];
-		$valueListSize = count($this->enumValues);
 		for($i = 0, $size = VarInt::readUnsignedInt($in); $i < $size; $i++){
-			$this->enums[] = CommandEnumRawData::read($in, $valueListSize);
+			$this->enums[] = CommandEnumRawData::read($in);
 		}
 
 		$this->chainedSubCommandData = [];
@@ -231,9 +230,8 @@ final class AvailableCommandsPacket extends DataPacket implements ClientboundPac
 		}
 
 		VarInt::writeUnsignedInt($out, count($this->enums));
-		$valueListSize = count($this->enumValues);
 		foreach($this->enums as $enum){
-			$enum->write($out, $valueListSize);
+			$enum->write($out);
 		}
 
 		VarInt::writeUnsignedInt($out, count($this->chainedSubCommandData));

@@ -17,7 +17,7 @@ namespace pocketmine\network\mcpe\protocol;
 use pmmp\encoding\Byte;
 use pmmp\encoding\ByteBufferReader;
 use pmmp\encoding\ByteBufferWriter;
-use pmmp\encoding\LE;
+use pocketmine\math\Vector3;
 use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 
 class InteractPacket extends DataPacket implements ServerboundPacket{
@@ -30,31 +30,18 @@ class InteractPacket extends DataPacket implements ServerboundPacket{
 
 	public int $action;
 	public int $targetActorRuntimeId;
-	public float $x;
-	public float $y;
-	public float $z;
+	public ?Vector3 $position = null;
 
 	protected function decodePayload(ByteBufferReader $in) : void{
 		$this->action = Byte::readUnsigned($in);
 		$this->targetActorRuntimeId = CommonTypes::getActorRuntimeId($in);
-
-		if($this->action === self::ACTION_MOUSEOVER || $this->action === self::ACTION_LEAVE_VEHICLE){
-			//TODO: should this be a vector3?
-			$this->x = LE::readFloat($in);
-			$this->y = LE::readFloat($in);
-			$this->z = LE::readFloat($in);
-		}
+		$this->position = CommonTypes::readOptional($in, CommonTypes::getVector3(...));
 	}
 
 	protected function encodePayload(ByteBufferWriter $out) : void{
 		Byte::writeUnsigned($out, $this->action);
 		CommonTypes::putActorRuntimeId($out, $this->targetActorRuntimeId);
-
-		if($this->action === self::ACTION_MOUSEOVER || $this->action === self::ACTION_LEAVE_VEHICLE){
-			LE::writeFloat($out, $this->x);
-			LE::writeFloat($out, $this->y);
-			LE::writeFloat($out, $this->z);
-		}
+		CommonTypes::writeOptional($out, $this->position, CommonTypes::putVector3(...));
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

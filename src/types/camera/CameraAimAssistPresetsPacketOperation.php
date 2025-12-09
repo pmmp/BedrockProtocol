@@ -12,19 +12,13 @@
 
 declare(strict_types=1);
 
-namespace pocketmine\network\mcpe\protocol\types;
+namespace pocketmine\network\mcpe\protocol\types\camera;
 
-enum GraphicsOverrideParameterType : int{
+use pocketmine\network\mcpe\protocol\types\PacketIntEnumTrait;
+
+enum CameraAimAssistPresetsPacketOperation : int{
 	use PacketIntEnumTrait;
 
-	case SKY_ZENITH_COLOR = 0;
-	case SKY_HORIZON_COLOR = 1;
-	case HORIZON_BLEND_MIN = 2;
-	case HORIZON_BLEND_MAX = 3;
-	case HORIZON_BLEND_START = 4;
-	case HORIZON_BLEND_MIE_START = 5;
-	case RAYLEIGH_STRENGTH = 6;
-	case SUN_MIE_STRENGTH = 7;
-	case MOON_MIE_STRENGTH = 8;
-	case SUN_GLARE_SHAPE = 9;
+	case SET = 0;
+	case ADD_TO_EXISTING = 1;
 }

@@ -20,9 +20,14 @@ use pmmp\encoding\ByteBufferWriter;
 use pmmp\encoding\VarInt;
 use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 use function count;
+use function in_array;
 
 class TextPacket extends DataPacket implements ClientboundPacket, ServerboundPacket{
 	public const NETWORK_ID = ProtocolInfo::TEXT_PACKET;
+
+	private const CATEGORY_MESSAGE_ONLY = 0;
+	private const CATEGORY_AUTHORED_MESSAGE = 1;
+	private const CATEGORY_MESSAGE_WITH_PARAMETERS = 2;
 
 	public const TYPE_RAW = 0;
 	public const TYPE_CHAT = 1;
@@ -45,7 +50,7 @@ class TextPacket extends DataPacket implements ClientboundPacket, ServerboundPac
 	public array $parameters = [];
 	public string $xboxUserId = "";
 	public string $platformChatId = "";
-	public string $filteredMessage = "";
+	public ?string $filteredMessage = null;
 
 	private static function messageOnly(int $type, string $message) : self{
 		$result = new self;
@@ -100,8 +105,31 @@ class TextPacket extends DataPacket implements ClientboundPacket, ServerboundPac
 	}
 
 	protected function decodePayload(ByteBufferReader $in) : void{
-		$this->type = Byte::readUnsigned($in);
 		$this->needsTranslation = CommonTypes::getBool($in);
+
+		$category = Byte::readUnsigned($in);
+		switch($category){
+			case self::CATEGORY_MESSAGE_ONLY:
+				CommonTypes::getString($in); // raw
+				CommonTypes::getString($in); // tip
+				CommonTypes::getString($in); // systemMessage
+				CommonTypes::getString($in); // textObjectWhisper
+				CommonTypes::getString($in); // textObjectAnnouncement
+				CommonTypes::getString($in); // textObject
+				break;
+			case self::CATEGORY_AUTHORED_MESSAGE:
+				CommonTypes::getString($in); // chat
+				CommonTypes::getString($in); // whisper
+				CommonTypes::getString($in); // announcement
+				break;
+			case self::CATEGORY_MESSAGE_WITH_PARAMETERS:
+				CommonTypes::getString($in); // translation
+				CommonTypes::getString($in); // popup
+				CommonTypes::getString($in); // jukeboxPopup
+				break;
+		}
+
+		$this->type = Byte::readUnsigned($in);
 		switch($this->type){
 			case self::TYPE_CHAT:
 			case self::TYPE_WHISPER:
@@ -130,12 +158,44 @@ class TextPacket extends DataPacket implements ClientboundPacket, ServerboundPac
 
 		$this->xboxUserId = CommonTypes::getString($in);
 		$this->platformChatId = CommonTypes::getString($in);
-		$this->filteredMessage = CommonTypes::getString($in);
+		$this->filteredMessage = CommonTypes::readOptional($in, CommonTypes::getString(...));
 	}
 
 	protected function encodePayload(ByteBufferWriter $out) : void{
-		Byte::writeUnsigned($out, $this->type);
 		CommonTypes::putBool($out, $this->needsTranslation);
+
+		if(in_array($this->type, [
+			self::TYPE_RAW,
+			self::TYPE_TIP,
+			self::TYPE_SYSTEM,
+			self::TYPE_JSON_WHISPER,
+			self::TYPE_JSON_ANNOUNCEMENT,
+			self::TYPE_JSON,
+		], true)){
+			Byte::writeUnsigned($out, self::CATEGORY_MESSAGE_ONLY);
+			CommonTypes::putString($out, 'raw');
+			CommonTypes::putString($out, 'tip');
+			CommonTypes::putString($out, 'systemMessage');
+			CommonTypes::putString($out, 'textObjectWhisper');
+			CommonTypes::putString($out, 'textObjectAnnouncement');
+			CommonTypes::putString($out, 'textObject');
+		}elseif(in_array($this->type, [
+			self::TYPE_CHAT,
+			self::TYPE_WHISPER,
+			self::TYPE_ANNOUNCEMENT,
+		], true)){
+			Byte::writeUnsigned($out, self::CATEGORY_AUTHORED_MESSAGE);
+			CommonTypes::putString($out, 'chat');
+			CommonTypes::putString($out, 'whisper');
+			CommonTypes::putString($out, 'announcement');
+		}else{
+			Byte::writeUnsigned($out, self::CATEGORY_MESSAGE_WITH_PARAMETERS);
+			CommonTypes::putString($out, 'translate');
+			CommonTypes::putString($out, 'popup');
+			CommonTypes::putString($out, 'jukeboxPopup');
+		}
+
+		Byte::writeUnsigned($out, $this->type);
 		switch($this->type){
 			case self::TYPE_CHAT:
 			case self::TYPE_WHISPER:
@@ -164,7 +224,7 @@ class TextPacket extends DataPacket implements ClientboundPacket, ServerboundPac
 
 		CommonTypes::putString($out, $this->xboxUserId);
 		CommonTypes::putString($out, $this->platformChatId);
-		CommonTypes::putString($out, $this->filteredMessage);
+		CommonTypes::writeOptional($out, $this->filteredMessage, CommonTypes::putString(...));
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

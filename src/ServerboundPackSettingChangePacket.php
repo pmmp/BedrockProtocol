@@ -49,7 +49,7 @@ class ServerboundPackSettingChangePacket extends DataPacket implements Serverbou
 		$this->packId = CommonTypes::getUUID($in);
 
 		$name = CommonTypes::getString($in);
-		$typeId = PackSettingType::from(VarInt::readUnsignedInt($in));
+		$typeId = PackSettingType::fromPacket(VarInt::readUnsignedInt($in));
 		$this->packSetting = match($typeId){
 			PackSettingType::FLOAT => FloatPackSetting::read($in, $name),
 			PackSettingType::BOOL => BoolPackSetting::read($in, $name),

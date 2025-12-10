@@ -37,7 +37,7 @@ class CommandOutputPacket extends DataPacket implements ClientboundPacket{
 	public int $successCount;
 	/** @var CommandOutputMessage[] */
 	public array $messages = [];
-	public ?string $unknownString;
+	public ?string $data;
 
 	protected function decodePayload(ByteBufferReader $in) : void{
 		$this->originData = CommonTypes::getCommandOriginData($in);
@@ -48,7 +48,7 @@ class CommandOutputPacket extends DataPacket implements ClientboundPacket{
 			$this->messages[] = $this->getCommandMessage($in);
 		}
 
-		$this->unknownString = CommonTypes::readOptional($in, CommonTypes::getString(...));
+		$this->data = CommonTypes::readOptional($in, CommonTypes::getString(...));
 	}
 
 	/**
@@ -77,7 +77,7 @@ class CommandOutputPacket extends DataPacket implements ClientboundPacket{
 			$this->putCommandMessage($message, $out);
 		}
 
-		CommonTypes::writeOptional($out, $this->unknownString, CommonTypes::putString(...));
+		CommonTypes::writeOptional($out, $this->data, CommonTypes::putString(...));
 	}
 
 	protected function putCommandMessage(CommandOutputMessage $message, ByteBufferWriter $out) : void{

@@ -202,20 +202,20 @@ class TextPacket extends DataPacket implements ClientboundPacket, ServerboundPac
 			case self::TYPE_WHISPER:
 			/** @noinspection PhpMissingBreakStatementInspection */
 			case self::TYPE_ANNOUNCEMENT:
-				CommonTypes::putString($out, $this->sourceName);
+				CommonTypes::putString($out, $this->sourceName === '' ? ' ' : $this->sourceName);
 			case self::TYPE_RAW:
 			case self::TYPE_TIP:
 			case self::TYPE_SYSTEM:
 			case self::TYPE_JSON_WHISPER:
 			case self::TYPE_JSON:
 			case self::TYPE_JSON_ANNOUNCEMENT:
-				CommonTypes::putString($out, $this->message);
+				CommonTypes::putString($out, $this->message === '' ? ' ' : $this->message);
 				break;
 
 			case self::TYPE_TRANSLATION:
 			case self::TYPE_POPUP:
 			case self::TYPE_JUKEBOX_POPUP:
-				CommonTypes::putString($out, $this->message);
+				CommonTypes::putString($out, $this->message === '' ? ' ' : $this->message);
 				VarInt::writeUnsignedInt($out, count($this->parameters));
 				foreach($this->parameters as $p){
 					CommonTypes::putString($out, $p);

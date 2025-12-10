@@ -27,7 +27,7 @@ final class BoolDataStoreValue extends DataStoreValue{
 
 	public function getValue() : bool{ return $this->value; }
 
-	public function getTypeId() : DataStoreValueType{
+	public function getTypeId() : int{
 		return self::ID;
 	}
 

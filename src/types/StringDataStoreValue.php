@@ -27,7 +27,7 @@ final class StringDataStoreValue extends DataStoreValue{
 
 	public function getValue() : string{ return $this->value; }
 
-	public function getTypeId() : DataStoreValueType{
+	public function getTypeId() : int{
 		return self::ID;
 	}
 

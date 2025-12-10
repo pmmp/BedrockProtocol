@@ -14,10 +14,8 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol\types;
 
-enum DataStoreType : int{
-	use PacketIntEnumTrait;
-
-	case UPDATE = 0;
-	case CHANGE = 1;
-	case REMOVAL = 2;
+final class DataStoreType{
+	public const UPDATE = 0;
+	public const CHANGE = 1;
+	public const REMOVAL = 2;
 }

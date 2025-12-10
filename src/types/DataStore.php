@@ -21,7 +21,7 @@ use pmmp\encoding\ByteBufferWriter;
  */
 abstract class DataStore{
 
-	abstract public function getTypeId() : DataStoreType;
+	abstract public function getTypeId() : int;
 
 	abstract public function write(ByteBufferWriter $out) : void;
 }

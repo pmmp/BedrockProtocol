@@ -27,7 +27,7 @@ final class DoubleDataStoreValue extends DataStoreValue{
 
 	public function getValue() : float{ return $this->value; }
 
-	public function getTypeId() : DataStoreValueType{
+	public function getTypeId() : int{
 		return self::ID;
 	}
 

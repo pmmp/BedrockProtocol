@@ -32,7 +32,7 @@ final class DataStoreChange extends DataStore {
 		private DataStoreValue $data
 	){}
 
-	public function getTypeId() : DataStoreType{
+	public function getTypeId() : int{
 		return self::ID;
 	}
 

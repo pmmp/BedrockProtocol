@@ -14,11 +14,7 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol\types\camera;
 
-use pocketmine\network\mcpe\protocol\types\PacketIntEnumTrait;
-
-enum CameraAimAssistPresetsPacketOperation : int{
-	use PacketIntEnumTrait;
-
-	case SET = 0;
-	case ADD_TO_EXISTING = 1;
+final class CameraAimAssistPresetsPacketOperation{
+	public const SET = 0;
+	public const ADD_TO_EXISTING = 1;
 }

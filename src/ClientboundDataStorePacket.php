@@ -47,10 +47,11 @@ class ClientboundDataStorePacket extends DataPacket{
 	protected function decodePayload(ByteBufferReader $in) : void{
 		$this->values = [];
 		for($i = 0, $len = VarInt::readUnsignedInt($in); $i < $len; ++$i){
-			$this->values[] = match(DataStoreType::fromPacket(VarInt::readUnsignedInt($in))){
+			$this->values[] = match(VarInt::readUnsignedInt($in)){
 				DataStoreType::UPDATE => DataStoreUpdate::read($in),
 				DataStoreType::CHANGE => DataStoreChange::read($in),
 				DataStoreType::REMOVAL => DataStoreRemoval::read($in),
+				default => throw new PacketDecodeException("Unknown DataStore type"),
 			};
 		}
 	}
@@ -58,7 +59,7 @@ class ClientboundDataStorePacket extends DataPacket{
 	protected function encodePayload(ByteBufferWriter $out) : void{
 		VarInt::writeUnsignedInt($out, count($this->values));
 		foreach($this->values as $value){
-			VarInt::writeUnsignedInt($out, $value->getTypeId()->value);
+			VarInt::writeUnsignedInt($out, $value->getTypeId());
 			$value->write($out);
 		}
 	}

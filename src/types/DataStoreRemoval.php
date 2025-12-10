@@ -28,7 +28,7 @@ final class DataStoreRemoval extends DataStore{
 		private string $name,
 	){}
 
-	public function getTypeId() : DataStoreType{
+	public function getTypeId() : int{
 		return self::ID;
 	}
 

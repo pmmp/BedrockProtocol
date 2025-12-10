@@ -20,7 +20,6 @@ use pmmp\encoding\ByteBufferWriter;
 use pmmp\encoding\VarInt;
 use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 use function count;
-use function in_array;
 
 class TextPacket extends DataPacket implements ClientboundPacket, ServerboundPacket{
 	public const NETWORK_ID = ProtocolInfo::TEXT_PACKET;
@@ -164,14 +163,15 @@ class TextPacket extends DataPacket implements ClientboundPacket, ServerboundPac
 	protected function encodePayload(ByteBufferWriter $out) : void{
 		CommonTypes::putBool($out, $this->needsTranslation);
 
-		if(in_array($this->type, [
+		if(match($this->type){
 			self::TYPE_RAW,
 			self::TYPE_TIP,
 			self::TYPE_SYSTEM,
 			self::TYPE_JSON_WHISPER,
 			self::TYPE_JSON_ANNOUNCEMENT,
-			self::TYPE_JSON,
-		], true)){
+			self::TYPE_JSON => true,
+			default => false,
+		}){
 			Byte::writeUnsigned($out, self::CATEGORY_MESSAGE_ONLY);
 			CommonTypes::putString($out, 'raw');
 			CommonTypes::putString($out, 'tip');
@@ -179,11 +179,12 @@ class TextPacket extends DataPacket implements ClientboundPacket, ServerboundPac
 			CommonTypes::putString($out, 'textObjectWhisper');
 			CommonTypes::putString($out, 'textObjectAnnouncement');
 			CommonTypes::putString($out, 'textObject');
-		}elseif(in_array($this->type, [
+		}elseif(match($this->type){
 			self::TYPE_CHAT,
 			self::TYPE_WHISPER,
-			self::TYPE_ANNOUNCEMENT,
-		], true)){
+			self::TYPE_ANNOUNCEMENT => true,
+			default => false,
+		}){
 			Byte::writeUnsigned($out, self::CATEGORY_AUTHORED_MESSAGE);
 			CommonTypes::putString($out, 'chat');
 			CommonTypes::putString($out, 'whisper');

@@ -109,22 +109,22 @@ class TextPacket extends DataPacket implements ClientboundPacket, ServerboundPac
 		$category = Byte::readUnsigned($in);
 		switch($category){
 			case self::CATEGORY_MESSAGE_ONLY:
-				CommonTypes::getString($in); // raw
-				CommonTypes::getString($in); // tip
-				CommonTypes::getString($in); // systemMessage
-				CommonTypes::getString($in); // textObjectWhisper
-				CommonTypes::getString($in); // textObjectAnnouncement
-				CommonTypes::getString($in); // textObject
+				$this->assertString(CommonTypes::getString($in), 'raw');
+				$this->assertString(CommonTypes::getString($in), 'tip');
+				$this->assertString(CommonTypes::getString($in), 'systemMessage');
+				$this->assertString(CommonTypes::getString($in), 'textObjectWhisper');
+				$this->assertString(CommonTypes::getString($in), 'textObjectAnnouncement');
+				$this->assertString(CommonTypes::getString($in), 'textObject');
 				break;
 			case self::CATEGORY_AUTHORED_MESSAGE:
-				CommonTypes::getString($in); // chat
-				CommonTypes::getString($in); // whisper
-				CommonTypes::getString($in); // announcement
+				$this->assertString(CommonTypes::getString($in), 'chat');
+				$this->assertString(CommonTypes::getString($in), 'whisper');
+				$this->assertString(CommonTypes::getString($in), 'announcement');
 				break;
 			case self::CATEGORY_MESSAGE_WITH_PARAMETERS:
-				CommonTypes::getString($in); // translation
-				CommonTypes::getString($in); // popup
-				CommonTypes::getString($in); // jukeboxPopup
+				$this->assertString(CommonTypes::getString($in), 'translate');
+				$this->assertString(CommonTypes::getString($in), 'popup');
+				$this->assertString(CommonTypes::getString($in), 'jukeboxPopup');
 				break;
 		}
 
@@ -134,19 +134,29 @@ class TextPacket extends DataPacket implements ClientboundPacket, ServerboundPac
 			case self::TYPE_WHISPER:
 			/** @noinspection PhpMissingBreakStatementInspection */
 			case self::TYPE_ANNOUNCEMENT:
+				if($category !== self::CATEGORY_AUTHORED_MESSAGE){
+					throw new PacketDecodeException("Decoded TextPacket has invalid structure: type {$this->type} requires category CATEGORY_AUTHORED_MESSAGE");
+				}
 				$this->sourceName = CommonTypes::getString($in);
+				$this->message = CommonTypes::getString($in);
+				break;
 			case self::TYPE_RAW:
 			case self::TYPE_TIP:
 			case self::TYPE_SYSTEM:
 			case self::TYPE_JSON_WHISPER:
 			case self::TYPE_JSON:
 			case self::TYPE_JSON_ANNOUNCEMENT:
+				if($category !== self::CATEGORY_MESSAGE_ONLY){
+					throw new PacketDecodeException("Decoded TextPacket has invalid structure: type {$this->type} requires category CATEGORY_MESSAGE_ONLY");
+				}
 				$this->message = CommonTypes::getString($in);
 				break;
-
 			case self::TYPE_TRANSLATION:
 			case self::TYPE_POPUP:
 			case self::TYPE_JUKEBOX_POPUP:
+				if($category !== self::CATEGORY_MESSAGE_WITH_PARAMETERS){
+					throw new PacketDecodeException("Decoded TextPacket has invalid structure: type {$this->type} requires category CATEGORY_MESSAGE_WITH_PARAMETERS");
+				}
 				$this->message = CommonTypes::getString($in);
 				$count = VarInt::readUnsignedInt($in);
 				for($i = 0; $i < $count; ++$i){
@@ -226,6 +236,12 @@ class TextPacket extends DataPacket implements ClientboundPacket, ServerboundPac
 		CommonTypes::putString($out, $this->xboxUserId);
 		CommonTypes::putString($out, $this->platformChatId);
 		CommonTypes::writeOptional($out, $this->filteredMessage, CommonTypes::putString(...));
+	}
+
+	private function assertString(string $receivedValue, string $requiredValue) : void{
+		if($receivedValue !== $requiredValue){
+			throw new PacketDecodeException("Decoded TextPacket has invalid structure: expected '$requiredValue', got '$receivedValue'");
+		}
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

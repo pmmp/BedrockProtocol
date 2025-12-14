@@ -17,6 +17,7 @@ namespace pocketmine\network\mcpe\protocol\types;
 use pmmp\encoding\ByteBufferReader;
 use pmmp\encoding\ByteBufferWriter;
 use pmmp\encoding\VarInt;
+use pocketmine\network\mcpe\protocol\PacketDecodeException;
 use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 
 /**

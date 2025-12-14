@@ -15,7 +15,6 @@ declare(strict_types=1);
 namespace pocketmine\network\mcpe\protocol\types\command;
 
 use pocketmine\network\mcpe\protocol\PacketDecodeException;
-use pocketmine\network\mcpe\protocol\types\PacketIntEnumTrait;
 use function array_flip;
 
 final class CommandPermissions{

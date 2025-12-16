@@ -29,7 +29,7 @@ final class CommandPermissions{
 	public const OWNER = 4; //server terminal on BDS
 	public const INTERNAL = 5;
 
-	private const PERMISSION_NAMES = [ // enum case references requires PHP 8.2
+	private const PERMISSION_NAMES = [
 		0 => "any",
 		1 => "gamedirectors",
 		2 => "admin",
@@ -38,18 +38,16 @@ final class CommandPermissions{
 		5 => "internal",
 	];
 
-	public static function getPermissionName(int $value) : string{
-		return self::PERMISSION_NAMES[$value] ?? throw new PacketDecodeException("Invalid raw value $value for " . static::class);
+	public static function toName(int $value) : string{
+		return self::PERMISSION_NAMES[$value] ?? throw new \InvalidArgumentException("Invalid raw value \"$value\" for CommandPermission");
 	}
 
-	public static function fromPermissionName(string $name) : int{
+	public static function fromName(string $name) : int{
 		static $cache = null;
 		if($cache === null){
 			$cache = array_flip(self::PERMISSION_NAMES);
 		}
 
-		$value = $cache[$name] ?? throw new PacketDecodeException("Invalid raw value $name for " . static::class);
-
-		return $value;
+		return $cache[$name] ?? throw new \InvalidArgumentException("Invalid raw value \"$name\" for CommandPermission");
 	}
 }

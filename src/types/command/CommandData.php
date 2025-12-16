@@ -15,6 +15,8 @@ declare(strict_types=1);
 namespace pocketmine\network\mcpe\protocol\types\command;
 
 class CommandData{
+	private string $permission;
+
 	/**
 	 * @param CommandOverload[] $overloads
 	 * @param ChainedSubCommandData[] $chainedSubCommandData
@@ -23,13 +25,14 @@ class CommandData{
 		public string $name,
 		public string $description,
 		public int $flags,
-		public string $permission,
+		int|string $permission,
 		public ?CommandHardEnum $aliases,
 		public array $overloads,
 		public array $chainedSubCommandData
 	){
 		(function(CommandOverload ...$overloads) : void{})(...$overloads);
 		(function(ChainedSubCommandData ...$chainedSubCommandData) : void{})(...$chainedSubCommandData);
+		$this->permission = is_int($permission) ? CommandPermissions::toName($permission) : $permission;
 	}
 
 	public function getName() : string{

@@ -75,7 +75,8 @@ class TextPacket extends DataPacket implements ClientboundPacket, ServerboundPac
 	private static function messageOnly(int $type, string $message) : self{
 		$result = new self;
 		$result->type = $type;
-		$result->message = $message;
+		//TODO: HACK! Empty message crashes or bugs out client in 1.21.130
+		$result->message = $message === "" ? " " : $message;
 		return $result;
 	}
 
@@ -86,7 +87,8 @@ class TextPacket extends DataPacket implements ClientboundPacket, ServerboundPac
 		$result = new self;
 		$result->type = $type;
 		$result->needsTranslation = true;
-		$result->message = $key;
+		//TODO: HACK! Empty message crashes or bugs out client in 1.21.130
+		$result->message = $key === "" ? " " : $key;
 		$result->parameters = $parameters;
 		return $result;
 	}
@@ -210,20 +212,20 @@ class TextPacket extends DataPacket implements ClientboundPacket, ServerboundPac
 			case self::TYPE_WHISPER:
 			/** @noinspection PhpMissingBreakStatementInspection */
 			case self::TYPE_ANNOUNCEMENT:
-				CommonTypes::putString($out, $this->sourceName === '' ? ' ' : $this->sourceName);
+				CommonTypes::putString($out, $this->sourceName);
 			case self::TYPE_RAW:
 			case self::TYPE_TIP:
 			case self::TYPE_SYSTEM:
 			case self::TYPE_JSON_WHISPER:
 			case self::TYPE_JSON:
 			case self::TYPE_JSON_ANNOUNCEMENT:
-				CommonTypes::putString($out, $this->message === '' ? ' ' : $this->message);
+				CommonTypes::putString($out, $this->message);
 				break;
 
 			case self::TYPE_TRANSLATION:
 			case self::TYPE_POPUP:
 			case self::TYPE_JUKEBOX_POPUP:
-				CommonTypes::putString($out, $this->message === '' ? ' ' : $this->message);
+				CommonTypes::putString($out, $this->message);
 				VarInt::writeUnsignedInt($out, count($this->parameters));
 				foreach($this->parameters as $p){
 					CommonTypes::putString($out, $p);

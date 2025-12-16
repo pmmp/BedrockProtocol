@@ -14,6 +14,8 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol\types\command;
 
+use function is_int;
+
 class CommandData{
 	private string $permission;
 

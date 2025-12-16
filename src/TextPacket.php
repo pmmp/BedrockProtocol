@@ -28,6 +28,27 @@ class TextPacket extends DataPacket implements ClientboundPacket, ServerboundPac
 	private const CATEGORY_AUTHORED_MESSAGE = 1;
 	private const CATEGORY_MESSAGE_WITH_PARAMETERS = 2;
 
+	private const CATEGORY_DUMMY_STRINGS = [
+		self::CATEGORY_MESSAGE_ONLY => [
+			'raw',
+			'tip',
+			'systemMessage',
+			'textObjectWhisper',
+			'textObjectAnnouncement',
+			'textObject'
+		],
+		self::CATEGORY_AUTHORED_MESSAGE => [
+			'chat',
+			'whisper',
+			'announcement'
+		],
+		self::CATEGORY_MESSAGE_WITH_PARAMETERS => [
+			'translate',
+			'popup',
+			'jukeboxPopup',
+		]
+	];
+
 	public const TYPE_RAW = 0;
 	public const TYPE_CHAT = 1;
 	public const TYPE_TRANSLATION = 2;
@@ -107,25 +128,12 @@ class TextPacket extends DataPacket implements ClientboundPacket, ServerboundPac
 		$this->needsTranslation = CommonTypes::getBool($in);
 
 		$category = Byte::readUnsigned($in);
-		switch($category){
-			case self::CATEGORY_MESSAGE_ONLY:
-				$this->assertString(CommonTypes::getString($in), 'raw');
-				$this->assertString(CommonTypes::getString($in), 'tip');
-				$this->assertString(CommonTypes::getString($in), 'systemMessage');
-				$this->assertString(CommonTypes::getString($in), 'textObjectWhisper');
-				$this->assertString(CommonTypes::getString($in), 'textObjectAnnouncement');
-				$this->assertString(CommonTypes::getString($in), 'textObject');
-				break;
-			case self::CATEGORY_AUTHORED_MESSAGE:
-				$this->assertString(CommonTypes::getString($in), 'chat');
-				$this->assertString(CommonTypes::getString($in), 'whisper');
-				$this->assertString(CommonTypes::getString($in), 'announcement');
-				break;
-			case self::CATEGORY_MESSAGE_WITH_PARAMETERS:
-				$this->assertString(CommonTypes::getString($in), 'translate');
-				$this->assertString(CommonTypes::getString($in), 'popup');
-				$this->assertString(CommonTypes::getString($in), 'jukeboxPopup');
-				break;
+		$expectedDummyStrings = self::CATEGORY_DUMMY_STRINGS[$category] ?? throw new PacketDecodeException("Unknown category ID $category");
+		foreach($expectedDummyStrings as $k => $expectedDummyString){
+			$actual = CommonTypes::getString($in);
+			if($expectedDummyString !== $actual){
+				throw new PacketDecodeException("Dummy string mismatch for category $category at position $k: expected $expectedDummyString, got $actual");
+			}
 		}
 
 		$this->type = Byte::readUnsigned($in);
@@ -173,37 +181,27 @@ class TextPacket extends DataPacket implements ClientboundPacket, ServerboundPac
 	protected function encodePayload(ByteBufferWriter $out) : void{
 		CommonTypes::putBool($out, $this->needsTranslation);
 
-		if(match($this->type){
+		$category = match ($this->type) {
 			self::TYPE_RAW,
 			self::TYPE_TIP,
 			self::TYPE_SYSTEM,
 			self::TYPE_JSON_WHISPER,
 			self::TYPE_JSON_ANNOUNCEMENT,
-			self::TYPE_JSON => true,
-			default => false,
-		}){
-			Byte::writeUnsigned($out, self::CATEGORY_MESSAGE_ONLY);
-			CommonTypes::putString($out, 'raw');
-			CommonTypes::putString($out, 'tip');
-			CommonTypes::putString($out, 'systemMessage');
-			CommonTypes::putString($out, 'textObjectWhisper');
-			CommonTypes::putString($out, 'textObjectAnnouncement');
-			CommonTypes::putString($out, 'textObject');
-		}elseif(match($this->type){
+			self::TYPE_JSON => self::CATEGORY_MESSAGE_ONLY,
+
 			self::TYPE_CHAT,
 			self::TYPE_WHISPER,
-			self::TYPE_ANNOUNCEMENT => true,
-			default => false,
-		}){
-			Byte::writeUnsigned($out, self::CATEGORY_AUTHORED_MESSAGE);
-			CommonTypes::putString($out, 'chat');
-			CommonTypes::putString($out, 'whisper');
-			CommonTypes::putString($out, 'announcement');
-		}else{
-			Byte::writeUnsigned($out, self::CATEGORY_MESSAGE_WITH_PARAMETERS);
-			CommonTypes::putString($out, 'translate');
-			CommonTypes::putString($out, 'popup');
-			CommonTypes::putString($out, 'jukeboxPopup');
+			self::TYPE_ANNOUNCEMENT => self::CATEGORY_AUTHORED_MESSAGE,
+
+			self::TYPE_TRANSLATION,
+			self::TYPE_POPUP,
+			self::TYPE_JUKEBOX_POPUP => self::CATEGORY_MESSAGE_WITH_PARAMETERS,
+
+			default => throw new \LogicException("Invalid TextPacket type: $this->type")
+		};
+		Byte::writeUnsigned($out, $category);
+		foreach(self::CATEGORY_DUMMY_STRINGS[$category] as $dummyString){
+			CommonTypes::putString($out, $dummyString);
 		}
 
 		Byte::writeUnsigned($out, $this->type);

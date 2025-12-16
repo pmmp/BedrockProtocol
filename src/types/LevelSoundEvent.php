@@ -555,5 +555,17 @@ final class LevelSoundEvent{
 	public const PLACE_ITEM = 563;
 	public const SINGLE_SWAP = 564;
 	public const MULTI_SWAP = 565;
+	public const ITEM_ENCHANT_LUNGE1 = 566;
+	public const ITEM_ENCHANT_LUNGE2 = 567;
+	public const ITEM_ENCHANT_LUNGE3 = 568;
+	public const ATTACK_CRITICAL = 569;
+	public const ITEM_SPEAR_ATTACK_HIT = 570;
+	public const ITEM_SPEAR_ATTACK_MISS = 571;
+	public const ITEM_WOODEN_SPEAR_ATTACK_HIT = 572;
+	public const ITEM_WOODEN_SPEAR_ATTACK_MISS = 573;
+	public const IMITATE_PARCHED = 574;
+	public const IMITATE_CAMEL_HUSK = 575;
+	public const ITEM_SPEAR_USE = 576;
+	public const ITEM_WOODEN_SPEAR_USE = 577;
 
 }

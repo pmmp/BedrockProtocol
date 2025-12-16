@@ -14,7 +14,6 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol\types\command\raw;
 
-use pmmp\encoding\Byte;
 use pmmp\encoding\ByteBufferReader;
 use pmmp\encoding\ByteBufferWriter;
 use pmmp\encoding\LE;
@@ -41,32 +40,24 @@ final class CommandEnumRawData{
 	 */
 	public function getValueIndexes() : array{ return $this->valueIndexes; }
 
-	public static function read(ByteBufferReader $in, int $valueListSize) : self{
+	public static function read(ByteBufferReader $in) : self{
 		$name = CommonTypes::getString($in);
 		$valueIndexes = [];
 		$size = VarInt::readUnsignedInt($in);
 
 		for($i = 0; $i < $size; $i++){
-			$valueIndexes[] = match(true){
-				$valueListSize < 256 => Byte::readUnsigned($in),
-				$valueListSize < 65536 => LE::readUnsignedShort($in),
-				default => LE::readUnsignedInt($in)
-			};
+			$valueIndexes[] = LE::readUnsignedInt($in);
 		}
 
 		return new self($name, $valueIndexes);
 	}
 
-	public function write(ByteBufferWriter $out, int $valueListSize) : void{
+	public function write(ByteBufferWriter $out) : void{
 		CommonTypes::putString($out, $this->name);
 		VarInt::writeUnsignedInt($out, count($this->valueIndexes));
 
 		foreach($this->valueIndexes as $index){
-			match(true){
-				$valueListSize < 256 => Byte::writeUnsigned($out, $index),
-				$valueListSize < 65536 => LE::writeUnsignedShort($out, $index),
-				default => LE::writeUnsignedInt($out, $index)
-			};
+			LE::writeUnsignedInt($out, $index);
 		}
 	}
 }

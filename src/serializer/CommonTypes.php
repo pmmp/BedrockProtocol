@@ -612,25 +612,19 @@ final class CommonTypes{
 	public static function getCommandOriginData(ByteBufferReader $in) : CommandOriginData{
 		$result = new CommandOriginData();
 
-		$result->type = VarInt::readUnsignedInt($in);
+		$result->type = CommonTypes::getString($in);
 		$result->uuid = self::getUUID($in);
 		$result->requestId = self::getString($in);
-
-		if($result->type === CommandOriginData::ORIGIN_DEV_CONSOLE or $result->type === CommandOriginData::ORIGIN_TEST){
-			$result->playerActorUniqueId = VarInt::readSignedLong($in);
-		}
+		$result->playerActorUniqueId = LE::readSignedLong($in);
 
 		return $result;
 	}
 
 	public static function putCommandOriginData(ByteBufferWriter $out, CommandOriginData $data) : void{
-		VarInt::writeUnsignedInt($out, $data->type);
+		self::putString($out, $data->type);
 		self::putUUID($out, $data->uuid);
 		self::putString($out, $data->requestId);
-
-		if($data->type === CommandOriginData::ORIGIN_DEV_CONSOLE or $data->type === CommandOriginData::ORIGIN_TEST){
-			VarInt::writeSignedLong($out, $data->playerActorUniqueId);
-		}
+		LE::writeSignedLong($out, $data->playerActorUniqueId);
 	}
 
 	/** @throws DataDecodeException */

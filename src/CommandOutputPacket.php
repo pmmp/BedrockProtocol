@@ -14,10 +14,10 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pmmp\encoding\Byte;
 use pmmp\encoding\ByteBufferReader;
 use pmmp\encoding\ByteBufferWriter;
 use pmmp\encoding\DataDecodeException;
+use pmmp\encoding\LE;
 use pmmp\encoding\VarInt;
 use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 use pocketmine\network\mcpe\protocol\types\command\CommandOriginData;
@@ -27,30 +27,28 @@ use function count;
 class CommandOutputPacket extends DataPacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::COMMAND_OUTPUT_PACKET;
 
-	public const TYPE_LAST = 1;
-	public const TYPE_SILENT = 2;
-	public const TYPE_ALL = 3;
-	public const TYPE_DATA_SET = 4;
+	public const TYPE_LAST = "lastoutput";
+	public const TYPE_SILENT = "silent";
+	public const TYPE_ALL = "alloutput";
+	public const TYPE_DATA_SET = "dataset";
 
 	public CommandOriginData $originData;
-	public int $outputType;
+	public string $outputType;
 	public int $successCount;
 	/** @var CommandOutputMessage[] */
 	public array $messages = [];
-	public string $unknownString;
+	public ?string $data;
 
 	protected function decodePayload(ByteBufferReader $in) : void{
 		$this->originData = CommonTypes::getCommandOriginData($in);
-		$this->outputType = Byte::readUnsigned($in);
-		$this->successCount = VarInt::readUnsignedInt($in);
+		$this->outputType = CommonTypes::getString($in);
+		$this->successCount = LE::readUnsignedInt($in);
 
 		for($i = 0, $size = VarInt::readUnsignedInt($in); $i < $size; ++$i){
 			$this->messages[] = $this->getCommandMessage($in);
 		}
 
-		if($this->outputType === self::TYPE_DATA_SET){
-			$this->unknownString = CommonTypes::getString($in);
-		}
+		$this->data = CommonTypes::readOptional($in, CommonTypes::getString(...));
 	}
 
 	/**
@@ -59,8 +57,8 @@ class CommandOutputPacket extends DataPacket implements ClientboundPacket{
 	protected function getCommandMessage(ByteBufferReader $in) : CommandOutputMessage{
 		$message = new CommandOutputMessage();
 
-		$message->isInternal = CommonTypes::getBool($in);
 		$message->messageId = CommonTypes::getString($in);
+		$message->isInternal = CommonTypes::getBool($in);
 
 		for($i = 0, $size = VarInt::readUnsignedInt($in); $i < $size; ++$i){
 			$message->parameters[] = CommonTypes::getString($in);
@@ -71,22 +69,20 @@ class CommandOutputPacket extends DataPacket implements ClientboundPacket{
 
 	protected function encodePayload(ByteBufferWriter $out) : void{
 		CommonTypes::putCommandOriginData($out, $this->originData);
-		Byte::writeUnsigned($out, $this->outputType);
-		VarInt::writeUnsignedInt($out, $this->successCount);
+		CommonTypes::putString($out, $this->outputType);
+		LE::writeUnsignedInt($out, $this->successCount);
 
 		VarInt::writeUnsignedInt($out, count($this->messages));
 		foreach($this->messages as $message){
 			$this->putCommandMessage($message, $out);
 		}
 
-		if($this->outputType === self::TYPE_DATA_SET){
-			CommonTypes::putString($out, $this->unknownString);
-		}
+		CommonTypes::writeOptional($out, $this->data, CommonTypes::putString(...));
 	}
 
 	protected function putCommandMessage(CommandOutputMessage $message, ByteBufferWriter $out) : void{
-		CommonTypes::putBool($out, $message->isInternal);
 		CommonTypes::putString($out, $message->messageId);
+		CommonTypes::putBool($out, $message->isInternal);
 
 		VarInt::writeUnsignedInt($out, count($message->parameters));
 		foreach($message->parameters as $parameter){

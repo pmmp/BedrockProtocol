@@ -40,6 +40,7 @@ final class EntityIds{
 	public const BREEZE = "minecraft:breeze";
 	public const BREEZE_WIND_CHARGE_PROJECTILE = "minecraft:breeze_wind_charge_projectile";
 	public const CAMEL = "minecraft:camel";
+	public const CAMEL_HUSK = "minecraft:camel_husk";
 	public const CAT = "minecraft:cat";
 	public const CAVE_SPIDER = "minecraft:cave_spider";
 	public const CHEST_BOAT = "minecraft:chest_boat";
@@ -93,11 +94,13 @@ final class EntityIds{
 	public const MINECART = "minecraft:minecart";
 	public const MOOSHROOM = "minecraft:mooshroom";
 	public const MULE = "minecraft:mule";
+	public const NAUTILUS = "minecraft:nautilus";
 	public const NPC = "minecraft:npc";
 	public const OCELOT = "minecraft:ocelot";
 	public const OMINOUS_ITEM_SPAWNER = "minecraft:ominous_item_spawner";
 	public const PAINTING = "minecraft:painting";
 	public const PANDA = "minecraft:panda";
+	public const PARCHED = "minecraft:parched";
 	public const PARROT = "minecraft:parrot";
 	public const PHANTOM = "minecraft:phantom";
 	public const PIG = "minecraft:pig";
@@ -152,6 +155,7 @@ final class EntityIds{
 	public const ZOGLIN = "minecraft:zoglin";
 	public const ZOMBIE = "minecraft:zombie";
 	public const ZOMBIE_HORSE = "minecraft:zombie_horse";
+	public const ZOMBIE_NAUTILUS = "minecraft:zombie_nautilus";
 	public const ZOMBIE_PIGMAN = "minecraft:zombie_pigman";
 	public const ZOMBIE_VILLAGER = "minecraft:zombie_villager";
 	public const ZOMBIE_VILLAGER_V2 = "minecraft:zombie_villager_v2";

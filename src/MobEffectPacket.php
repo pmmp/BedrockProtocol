@@ -34,6 +34,7 @@ class MobEffectPacket extends DataPacket implements ClientboundPacket{
 	public bool $particles = true;
 	public int $duration = 0;
 	public int $tick = 0;
+	public bool $ambient = true;
 
 	/**
 	 * @generate-create-func
@@ -46,6 +47,7 @@ class MobEffectPacket extends DataPacket implements ClientboundPacket{
 		bool $particles,
 		int $duration,
 		int $tick,
+		bool $ambient,
 	) : self{
 		$result = new self;
 		$result->actorRuntimeId = $actorRuntimeId;
@@ -55,15 +57,16 @@ class MobEffectPacket extends DataPacket implements ClientboundPacket{
 		$result->particles = $particles;
 		$result->duration = $duration;
 		$result->tick = $tick;
+		$result->ambient = $ambient;
 		return $result;
 	}
 
-	public static function add(int $actorRuntimeId, bool $replace, int $effectId, int $amplifier, bool $particles, int $duration, int $tick) : self{
-		return self::create($actorRuntimeId, $replace ? self::EVENT_MODIFY : self::EVENT_ADD, $effectId, $amplifier, $particles, $duration, $tick);
+	public static function add(int $actorRuntimeId, bool $replace, int $effectId, int $amplifier, bool $particles, int $duration, int $tick, bool $ambient) : self{
+		return self::create($actorRuntimeId, $replace ? self::EVENT_MODIFY : self::EVENT_ADD, $effectId, $amplifier, $particles, $duration, $tick, $ambient);
 	}
 
 	public static function remove(int $actorRuntimeId, int $effectId, int $tick) : self{
-		return self::create($actorRuntimeId, self::EVENT_REMOVE, $effectId, 0, false, 0, $tick);
+		return self::create($actorRuntimeId, self::EVENT_REMOVE, $effectId, 0, false, 0, $tick, false);
 	}
 
 	protected function decodePayload(ByteBufferReader $in) : void{
@@ -74,6 +77,7 @@ class MobEffectPacket extends DataPacket implements ClientboundPacket{
 		$this->particles = CommonTypes::getBool($in);
 		$this->duration = VarInt::readSignedInt($in);
 		$this->tick = VarInt::readUnsignedLong($in);
+		$this->ambient = CommonTypes::getBool($in);
 	}
 
 	protected function encodePayload(ByteBufferWriter $out) : void{
@@ -84,6 +88,7 @@ class MobEffectPacket extends DataPacket implements ClientboundPacket{
 		CommonTypes::putBool($out, $this->particles);
 		VarInt::writeSignedInt($out, $this->duration);
 		VarInt::writeUnsignedLong($out, $this->tick);
+		CommonTypes::putBool($out, $this->ambient);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

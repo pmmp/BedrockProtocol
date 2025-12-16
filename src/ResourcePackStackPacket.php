@@ -27,8 +27,6 @@ class ResourcePackStackPacket extends DataPacket implements ClientboundPacket{
 
 	/** @var ResourcePackStackEntry[] */
 	public array $resourcePackStack = [];
-	/** @var ResourcePackStackEntry[] */
-	public array $behaviorPackStack = [];
 	public bool $mustAccept = false;
 	public string $baseGameVersion = ProtocolInfo::MINECRAFT_VERSION_NETWORK;
 	public Experiments $experiments;
@@ -37,12 +35,10 @@ class ResourcePackStackPacket extends DataPacket implements ClientboundPacket{
 	/**
 	 * @generate-create-func
 	 * @param ResourcePackStackEntry[] $resourcePackStack
-	 * @param ResourcePackStackEntry[] $behaviorPackStack
 	 */
-	public static function create(array $resourcePackStack, array $behaviorPackStack, bool $mustAccept, string $baseGameVersion, Experiments $experiments, bool $useVanillaEditorPacks) : self{
+	public static function create(array $resourcePackStack, bool $mustAccept, string $baseGameVersion, Experiments $experiments, bool $useVanillaEditorPacks) : self{
 		$result = new self;
 		$result->resourcePackStack = $resourcePackStack;
-		$result->behaviorPackStack = $behaviorPackStack;
 		$result->mustAccept = $mustAccept;
 		$result->baseGameVersion = $baseGameVersion;
 		$result->experiments = $experiments;
@@ -52,10 +48,6 @@ class ResourcePackStackPacket extends DataPacket implements ClientboundPacket{
 
 	protected function decodePayload(ByteBufferReader $in) : void{
 		$this->mustAccept = CommonTypes::getBool($in);
-		$behaviorPackCount = VarInt::readUnsignedInt($in);
-		while($behaviorPackCount-- > 0){
-			$this->behaviorPackStack[] = ResourcePackStackEntry::read($in);
-		}
 
 		$resourcePackCount = VarInt::readUnsignedInt($in);
 		while($resourcePackCount-- > 0){
@@ -69,11 +61,6 @@ class ResourcePackStackPacket extends DataPacket implements ClientboundPacket{
 
 	protected function encodePayload(ByteBufferWriter $out) : void{
 		CommonTypes::putBool($out, $this->mustAccept);
-
-		VarInt::writeUnsignedInt($out, count($this->behaviorPackStack));
-		foreach($this->behaviorPackStack as $entry){
-			$entry->write($out);
-		}
 
 		VarInt::writeUnsignedInt($out, count($this->resourcePackStack));
 		foreach($this->resourcePackStack as $entry){

@@ -236,12 +236,6 @@ class TextPacket extends DataPacket implements ClientboundPacket, ServerboundPac
 		CommonTypes::writeOptional($out, $this->filteredMessage, CommonTypes::putString(...));
 	}
 
-	private function assertString(string $receivedValue, string $requiredValue) : void{
-		if($receivedValue !== $requiredValue){
-			throw new PacketDecodeException("Decoded TextPacket has invalid structure: expected '$requiredValue', got '$receivedValue'");
-		}
-	}
-
 	public function handle(PacketHandlerInterface $handler) : bool{
 		return $handler->handleText($this);
 	}

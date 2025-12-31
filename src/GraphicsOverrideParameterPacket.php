@@ -23,7 +23,7 @@ use pocketmine\network\mcpe\protocol\types\GraphicsOverrideParameterType;
 use pocketmine\network\mcpe\protocol\types\ParameterKeyframeValue;
 use function count;
 
-class GraphicsOverrideParameterPacket extends DataPacket{
+class GraphicsOverrideParameterPacket extends DataPacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::GRAPHICS_OVERRIDE_PARAMETER_PACKET;
 
 	/** @var ParameterKeyframeValue[] */

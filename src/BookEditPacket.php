@@ -14,9 +14,9 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pmmp\encoding\Byte;
 use pmmp\encoding\ByteBufferReader;
 use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\VarInt;
 use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 
 class BookEditPacket extends DataPacket implements ServerboundPacket{
@@ -39,22 +39,22 @@ class BookEditPacket extends DataPacket implements ServerboundPacket{
 	public string $xuid;
 
 	protected function decodePayload(ByteBufferReader $in) : void{
-		$this->type = Byte::readUnsigned($in);
-		$this->inventorySlot = Byte::readUnsigned($in);
+		$this->inventorySlot = VarInt::readUnsignedInt($in);
+		$this->type = VarInt::readUnsignedInt($in);
 
 		switch($this->type){
 			case self::TYPE_REPLACE_PAGE:
 			case self::TYPE_ADD_PAGE:
-				$this->pageNumber = Byte::readUnsigned($in);
+				$this->pageNumber = VarInt::readUnsignedInt($in);
 				$this->text = CommonTypes::getString($in);
 				$this->photoName = CommonTypes::getString($in);
 				break;
 			case self::TYPE_DELETE_PAGE:
-				$this->pageNumber = Byte::readUnsigned($in);
+				$this->pageNumber = VarInt::readUnsignedInt($in);
 				break;
 			case self::TYPE_SWAP_PAGES:
-				$this->pageNumber = Byte::readUnsigned($in);
-				$this->secondaryPageNumber = Byte::readUnsigned($in);
+				$this->pageNumber = VarInt::readUnsignedInt($in);
+				$this->secondaryPageNumber = VarInt::readUnsignedInt($in);
 				break;
 			case self::TYPE_SIGN_BOOK:
 				$this->title = CommonTypes::getString($in);
@@ -67,22 +67,22 @@ class BookEditPacket extends DataPacket implements ServerboundPacket{
 	}
 
 	protected function encodePayload(ByteBufferWriter $out) : void{
-		Byte::writeUnsigned($out, $this->type);
-		Byte::writeUnsigned($out, $this->inventorySlot);
+		VarInt::writeUnsignedInt($out, $this->inventorySlot);
+		VarInt::writeUnsignedInt($out, $this->type);
 
 		switch($this->type){
 			case self::TYPE_REPLACE_PAGE:
 			case self::TYPE_ADD_PAGE:
-				Byte::writeUnsigned($out, $this->pageNumber);
+				VarInt::writeUnsignedInt($out, $this->pageNumber);
 				CommonTypes::putString($out, $this->text);
 				CommonTypes::putString($out, $this->photoName);
 				break;
 			case self::TYPE_DELETE_PAGE:
-				Byte::writeUnsigned($out, $this->pageNumber);
+				VarInt::writeUnsignedInt($out, $this->pageNumber);
 				break;
 			case self::TYPE_SWAP_PAGES:
-				Byte::writeUnsigned($out, $this->pageNumber);
-				Byte::writeUnsigned($out, $this->secondaryPageNumber);
+				VarInt::writeUnsignedInt($out, $this->pageNumber);
+				VarInt::writeUnsignedInt($out, $this->secondaryPageNumber);
 				break;
 			case self::TYPE_SIGN_BOOK:
 				CommonTypes::putString($out, $this->title);

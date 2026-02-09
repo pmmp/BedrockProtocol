@@ -16,6 +16,7 @@ namespace pocketmine\network\mcpe\protocol\types;
 
 use pmmp\encoding\ByteBufferReader;
 use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\LE;
 use pmmp\encoding\VarInt;
 use pocketmine\network\mcpe\protocol\PacketDecodeException;
 use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
@@ -31,7 +32,8 @@ final class DataStoreUpdate extends DataStore{
 		private string $property,
 		private string $path,
 		private DataStoreValue $data,
-		private int $updateCount
+		private int $updateCount,
+		private int $pathUpdateCount,
 	){}
 
 	public function getTypeId() : int{
@@ -48,6 +50,8 @@ final class DataStoreUpdate extends DataStore{
 
 	public function getUpdateCount() : int{ return $this->updateCount; }
 
+	public function getPathUpdateCount() : int{ return $this->pathUpdateCount; }
+
 	public static function read(ByteBufferReader $in) : self{
 		$name = CommonTypes::getString($in);
 		$property = CommonTypes::getString($in);
@@ -60,14 +64,16 @@ final class DataStoreUpdate extends DataStore{
 			default => throw new PacketDecodeException("Unknown DataStoreValueType"),
 		};
 
-		$updateCount = VarInt::readUnsignedInt($in);
+		$updateCount = LE::readUnsignedInt($in);
+		$pathUpdateCount = LE::readUnsignedInt($in);
 
 		return new self(
 			$name,
 			$property,
 			$path,
 			$data,
-			$updateCount
+			$updateCount,
+			$pathUpdateCount,
 		);
 	}
 
@@ -77,6 +83,7 @@ final class DataStoreUpdate extends DataStore{
 		CommonTypes::putString($out, $this->path);
 		VarInt::writeUnsignedInt($out, $this->data->getTypeId());
 		$this->data->write($out);
-		VarInt::writeUnsignedInt($out, $this->updateCount);
+		LE::writeUnsignedInt($out, $this->updateCount);
+		LE::writeUnsignedInt($out, $this->pathUpdateCount);
 	}
 }

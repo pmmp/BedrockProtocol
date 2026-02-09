@@ -439,4 +439,18 @@ interface PacketHandlerInterface{
 	public function handleGraphicsOverrideParameter(GraphicsOverrideParameterPacket $packet) : bool;
 
 	public function handleServerboundDataStore(ServerboundDataStorePacket $packet) : bool;
+
+	public function handleClientboundDataDrivenUIShowScreen(ClientboundDataDrivenUIShowScreenPacket $packet) : bool;
+
+	public function handleClientboundDataDrivenUICloseAllScreens(ClientboundDataDrivenUICloseAllScreensPacket $packet) : bool;
+
+	public function handleClientboundDataDrivenUIReload(ClientboundDataDrivenUIReloadPacket $packet) : bool;
+
+	public function handleClientboundTextureShift(ClientboundTextureShiftPacket $packet) : bool;
+
+	public function handleVoxelShapes(VoxelShapesPacket $packet) : bool;
+
+	public function handleCameraSpline(CameraSplinePacket $packet) : bool;
+
+	public function handleCameraAimAssistActorPriority(CameraAimAssistActorPriorityPacket $packet) : bool;
 }

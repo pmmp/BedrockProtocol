@@ -81,11 +81,6 @@ final class LevelSettings{
 	public int $chatRestrictionLevel = ChatRestrictionLevel::NONE;
 	public bool $disablePlayerInteractions = false;
 
-	public string $serverIdentifier = "";
-	public string $worldIdentifier = "";
-	public string $scenarioIdentifier = "";
-	public string $ownerIdentifier = "";
-
 	/**
 	 * @throws DataDecodeException
 	 * @throws PacketDecodeException
@@ -151,10 +146,6 @@ final class LevelSettings{
 		$this->experimentalGameplayOverride = CommonTypes::readOptional($in, CommonTypes::getBool(...));
 		$this->chatRestrictionLevel = Byte::readUnsigned($in);
 		$this->disablePlayerInteractions = CommonTypes::getBool($in);
-		$this->serverIdentifier = CommonTypes::getString($in);
-		$this->worldIdentifier = CommonTypes::getString($in);
-		$this->scenarioIdentifier = CommonTypes::getString($in);
-		$this->ownerIdentifier = CommonTypes::getString($in);
 	}
 
 	public function write(ByteBufferWriter $out) : void{
@@ -206,9 +197,5 @@ final class LevelSettings{
 		CommonTypes::writeOptional($out, $this->experimentalGameplayOverride, CommonTypes::putBool(...));
 		Byte::writeUnsigned($out, $this->chatRestrictionLevel);
 		CommonTypes::putBool($out, $this->disablePlayerInteractions);
-		CommonTypes::putString($out, $this->serverIdentifier);
-		CommonTypes::putString($out, $this->worldIdentifier);
-		CommonTypes::putString($out, $this->scenarioIdentifier);
-		CommonTypes::putString($out, $this->ownerIdentifier);
 	}
 }

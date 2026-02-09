@@ -165,4 +165,7 @@ final class EntityMetadataProperties{
 	public const BED_ENTER_POSITION = 133; //blockpos
 	public const SEAT_THIRD_PERSON_CAMERA_RADIUS = 134;
 	public const SEAT_CAMERA_RELAX_DISTANCE_SMOOTHING = 135;
+	public const AIM_ASSIST_PRIORITY_PRESET_ID = 136; //int
+	public const AIM_ASSIST_PRIORITY_CATEGORY_ID = 137; //int
+	public const AIM_ASSIST_PRIORITY_ACTOR_ID = 138; //int
 }

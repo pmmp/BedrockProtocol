@@ -17,6 +17,8 @@ namespace pocketmine\network\mcpe\protocol;
 use pmmp\encoding\ByteBufferReader;
 use pmmp\encoding\ByteBufferWriter;
 use pmmp\encoding\LE;
+use pocketmine\network\mcpe\protocol\types\MemoryCategoryCounter;
+use function count;
 
 class ServerboundDiagnosticsPacket extends DataPacket implements ServerboundPacket{
 	public const NETWORK_ID = ProtocolInfo::SERVERBOUND_DIAGNOSTICS_PACKET;
@@ -30,9 +32,16 @@ class ServerboundDiagnosticsPacket extends DataPacket implements ServerboundPack
 	private float $avgEndFrameTimeMS;
 	private float $avgRemainderTimePercent;
 	private float $avgUnaccountedTimePercent;
+	/**
+	 * @var MemoryCategoryCounter[]
+	 * @phpstan-var list<MemoryCategoryCounter>
+	 */
+	private array $memoryCategoryValues = [];
 
 	/**
 	 * @generate-create-func
+	 * @param MemoryCategoryCounter[] $memoryCategoryValues
+	 * @phpstan-param list<MemoryCategoryCounter> $memoryCategoryValues
 	 */
 	public static function create(
 		float $avgFps,
@@ -44,6 +53,7 @@ class ServerboundDiagnosticsPacket extends DataPacket implements ServerboundPack
 		float $avgEndFrameTimeMS,
 		float $avgRemainderTimePercent,
 		float $avgUnaccountedTimePercent,
+		array $memoryCategoryValues,
 	) : self{
 		$result = new self;
 		$result->avgFps = $avgFps;
@@ -55,6 +65,7 @@ class ServerboundDiagnosticsPacket extends DataPacket implements ServerboundPack
 		$result->avgEndFrameTimeMS = $avgEndFrameTimeMS;
 		$result->avgRemainderTimePercent = $avgRemainderTimePercent;
 		$result->avgUnaccountedTimePercent = $avgUnaccountedTimePercent;
+		$result->memoryCategoryValues = $memoryCategoryValues;
 		return $result;
 	}
 
@@ -76,6 +87,12 @@ class ServerboundDiagnosticsPacket extends DataPacket implements ServerboundPack
 
 	public function getAvgUnaccountedTimePercent() : float{ return $this->avgUnaccountedTimePercent; }
 
+	/**
+	 * @return MemoryCategoryCounter[]
+	 * @phpstan-return list<MemoryCategoryCounter>
+	 */
+	public function getMemoryCategoryValues() : array{ return $this->memoryCategoryValues; }
+
 	protected function decodePayload(ByteBufferReader $in) : void{
 		$this->avgFps = LE::readFloat($in);
 		$this->avgServerSimTickTimeMS = LE::readFloat($in);
@@ -86,6 +103,11 @@ class ServerboundDiagnosticsPacket extends DataPacket implements ServerboundPack
 		$this->avgEndFrameTimeMS = LE::readFloat($in);
 		$this->avgRemainderTimePercent = LE::readFloat($in);
 		$this->avgUnaccountedTimePercent = LE::readFloat($in);
+
+		$this->memoryCategoryValues = [];
+		for($i = 0, $count = LE::readUnsignedInt($in); $i < $count; $i++){
+			$this->memoryCategoryValues[] = MemoryCategoryCounter::read($in);
+		}
 	}
 
 	protected function encodePayload(ByteBufferWriter $out) : void{
@@ -98,6 +120,11 @@ class ServerboundDiagnosticsPacket extends DataPacket implements ServerboundPack
 		LE::writeFloat($out, $this->avgEndFrameTimeMS);
 		LE::writeFloat($out, $this->avgRemainderTimePercent);
 		LE::writeFloat($out, $this->avgUnaccountedTimePercent);
+
+		LE::writeUnsignedInt($out, count($this->memoryCategoryValues));
+		foreach($this->memoryCategoryValues as $value){
+			$value->write($out);
+		}
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

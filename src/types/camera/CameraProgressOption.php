@@ -17,30 +17,42 @@ namespace pocketmine\network\mcpe\protocol\types\camera;
 use pmmp\encoding\ByteBufferReader;
 use pmmp\encoding\ByteBufferWriter;
 use pmmp\encoding\LE;
-use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 
-final class CameraAimAssistCategoryBlockPriority{
+final class CameraProgressOption{
 
+	/**
+	 * @see CameraSetInstructionEaseType
+	 */
 	public function __construct(
-		private string $identifier,
-		private int $priority
+		private float $value,
+		private float $time,
+		private int $easeType,
 	){}
 
-	public function getIdentifier() : string{ return $this->identifier; }
+	public function getValue() : float{ return $this->value; }
 
-	public function getPriority() : int{ return $this->priority; }
+	public function getTime() : float{ return $this->time; }
+
+	/**
+	 * @see CameraSetInstructionEaseType
+	 */
+	public function getEaseType() : int{ return $this->easeType; }
 
 	public static function read(ByteBufferReader $in) : self{
-		$identifier = CommonTypes::getString($in);
-		$priority = LE::readSignedInt($in);
+		$value = LE::readFloat($in);
+		$time = LE::readFloat($in);
+		$easeType = LE::readUnsignedInt($in);
+
 		return new self(
-			$identifier,
-			$priority
+			$value,
+			$time,
+			$easeType
 		);
 	}
 
 	public function write(ByteBufferWriter $out) : void{
-		CommonTypes::putString($out, $this->identifier);
-		LE::writeSignedInt($out, $this->priority);
+		LE::writeFloat($out, $this->value);
+		LE::writeFloat($out, $this->time);
+		LE::writeUnsignedInt($out, $this->easeType);
 	}
 }

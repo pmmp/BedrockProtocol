@@ -12,15 +12,15 @@
 
 declare(strict_types=1);
 
-namespace pocketmine\network\mcpe\protocol\types\inventory;
+namespace pocketmine\network\mcpe\protocol\types;
 
-use pocketmine\network\mcpe\protocol\types\PacketIntEnumTrait;
-
-enum InventoryLayout : int{
-	use PacketIntEnumTrait;
-
-	case NONE = 0;
-	case INVENTORY_ONLY = 1;
-	case DEFAULT = 2;
-	case RECIPE_BOOK_ONLY = 3;
+/**
+ * @see ClientboundTextureShiftPacket
+ */
+final class TextureShiftAction{
+	public const INVALID = 0;
+	public const INITIALIZE = 1;
+	public const START = 2;
+	public const SET_ENABLED = 3;
+	public const SYNC = 4;
 }

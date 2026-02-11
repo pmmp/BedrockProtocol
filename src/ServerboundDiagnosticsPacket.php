@@ -17,6 +17,7 @@ namespace pocketmine\network\mcpe\protocol;
 use pmmp\encoding\ByteBufferReader;
 use pmmp\encoding\ByteBufferWriter;
 use pmmp\encoding\LE;
+use pmmp\encoding\VarInt;
 use pocketmine\network\mcpe\protocol\types\MemoryCategoryCounter;
 use function count;
 
@@ -105,7 +106,7 @@ class ServerboundDiagnosticsPacket extends DataPacket implements ServerboundPack
 		$this->avgUnaccountedTimePercent = LE::readFloat($in);
 
 		$this->memoryCategoryValues = [];
-		for($i = 0, $count = LE::readUnsignedInt($in); $i < $count; $i++){
+		for($i = 0, $count = VarInt::readUnsignedInt($in); $i < $count; $i++){
 			$this->memoryCategoryValues[] = MemoryCategoryCounter::read($in);
 		}
 	}
@@ -121,7 +122,7 @@ class ServerboundDiagnosticsPacket extends DataPacket implements ServerboundPack
 		LE::writeFloat($out, $this->avgRemainderTimePercent);
 		LE::writeFloat($out, $this->avgUnaccountedTimePercent);
 
-		LE::writeUnsignedInt($out, count($this->memoryCategoryValues));
+		VarInt::writeUnsignedInt($out, count($this->memoryCategoryValues));
 		foreach($this->memoryCategoryValues as $value){
 			$value->write($out);
 		}

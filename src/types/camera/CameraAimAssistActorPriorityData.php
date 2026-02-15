@@ -36,17 +36,17 @@ final class CameraAimAssistActorPriorityData{
 	public function getPriority() : int { return $this->priority; }
 
 	public static function read(ByteBufferReader $in) : self{
-		$presetIndex = LE::readUnsignedInt($in);
-		$categoryIndex = LE::readUnsignedInt($in);
-		$actorIndex = LE::readUnsignedInt($in);
-		$priority = LE::readUnsignedInt($in);
+		$presetIndex = LE::readSignedInt($in);
+		$categoryIndex = LE::readSignedInt($in);
+		$actorIndex = LE::readSignedInt($in);
+		$priority = LE::readSignedInt($in);
 		return new self($presetIndex, $categoryIndex, $actorIndex, $priority);
 	}
 
 	public function write(ByteBufferWriter $out) : void{
-		LE::writeUnsignedInt($out, $this->presetIndex);
-		LE::writeUnsignedInt($out, $this->categoryIndex);
-		LE::writeUnsignedInt($out, $this->actorIndex);
-		LE::writeUnsignedInt($out, $this->priority);
+		LE::writeSignedInt($out, $this->presetIndex);
+		LE::writeSignedInt($out, $this->categoryIndex);
+		LE::writeSignedInt($out, $this->actorIndex);
+		LE::writeSignedInt($out, $this->priority);
 	}
 }

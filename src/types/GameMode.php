@@ -26,4 +26,5 @@ final class GameMode{
 	public const SURVIVAL_VIEWER = 3;
 	public const CREATIVE_VIEWER = 4;
 	public const DEFAULT = 5;
+	public const SPECTATOR = 6;
 }

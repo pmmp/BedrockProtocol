@@ -19,7 +19,9 @@ use pmmp\encoding\ByteBufferWriter;
 use pmmp\encoding\VarInt;
 use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 
-/** This is used for PlayerAuthInput packet when the flags include PERFORM_BLOCK_ACTIONS */
+/**
+ * This is used for PlayerAuthInput packet when the flags include PERFORM_BLOCK_ACTIONS
+ */
 final class PlayerBlockActionWithBlockInfo implements PlayerBlockAction{
 	public function __construct(
 		private int $actionType,

@@ -16,7 +16,9 @@ namespace pocketmine\network\mcpe\protocol\types;
 
 use pmmp\encoding\ByteBufferWriter;
 
-/** This is used for PlayerAuthInput packet when the flags include PERFORM_BLOCK_ACTIONS */
+/**
+ * This is used for PlayerAuthInput packet when the flags include PERFORM_BLOCK_ACTIONS
+ */
 interface PlayerBlockAction{
 
 	public function getActionType() : int;

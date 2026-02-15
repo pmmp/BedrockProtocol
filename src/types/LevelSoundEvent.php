@@ -567,5 +567,24 @@ final class LevelSoundEvent{
 	public const IMITATE_CAMEL_HUSK = 575;
 	public const ITEM_SPEAR_USE = 576;
 	public const ITEM_WOODEN_SPEAR_USE = 577;
+	public const SADDLE_IN_WATER = 578;
+	public const ITEM_STONE_SPEAR_ATTACK_HIT = 579;
+	public const ITEM_IRON_SPEAR_ATTACK_HIT = 580;
+	public const ITEM_COPPER_SPEAR_ATTACK_HIT = 581;
+	public const ITEM_GOLDEN_SPEAR_ATTACK_HIT = 582;
+	public const ITEM_DIAMOND_SPEAR_ATTACK_HIT = 583;
+	public const ITEM_NETHERITE_SPEAR_ATTACK_HIT = 584;
+	public const ITEM_STONE_SPEAR_ATTACK_MISS = 585;
+	public const ITEM_IRON_SPEAR_ATTACK_MISS = 586;
+	public const ITEM_COPPER_SPEAR_ATTACK_MISS = 587;
+	public const ITEM_GOLDEN_SPEAR_ATTACK_MISS = 588;
+	public const ITEM_DIAMOND_SPEAR_ATTACK_MISS = 589;
+	public const ITEM_NETHERITE_SPEAR_ATTACK_MISS = 590;
+	public const ITEM_STONE_SPEAR_USE = 591;
+	public const ITEM_IRON_SPEAR_USE = 592;
+	public const ITEM_COPPER_SPEAR_USE = 593;
+	public const ITEM_GOLDEN_SPEAR_USE = 594;
+	public const ITEM_DIAMOND_SPEAR_USE = 595;
+	public const ITEM_NETHERITE_SPEAR_USE = 596;
 
 }

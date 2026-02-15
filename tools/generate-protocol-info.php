@@ -253,9 +253,9 @@ final class ProtocolInfo{
 
 	/** Actual Minecraft: PE protocol version */
 	public const CURRENT_PROTOCOL = %d;
-	/** Current Minecraft PE version reported by the server. This is usually the earliest currently supported version. */
+	/** Display version shown in the server logs. This should match the version on the game's home screen. */
 	public const MINECRAFT_VERSION = '%s';
-	/** Version number sent to clients in ping responses. */
+	/** Version sent on the network for client side compatibility checks. This may differ from the display version. */
 	public const MINECRAFT_VERSION_NETWORK = '%s';
 
 %s
@@ -355,7 +355,13 @@ function generate_protocol_info(array $packetToIdList, int $protocolVersion, int
 		);
 	}
 
-	$gameVersion = sprintf("v%d.%d.%d%s", $major, $minor, $patch, $beta ? ".$revision beta" : "");
+	if($major === 1 && $minor >= 26){
+		//major version is no longer displayed as of 1.26.0, presumably because the 1 is meaningless
+		//however it is still shown in the network version for BC reasons
+		$gameVersion = sprintf("v%d.%d%s", $minor, $patch, $beta ? ".$revision beta" : "");
+	}else{
+		$gameVersion = sprintf("v%d.%d.%d%s", $major, $minor, $patch, $beta ? ".$revision beta" : "");
+	}
 	$gameVersionNetwork = sprintf("%d.%d.%d%s", $major, $minor, $patch, $beta ? ".$revision" : "");
 	file_put_contents($packetsDir . DIRECTORY_SEPARATOR . "ProtocolInfo.php", sprintf(
 		PROTOCOL_INFO_TEMPLATE,

@@ -865,4 +865,32 @@ trait PacketHandlerDefaultImplTrait{
 	public function handleServerboundDataStore(ServerboundDataStorePacket $packet) : bool{
 		return false;
 	}
+
+	public function handleClientboundDataDrivenUIShowScreen(ClientboundDataDrivenUIShowScreenPacket $packet) : bool{
+		return false;
+	}
+
+	public function handleClientboundDataDrivenUICloseAllScreens(ClientboundDataDrivenUICloseAllScreensPacket $packet) : bool{
+		return false;
+	}
+
+	public function handleClientboundDataDrivenUIReload(ClientboundDataDrivenUIReloadPacket $packet) : bool{
+		return false;
+	}
+
+	public function handleClientboundTextureShift(ClientboundTextureShiftPacket $packet) : bool{
+		return false;
+	}
+
+	public function handleVoxelShapes(VoxelShapesPacket $packet) : bool{
+		return false;
+	}
+
+	public function handleCameraSpline(CameraSplinePacket $packet) : bool{
+		return false;
+	}
+
+	public function handleCameraAimAssistActorPriority(CameraAimAssistActorPriorityPacket $packet) : bool{
+		return false;
+	}
 }

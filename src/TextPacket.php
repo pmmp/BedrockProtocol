@@ -28,27 +28,6 @@ class TextPacket extends DataPacket implements ClientboundPacket, ServerboundPac
 	private const CATEGORY_AUTHORED_MESSAGE = 1;
 	private const CATEGORY_MESSAGE_WITH_PARAMETERS = 2;
 
-	private const CATEGORY_DUMMY_STRINGS = [
-		self::CATEGORY_MESSAGE_ONLY => [
-			'raw',
-			'tip',
-			'systemMessage',
-			'textObjectWhisper',
-			'textObjectAnnouncement',
-			'textObject'
-		],
-		self::CATEGORY_AUTHORED_MESSAGE => [
-			'chat',
-			'whisper',
-			'announcement'
-		],
-		self::CATEGORY_MESSAGE_WITH_PARAMETERS => [
-			'translate',
-			'popup',
-			'jukeboxPopup',
-		]
-	];
-
 	public const TYPE_RAW = 0;
 	public const TYPE_CHAT = 1;
 	public const TYPE_TRANSLATION = 2;
@@ -130,14 +109,6 @@ class TextPacket extends DataPacket implements ClientboundPacket, ServerboundPac
 		$this->needsTranslation = CommonTypes::getBool($in);
 
 		$category = Byte::readUnsigned($in);
-		$expectedDummyStrings = self::CATEGORY_DUMMY_STRINGS[$category] ?? throw new PacketDecodeException("Unknown category ID $category");
-		foreach($expectedDummyStrings as $k => $expectedDummyString){
-			$actual = CommonTypes::getString($in);
-			if($expectedDummyString !== $actual){
-				throw new PacketDecodeException("Dummy string mismatch for category $category at position $k: expected $expectedDummyString, got $actual");
-			}
-		}
-
 		$this->type = Byte::readUnsigned($in);
 		switch($this->type){
 			case self::TYPE_CHAT:
@@ -201,11 +172,8 @@ class TextPacket extends DataPacket implements ClientboundPacket, ServerboundPac
 
 			default => throw new \LogicException("Invalid TextPacket type: $this->type")
 		};
-		Byte::writeUnsigned($out, $category);
-		foreach(self::CATEGORY_DUMMY_STRINGS[$category] as $dummyString){
-			CommonTypes::putString($out, $dummyString);
-		}
 
+		Byte::writeUnsigned($out, $category);
 		Byte::writeUnsigned($out, $this->type);
 		switch($this->type){
 			case self::TYPE_CHAT:

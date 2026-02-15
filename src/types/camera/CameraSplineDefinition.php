@@ -16,31 +16,27 @@ namespace pocketmine\network\mcpe\protocol\types\camera;
 
 use pmmp\encoding\ByteBufferReader;
 use pmmp\encoding\ByteBufferWriter;
-use pmmp\encoding\LE;
 use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 
-final class CameraAimAssistCategoryEntityPriority{
+final class CameraSplineDefinition{
 
 	public function __construct(
-		private string $identifier,
-		private int $priority
+		private string $name,
+		private CameraSplineInstruction $instruction,
 	){}
 
-	public function getIdentifier() : string{ return $this->identifier; }
+	public function getName() : string { return $this->name; }
 
-	public function getPriority() : int{ return $this->priority; }
+	public function getInstruction() : CameraSplineInstruction { return $this->instruction; }
 
 	public static function read(ByteBufferReader $in) : self{
-		$identifier = CommonTypes::getString($in);
-		$priority = LE::readSignedInt($in);
-		return new self(
-			$identifier,
-			$priority
-		);
+		$name = CommonTypes::getString($in);
+		$instruction = CameraSplineInstruction::read($in);
+		return new self($name, $instruction);
 	}
 
 	public function write(ByteBufferWriter $out) : void{
-		CommonTypes::putString($out, $this->identifier);
-		LE::writeSignedInt($out, $this->priority);
+		CommonTypes::putString($out, $this->name);
+		$this->instruction->write($out);
 	}
 }

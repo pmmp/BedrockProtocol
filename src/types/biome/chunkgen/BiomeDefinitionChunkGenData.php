@@ -14,6 +14,7 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol\types\biome\chunkgen;
 
+use pmmp\encoding\Byte;
 use pmmp\encoding\ByteBufferReader;
 use pmmp\encoding\ByteBufferWriter;
 use pmmp\encoding\VarInt;
@@ -41,6 +42,7 @@ final class BiomeDefinitionChunkGenData{
 		private ?BiomeMultinoiseGenRulesData $multinoiseGenRules,
 		private ?BiomeLegacyWorldGenRulesData $legacyWorldGenRules,
 		private ?array $replacementsData,
+		private ?int $villageType,
 	){}
 
 	public function getClimate() : ?BiomeClimateData{ return $this->climate; }
@@ -76,6 +78,8 @@ final class BiomeDefinitionChunkGenData{
 	 */
 	public function getReplacementsData() : ?array{ return $this->replacementsData; }
 
+	public function getVillageType() : ?int{ return $this->villageType; }
+
 	public static function read(ByteBufferReader $in) : self{
 		$climate = CommonTypes::readOptional($in, fn() => BiomeClimateData::read($in));
 		$consolidatedFeatures = CommonTypes::readOptional($in, fn() => BiomeConsolidatedFeaturesData::read($in));
@@ -99,6 +103,7 @@ final class BiomeDefinitionChunkGenData{
 			}
 			return $result;
 		});
+		$villageType = CommonTypes::readOptional($in, fn() => Byte::readUnsigned($in));
 
 		return new self(
 			$climate,
@@ -116,6 +121,7 @@ final class BiomeDefinitionChunkGenData{
 			$multinoiseGenRules,
 			$legacyWorldGenRules,
 			$replacementsData,
+			$villageType
 		);
 	}
 
@@ -140,5 +146,6 @@ final class BiomeDefinitionChunkGenData{
 				$item->write($out);
 			}
 		});
+		CommonTypes::writeOptional($out, $this->villageType, fn(ByteBufferWriter $out, int $v) => Byte::writeUnsigned($out, $v));
 	}
 }

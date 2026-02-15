@@ -26,6 +26,8 @@ use pocketmine\network\mcpe\protocol\types\CacheableNbt;
 use pocketmine\network\mcpe\protocol\types\LevelSettings;
 use pocketmine\network\mcpe\protocol\types\NetworkPermissions;
 use pocketmine\network\mcpe\protocol\types\PlayerMovementSettings;
+use pocketmine\network\mcpe\protocol\types\ServerJoinInformation;
+use pocketmine\network\mcpe\protocol\types\ServerTelemetryData;
 use Ramsey\Uuid\UuidInterface;
 use function count;
 
@@ -60,6 +62,8 @@ class StartGamePacket extends DataPacket implements ClientboundPacket{
 	public bool $enableClientSideChunkGeneration;
 	public bool $blockNetworkIdsAreHashes = false; //new in 1.19.80, possibly useful for multi version
 	public NetworkPermissions $networkPermissions;
+	public ?ServerJoinInformation $serverJoinInformation;
+	public ServerTelemetryData $serverTelemetryData;
 
 	/**
 	 * @var BlockPaletteEntry[]
@@ -103,6 +107,8 @@ class StartGamePacket extends DataPacket implements ClientboundPacket{
 		bool $enableClientSideChunkGeneration,
 		bool $blockNetworkIdsAreHashes,
 		NetworkPermissions $networkPermissions,
+		?ServerJoinInformation $serverJoinInformation,
+		ServerTelemetryData $serverTelemetryData,
 		array $blockPalette,
 		int $blockPaletteChecksum,
 	) : self{
@@ -129,6 +135,8 @@ class StartGamePacket extends DataPacket implements ClientboundPacket{
 		$result->enableClientSideChunkGeneration = $enableClientSideChunkGeneration;
 		$result->blockNetworkIdsAreHashes = $blockNetworkIdsAreHashes;
 		$result->networkPermissions = $networkPermissions;
+		$result->serverJoinInformation = $serverJoinInformation;
+		$result->serverTelemetryData = $serverTelemetryData;
 		$result->blockPalette = $blockPalette;
 		$result->blockPaletteChecksum = $blockPaletteChecksum;
 		return $result;
@@ -171,6 +179,8 @@ class StartGamePacket extends DataPacket implements ClientboundPacket{
 		$this->enableClientSideChunkGeneration = CommonTypes::getBool($in);
 		$this->blockNetworkIdsAreHashes = CommonTypes::getBool($in);
 		$this->networkPermissions = NetworkPermissions::decode($in);
+		$this->serverJoinInformation = CommonTypes::readOptional($in, ServerJoinInformation::read(...));
+		$this->serverTelemetryData = ServerTelemetryData::read($in);
 	}
 
 	protected function encodePayload(ByteBufferWriter $out) : void{
@@ -209,6 +219,8 @@ class StartGamePacket extends DataPacket implements ClientboundPacket{
 		CommonTypes::putBool($out, $this->enableClientSideChunkGeneration);
 		CommonTypes::putBool($out, $this->blockNetworkIdsAreHashes);
 		$this->networkPermissions->encode($out);
+		CommonTypes::writeOptional($out, $this->serverJoinInformation, fn(ByteBufferWriter $out, ServerJoinInformation $info) => $info->write($out));
+		$this->serverTelemetryData->write($out);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

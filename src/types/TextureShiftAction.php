@@ -14,14 +14,13 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol\types;
 
-use pmmp\encoding\ByteBufferWriter;
-
 /**
- * This is used for PlayerAuthInput packet when the flags include PERFORM_BLOCK_ACTIONS
+ * @see ClientboundTextureShiftPacket
  */
-interface PlayerBlockAction{
-
-	public function getActionType() : int;
-
-	public function write(ByteBufferWriter $out) : void;
+final class TextureShiftAction{
+	public const INVALID = 0;
+	public const INITIALIZE = 1;
+	public const START = 2;
+	public const SET_ENABLED = 3;
+	public const SYNC = 4;
 }

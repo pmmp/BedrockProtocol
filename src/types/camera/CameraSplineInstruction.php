@@ -19,7 +19,6 @@ use pmmp\encoding\ByteBufferReader;
 use pmmp\encoding\ByteBufferWriter;
 use pmmp\encoding\LE;
 use pmmp\encoding\VarInt;
-use pocketmine\math\Vector2;
 use pocketmine\math\Vector3;
 use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 use function count;
@@ -30,7 +29,7 @@ final class CameraSplineInstruction{
 	 * @see CameraSetInstructionEaseType
 	 *
 	 * @param Vector3[] $curve
-	 * @param Vector2[] $progressKeyFrames
+	 * @param CameraProgressOption[] $progressKeyFrames
 	 * @param CameraRotationOption[] $rotationOptions
 	 */
 	public function __construct(
@@ -54,7 +53,7 @@ final class CameraSplineInstruction{
 	public function getCurve() : array{ return $this->curve; }
 
 	/**
-	 * @return Vector2[]
+	 * @return CameraProgressOption[]
 	 */
 	public function getProgressKeyFrames() : array{ return $this->progressKeyFrames; }
 
@@ -76,7 +75,7 @@ final class CameraSplineInstruction{
 		$progressKeyFrames = [];
 		$progressKeyFrameCount = VarInt::readUnsignedInt($in);
 		for($i = 0; $i < $progressKeyFrameCount; ++$i){
-			$progressKeyFrames[] = CommonTypes::getVector2($in);
+			$progressKeyFrames[] = CameraProgressOption::read($in);
 		}
 
 		$rotationOptions = [];
@@ -99,7 +98,7 @@ final class CameraSplineInstruction{
 
 		VarInt::writeUnsignedInt($out, count($this->progressKeyFrames));
 		foreach($this->progressKeyFrames as $keyFrame){
-			CommonTypes::putVector2($out, $keyFrame);
+			$keyFrame->write($out);
 		}
 
 		VarInt::writeUnsignedInt($out, count($this->rotationOptions));

@@ -20,7 +20,7 @@ enum InventoryLayout : int{
 	use PacketIntEnumTrait;
 
 	case NONE = 0;
-	case SURVIVAL = 1;
-	case RECIPE_BOOK = 2;
-	case CREATIVE = 3;
+	case INVENTORY_ONLY = 1;
+	case DEFAULT = 2;
+	case RECIPE_BOOK_ONLY = 3;
 }

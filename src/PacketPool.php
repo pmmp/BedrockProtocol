@@ -244,6 +244,13 @@ class PacketPool{
 		$this->registerPacket(new ClientboundDataStorePacket());
 		$this->registerPacket(new GraphicsOverrideParameterPacket());
 		$this->registerPacket(new ServerboundDataStorePacket());
+		$this->registerPacket(new ClientboundDataDrivenUIShowScreenPacket());
+		$this->registerPacket(new ClientboundDataDrivenUICloseAllScreensPacket());
+		$this->registerPacket(new ClientboundDataDrivenUIReloadPacket());
+		$this->registerPacket(new ClientboundTextureShiftPacket());
+		$this->registerPacket(new VoxelShapesPacket());
+		$this->registerPacket(new CameraSplinePacket());
+		$this->registerPacket(new CameraAimAssistActorPriorityPacket());
 	}
 
 	public function registerPacket(Packet $packet) : void{

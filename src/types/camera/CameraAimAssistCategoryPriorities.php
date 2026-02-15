@@ -24,32 +24,39 @@ use function count;
 final class CameraAimAssistCategoryPriorities{
 
 	/**
-	 * @param CameraAimAssistCategoryEntityPriority[] $entities
-	 * @param CameraAimAssistCategoryBlockPriority[] $blocks
-	 * @param int[] $blockTags
+	 * @param CameraAimAssistCategoryPriority[] $entities
+	 * @param CameraAimAssistCategoryPriority[] $blocks
+	 * @param CameraAimAssistCategoryPriority[] $blockTags
+	 * @param CameraAimAssistCategoryPriority[] $entityTypeFamilies
 	 */
 	public function __construct(
 		private array $entities,
 		private array $blocks,
 		private array $blockTags,
+		private array $entityTypeFamilies,
 		private ?int $defaultEntityPriority,
 		private ?int $defaultBlockPriority
 	){}
 
 	/**
-	 * @return CameraAimAssistCategoryEntityPriority[]
+	 * @return CameraAimAssistCategoryPriority[]
 	 */
 	public function getEntities() : array{ return $this->entities; }
 
 	/**
-	 * @return CameraAimAssistCategoryBlockPriority[]
+	 * @return CameraAimAssistCategoryPriority[]
 	 */
 	public function getBlocks() : array{ return $this->blocks; }
 
 	/**
-	 * @return int[]
+	 * @return CameraAimAssistCategoryPriority[]
 	 */
 	public function getBlockTags() : array{ return $this->blockTags; }
+
+	/**
+	 * @return CameraAimAssistCategoryPriority[]
+	 */
+	public function getEntityTypeFamilies() : array{ return $this->entityTypeFamilies; }
 
 	public function getDefaultEntityPriority() : ?int{ return $this->defaultEntityPriority; }
 
@@ -58,17 +65,22 @@ final class CameraAimAssistCategoryPriorities{
 	public static function read(ByteBufferReader $in) : self{
 		$entities = [];
 		for($i = 0, $len = VarInt::readUnsignedInt($in); $i < $len; ++$i){
-			$entities[] = CameraAimAssistCategoryEntityPriority::read($in);
+			$entities[] = CameraAimAssistCategoryPriority::read($in);
 		}
 
 		$blocks = [];
 		for($i = 0, $len = VarInt::readUnsignedInt($in); $i < $len; ++$i){
-			$blocks[] = CameraAimAssistCategoryBlockPriority::read($in);
+			$blocks[] = CameraAimAssistCategoryPriority::read($in);
 		}
 
 		$blockTags = [];
 		for($i = 0, $len = VarInt::readUnsignedInt($in); $i < $len; ++$i){
-			$blockTags[] = VarInt::readUnsignedInt($in);
+			$blockTags[] = CameraAimAssistCategoryPriority::read($in);
+		}
+
+		$entityTypeFamilies = [];
+		for($i = 0, $len = VarInt::readUnsignedInt($in); $i < $len; ++$i){
+			$entityTypeFamilies[] = CameraAimAssistCategoryPriority::read($in);
 		}
 
 		$defaultEntityPriority = CommonTypes::readOptional($in, LE::readSignedInt(...));
@@ -77,6 +89,7 @@ final class CameraAimAssistCategoryPriorities{
 			$entities,
 			$blocks,
 			$blockTags,
+			$entityTypeFamilies,
 			$defaultEntityPriority,
 			$defaultBlockPriority
 		);
@@ -95,7 +108,12 @@ final class CameraAimAssistCategoryPriorities{
 
 		VarInt::writeUnsignedInt($out, count($this->blockTags));
 		foreach($this->blockTags as $tag){
-			VarInt::writeUnsignedInt($out, $tag);
+			$tag->write($out);
+		}
+
+		VarInt::writeUnsignedInt($out, count($this->entityTypeFamilies));
+		foreach($this->entityTypeFamilies as $family){
+			$family->write($out);
 		}
 
 		CommonTypes::writeOptional($out, $this->defaultEntityPriority, LE::writeSignedInt(...));

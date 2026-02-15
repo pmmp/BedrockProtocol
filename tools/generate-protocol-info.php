@@ -269,7 +269,7 @@ const CPP_NAMESPACE_SEPARATOR = "::";
  * @return string[]
  */
 function split_upper(string $string) : array{
-	$split = preg_split('/([A-Z][^A-Z]*)/', $string, flags: PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
+	$split = preg_split('/([A-Z][^A-Z]+)/', $string, flags: PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
 	if($split === false){
 		throw new \Error("preg_split failed");
 	}

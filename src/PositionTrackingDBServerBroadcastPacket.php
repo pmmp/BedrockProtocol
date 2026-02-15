@@ -22,7 +22,7 @@ use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 use pocketmine\network\mcpe\protocol\types\CacheableNbt;
 
 class PositionTrackingDBServerBroadcastPacket extends DataPacket implements ClientboundPacket{
-	public const NETWORK_ID = ProtocolInfo::POSITION_TRACKING_D_B_SERVER_BROADCAST_PACKET;
+	public const NETWORK_ID = ProtocolInfo::POSITION_TRACKING_DB_SERVER_BROADCAST_PACKET;
 
 	public const ACTION_UPDATE = 0;
 	public const ACTION_DESTROY = 1;

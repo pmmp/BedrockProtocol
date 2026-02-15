@@ -20,7 +20,7 @@ use pmmp\encoding\ByteBufferWriter;
 use pmmp\encoding\VarInt;
 
 class PositionTrackingDBClientRequestPacket extends DataPacket implements ServerboundPacket{
-	public const NETWORK_ID = ProtocolInfo::POSITION_TRACKING_D_B_CLIENT_REQUEST_PACKET;
+	public const NETWORK_ID = ProtocolInfo::POSITION_TRACKING_DB_CLIENT_REQUEST_PACKET;
 
 	public const ACTION_QUERY = 0;
 

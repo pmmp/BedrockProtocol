@@ -1,3 +1,4 @@
+
 <?php
 
 /*
@@ -17,7 +18,8 @@ namespace pocketmine\network\mcpe\protocol\types\login\clientdata;
 /**
  * Model class for LoginPacket JSON data for JsonMapper
  */
-final class ClientData{
+final class ClientData
+{
 
 	/**
 	 * @var ClientDataAnimationFrame[]
@@ -86,6 +88,8 @@ final class ClientData{
 	public int $MemoryTier;
 
 	public bool $OverrideSkin;
+
+	public string $PartyId = "";
 
 	/**
 	 * @var ClientDataPersonaSkinPiece[]

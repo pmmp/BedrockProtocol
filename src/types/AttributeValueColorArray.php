@@ -36,13 +36,13 @@ final class AttributeValueColorArray extends AttributeValueColorValue{
 	public function getValue() : Color{ return $this->value; }
 
 	public static function read(ByteBufferReader $in) : self{
-		$value = [];
-		for($i = 0; $i < 4; ++$i){
-			$value[] = LE::readUnsignedInt($in);
-		}
+		$r = LE::readUnsignedInt($in);
+		$g = LE::readUnsignedInt($in);
+		$b = LE::readUnsignedInt($in);
+		$a = LE::readUnsignedInt($in);
 
 		return new self(
-			new Color(...$value)
+			new Color($r, $g, $b, $a)
 		);
 	}
 

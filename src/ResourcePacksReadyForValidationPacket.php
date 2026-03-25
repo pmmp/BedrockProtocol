@@ -17,7 +17,7 @@ namespace pocketmine\network\mcpe\protocol;
 use pmmp\encoding\ByteBufferReader;
 use pmmp\encoding\ByteBufferWriter;
 
-class ResourcePacksReadyForValidationPacket extends DataPacket{
+class ResourcePacksReadyForValidationPacket extends DataPacket implements ServerboundPacket{
 	public const NETWORK_ID = ProtocolInfo::RESOURCE_PACKS_READY_FOR_VALIDATION_PACKET;
 
 	/**

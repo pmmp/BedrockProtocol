@@ -20,7 +20,7 @@ use pmmp\encoding\VarInt;
 use pocketmine\network\mcpe\protocol\types\LocatorBarWaypointPayload;
 use function count;
 
-class LocatorBarPacket extends DataPacket{
+class LocatorBarPacket extends DataPacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::LOCATOR_BAR_PACKET;
 
 	/**

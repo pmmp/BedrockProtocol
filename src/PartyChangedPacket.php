@@ -18,7 +18,7 @@ use pmmp\encoding\ByteBufferReader;
 use pmmp\encoding\ByteBufferWriter;
 use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 
-class PartyChangedPacket extends DataPacket{
+class PartyChangedPacket extends DataPacket implements ServerboundPacket{
 	public const NETWORK_ID = ProtocolInfo::PARTY_CHANGED_PACKET;
 
 	private string $partyId;

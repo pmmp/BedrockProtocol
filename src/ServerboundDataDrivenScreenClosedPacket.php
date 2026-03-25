@@ -19,7 +19,7 @@ use pmmp\encoding\ByteBufferWriter;
 use pmmp\encoding\LE;
 use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 
-class ServerboundDataDrivenScreenClosedPacket extends DataPacket{
+class ServerboundDataDrivenScreenClosedPacket extends DataPacket implements ServerboundPacket{
 	public const NETWORK_ID = ProtocolInfo::SERVERBOUND_DATA_DRIVEN_SCREEN_CLOSED_PACKET;
 
 	private int $formId;

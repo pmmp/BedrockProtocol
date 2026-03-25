@@ -23,7 +23,7 @@ use pocketmine\network\mcpe\protocol\types\AttributesUpdateEnvironment;
 use pocketmine\network\mcpe\protocol\types\AttributeUpdateLayers;
 use pocketmine\network\mcpe\protocol\types\AttributeUpdateLayerSettings;
 
-class ClientboundAttributeLayerSyncPacket extends DataPacket{
+class ClientboundAttributeLayerSyncPacket extends DataPacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::CLIENTBOUND_ATTRIBUTE_LAYER_SYNC_PACKET;
 
 	private AttributeLayerSyncPayload $payload;

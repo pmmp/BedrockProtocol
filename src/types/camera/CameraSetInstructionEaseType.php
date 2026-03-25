@@ -14,7 +14,6 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol\types\camera;
 
-use pocketmine\network\mcpe\protocol\PacketDecodeException;
 use function array_flip;
 
 final class CameraSetInstructionEaseType{
@@ -101,6 +100,6 @@ final class CameraSetInstructionEaseType{
 			$cache = array_flip(self::EASE_TYPE_NAMES);
 		}
 
-		return $cache[$name] ?? throw new PacketDecodeException("Invalid raw value \"$name\" for EaseType.");
+		return $cache[$name] ?? throw new \InvalidArgumentException("Invalid raw value \"$name\" for EaseType.");
 	}
 }

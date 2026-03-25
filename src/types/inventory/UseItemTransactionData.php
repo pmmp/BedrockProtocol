@@ -14,6 +14,7 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol\types\inventory;
 
+use pmmp\encoding\Byte;
 use pmmp\encoding\ByteBufferReader;
 use pmmp\encoding\ByteBufferWriter;
 use pmmp\encoding\VarInt;
@@ -43,6 +44,7 @@ class UseItemTransactionData extends TransactionData{
 	private Vector3 $clickPosition;
 	private int $blockRuntimeId;
 	private PredictedResult $clientInteractPrediction;
+	private int $clientCooldownState;
 
 	public function getActionType() : int{
 		return $this->actionType;
@@ -80,6 +82,8 @@ class UseItemTransactionData extends TransactionData{
 
 	public function getClientInteractPrediction() : PredictedResult{ return $this->clientInteractPrediction; }
 
+	public function getClientCooldownState() : int{ return $this->clientCooldownState; }
+
 	protected function decodeData(ByteBufferReader $in) : void{
 		$this->actionType = VarInt::readUnsignedInt($in);
 		$this->triggerType = TriggerType::fromPacket(VarInt::readUnsignedInt($in));
@@ -91,6 +95,7 @@ class UseItemTransactionData extends TransactionData{
 		$this->clickPosition = CommonTypes::getVector3($in);
 		$this->blockRuntimeId = VarInt::readUnsignedInt($in);
 		$this->clientInteractPrediction = PredictedResult::fromPacket(VarInt::readUnsignedInt($in));
+		$this->clientCooldownState = Byte::readUnsigned($in);
 	}
 
 	protected function encodeData(ByteBufferWriter $out) : void{
@@ -104,6 +109,7 @@ class UseItemTransactionData extends TransactionData{
 		CommonTypes::putVector3($out, $this->clickPosition);
 		VarInt::writeUnsignedInt($out, $this->blockRuntimeId);
 		VarInt::writeUnsignedInt($out, $this->clientInteractPrediction->value);
+		Byte::writeUnsigned($out, $this->clientCooldownState);
 	}
 
 	/**
@@ -120,6 +126,7 @@ class UseItemTransactionData extends TransactionData{
 		Vector3 $clickPosition,
 		int $blockRuntimeId,
 		PredictedResult $clientInteractPrediction,
+		int $clientCooldownState,
 	) : self{
 		$result = new self;
 		$result->actionType = $actionType;
@@ -132,14 +139,15 @@ class UseItemTransactionData extends TransactionData{
 		$result->clickPosition = $clickPosition;
 		$result->blockRuntimeId = $blockRuntimeId;
 		$result->clientInteractPrediction = $clientInteractPrediction;
+		$result->clientCooldownState = $clientCooldownState;
 		return $result;
 	}
 
 	/**
 	 * @param NetworkInventoryAction[] $actions
 	 */
-	public static function new(array $actions, int $actionType, TriggerType $triggerType, BlockPosition $blockPosition, int $face, int $hotbarSlot, ItemStackWrapper $itemInHand, Vector3 $playerPosition, Vector3 $clickPosition, int $blockRuntimeId, PredictedResult $clientInteractPrediction) : self{
-		$result = self::initSelf($actionType, $triggerType, $blockPosition, $face, $hotbarSlot, $itemInHand, $playerPosition, $clickPosition, $blockRuntimeId, $clientInteractPrediction);
+	public static function new(array $actions, int $actionType, TriggerType $triggerType, BlockPosition $blockPosition, int $face, int $hotbarSlot, ItemStackWrapper $itemInHand, Vector3 $playerPosition, Vector3 $clickPosition, int $blockRuntimeId, PredictedResult $clientInteractPrediction, int $clientCooldownState) : self{
+		$result = self::initSelf($actionType, $triggerType, $blockPosition, $face, $hotbarSlot, $itemInHand, $playerPosition, $clickPosition, $blockRuntimeId, $clientInteractPrediction, $clientCooldownState);
 		$result->actions = $actions;
 		return $result;
 	}

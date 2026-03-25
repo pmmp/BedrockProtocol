@@ -245,12 +245,18 @@ class PacketPool{
 		$this->registerPacket(new GraphicsOverrideParameterPacket());
 		$this->registerPacket(new ServerboundDataStorePacket());
 		$this->registerPacket(new ClientboundDataDrivenUIShowScreenPacket());
-		$this->registerPacket(new ClientboundDataDrivenUICloseAllScreensPacket());
+		$this->registerPacket(new ClientboundDataDrivenUICloseScreenPacket());
 		$this->registerPacket(new ClientboundDataDrivenUIReloadPacket());
 		$this->registerPacket(new ClientboundTextureShiftPacket());
 		$this->registerPacket(new VoxelShapesPacket());
 		$this->registerPacket(new CameraSplinePacket());
 		$this->registerPacket(new CameraAimAssistActorPriorityPacket());
+		$this->registerPacket(new ResourcePacksReadyForValidationPacket());
+		$this->registerPacket(new LocatorBarPacket());
+		$this->registerPacket(new PartyChangedPacket());
+		$this->registerPacket(new ServerboundDataDrivenScreenClosedPacket());
+		$this->registerPacket(new SyncWorldClocksPacket());
+		$this->registerPacket(new ClientboundAttributeLayerSyncPacket());
 	}
 
 	public function registerPacket(Packet $packet) : void{

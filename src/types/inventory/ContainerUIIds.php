@@ -84,4 +84,7 @@ final class ContainerUIIds{
 	public const SMITHING_TABLE_TEMPLATE = 61;
 	public const CRAFTER = 62;
 	public const DYNAMIC = 63;
+	public const RECIPE_FOOD_CONTAINER = 64;
+	public const RECIPE_BLOCKS_CONTAINER = 65;
+	public const RECIPE_FURNACE_ITEMS_CONTAINER = 66;
 }

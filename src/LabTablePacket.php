@@ -44,13 +44,13 @@ class LabTablePacket extends DataPacket implements ClientboundPacket, Serverboun
 
 	protected function decodePayload(ByteBufferReader $in) : void{
 		$this->actionType = Byte::readUnsigned($in);
-		$this->blockPosition = CommonTypes::getSignedBlockPosition($in);
+		$this->blockPosition = CommonTypes::getBlockPosition($in);
 		$this->reactionType = Byte::readUnsigned($in);
 	}
 
 	protected function encodePayload(ByteBufferWriter $out) : void{
 		Byte::writeUnsigned($out, $this->actionType);
-		CommonTypes::putSignedBlockPosition($out, $this->blockPosition);
+		CommonTypes::putBlockPosition($out, $this->blockPosition);
 		Byte::writeUnsigned($out, $this->reactionType);
 	}
 

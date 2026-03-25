@@ -34,11 +34,11 @@ final class BlockPosMetadataProperty implements MetadataProperty{
 	}
 
 	public static function read(ByteBufferReader $in) : self{
-		return new self(CommonTypes::getSignedBlockPosition($in));
+		return new self(CommonTypes::getBlockPosition($in));
 	}
 
 	public function write(ByteBufferWriter $out) : void{
-		CommonTypes::putSignedBlockPosition($out, $this->value);
+		CommonTypes::putBlockPosition($out, $this->value);
 	}
 
 	public function equals(MetadataProperty $other) : bool{

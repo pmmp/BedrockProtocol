@@ -586,5 +586,7 @@ final class LevelSoundEvent{
 	public const ITEM_GOLDEN_SPEAR_USE = 594;
 	public const ITEM_DIAMOND_SPEAR_USE = 595;
 	public const ITEM_NETHERITE_SPEAR_USE = 596;
+	public const PAUSE_GROWTH = 597;
+	public const RESET_GROWTH = 598;
 
 }

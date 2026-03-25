@@ -82,7 +82,7 @@ class GameTestRequestPacket extends DataPacket implements ServerboundPacket{
 		$this->repeatCount = VarInt::readSignedInt($in);
 		$this->rotation = Byte::readUnsigned($in);
 		$this->stopOnFailure = CommonTypes::getBool($in);
-		$this->testPosition = CommonTypes::getSignedBlockPosition($in);
+		$this->testPosition = CommonTypes::getBlockPosition($in);
 		$this->testsPerRow = VarInt::readSignedInt($in);
 		$this->testName = CommonTypes::getString($in);
 	}
@@ -92,7 +92,7 @@ class GameTestRequestPacket extends DataPacket implements ServerboundPacket{
 		VarInt::writeSignedInt($out, $this->repeatCount);
 		Byte::writeUnsigned($out, $this->rotation);
 		CommonTypes::putBool($out, $this->stopOnFailure);
-		CommonTypes::putSignedBlockPosition($out, $this->testPosition);
+		CommonTypes::putBlockPosition($out, $this->testPosition);
 		VarInt::writeSignedInt($out, $this->testsPerRow);
 		CommonTypes::putString($out, $this->testName);
 	}

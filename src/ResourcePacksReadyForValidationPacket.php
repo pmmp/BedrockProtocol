@@ -17,8 +17,8 @@ namespace pocketmine\network\mcpe\protocol;
 use pmmp\encoding\ByteBufferReader;
 use pmmp\encoding\ByteBufferWriter;
 
-class ClientboundDataDrivenUICloseAllScreensPacket extends DataPacket implements ClientboundPacket{
-	public const NETWORK_ID = ProtocolInfo::CLIENTBOUND_DATA_DRIVEN_UI_CLOSE_ALL_SCREENS_PACKET;
+class ResourcePacksReadyForValidationPacket extends DataPacket{
+	public const NETWORK_ID = ProtocolInfo::RESOURCE_PACKS_READY_FOR_VALIDATION_PACKET;
 
 	/**
 	 * @generate-create-func
@@ -36,6 +36,6 @@ class ClientboundDataDrivenUICloseAllScreensPacket extends DataPacket implements
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{
-		return $handler->handleClientboundDataDrivenUICloseAllScreens($this);
+		return $handler->handleResourcePacksReadyForValidation($this);
 	}
 }

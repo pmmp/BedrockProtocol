@@ -60,7 +60,7 @@ class ClientboundMapItemDataPacket extends DataPacket implements ClientboundPack
 		$this->type = VarInt::readUnsignedInt($in);
 		$this->dimensionId = Byte::readUnsigned($in);
 		$this->isLocked = CommonTypes::getBool($in);
-		$this->origin = CommonTypes::getSignedBlockPosition($in);
+		$this->origin = CommonTypes::getBlockPosition($in);
 
 		if(($this->type & self::BITFLAG_MAP_CREATION) !== 0){
 			$count = VarInt::readUnsignedInt($in);
@@ -130,7 +130,7 @@ class ClientboundMapItemDataPacket extends DataPacket implements ClientboundPack
 		VarInt::writeUnsignedInt($out, $type);
 		Byte::writeUnsigned($out, $this->dimensionId);
 		CommonTypes::putBool($out, $this->isLocked);
-		CommonTypes::putSignedBlockPosition($out, $this->origin);
+		CommonTypes::putBlockPosition($out, $this->origin);
 
 		if(($type & self::BITFLAG_MAP_CREATION) !== 0){
 			VarInt::writeUnsignedInt($out, $parentMapIdsCount);

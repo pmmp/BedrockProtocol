@@ -117,4 +117,6 @@ final class ParticleIds{
 	public const EYEBLOSSOM_OPEN = 96;
 	public const EYEBLOSSOM_CLOSE = 97;
 	public const GREEN_FLAME = 98;
+	public const PAUSE_MOB_GROWTH = 99;
+	public const RESET_MOB_GROWTH = 100;
 }

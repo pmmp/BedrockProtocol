@@ -59,7 +59,6 @@ use pocketmine\network\mcpe\protocol\types\skin\SkinData;
 use pocketmine\network\mcpe\protocol\types\skin\SkinImage;
 use pocketmine\network\mcpe\protocol\types\StructureEditorData;
 use pocketmine\network\mcpe\protocol\types\StructureSettings;
-use pocketmine\utils\Binary;
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
 use function count;
@@ -432,32 +431,11 @@ final class CommonTypes{
 	}
 
 	/**
-	 * Reads a block position with unsigned Y coordinate.
+	 * Reads a block position
 	 *
 	 * @throws DataDecodeException
 	 */
 	public static function getBlockPosition(ByteBufferReader $in) : BlockPosition{
-		$x = VarInt::readSignedInt($in);
-		$y = Binary::signInt(VarInt::readUnsignedInt($in)); //Y coordinate may be signed, but it's written unsigned :<
-		$z = VarInt::readSignedInt($in);
-		return new BlockPosition($x, $y, $z);
-	}
-
-	/**
-	 * Writes a block position with unsigned Y coordinate.
-	 */
-	public static function putBlockPosition(ByteBufferWriter $out, BlockPosition $blockPosition) : void{
-		VarInt::writeSignedInt($out, $blockPosition->getX());
-		VarInt::writeUnsignedInt($out, Binary::unsignInt($blockPosition->getY())); //Y coordinate may be signed, but it's written unsigned :<
-		VarInt::writeSignedInt($out, $blockPosition->getZ());
-	}
-
-	/**
-	 * Reads a block position with a signed Y coordinate.
-	 *
-	 * @throws DataDecodeException
-	 */
-	public static function getSignedBlockPosition(ByteBufferReader $in) : BlockPosition{
 		$x = VarInt::readSignedInt($in);
 		$y = VarInt::readSignedInt($in);
 		$z = VarInt::readSignedInt($in);
@@ -465,9 +443,9 @@ final class CommonTypes{
 	}
 
 	/**
-	 * Writes a block position with a signed Y coordinate.
+	 * Writes a block position
 	 */
-	public static function putSignedBlockPosition(ByteBufferWriter $out, BlockPosition $blockPosition) : void{
+	public static function putBlockPosition(ByteBufferWriter $out, BlockPosition $blockPosition) : void{
 		VarInt::writeSignedInt($out, $blockPosition->getX());
 		VarInt::writeSignedInt($out, $blockPosition->getY());
 		VarInt::writeSignedInt($out, $blockPosition->getZ());

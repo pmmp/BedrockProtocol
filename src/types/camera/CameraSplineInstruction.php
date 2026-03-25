@@ -38,6 +38,8 @@ final class CameraSplineInstruction{
 		private array $curve,
 		private array $progressKeyFrames,
 		private array $rotationOptions,
+		private string $splineIdentifier,
+		private bool $loadFromJson
 	){}
 
 	public function getTotalTime() : float{ return $this->totalTime; }
@@ -62,6 +64,10 @@ final class CameraSplineInstruction{
 	 */
 	public function getRotationOptions() : array{ return $this->rotationOptions; }
 
+	public function getSplineIdentifier() : string{ return $this->splineIdentifier; }
+
+	public function isLoadFromJson() : bool{ return $this->loadFromJson; }
+
 	public static function read(ByteBufferReader $in) : self{
 		$totalTime = LE::readFloat($in);
 		$easeType = Byte::readUnsigned($in);
@@ -84,7 +90,10 @@ final class CameraSplineInstruction{
 			$rotationOptions[] = CameraRotationOption::read($in);
 		}
 
-		return new self($totalTime, $easeType, $curve, $progressKeyFrames, $rotationOptions);
+		$splineIdentifier = CommonTypes::getString($in);
+		$loadFromJson = CommonTypes::getBool($in);
+
+		return new self($totalTime, $easeType, $curve, $progressKeyFrames, $rotationOptions, $splineIdentifier, $loadFromJson);
 	}
 
 	public function write(ByteBufferWriter $out) : void{
@@ -105,5 +114,8 @@ final class CameraSplineInstruction{
 		foreach($this->rotationOptions as $option){
 			$option->write($out);
 		}
+
+		CommonTypes::putString($out, $this->splineIdentifier);
+		CommonTypes::putBool($out, $this->loadFromJson);
 	}
 }

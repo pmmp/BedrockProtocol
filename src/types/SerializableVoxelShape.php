@@ -23,22 +23,18 @@ use function count;
 final class SerializableVoxelShape{
 
 	/**
-	 * @param list<SerializableVoxelCells> $cells
 	 * @param list<float> $xCoordinates
 	 * @param list<float> $yCoordinates
 	 * @param list<float> $zCoordinates
 	 */
 	public function __construct(
-		private array $cells,
+		private SerializableVoxelCells $cells,
 		private array $xCoordinates,
 		private array $yCoordinates,
 		private array $zCoordinates
 	){}
 
-	/**
-	 * @return list<SerializableVoxelCells>
-	 */
-	public function getCells() : array{ return $this->cells; }
+	public function getCells() : SerializableVoxelCells{ return $this->cells; }
 
 	/**
 	 * @return list<float>
@@ -56,10 +52,7 @@ final class SerializableVoxelShape{
 	public function getZCoordinates() : array{ return $this->zCoordinates; }
 
 	public static function read(ByteBufferReader $in) : self{
-		$cells = [];
-		for($i = 0, $cellsCount = VarInt::readUnsignedInt($in); $i < $cellsCount; ++$i){
-			$cells[] = SerializableVoxelCells::read($in);
-		}
+		$cells = SerializableVoxelCells::read($in);
 
 		$xCoordinates = [];
 		for($i = 0, $xCoordinatesCount = VarInt::readUnsignedInt($in); $i < $xCoordinatesCount; ++$i){
@@ -85,10 +78,7 @@ final class SerializableVoxelShape{
 	}
 
 	public function write(ByteBufferWriter $out) : void{
-		VarInt::writeUnsignedInt($out, count($this->cells));
-		foreach($this->cells as $cell){
-			$cell->write($out);
-		}
+		$this->cells->write($out);
 
 		VarInt::writeUnsignedInt($out, count($this->xCoordinates));
 		foreach($this->xCoordinates as $value){

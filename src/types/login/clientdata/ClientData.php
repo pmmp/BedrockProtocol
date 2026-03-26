@@ -86,6 +86,8 @@ final class ClientData{
 	public int $MemoryTier;
 
 	public bool $OverrideSkin;
+	
+	public string $PartyId;
 
 	/**
 	 * @var ClientDataPersonaSkinPiece[]

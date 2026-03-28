@@ -35,6 +35,10 @@ class ServerboundDataDrivenScreenClosedPacket extends DataPacket implements Serv
 		return $result;
 	}
 
+	public function getFormId() : int{ return $this->formId; }
+
+	public function getCloseReason() : string{ return $this->closeReason; }
+
 	protected function decodePayload(ByteBufferReader $in) : void{
 		$this->formId = LE::readUnsignedInt($in);
 		$this->closeReason = CommonTypes::getString($in);

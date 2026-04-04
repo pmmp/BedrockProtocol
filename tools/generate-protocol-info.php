@@ -180,6 +180,8 @@ namespace pocketmine\network\mcpe\protocol;
 
 use pmmp\encoding\DataDecodeException;
 use pmmp\encoding\VarInt;
+use function array_filter;
+use function is_object;
 
 class PacketPool{
 	protected static ?PacketPool $instance = null;
@@ -212,6 +214,14 @@ class PacketPool{
 	 */
 	public function getPacket(string $buffer) : ?Packet{
 		return $this->getPacketById(VarInt::unpackUnsignedInt($buffer) & DataPacket::PID_MASK);
+	}
+
+	/**
+	 * @return Packet[]
+	 * @phpstan-return array<int, Packet>
+	 */
+	public function getAll() : array{
+		return array_filter($this->pool->toArray(), is_object(...));
 	}
 }
 

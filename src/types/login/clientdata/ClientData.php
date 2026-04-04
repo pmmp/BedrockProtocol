@@ -87,6 +87,8 @@ final class ClientData{
 
 	public bool $OverrideSkin;
 
+	public string $PartyId;
+
 	/**
 	 * @var ClientDataPersonaSkinPiece[]
 	 * @required

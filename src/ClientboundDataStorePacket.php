@@ -24,7 +24,7 @@ use pocketmine\network\mcpe\protocol\types\DataStoreType;
 use pocketmine\network\mcpe\protocol\types\DataStoreUpdate;
 use function count;
 
-class ClientboundDataStorePacket extends DataPacket implements ClientboundPacket {
+class ClientboundDataStorePacket extends DataPacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::CLIENTBOUND_DATA_STORE_PACKET;
 
 	/**

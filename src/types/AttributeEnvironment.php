@@ -55,7 +55,7 @@ final class AttributeEnvironment{
 		$name = CommonTypes::getString($in);
 		$fromAttribute = CommonTypes::readOptional($in, AttributeValue::read(...));
 		$attribute = AttributeValue::read($in);
-		$toAttribute = CommonTypes::readOptional($in, fn() => AttributeValue::read($in));
+		$toAttribute = CommonTypes::readOptional($in, AttributeValue::read(...));
 		$currentTransitionTicks = LE::readUnsignedInt($in);
 		$totalTransitionTicks = LE::readUnsignedInt($in);
 		$easeType = CommonTypes::getString($in);

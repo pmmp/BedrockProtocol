@@ -74,6 +74,11 @@ class LevelChunkPacket extends DataPacket implements ClientboundPacket{
 		return $this->subChunkCount;
 	}
 
+	public function isClientSubChunkRequestsEnabled() : bool{
+		return $this->clientSubChunkRequestsEnabled;
+	}
+
+	/** @deprecated incorrect name */
 	public function isClientSubChunkRequestEnabled() : bool{
 		return $this->clientSubChunkRequestsEnabled;
 	}

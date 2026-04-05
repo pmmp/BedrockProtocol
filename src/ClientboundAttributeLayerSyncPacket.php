@@ -37,6 +37,8 @@ class ClientboundAttributeLayerSyncPacket extends DataPacket implements Clientbo
 		return $result;
 	}
 
+	public function getPayload() : AttributeLayerSyncPayload{ return $this->payload; }
+
 	protected function decodePayload(ByteBufferReader $in) : void{
 		$this->payload = match(VarInt::readUnsignedInt($in)){
 			AttributeUpdateLayers::ID => AttributeUpdateLayers::read($in),

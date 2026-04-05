@@ -119,6 +119,18 @@ class BiomeDefinitionListPacket extends DataPacket implements ClientboundPacket{
 		), $this->definitionData);
 	}
 
+	/**
+	 * @return BiomeDefinitionData[]
+	 * @phpstan-return list<BiomeDefinitionData>
+	 */
+	public function getDefinitionData() : array{ return $this->definitionData; }
+
+	/**
+	 * @return string[]
+	 * @phpstan-return list<string>
+	 */
+	public function getStrings() : array{ return $this->strings; }
+
 	protected function decodePayload(ByteBufferReader $in) : void{
 		for($i = 0, $count = VarInt::readUnsignedInt($in); $i < $count; ++$i){
 			$this->definitionData[] = BiomeDefinitionData::read($in);

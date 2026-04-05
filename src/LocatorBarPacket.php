@@ -40,6 +40,12 @@ class LocatorBarPacket extends DataPacket implements ClientboundPacket{
 		return $result;
 	}
 
+	/**
+	 * @return LocatorBarWaypointPayload[]
+	 * @phpstan-return list<LocatorBarWaypointPayload>
+	 */
+	public function getWaypoints() : array{ return $this->waypoints; }
+
 	protected function decodePayload(ByteBufferReader $in) : void{
 		$this->waypoints = [];
 		for($i = 0, $len = VarInt::readUnsignedInt($in); $i < $len; ++$i){

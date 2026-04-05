@@ -32,6 +32,8 @@ class PartyChangedPacket extends DataPacket implements ServerboundPacket{
 		return $result;
 	}
 
+	public function getPartyId() : string{ return $this->partyId; }
+
 	protected function decodePayload(ByteBufferReader $in) : void{
 		$this->partyId = CommonTypes::getString($in);
 	}

@@ -62,7 +62,10 @@ class ResourcePacksInfoPacket extends DataPacket implements ClientboundPacket{
 
 	public function getWorldTemplateVersion() : string{ return $this->worldTemplateVersion; }
 
+	/** @deprecated incorrect name */
 	public function isForceDisablingVibrantVisuals() : bool{ return $this->forceDisableVibrantVisuals; }
+
+	public function isForceDisableVibrantVisuals() : bool{ return $this->forceDisableVibrantVisuals; }
 
 	protected function decodePayload(ByteBufferReader $in) : void{
 		$this->mustAccept = CommonTypes::getBool($in);

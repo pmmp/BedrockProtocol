@@ -37,6 +37,8 @@ class SyncWorldClocksPacket extends DataPacket implements ClientboundPacket{
 		return $result;
 	}
 
+	public function getPayload() : SyncWorldClocksPayload{ return $this->payload; }
+
 	protected function decodePayload(ByteBufferReader $in) : void{
 		$this->payload = match(VarInt::readUnsignedInt($in)){
 			SyncWorldClocksSyncState::ID => SyncWorldClocksSyncState::read($in),

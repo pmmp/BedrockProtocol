@@ -53,7 +53,7 @@ final class AttributeEnvironment{
 
 	public static function read(ByteBufferReader $in) : self{
 		$name = CommonTypes::getString($in);
-		$fromAttribute = CommonTypes::readOptional($in, fn() => AttributeValue::read($in));
+		$fromAttribute = CommonTypes::readOptional($in, AttributeValue::read(...));
 		$attribute = AttributeValue::read($in);
 		$toAttribute = CommonTypes::readOptional($in, fn() => AttributeValue::read($in));
 		$currentTransitionTicks = LE::readUnsignedInt($in);

@@ -64,6 +64,7 @@ final class ClientData{
 	/** @required */
 	public int $DeviceOS;
 
+	/** @required */
 	public bool $FilterProfanity;
 
 	/** @required */
@@ -90,6 +91,7 @@ final class ClientData{
 	public bool $OverrideSkin;
 
 	public string $PartyId;
+	public bool $IsPartyLeader;
 
 	/**
 	 * @var ClientDataPersonaSkinPiece[]

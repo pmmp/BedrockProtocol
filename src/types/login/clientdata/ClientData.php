@@ -64,6 +64,8 @@ final class ClientData{
 	/** @required */
 	public int $DeviceOS;
 
+	public bool $FilterProfanity;
+
 	/** @required */
 	public string $GameVersion;
 

@@ -17,38 +17,33 @@ namespace pocketmine\network\mcpe\protocol;
 use pmmp\encoding\ByteBufferReader;
 use pmmp\encoding\ByteBufferWriter;
 use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
+use pocketmine\network\mcpe\protocol\types\ClientStoreEntrypointConfig;
 
-class PartyChangedPacket extends DataPacket implements ServerboundPacket{
-	public const NETWORK_ID = ProtocolInfo::PARTY_CHANGED_PACKET;
+class ServerStoreInfoPacket extends DataPacket implements ClientboundPacket{
+	public const NETWORK_ID = ProtocolInfo::SERVER_STORE_INFO_PACKET;
 
-	private string $partyId;
-	private bool $partyLeader;
+	private ?ClientStoreEntrypointConfig $clientStoreEntrypointConfig;
 
 	/**
 	 * @generate-create-func
 	 */
-	public static function create(string $partyId, bool $partyLeader) : self{
+	public static function create(?ClientStoreEntrypointConfig $clientStoreEntrypointConfig) : self{
 		$result = new self;
-		$result->partyId = $partyId;
-		$result->partyLeader = $partyLeader;
+		$result->clientStoreEntrypointConfig = $clientStoreEntrypointConfig;
 		return $result;
 	}
 
-	public function getPartyId() : string{ return $this->partyId; }
-
-	public function isPartyLeader() : bool{ return $this->partyLeader; }
+	public function getClientStoreEntrypointConfig() : ?ClientStoreEntrypointConfig{ return $this->clientStoreEntrypointConfig; }
 
 	protected function decodePayload(ByteBufferReader $in) : void{
-		$this->partyId = CommonTypes::getString($in);
-		$this->partyLeader = CommonTypes::getBool($in);
+		$this->clientStoreEntrypointConfig = CommonTypes::readOptional($in, ClientStoreEntrypointConfig::read(...));
 	}
 
 	protected function encodePayload(ByteBufferWriter $out) : void{
-		CommonTypes::putString($out, $this->partyId);
-		CommonTypes::putBool($out, $this->partyLeader);
+		CommonTypes::writeOptional($out, $this->clientStoreEntrypointConfig, fn(ByteBufferWriter $out, ClientStoreEntrypointConfig $v) => $v->write($out));
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{
-		return $handler->handlePartyChanged($this);
+		return $handler->handleServerStoreInfo($this);
 	}
 }

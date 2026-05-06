@@ -241,7 +241,7 @@ class PacketPool{
 		$this->registerPacket(new PlayerUpdateEntityOverridesPacket());
 		$this->registerPacket(new PlayerLocationPacket());
 		$this->registerPacket(new ClientboundControlSchemeSetPacket());
-		$this->registerPacket(new DebugDrawerPacket());
+		$this->registerPacket(new PrimitiveShapesPacket());
 		$this->registerPacket(new ServerboundPackSettingChangePacket());
 		$this->registerPacket(new ClientboundDataStorePacket());
 		$this->registerPacket(new GraphicsOverrideParameterPacket());
@@ -259,6 +259,8 @@ class PacketPool{
 		$this->registerPacket(new ServerboundDataDrivenScreenClosedPacket());
 		$this->registerPacket(new SyncWorldClocksPacket());
 		$this->registerPacket(new ClientboundAttributeLayerSyncPacket());
+		$this->registerPacket(new ServerStoreInfoPacket());
+		$this->registerPacket(new ServerPresenceInfoPacket());
 	}
 
 	public function registerPacket(Packet $packet) : void{

@@ -588,5 +588,7 @@ final class LevelSoundEvent{
 	public const ITEM_NETHERITE_SPEAR_USE = 596;
 	public const PAUSE_GROWTH = 597;
 	public const RESET_GROWTH = 598;
+	public const PUSHED_BY_PLAYER = 599;
+	public const BOUNCE = 600;
 
 }

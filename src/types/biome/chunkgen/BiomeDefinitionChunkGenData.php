@@ -31,18 +31,13 @@ final class BiomeDefinitionChunkGenData{
 		private ?BiomeConsolidatedFeaturesData $consolidatedFeatures,
 		private ?BiomeMountainParamsData $mountainParams,
 		private ?BiomeSurfaceMaterialAdjustmentData $surfaceMaterialAdjustment,
-		private ?BiomeSurfaceMaterialData $surfaceMaterial,
-		private bool $defaultOverworldSurface,
-		private bool $swampSurface,
-		private bool $frozenOceanSurface,
-		private bool $theEndSurface,
-		private ?BiomeMesaSurfaceData $mesaSurface,
-		private ?BiomeCappedSurfaceData $cappedSurface,
 		private ?BiomeOverworldGenRulesData $overworldGenRules,
 		private ?BiomeMultinoiseGenRulesData $multinoiseGenRules,
 		private ?BiomeLegacyWorldGenRulesData $legacyWorldGenRules,
 		private ?array $replacementsData,
 		private ?int $villageType,
+		private ?BiomeSurfaceBuilderData $surfaceBuilderData,
+		private ?BiomeSurfaceBuilderData $subSurfaceBuilderData
 	){}
 
 	public function getClimate() : ?BiomeClimateData{ return $this->climate; }
@@ -52,20 +47,6 @@ final class BiomeDefinitionChunkGenData{
 	public function getMountainParams() : ?BiomeMountainParamsData{ return $this->mountainParams; }
 
 	public function getSurfaceMaterialAdjustment() : ?BiomeSurfaceMaterialAdjustmentData{ return $this->surfaceMaterialAdjustment; }
-
-	public function getSurfaceMaterial() : ?BiomeSurfaceMaterialData{ return $this->surfaceMaterial; }
-
-	public function hasDefaultOverworldSurface() : bool{ return $this->defaultOverworldSurface; }
-
-	public function hasSwampSurface() : bool{ return $this->swampSurface; }
-
-	public function hasFrozenOceanSurface() : bool{ return $this->frozenOceanSurface; }
-
-	public function hasTheEndSurface() : bool{ return $this->theEndSurface; }
-
-	public function getMesaSurface() : ?BiomeMesaSurfaceData{ return $this->mesaSurface; }
-
-	public function getCappedSurface() : ?BiomeCappedSurfaceData{ return $this->cappedSurface; }
 
 	public function getOverworldGenRules() : ?BiomeOverworldGenRulesData{ return $this->overworldGenRules; }
 
@@ -80,18 +61,15 @@ final class BiomeDefinitionChunkGenData{
 
 	public function getVillageType() : ?int{ return $this->villageType; }
 
+	public function getSurfaceBuilderData() : ?BiomeSurfaceBuilderData{ return $this->surfaceBuilderData; }
+
+	public function getSubSurfaceBuilderData() : ?BiomeSurfaceBuilderData{ return $this->subSurfaceBuilderData; }
+
 	public static function read(ByteBufferReader $in) : self{
 		$climate = CommonTypes::readOptional($in, fn() => BiomeClimateData::read($in));
 		$consolidatedFeatures = CommonTypes::readOptional($in, fn() => BiomeConsolidatedFeaturesData::read($in));
 		$mountainParams = CommonTypes::readOptional($in, fn() => BiomeMountainParamsData::read($in));
 		$surfaceMaterialAdjustment = CommonTypes::readOptional($in, fn() => BiomeSurfaceMaterialAdjustmentData::read($in));
-		$surfaceMaterial = CommonTypes::readOptional($in, fn() => BiomeSurfaceMaterialData::read($in));
-		$defaultOverworldSurface = CommonTypes::getBool($in);
-		$swampSurface = CommonTypes::getBool($in);
-		$frozenOceanSurface = CommonTypes::getBool($in);
-		$theEndSurface = CommonTypes::getBool($in);
-		$mesaSurface = CommonTypes::readOptional($in, fn() => BiomeMesaSurfaceData::read($in));
-		$cappedSurface = CommonTypes::readOptional($in, fn() => BiomeCappedSurfaceData::read($in));
 		$overworldGenRules = CommonTypes::readOptional($in, fn() => BiomeOverworldGenRulesData::read($in));
 		$multinoiseGenRules = CommonTypes::readOptional($in, fn() => BiomeMultinoiseGenRulesData::read($in));
 		$legacyWorldGenRules = CommonTypes::readOptional($in, fn() => BiomeLegacyWorldGenRulesData::read($in));
@@ -104,24 +82,21 @@ final class BiomeDefinitionChunkGenData{
 			return $result;
 		});
 		$villageType = CommonTypes::readOptional($in, fn() => Byte::readUnsigned($in));
+		$surfaceBuilderData = CommonTypes::readOptional($in, fn() => BiomeSurfaceBuilderData::read($in));
+		$subSurfaceBuilderData = CommonTypes::readOptional($in, fn() => BiomeSurfaceBuilderData::read($in));
 
 		return new self(
 			$climate,
 			$consolidatedFeatures,
 			$mountainParams,
 			$surfaceMaterialAdjustment,
-			$surfaceMaterial,
-			$defaultOverworldSurface,
-			$swampSurface,
-			$frozenOceanSurface,
-			$theEndSurface,
-			$mesaSurface,
-			$cappedSurface,
 			$overworldGenRules,
 			$multinoiseGenRules,
 			$legacyWorldGenRules,
 			$replacementsData,
-			$villageType
+			$villageType,
+			$surfaceBuilderData,
+			$subSurfaceBuilderData
 		);
 	}
 
@@ -130,13 +105,6 @@ final class BiomeDefinitionChunkGenData{
 		CommonTypes::writeOptional($out, $this->consolidatedFeatures, fn(ByteBufferWriter $out, BiomeConsolidatedFeaturesData $v) => $v->write($out));
 		CommonTypes::writeOptional($out, $this->mountainParams, fn(ByteBufferWriter $out, BiomeMountainParamsData $v) => $v->write($out));
 		CommonTypes::writeOptional($out, $this->surfaceMaterialAdjustment, fn(ByteBufferWriter $out, BiomeSurfaceMaterialAdjustmentData $v) => $v->write($out));
-		CommonTypes::writeOptional($out, $this->surfaceMaterial, fn(ByteBufferWriter $out, BiomeSurfaceMaterialData $v) => $v->write($out));
-		CommonTypes::putBool($out, $this->defaultOverworldSurface);
-		CommonTypes::putBool($out, $this->swampSurface);
-		CommonTypes::putBool($out, $this->frozenOceanSurface);
-		CommonTypes::putBool($out, $this->theEndSurface);
-		CommonTypes::writeOptional($out, $this->mesaSurface, fn(ByteBufferWriter $out, BiomeMesaSurfaceData $v) => $v->write($out));
-		CommonTypes::writeOptional($out, $this->cappedSurface, fn(ByteBufferWriter $out, BiomeCappedSurfaceData $v) => $v->write($out));
 		CommonTypes::writeOptional($out, $this->overworldGenRules, fn(ByteBufferWriter $out, BiomeOverworldGenRulesData $v) => $v->write($out));
 		CommonTypes::writeOptional($out, $this->multinoiseGenRules, fn(ByteBufferWriter $out, BiomeMultinoiseGenRulesData $v) => $v->write($out));
 		CommonTypes::writeOptional($out, $this->legacyWorldGenRules, fn(ByteBufferWriter $out, BiomeLegacyWorldGenRulesData $v) => $v->write($out));
@@ -147,5 +115,7 @@ final class BiomeDefinitionChunkGenData{
 			}
 		});
 		CommonTypes::writeOptional($out, $this->villageType, fn(ByteBufferWriter $out, int $v) => Byte::writeUnsigned($out, $v));
+		CommonTypes::writeOptional($out, $this->surfaceBuilderData, fn(ByteBufferWriter $out, BiomeSurfaceBuilderData $v) => $v->write($out));
+		CommonTypes::writeOptional($out, $this->subSurfaceBuilderData, fn(ByteBufferWriter $out, BiomeSurfaceBuilderData $v) => $v->write($out));
 	}
 }

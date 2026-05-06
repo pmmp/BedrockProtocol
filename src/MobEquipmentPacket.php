@@ -44,7 +44,7 @@ class MobEquipmentPacket extends DataPacket implements ClientboundPacket, Server
 
 	protected function decodePayload(ByteBufferReader $in) : void{
 		$this->actorRuntimeId = CommonTypes::getActorRuntimeId($in);
-		$this->item = CommonTypes::getItemStackWrapper($in);
+		$this->item = CommonTypes::getNetworkItemStackDescriptor($in);
 		$this->inventorySlot = Byte::readUnsigned($in);
 		$this->hotbarSlot = Byte::readUnsigned($in);
 		$this->windowId = Byte::readUnsigned($in);
@@ -52,7 +52,7 @@ class MobEquipmentPacket extends DataPacket implements ClientboundPacket, Server
 
 	protected function encodePayload(ByteBufferWriter $out) : void{
 		CommonTypes::putActorRuntimeId($out, $this->actorRuntimeId);
-		CommonTypes::putItemStackWrapper($out, $this->item);
+		CommonTypes::putNetworkItemStackDescriptor($out, $this->item);
 		Byte::writeUnsigned($out, $this->inventorySlot);
 		Byte::writeUnsigned($out, $this->hotbarSlot);
 		Byte::writeUnsigned($out, $this->windowId);

@@ -82,6 +82,7 @@ final class ActorEvent{
 	public const DRINK_MILK = 78;
 	public const SHAKE_WETNESS_STOP = 79;
 	public const KINETIC_DAMAGE_DEALT = 80;
+	public const HURT_WITHOUT_RECEIVING_DAMAGE = 81;
 
 	//TODO: add more events
 }

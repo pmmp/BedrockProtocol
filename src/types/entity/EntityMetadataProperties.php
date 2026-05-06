@@ -168,4 +168,6 @@ final class EntityMetadataProperties{
 	public const AIM_ASSIST_PRIORITY_PRESET_ID = 136; //int
 	public const AIM_ASSIST_PRIORITY_CATEGORY_ID = 137; //int
 	public const AIM_ASSIST_PRIORITY_ACTOR_ID = 138; //int
+	public const RESERVED_139 = 139; //long
+	public const NAMEPLATE_RENDER_DISTANCE_MAX = 140; //float
 }

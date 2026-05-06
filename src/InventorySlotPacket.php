@@ -26,14 +26,14 @@ class InventorySlotPacket extends DataPacket implements ClientboundPacket{
 
 	public int $windowId;
 	public int $inventorySlot;
-	public FullContainerName $containerName;
-	public ItemStackWrapper $storage;
+	public ?FullContainerName $containerName;
+	public ?ItemStackWrapper $storage;
 	public ItemStackWrapper $item;
 
 	/**
 	 * @generate-create-func
 	 */
-	public static function create(int $windowId, int $inventorySlot, FullContainerName $containerName, ItemStackWrapper $storage, ItemStackWrapper $item) : self{
+	public static function create(int $windowId, int $inventorySlot, ?FullContainerName $containerName, ?ItemStackWrapper $storage, ItemStackWrapper $item) : self{
 		$result = new self;
 		$result->windowId = $windowId;
 		$result->inventorySlot = $inventorySlot;
@@ -46,17 +46,17 @@ class InventorySlotPacket extends DataPacket implements ClientboundPacket{
 	protected function decodePayload(ByteBufferReader $in) : void{
 		$this->windowId = VarInt::readUnsignedInt($in);
 		$this->inventorySlot = VarInt::readUnsignedInt($in);
-		$this->containerName = FullContainerName::read($in);
-		$this->storage = CommonTypes::getItemStackWrapper($in);
-		$this->item = CommonTypes::getItemStackWrapper($in);
+		$this->containerName = CommonTypes::readOptional($in, FullContainerName::read(...));
+		$this->storage = CommonTypes::readOptional($in, CommonTypes::getNetworkItemStackDescriptor(...));
+		$this->item = CommonTypes::getNetworkItemStackDescriptor($in);
 	}
 
 	protected function encodePayload(ByteBufferWriter $out) : void{
 		VarInt::writeUnsignedInt($out, $this->windowId);
 		VarInt::writeUnsignedInt($out, $this->inventorySlot);
-		$this->containerName->write($out);
-		CommonTypes::putItemStackWrapper($out, $this->storage);
-		CommonTypes::putItemStackWrapper($out, $this->item);
+		CommonTypes::writeOptional($out, $this->containerName, fn(ByteBufferWriter $out, FullContainerName $v) => $v->write($out));
+		CommonTypes::writeOptional($out, $this->storage, CommonTypes::putNetworkItemStackDescriptor(...));
+		CommonTypes::putNetworkItemStackDescriptor($out, $this->item);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

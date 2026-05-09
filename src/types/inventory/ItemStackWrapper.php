@@ -17,7 +17,8 @@ namespace pocketmine\network\mcpe\protocol\types\inventory;
 final class ItemStackWrapper{
 	public function __construct(
 		private int $stackId,
-		private ItemStack $itemStack
+		private ItemStack $itemStack,
+		private int $stackIdVariant = 0
 	){}
 
 	public static function legacy(ItemStack $itemStack) : self{
@@ -25,6 +26,8 @@ final class ItemStackWrapper{
 	}
 
 	public function getStackId() : int{ return $this->stackId; }
+
+	public function getStackIdVariant() : int{ return $this->stackIdVariant; }
 
 	public function getItemStack() : ItemStack{ return $this->itemStack; }
 }

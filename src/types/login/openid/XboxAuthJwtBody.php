@@ -38,6 +38,8 @@ final class XboxAuthJwtBody extends JwtBodyRfc7519{
 	/** @required */
 	public string $xname; // the player's Xbox Live gamertag
 
+	public int $ap; // ??
+
 	/** @required */
 	public string $cpk; // the public key that was used to sign the "client properties" token
 

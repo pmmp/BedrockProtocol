@@ -43,14 +43,14 @@ class DisconnectPacket extends DataPacket implements ClientboundPacket, Serverbo
 
 	protected function decodePayload(ByteBufferReader $in) : void{
 		$this->reason = VarInt::readSignedInt($in);
-		$skipMessage = CommonTypes::getBool($in);
-		$this->message = $skipMessage ? null : CommonTypes::getString($in);
-		$this->filteredMessage = $skipMessage ? null : CommonTypes::getString($in);
+		$type = VarInt::readUnsignedInt($in);
+		$this->message = $type === 0 ? CommonTypes::getString($in) : null;
+		$this->filteredMessage = $type === 0 ? CommonTypes::getString($in) : null;
 	}
 
 	protected function encodePayload(ByteBufferWriter $out) : void{
 		VarInt::writeSignedInt($out, $this->reason);
-		CommonTypes::putBool($out, $skipMessage = $this->message === null && $this->filteredMessage === null);
+		VarInt::writeUnsignedInt($out, ($skipMessage = $this->message === null && $this->filteredMessage === null) ? 1 : 0);
 		if(!$skipMessage){
 			CommonTypes::putString($out, $this->message ?? "");
 			CommonTypes::putString($out, $this->filteredMessage ?? "");

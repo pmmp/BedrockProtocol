@@ -18,6 +18,7 @@ use pmmp\encoding\ByteBufferReader;
 use pmmp\encoding\ByteBufferWriter;
 use pmmp\encoding\LE;
 use pocketmine\color\Color;
+use pocketmine\math\Vector2;
 use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 
 /**
@@ -28,7 +29,8 @@ final class LocatorBarWaypoint{
 		private int $updateFlag,
 		private ?bool $visible,
 		private ?WorldPosition $worldPosition,
-		private ?int $textureId,
+		private ?string $texturePath,
+		private ?Vector2 $iconSize,
 		private ?Color $color,
 		private ?bool $clientPositionAuthority,
 		private ?int $actorUniqueId,
@@ -40,7 +42,9 @@ final class LocatorBarWaypoint{
 
 	public function getWorldPosition() : ?WorldPosition{ return $this->worldPosition; }
 
-	public function getTextureId() : ?int{ return $this->textureId; }
+	public function getTexturePath() : ?string{ return $this->texturePath; }
+
+	public function getIconSize() : ?Vector2{ return $this->iconSize; }
 
 	public function getColor() : ?Color{ return $this->color; }
 
@@ -52,7 +56,8 @@ final class LocatorBarWaypoint{
 		$updateFlag = LE::readUnsignedInt($in);
 		$visible = CommonTypes::readOptional($in, CommonTypes::getBool(...));
 		$worldPosition = CommonTypes::readOptional($in, WorldPosition::read(...));
-		$textureId = CommonTypes::readOptional($in, LE::readUnsignedInt(...));
+		$texturePath = CommonTypes::readOptional($in, CommonTypes::getString(...));
+		$iconSize = CommonTypes::readOptional($in, CommonTypes::getVector2(...));
 		$color = CommonTypes::readOptional($in, fn() => Color::fromARGB(LE::readUnsignedInt($in)));
 		$clientPositionAuthority = CommonTypes::readOptional($in, CommonTypes::getBool(...));
 		$actorUniqueId = CommonTypes::readOptional($in, CommonTypes::getActorUniqueId(...));
@@ -61,7 +66,8 @@ final class LocatorBarWaypoint{
 			$updateFlag,
 			$visible,
 			$worldPosition,
-			$textureId,
+			$texturePath,
+			$iconSize,
 			$color,
 			$clientPositionAuthority,
 			$actorUniqueId,
@@ -72,7 +78,8 @@ final class LocatorBarWaypoint{
 		LE::writeUnsignedInt($out, $this->updateFlag);
 		CommonTypes::writeOptional($out, $this->visible, CommonTypes::putBool(...));
 		CommonTypes::writeOptional($out, $this->worldPosition, fn(ByteBufferWriter $out, WorldPosition $v) => $v->write($out));
-		CommonTypes::writeOptional($out, $this->textureId, LE::writeUnsignedInt(...));
+		CommonTypes::writeOptional($out, $this->texturePath, CommonTypes::putString(...));
+		CommonTypes::writeOptional($out, $this->iconSize, CommonTypes::putVector2(...));
 		CommonTypes::writeOptional($out, $this->color, fn(ByteBufferWriter $out, Color $v) => LE::writeUnsignedInt($out, $v->toARGB()));
 		CommonTypes::writeOptional($out, $this->clientPositionAuthority, CommonTypes::putBool(...));
 		CommonTypes::writeOptional($out, $this->actorUniqueId, CommonTypes::putActorUniqueId(...));

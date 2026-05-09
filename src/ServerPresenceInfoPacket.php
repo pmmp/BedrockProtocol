@@ -17,38 +17,33 @@ namespace pocketmine\network\mcpe\protocol;
 use pmmp\encoding\ByteBufferReader;
 use pmmp\encoding\ByteBufferWriter;
 use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
+use pocketmine\network\mcpe\protocol\types\PresenceConfig;
 
-class PartyChangedPacket extends DataPacket implements ServerboundPacket{
-	public const NETWORK_ID = ProtocolInfo::PARTY_CHANGED_PACKET;
+class ServerPresenceInfoPacket extends DataPacket implements ClientboundPacket{
+	public const NETWORK_ID = ProtocolInfo::SERVER_PRESENCE_INFO_PACKET;
 
-	private string $partyId;
-	private bool $partyLeader;
+	private ?PresenceConfig $presenceConfig;
 
 	/**
 	 * @generate-create-func
 	 */
-	public static function create(string $partyId, bool $partyLeader) : self{
+	public static function create(?PresenceConfig $presenceConfig) : self{
 		$result = new self;
-		$result->partyId = $partyId;
-		$result->partyLeader = $partyLeader;
+		$result->presenceConfig = $presenceConfig;
 		return $result;
 	}
 
-	public function getPartyId() : string{ return $this->partyId; }
-
-	public function isPartyLeader() : bool{ return $this->partyLeader; }
+	public function getPresenceConfig() : ?PresenceConfig{ return $this->presenceConfig; }
 
 	protected function decodePayload(ByteBufferReader $in) : void{
-		$this->partyId = CommonTypes::getString($in);
-		$this->partyLeader = CommonTypes::getBool($in);
+		$this->presenceConfig = CommonTypes::readOptional($in, PresenceConfig::read(...));
 	}
 
 	protected function encodePayload(ByteBufferWriter $out) : void{
-		CommonTypes::putString($out, $this->partyId);
-		CommonTypes::putBool($out, $this->partyLeader);
+		CommonTypes::writeOptional($out, $this->presenceConfig, fn(ByteBufferWriter $out, PresenceConfig $v) => $v->write($out));
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{
-		return $handler->handlePartyChanged($this);
+		return $handler->handleServerPresenceInfo($this);
 	}
 }

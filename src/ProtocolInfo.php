@@ -32,11 +32,11 @@ final class ProtocolInfo{
 	 */
 
 	/** Actual Minecraft: PE protocol version */
-	public const CURRENT_PROTOCOL = 944;
+	public const CURRENT_PROTOCOL = 975;
 	/** Display version shown in the server logs. This should match the version on the game's home screen. */
-	public const MINECRAFT_VERSION = 'v26.10';
+	public const MINECRAFT_VERSION = 'v26.20';
 	/** Version sent on the network for client side compatibility checks. This may differ from the display version. */
-	public const MINECRAFT_VERSION_NETWORK = '1.26.10';
+	public const MINECRAFT_VERSION_NETWORK = '1.26.20';
 
 	public const LOGIN_PACKET = 0x01;
 	public const PLAY_STATUS_PACKET = 0x02;
@@ -262,7 +262,7 @@ final class ProtocolInfo{
 	public const PLAYER_UPDATE_ENTITY_OVERRIDES_PACKET = 0x145;
 	public const PLAYER_LOCATION_PACKET = 0x146;
 	public const CLIENTBOUND_CONTROL_SCHEME_SET_PACKET = 0x147;
-	public const DEBUG_DRAWER_PACKET = 0x148;
+	public const PRIMITIVE_SHAPES_PACKET = 0x148;
 	public const SERVERBOUND_PACK_SETTING_CHANGE_PACKET = 0x149;
 	public const CLIENTBOUND_DATA_STORE_PACKET = 0x14a;
 	public const GRAPHICS_OVERRIDE_PARAMETER_PACKET = 0x14b;
@@ -280,5 +280,7 @@ final class ProtocolInfo{
 	public const SERVERBOUND_DATA_DRIVEN_SCREEN_CLOSED_PACKET = 0x157;
 	public const SYNC_WORLD_CLOCKS_PACKET = 0x158;
 	public const CLIENTBOUND_ATTRIBUTE_LAYER_SYNC_PACKET = 0x159;
+	public const SERVER_STORE_INFO_PACKET = 0x15a;
+	public const SERVER_PRESENCE_INFO_PACKET = 0x15b;
 
 }

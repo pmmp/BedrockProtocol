@@ -23,7 +23,8 @@ final class DimensionData{
 	public function __construct(
 		private int $maxHeight,
 		private int $minHeight,
-		private int $generator
+		private int $generator,
+		private int $dimensionType,
 	){}
 
 	public function getMaxHeight() : int{ return $this->maxHeight; }
@@ -32,17 +33,21 @@ final class DimensionData{
 
 	public function getGenerator() : int{ return $this->generator; }
 
+	public function getDimensionType() : int{ return $this->dimensionType; }
+
 	public static function read(ByteBufferReader $in) : self{
 		$maxHeight = VarInt::readSignedInt($in);
 		$minHeight = VarInt::readSignedInt($in);
 		$generator = VarInt::readSignedInt($in);
+		$dimensionType = VarInt::readSignedInt($in);
 
-		return new self($maxHeight, $minHeight, $generator);
+		return new self($maxHeight, $minHeight, $generator, $dimensionType);
 	}
 
 	public function write(ByteBufferWriter $out) : void{
 		VarInt::writeSignedInt($out, $this->maxHeight);
 		VarInt::writeSignedInt($out, $this->minHeight);
 		VarInt::writeSignedInt($out, $this->generator);
+		VarInt::writeSignedInt($out, $this->dimensionType);
 	}
 }

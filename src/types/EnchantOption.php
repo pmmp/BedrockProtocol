@@ -14,6 +14,7 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol\types;
 
+use pmmp\encoding\Byte;
 use pmmp\encoding\ByteBufferReader;
 use pmmp\encoding\ByteBufferWriter;
 use pmmp\encoding\LE;
@@ -76,7 +77,7 @@ final class EnchantOption{
 	}
 
 	public static function read(ByteBufferReader $in) : self{
-		$cost = VarInt::readUnsignedInt($in);
+		$cost = Byte::readUnsigned($in);
 
 		$slotFlags = LE::readUnsignedInt($in);
 		$equipActivatedEnchants = self::readEnchantList($in);
@@ -90,7 +91,7 @@ final class EnchantOption{
 	}
 
 	public function write(ByteBufferWriter $out) : void{
-		VarInt::writeUnsignedInt($out, $this->cost);
+		Byte::writeUnsigned($out, $this->cost);
 
 		LE::writeUnsignedInt($out, $this->slotFlags);
 		self::writeEnchantList($out, $this->equipActivatedEnchantments);

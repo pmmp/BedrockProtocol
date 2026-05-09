@@ -22,7 +22,6 @@ final class AuthenticationInfo{
 	/** @required */
 	public int $AuthenticationType;
 
-	/** @required */
 	public string $Certificate;
 
 	/** @required */

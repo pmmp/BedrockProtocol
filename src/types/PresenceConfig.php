@@ -14,29 +14,32 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol\types;
 
-use pmmp\encoding\Byte;
 use pmmp\encoding\ByteBufferReader;
 use pmmp\encoding\ByteBufferWriter;
-use pmmp\encoding\VarInt;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 
-final class Enchant{
+/**
+ * @see ServerPresenceInfoPacket
+ */
+final class PresenceConfig{
 	public function __construct(
-		private int $id,
-		private int $level
+		private string $experienceName,
+		private string $worldName
 	){}
 
-	public function getId() : int{ return $this->id; }
+	public function getExperienceName() : string{ return $this->experienceName; }
 
-	public function getLevel() : int{ return $this->level; }
+	public function getWorldName() : string{ return $this->worldName; }
 
 	public static function read(ByteBufferReader $in) : self{
-		$id = VarInt::readUnsignedInt($in);
-		$level = Byte::readUnsigned($in);
-		return new self($id, $level);
+		$experienceName = CommonTypes::getString($in);
+		$worldName = CommonTypes::getString($in);
+
+		return new self($experienceName, $worldName);
 	}
 
 	public function write(ByteBufferWriter $out) : void{
-		VarInt::writeUnsignedInt($out, $this->id);
-		Byte::writeUnsigned($out, $this->level);
+		CommonTypes::putString($out, $this->experienceName);
+		CommonTypes::putString($out, $this->worldName);
 	}
 }

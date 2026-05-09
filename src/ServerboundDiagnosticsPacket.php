@@ -18,7 +18,9 @@ use pmmp\encoding\ByteBufferReader;
 use pmmp\encoding\ByteBufferWriter;
 use pmmp\encoding\LE;
 use pmmp\encoding\VarInt;
+use pocketmine\network\mcpe\protocol\types\EntityDiagnosticTimingInfo;
 use pocketmine\network\mcpe\protocol\types\MemoryCategoryCounter;
+use pocketmine\network\mcpe\protocol\types\SystemDiagnosticTimingInfo;
 use function count;
 
 class ServerboundDiagnosticsPacket extends DataPacket implements ServerboundPacket{
@@ -38,11 +40,25 @@ class ServerboundDiagnosticsPacket extends DataPacket implements ServerboundPack
 	 * @phpstan-var list<MemoryCategoryCounter>
 	 */
 	private array $memoryCategoryValues = [];
+	/**
+	 * @var EntityDiagnosticTimingInfo[]
+	 * @phpstan-var list<EntityDiagnosticTimingInfo>
+	 */
+	private array $entityDiagnostics = [];
+	/**
+	 * @var SystemDiagnosticTimingInfo[]
+	 * @phpstan-var list<SystemDiagnosticTimingInfo>
+	 */
+	private array $systemDiagnostics = [];
 
 	/**
 	 * @generate-create-func
-	 * @param MemoryCategoryCounter[] $memoryCategoryValues
-	 * @phpstan-param list<MemoryCategoryCounter> $memoryCategoryValues
+	 * @param MemoryCategoryCounter[]      $memoryCategoryValues
+	 * @param EntityDiagnosticTimingInfo[] $entityDiagnostics
+	 * @param SystemDiagnosticTimingInfo[] $systemDiagnostics
+	 * @phpstan-param list<MemoryCategoryCounter>      $memoryCategoryValues
+	 * @phpstan-param list<EntityDiagnosticTimingInfo> $entityDiagnostics
+	 * @phpstan-param list<SystemDiagnosticTimingInfo> $systemDiagnostics
 	 */
 	public static function create(
 		float $avgFps,
@@ -55,6 +71,8 @@ class ServerboundDiagnosticsPacket extends DataPacket implements ServerboundPack
 		float $avgRemainderTimePercent,
 		float $avgUnaccountedTimePercent,
 		array $memoryCategoryValues,
+		array $entityDiagnostics,
+		array $systemDiagnostics,
 	) : self{
 		$result = new self;
 		$result->avgFps = $avgFps;
@@ -67,6 +85,8 @@ class ServerboundDiagnosticsPacket extends DataPacket implements ServerboundPack
 		$result->avgRemainderTimePercent = $avgRemainderTimePercent;
 		$result->avgUnaccountedTimePercent = $avgUnaccountedTimePercent;
 		$result->memoryCategoryValues = $memoryCategoryValues;
+		$result->entityDiagnostics = $entityDiagnostics;
+		$result->systemDiagnostics = $systemDiagnostics;
 		return $result;
 	}
 
@@ -94,6 +114,18 @@ class ServerboundDiagnosticsPacket extends DataPacket implements ServerboundPack
 	 */
 	public function getMemoryCategoryValues() : array{ return $this->memoryCategoryValues; }
 
+	/**
+	 * @return EntityDiagnosticTimingInfo[]
+	 * @phpstan-return list<EntityDiagnosticTimingInfo>
+	 */
+	public function getEntityDiagnostics() : array{ return $this->entityDiagnostics; }
+
+	/**
+	 * @return SystemDiagnosticTimingInfo[]
+	 * @phpstan-return list<SystemDiagnosticTimingInfo>
+	 */
+	public function getSystemDiagnostics() : array{ return $this->systemDiagnostics; }
+
 	protected function decodePayload(ByteBufferReader $in) : void{
 		$this->avgFps = LE::readFloat($in);
 		$this->avgServerSimTickTimeMS = LE::readFloat($in);
@@ -108,6 +140,16 @@ class ServerboundDiagnosticsPacket extends DataPacket implements ServerboundPack
 		$this->memoryCategoryValues = [];
 		for($i = 0, $count = VarInt::readUnsignedInt($in); $i < $count; $i++){
 			$this->memoryCategoryValues[] = MemoryCategoryCounter::read($in);
+		}
+
+		$this->entityDiagnostics = [];
+		for($i = 0, $count = VarInt::readUnsignedInt($in); $i < $count; $i++){
+			$this->entityDiagnostics[] = EntityDiagnosticTimingInfo::read($in);
+		}
+
+		$this->systemDiagnostics = [];
+		for($i = 0, $count = VarInt::readUnsignedInt($in); $i < $count; $i++){
+			$this->systemDiagnostics[] = SystemDiagnosticTimingInfo::read($in);
 		}
 	}
 
@@ -124,6 +166,16 @@ class ServerboundDiagnosticsPacket extends DataPacket implements ServerboundPack
 
 		VarInt::writeUnsignedInt($out, count($this->memoryCategoryValues));
 		foreach($this->memoryCategoryValues as $value){
+			$value->write($out);
+		}
+
+		VarInt::writeUnsignedInt($out, count($this->entityDiagnostics));
+		foreach($this->entityDiagnostics as $value){
+			$value->write($out);
+		}
+
+		VarInt::writeUnsignedInt($out, count($this->systemDiagnostics));
+		foreach($this->systemDiagnostics as $value){
 			$value->write($out);
 		}
 	}

@@ -14,6 +14,7 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
+use pmmp\encoding\Byte;
 use pmmp\encoding\ByteBufferReader;
 use pmmp\encoding\ByteBufferWriter;
 use pmmp\encoding\LE;
@@ -22,31 +23,31 @@ use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
 class ServerboundDataDrivenScreenClosedPacket extends DataPacket implements ServerboundPacket{
 	public const NETWORK_ID = ProtocolInfo::SERVERBOUND_DATA_DRIVEN_SCREEN_CLOSED_PACKET;
 
-	private int $formId;
-	private string $closeReason;
+	private ?int $formId;
+	private int $closeReason;
 
 	/**
 	 * @generate-create-func
 	 */
-	public static function create(int $formId, string $closeReason) : self{
+	public static function create(?int $formId, int $closeReason) : self{
 		$result = new self;
 		$result->formId = $formId;
 		$result->closeReason = $closeReason;
 		return $result;
 	}
 
-	public function getFormId() : int{ return $this->formId; }
+	public function getFormId() : ?int{ return $this->formId; }
 
-	public function getCloseReason() : string{ return $this->closeReason; }
+	public function getCloseReason() : int{ return $this->closeReason; }
 
 	protected function decodePayload(ByteBufferReader $in) : void{
-		$this->formId = LE::readUnsignedInt($in);
-		$this->closeReason = CommonTypes::getString($in);
+		$this->formId = CommonTypes::readOptional($in, LE::readUnsignedInt(...));
+		$this->closeReason = Byte::readUnsigned($in);
 	}
 
 	protected function encodePayload(ByteBufferWriter $out) : void{
-		LE::writeUnsignedInt($out, $this->formId);
-		CommonTypes::putString($out, $this->closeReason);
+		CommonTypes::writeOptional($out, $this->formId, LE::writeUnsignedInt(...));
+		Byte::writeUnsigned($out, $this->closeReason);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

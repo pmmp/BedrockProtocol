@@ -14,13 +14,10 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol\types;
 
-/**
- * @see ServerboundDataDrivenScreenClosedPacket
- */
-final class ScreenCloseReason{
-	public const PROGRAMMATIC_CLOSE = 0;
-	public const PROGRAMMATIC_CLOSE_ALL = 1;
-	public const CLIENT_CANCELED = 2;
-	public const USER_BUSY = 3;
-	public const INVALID_FORM = 4;
+final class DataStorePropertyType{
+	public const NONE = 0;
+	public const BOOL = 1;
+	public const INT64 = 2;
+	public const STRING = 4;
+	public const MAP = 6;
 }

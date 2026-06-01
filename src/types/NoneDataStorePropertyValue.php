@@ -14,13 +14,21 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol\types;
 
-/**
- * @see ServerboundDataDrivenScreenClosedPacket
- */
-final class ScreenCloseReason{
-	public const PROGRAMMATIC_CLOSE = 0;
-	public const PROGRAMMATIC_CLOSE_ALL = 1;
-	public const CLIENT_CANCELED = 2;
-	public const USER_BUSY = 3;
-	public const INVALID_FORM = 4;
+use pmmp\encoding\ByteBufferReader;
+use pmmp\encoding\ByteBufferWriter;
+
+final class NoneDataStorePropertyValue extends DataStorePropertyValue{
+	public const ID = DataStorePropertyType::NONE;
+
+	public function getTypeId() : int{
+		return self::ID;
+	}
+
+	public function write(ByteBufferWriter $out) : void{
+		// NOOP
+	}
+
+	public static function readPayload(ByteBufferReader $in) : self{
+		return new self;
+	}
 }

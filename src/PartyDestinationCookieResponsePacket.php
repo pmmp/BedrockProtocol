@@ -17,33 +17,38 @@ namespace pocketmine\network\mcpe\protocol;
 use pmmp\encoding\ByteBufferReader;
 use pmmp\encoding\ByteBufferWriter;
 use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
-use pocketmine\network\mcpe\protocol\types\PresenceInfo;
 
-class ServerPresenceInfoPacket extends DataPacket implements ClientboundPacket{
-	public const NETWORK_ID = ProtocolInfo::SERVER_PRESENCE_INFO_PACKET;
+class PartyDestinationCookieResponsePacket extends DataPacket implements ServerboundPacket{
+	public const NETWORK_ID = ProtocolInfo::PARTY_DESTINATION_COOKIE_RESPONSE_PACKET;
 
-	private ?PresenceInfo $presenceConfig;
+	private string $cookie;
+	private bool $accepted;
 
 	/**
 	 * @generate-create-func
 	 */
-	public static function create(?PresenceInfo $presenceConfig) : self{
+	public static function create(string $cookie, bool $accepted) : self{
 		$result = new self;
-		$result->presenceConfig = $presenceConfig;
+		$result->cookie = $cookie;
+		$result->accepted = $accepted;
 		return $result;
 	}
 
-	public function getPresenceConfig() : ?PresenceInfo{ return $this->presenceConfig; }
+	public function getCookie() : string{ return $this->cookie; }
+
+	public function isAccepted() : bool{ return $this->accepted; }
 
 	protected function decodePayload(ByteBufferReader $in) : void{
-		$this->presenceConfig = CommonTypes::readOptional($in, PresenceInfo::read(...));
+		$this->cookie = CommonTypes::getString($in);
+		$this->accepted = CommonTypes::getBool($in);
 	}
 
 	protected function encodePayload(ByteBufferWriter $out) : void{
-		CommonTypes::writeOptional($out, $this->presenceConfig, fn(ByteBufferWriter $out, PresenceInfo $v) => $v->write($out));
+		CommonTypes::putString($out, $this->cookie);
+		CommonTypes::putBool($out, $this->accepted);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{
-		return $handler->handleServerPresenceInfo($this);
+		return $handler->handlePartyDestinationCookieResponse($this);
 	}
 }

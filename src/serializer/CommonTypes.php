@@ -808,7 +808,7 @@ final class CommonTypes{
 
 	/**
 	 * @phpstan-template T
-	 * @phpstan-param \Closure(ByteBufferReader) : T $reader
+	 * @phpstan-param \Closure(ByteBufferReader) : (T|null) $reader
 	 * @phpstan-return T|null
 	 * @throws DataDecodeException
 	 */

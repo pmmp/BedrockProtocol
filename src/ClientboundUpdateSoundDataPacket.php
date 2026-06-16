@@ -16,34 +16,40 @@ namespace pocketmine\network\mcpe\protocol;
 
 use pmmp\encoding\ByteBufferReader;
 use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\LE;
 use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
-use pocketmine\network\mcpe\protocol\types\PresenceInfo;
 
-class ServerPresenceInfoPacket extends DataPacket implements ClientboundPacket{
-	public const NETWORK_ID = ProtocolInfo::SERVER_PRESENCE_INFO_PACKET;
+class ClientboundUpdateSoundDataPacket extends DataPacket implements ClientboundPacket{
+	public const NETWORK_ID = ProtocolInfo::CLIENTBOUND_UPDATE_SOUND_DATA_PACKET;
 
-	private ?PresenceInfo $presenceConfig;
+	private int $serverSoundHandle;
+	private string $soundEvent;
 
 	/**
 	 * @generate-create-func
 	 */
-	public static function create(?PresenceInfo $presenceConfig) : self{
+	public static function create(int $serverSoundHandle, string $soundEvent) : self{
 		$result = new self;
-		$result->presenceConfig = $presenceConfig;
+		$result->serverSoundHandle = $serverSoundHandle;
+		$result->soundEvent = $soundEvent;
 		return $result;
 	}
 
-	public function getPresenceConfig() : ?PresenceInfo{ return $this->presenceConfig; }
+	public function getServerSoundHandle() : int{ return $this->serverSoundHandle; }
+
+	public function getSoundEvent() : string{ return $this->soundEvent; }
 
 	protected function decodePayload(ByteBufferReader $in) : void{
-		$this->presenceConfig = CommonTypes::readOptional($in, PresenceInfo::read(...));
+		$this->serverSoundHandle = LE::readUnsignedLong($in);
+		$this->soundEvent = CommonTypes::getString($in);
 	}
 
 	protected function encodePayload(ByteBufferWriter $out) : void{
-		CommonTypes::writeOptional($out, $this->presenceConfig, fn(ByteBufferWriter $out, PresenceInfo $v) => $v->write($out));
+		LE::writeUnsignedLong($out, $this->serverSoundHandle);
+		CommonTypes::putString($out, $this->soundEvent);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{
-		return $handler->handleServerPresenceInfo($this);
+		return $handler->handleClientboundUpdateSoundData($this);
 	}
 }

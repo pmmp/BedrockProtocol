@@ -469,4 +469,10 @@ interface PacketHandlerInterface{
 	public function handleServerStoreInfo(ServerStoreInfoPacket $packet) : bool;
 
 	public function handleServerPresenceInfo(ServerPresenceInfoPacket $packet) : bool;
+
+	public function handleClientboundUpdateSoundData(ClientboundUpdateSoundDataPacket $packet) : bool;
+
+	public function handleSendPartyDestinationCookie(SendPartyDestinationCookiePacket $packet) : bool;
+
+	public function handlePartyDestinationCookieResponse(PartyDestinationCookieResponsePacket $packet) : bool;
 }

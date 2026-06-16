@@ -47,20 +47,20 @@ class MobArmorEquipmentPacket extends DataPacket implements ClientboundPacket, S
 
 	protected function decodePayload(ByteBufferReader $in) : void{
 		$this->actorRuntimeId = CommonTypes::getActorRuntimeId($in);
-		$this->head = CommonTypes::getItemStackWrapper($in);
-		$this->chest = CommonTypes::getItemStackWrapper($in);
-		$this->legs = CommonTypes::getItemStackWrapper($in);
-		$this->feet = CommonTypes::getItemStackWrapper($in);
-		$this->body = CommonTypes::getItemStackWrapper($in);
+		$this->head = CommonTypes::getNetworkItemStackDescriptor($in);
+		$this->chest = CommonTypes::getNetworkItemStackDescriptor($in);
+		$this->legs = CommonTypes::getNetworkItemStackDescriptor($in);
+		$this->feet = CommonTypes::getNetworkItemStackDescriptor($in);
+		$this->body = CommonTypes::getNetworkItemStackDescriptor($in);
 	}
 
 	protected function encodePayload(ByteBufferWriter $out) : void{
 		CommonTypes::putActorRuntimeId($out, $this->actorRuntimeId);
-		CommonTypes::putItemStackWrapper($out, $this->head);
-		CommonTypes::putItemStackWrapper($out, $this->chest);
-		CommonTypes::putItemStackWrapper($out, $this->legs);
-		CommonTypes::putItemStackWrapper($out, $this->feet);
-		CommonTypes::putItemStackWrapper($out, $this->body);
+		CommonTypes::putNetworkItemStackDescriptor($out, $this->head);
+		CommonTypes::putNetworkItemStackDescriptor($out, $this->chest);
+		CommonTypes::putNetworkItemStackDescriptor($out, $this->legs);
+		CommonTypes::putNetworkItemStackDescriptor($out, $this->feet);
+		CommonTypes::putNetworkItemStackDescriptor($out, $this->body);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

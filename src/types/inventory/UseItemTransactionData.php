@@ -85,7 +85,7 @@ class UseItemTransactionData extends TransactionData{
 	public function getClientCooldownState() : int{ return $this->clientCooldownState; }
 
 	protected function decodeData(ByteBufferReader $in) : void{
-		$this->actionType = VarInt::readUnsignedInt($in);
+		$this->actionType = VarInt::readSignedInt($in);
 		$this->triggerType = TriggerType::fromPacket(Byte::readUnsigned($in));
 		$this->blockPosition = CommonTypes::getBlockPosition($in);
 		$this->face = Byte::readUnsigned($in);
@@ -99,7 +99,7 @@ class UseItemTransactionData extends TransactionData{
 	}
 
 	protected function encodeData(ByteBufferWriter $out) : void{
-		VarInt::writeUnsignedInt($out, $this->actionType);
+		VarInt::writeSignedInt($out, $this->actionType);
 		Byte::writeUnsigned($out, $this->triggerType->value);
 		CommonTypes::putBlockPosition($out, $this->blockPosition);
 		Byte::writeUnsigned($out, $this->face);

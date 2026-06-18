@@ -64,7 +64,7 @@ class UseItemOnEntityTransactionData extends TransactionData{
 
 	protected function decodeData(ByteBufferReader $in) : void{
 		$this->actorRuntimeId = CommonTypes::getActorRuntimeId($in);
-		$this->actionType = VarInt::readUnsignedInt($in);
+		$this->actionType = VarInt::readSignedInt($in);
 		$this->hotbarSlot = VarInt::readSignedInt($in);
 		$this->itemInHand = CommonTypes::getNetworkItemStackDescriptor($in);
 		$this->playerPosition = CommonTypes::getVector3($in);
@@ -73,7 +73,7 @@ class UseItemOnEntityTransactionData extends TransactionData{
 
 	protected function encodeData(ByteBufferWriter $out) : void{
 		CommonTypes::putActorRuntimeId($out, $this->actorRuntimeId);
-		VarInt::writeUnsignedInt($out, $this->actionType);
+		VarInt::writeSignedInt($out, $this->actionType);
 		VarInt::writeSignedInt($out, $this->hotbarSlot);
 		CommonTypes::putNetworkItemStackDescriptor($out, $this->itemInHand);
 		CommonTypes::putVector3($out, $this->playerPosition);

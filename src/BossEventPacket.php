@@ -46,12 +46,12 @@ class BossEventPacket extends DataPacket implements ClientboundPacket, Serverbou
 	public int $bossActorUniqueId;
 	public int $eventType;
 
-	public int $playerActorUniqueId;
-	public float $healthPercent;
-	public string $title;
-	public string $filteredTitle;
-	public int $color;
-	public int $overlay;
+	public int $playerActorUniqueId = 0;
+	public float $healthPercent = 0.0;
+	public string $title = "";
+	public string $filteredTitle = "";
+	public int $color = BossBarColor::YELLOW;
+	public int $overlay = 0;
 
 	private static function base(int $bossActorUniqueId, int $eventId) : self{
 		$result = new self;

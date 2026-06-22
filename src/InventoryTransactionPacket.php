@@ -47,7 +47,7 @@ class InventoryTransactionPacket extends DataPacket implements ClientboundPacket
 
 	/**
 	 * @generate-create-func
-	 * @param InventoryTransactionChangedSlotsHack[]|null $requestChangedSlots
+	 * @param InventoryTransactionChangedSlotsHack[] $requestChangedSlots
 	 */
 	public static function create(int $requestId, ?array $requestChangedSlots, TransactionData $trData) : self{
 		$result = new self;

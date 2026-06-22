@@ -50,7 +50,7 @@ class BossEventPacket extends DataPacket implements ClientboundPacket, Serverbou
 	public float $healthPercent = 0.0;
 	public string $title = "";
 	public string $filteredTitle = "";
-	public int $color = BossBarColor::YELLOW;
+	public int $color = BossBarColor::PINK;
 	public int $overlay = 0;
 
 	private static function base(int $bossActorUniqueId, int $eventId) : self{

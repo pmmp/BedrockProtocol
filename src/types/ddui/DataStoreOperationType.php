@@ -12,9 +12,9 @@
 
 declare(strict_types=1);
 
-namespace pocketmine\network\mcpe\protocol\types;
+namespace pocketmine\network\mcpe\protocol\types\ddui;
 
-final class DataStoreType{
+final class DataStoreOperationType{
 	public const UPDATE = 0;
 	public const CHANGE = 1;
 	public const REMOVAL = 2;

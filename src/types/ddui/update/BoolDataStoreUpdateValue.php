@@ -12,37 +12,29 @@
 
 declare(strict_types=1);
 
-namespace pocketmine\network\mcpe\protocol\types;
+namespace pocketmine\network\mcpe\protocol\types\ddui\update;
 
 use pmmp\encoding\ByteBufferReader;
 use pmmp\encoding\ByteBufferWriter;
 use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
+use pocketmine\network\mcpe\protocol\types\GetTypeIdFromConstTrait;
 
-/**
- * @see ClientboundDataStorePacket
- */
-final class DataStoreRemoval extends DataStore{
-	public const ID = DataStoreType::REMOVAL;
+final class BoolDataStoreUpdateValue extends DataStoreUpdateValue{
+	use GetTypeIdFromConstTrait;
+
+	public const ID = DataStoreUpdateValueType::BOOL;
 
 	public function __construct(
-		private string $name,
+		private readonly bool $value
 	){}
 
-	public function getTypeId() : int{
-		return self::ID;
-	}
-
-	public function getName() : string{ return $this->name; }
-
-	public static function read(ByteBufferReader $in) : self{
-		$name = CommonTypes::getString($in);
-
-		return new self(
-			$name,
-		);
-	}
+	public function getValue() : bool{ return $this->value; }
 
 	public function write(ByteBufferWriter $out) : void{
-		CommonTypes::putString($out, $this->name);
+		CommonTypes::putBool($out, $this->value);
+	}
+
+	public static function read(ByteBufferReader $in) : self{
+		return new self(CommonTypes::getBool($in));
 	}
 }

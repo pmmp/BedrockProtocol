@@ -12,11 +12,11 @@
 
 declare(strict_types=1);
 
-namespace pocketmine\network\mcpe\protocol\types;
+namespace pocketmine\network\mcpe\protocol\types\ddui\update;
 
 use pmmp\encoding\ByteBufferWriter;
 
-abstract class DataStoreValue{
+abstract class DataStoreUpdateValue{
 
 	abstract public function getTypeId() : int;
 

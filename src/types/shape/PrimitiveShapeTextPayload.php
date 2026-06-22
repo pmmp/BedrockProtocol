@@ -12,13 +12,14 @@
 
 declare(strict_types=1);
 
-namespace pocketmine\network\mcpe\protocol\types;
+namespace pocketmine\network\mcpe\protocol\types\shape;
 
 use pmmp\encoding\ByteBufferReader;
 use pmmp\encoding\ByteBufferWriter;
 use pmmp\encoding\LE;
 use pocketmine\color\Color;
 use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
+use pocketmine\network\mcpe\protocol\types\GetTypeIdFromConstTrait;
 
 final class PrimitiveShapeTextPayload extends PrimitiveShapePayload{
 	use GetTypeIdFromConstTrait;
@@ -47,14 +48,14 @@ final class PrimitiveShapeTextPayload extends PrimitiveShapePayload{
 	public function hasShowTextBackface() : bool{ return $this->showTextBackface; }
 
 	public static function read(ByteBufferReader $in) : self{
-		return new self(
-			CommonTypes::getString($in),
-			CommonTypes::getBool($in),
-			CommonTypes::readOptional($in, fn() => Color::fromARGB(LE::readUnsignedInt($in))),
-			CommonTypes::getBool($in),
-			CommonTypes::getBool($in),
-			CommonTypes::getBool($in),
-		);
+		$text = CommonTypes::getString($in);
+		$useRotation = CommonTypes::getBool($in);
+		$backgroundColor = CommonTypes::readOptional($in, fn() => Color::fromARGB(LE::readUnsignedInt($in)));
+		$depthTest = CommonTypes::getBool($in);
+		$showBackface = CommonTypes::getBool($in);
+		$showTextBackface = CommonTypes::getBool($in);
+
+		return new self($text, $useRotation, $backgroundColor, $depthTest, $showBackface, $showTextBackface,);
 	}
 
 	public function write(ByteBufferWriter $out) : void{

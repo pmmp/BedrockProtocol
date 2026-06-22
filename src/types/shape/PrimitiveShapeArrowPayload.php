@@ -12,7 +12,7 @@
 
 declare(strict_types=1);
 
-namespace pocketmine\network\mcpe\protocol\types;
+namespace pocketmine\network\mcpe\protocol\types\shape;
 
 use pmmp\encoding\Byte;
 use pmmp\encoding\ByteBufferReader;
@@ -20,6 +20,7 @@ use pmmp\encoding\ByteBufferWriter;
 use pmmp\encoding\LE;
 use pocketmine\math\Vector3;
 use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
+use pocketmine\network\mcpe\protocol\types\GetTypeIdFromConstTrait;
 
 final class PrimitiveShapeArrowPayload extends PrimitiveShapePayload{
 	use GetTypeIdFromConstTrait;
@@ -42,11 +43,16 @@ final class PrimitiveShapeArrowPayload extends PrimitiveShapePayload{
 	public function getSegments() : ?int{ return $this->segments; }
 
 	public static function read(ByteBufferReader $in) : self{
+		$lineEndLocation = CommonTypes::readOptional($in, CommonTypes::getVector3(...));
+		$arrowHeadLength = CommonTypes::readOptional($in, LE::readFloat(...));
+		$arrowHeadRadius = CommonTypes::readOptional($in, LE::readFloat(...));
+		$segments = CommonTypes::readOptional($in, Byte::readUnsigned(...));
+
 		return new self(
-			CommonTypes::readOptional($in, CommonTypes::getVector3(...)),
-			CommonTypes::readOptional($in, LE::readFloat(...)),
-			CommonTypes::readOptional($in, LE::readFloat(...)),
-			CommonTypes::readOptional($in, Byte::readUnsigned(...)),
+			$lineEndLocation,
+			$arrowHeadLength,
+			$arrowHeadRadius,
+			$segments,
 		);
 	}
 

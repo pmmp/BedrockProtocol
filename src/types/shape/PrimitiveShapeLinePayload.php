@@ -12,12 +12,13 @@
 
 declare(strict_types=1);
 
-namespace pocketmine\network\mcpe\protocol\types;
+namespace pocketmine\network\mcpe\protocol\types\shape;
 
 use pmmp\encoding\ByteBufferReader;
 use pmmp\encoding\ByteBufferWriter;
 use pocketmine\math\Vector3;
 use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
+use pocketmine\network\mcpe\protocol\types\GetTypeIdFromConstTrait;
 
 final class PrimitiveShapeLinePayload extends PrimitiveShapePayload{
 	use GetTypeIdFromConstTrait;
@@ -31,7 +32,8 @@ final class PrimitiveShapeLinePayload extends PrimitiveShapePayload{
 	public function getLineEndLocation() : Vector3{ return $this->lineEndLocation; }
 
 	public static function read(ByteBufferReader $in) : self{
-		return new self(CommonTypes::getVector3($in));
+		$lineEndLocation = CommonTypes::getVector3($in);
+		return new self($lineEndLocation);
 	}
 
 	public function write(ByteBufferWriter $out) : void{

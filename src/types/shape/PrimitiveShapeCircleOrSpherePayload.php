@@ -12,48 +12,30 @@
 
 declare(strict_types=1);
 
-namespace pocketmine\network\mcpe\protocol\types;
+namespace pocketmine\network\mcpe\protocol\types\shape;
 
 use pmmp\encoding\Byte;
 use pmmp\encoding\ByteBufferReader;
 use pmmp\encoding\ByteBufferWriter;
-use pmmp\encoding\LE;
-use pocketmine\math\Vector2;
-use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
+use pocketmine\network\mcpe\protocol\types\GetTypeIdFromConstTrait;
 
-final class PrimitiveShapeCylinderPayload extends PrimitiveShapePayload{
+final class PrimitiveShapeCircleOrSpherePayload extends PrimitiveShapePayload{
 	use GetTypeIdFromConstTrait;
 
-	public const ID = PrimitiveShapeType::PAYLOAD_TYPE_CYLINDER;
+	public const ID = PrimitiveShapeType::PAYLOAD_TYPE_CIRCLE_OR_SPHERE;
 
 	public function __construct(
-		private Vector2 $radiusX,
-		private Vector2 $radiusZ,
-		private float $height,
 		private int $segments,
 	){}
-
-	public function getRadiusX() : Vector2{ return $this->radiusX; }
-
-	public function getRadiusZ() : Vector2{ return $this->radiusZ; }
-
-	public function getHeight() : float{ return $this->height; }
 
 	public function getSegments() : int{ return $this->segments; }
 
 	public static function read(ByteBufferReader $in) : self{
-		return new self(
-			CommonTypes::getVector2($in),
-			CommonTypes::getVector2($in),
-			LE::readFloat($in),
-			Byte::readUnsigned($in)
-		);
+		$segments = Byte::readUnsigned($in);
+		return new self($segments);
 	}
 
 	public function write(ByteBufferWriter $out) : void{
-		CommonTypes::putVector2($out, $this->radiusX);
-		CommonTypes::putVector2($out, $this->radiusZ);
-		LE::writeFloat($out, $this->height);
 		Byte::writeUnsigned($out, $this->segments);
 	}
 }

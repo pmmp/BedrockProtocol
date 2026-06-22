@@ -63,7 +63,7 @@ class SubChunkRequestPacket extends DataPacket implements ServerboundPacket{
 			$this->entries[] = SubChunkPositionOffset::read($in);
 		}
 
-		$this->basePosition = SubChunkPosition::read($in, true);
+		$this->basePosition = SubChunkPosition::readFixedInts($in);
 	}
 
 	protected function encodePayload(ByteBufferWriter $out) : void{
@@ -74,7 +74,7 @@ class SubChunkRequestPacket extends DataPacket implements ServerboundPacket{
 			$entry->write($out);
 		}
 
-		$this->basePosition->write($out, true);
+		$this->basePosition->writeFixedInts($out);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

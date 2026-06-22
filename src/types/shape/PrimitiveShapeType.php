@@ -12,7 +12,9 @@
 
 declare(strict_types=1);
 
-namespace pocketmine\network\mcpe\protocol\types;
+namespace pocketmine\network\mcpe\protocol\types\shape;
+
+use pocketmine\network\mcpe\protocol\types\PacketIntEnumTrait;
 
 enum PrimitiveShapeType : int{
 	use PacketIntEnumTrait;

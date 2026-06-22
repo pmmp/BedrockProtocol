@@ -12,37 +12,31 @@
 
 declare(strict_types=1);
 
-namespace pocketmine\network\mcpe\protocol\types;
+namespace pocketmine\network\mcpe\protocol\types\shape;
 
-use pmmp\encoding\Byte;
 use pmmp\encoding\ByteBufferReader;
 use pmmp\encoding\ByteBufferWriter;
 use pocketmine\math\Vector3;
 use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
+use pocketmine\network\mcpe\protocol\types\GetTypeIdFromConstTrait;
 
-final class PrimitiveShapeEllipsoidPayload extends PrimitiveShapePayload{
+final class PrimitiveShapeBoxPayload extends PrimitiveShapePayload{
 	use GetTypeIdFromConstTrait;
 
-	public const ID = PrimitiveShapeType::PAYLOAD_TYPE_ELLIPSOID;
+	public const ID = PrimitiveShapeType::PAYLOAD_TYPE_BOX;
 
 	public function __construct(
-		private Vector3 $radii,
-		private int $segmentsPerAxis,
+		private Vector3 $boxBound,
 	){}
 
-	public function getRadii() : Vector3{ return $this->radii; }
-
-	public function getSegmentsPerAxis() : int{ return $this->segmentsPerAxis; }
+	public function getBoxBound() : Vector3{ return $this->boxBound; }
 
 	public static function read(ByteBufferReader $in) : self{
-		return new self(
-			CommonTypes::getVector3($in),
-			Byte::readUnsigned($in)
-		);
+		$boxBound = CommonTypes::getVector3($in);
+		return new self($boxBound);
 	}
 
 	public function write(ByteBufferWriter $out) : void{
-		CommonTypes::putVector3($out, $this->radii);
-		Byte::writeUnsigned($out, $this->segmentsPerAxis);
+		CommonTypes::putVector3($out, $this->boxBound);
 	}
 }

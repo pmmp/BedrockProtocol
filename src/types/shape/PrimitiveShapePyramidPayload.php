@@ -12,12 +12,13 @@
 
 declare(strict_types=1);
 
-namespace pocketmine\network\mcpe\protocol\types;
+namespace pocketmine\network\mcpe\protocol\types\shape;
 
 use pmmp\encoding\ByteBufferReader;
 use pmmp\encoding\ByteBufferWriter;
 use pmmp\encoding\LE;
 use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
+use pocketmine\network\mcpe\protocol\types\GetTypeIdFromConstTrait;
 
 final class PrimitiveShapePyramidPayload extends PrimitiveShapePayload{
 	use GetTypeIdFromConstTrait;
@@ -37,11 +38,11 @@ final class PrimitiveShapePyramidPayload extends PrimitiveShapePayload{
 	public function getHeight() : float{ return $this->height; }
 
 	public static function read(ByteBufferReader $in) : self{
-		return new self(
-			LE::readFloat($in),
-			CommonTypes::readOptional($in, LE::readFloat(...)),
-			LE::readFloat($in)
-		);
+		$width = LE::readFloat($in);
+		$depth = CommonTypes::readOptional($in, LE::readFloat(...));
+		$height = LE::readFloat($in);
+
+		return new self($width, $depth, $height);
 	}
 
 	public function write(ByteBufferWriter $out) : void{

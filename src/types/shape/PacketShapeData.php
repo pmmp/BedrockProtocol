@@ -12,7 +12,7 @@
 
 declare(strict_types=1);
 
-namespace pocketmine\network\mcpe\protocol\types;
+namespace pocketmine\network\mcpe\protocol\types\shape;
 
 use pmmp\encoding\Byte;
 use pmmp\encoding\ByteBufferReader;

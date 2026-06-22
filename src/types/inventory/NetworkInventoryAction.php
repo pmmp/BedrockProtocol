@@ -61,8 +61,8 @@ class NetworkInventoryAction{
 	public const ACTION_MAGIC_SLOT_PICKUP_ITEM = 1;
 
 	public int $sourceType;
-	public ?int $windowId;
-	public ?int $sourceFlags = 0;
+	public ?int $windowId = null;
+	public ?int $sourceFlags = null;
 	public int $inventorySlot;
 	public ItemStackWrapper $oldItem;
 	public ItemStackWrapper $newItem;
@@ -73,10 +73,84 @@ class NetworkInventoryAction{
 	 * @throws DataDecodeException
 	 * @throws PacketDecodeException
 	 */
-	public function read(ByteBufferReader $in) : NetworkInventoryAction{
+	public function readAuthInput(ByteBufferReader $in) : NetworkInventoryAction{
 		$this->sourceType = VarInt::readUnsignedInt($in);
-		$this->windowId = CommonTypes::readOptional($in, fn(ByteBufferReader $in) => CommonTypes::readOptional($in, Byte::readSigned(...)));
-		$this->sourceFlags = CommonTypes::readOptional($in, fn(ByteBufferReader $in) => CommonTypes::readOptional($in, VarInt::readUnsignedInt(...)));
+
+		switch($this->sourceType){
+			case self::SOURCE_CONTAINER:
+				$this->windowId = VarInt::readSignedInt($in);
+				break;
+			case self::SOURCE_WORLD:
+				$this->sourceFlags = VarInt::readUnsignedInt($in);
+				break;
+			case self::SOURCE_CREATIVE:
+				break;
+			case self::SOURCE_TODO:
+				$this->windowId = VarInt::readSignedInt($in);
+				break;
+			default:
+				throw new PacketDecodeException("Unknown inventory action source type $this->sourceType");
+		}
+
+		$this->inventorySlot = VarInt::readUnsignedInt($in);
+		$this->oldItem = CommonTypes::getItemStackWrapper($in);
+		$this->newItem = CommonTypes::getItemStackWrapper($in);
+
+		return $this;
+	}
+
+	public function writeAuthInput(ByteBufferWriter $out) : void{
+		VarInt::writeUnsignedInt($out, $this->sourceType);
+
+		switch($this->sourceType){
+			case self::SOURCE_CONTAINER:
+				if($this->windowId === null){
+					throw new \LogicException("WindowID must be set for SOURCE_CONTAINER");
+				}
+				VarInt::writeSignedInt($out, $this->windowId);
+				break;
+			case self::SOURCE_WORLD:
+				if($this->sourceFlags === null){
+					throw new \LogicException("SourceFlags must be set for SOURCE_WORLD");
+				}
+				VarInt::writeUnsignedInt($out, $this->sourceFlags);
+				break;
+			case self::SOURCE_CREATIVE:
+				break;
+			case self::SOURCE_TODO:
+				if($this->windowId === null){
+					throw new \LogicException("WindowID must be set for SOURCE_TODO");
+				}
+				VarInt::writeSignedInt($out, $this->windowId);
+				break;
+			default:
+				throw new \InvalidArgumentException("Unknown inventory action source type $this->sourceType");
+		}
+
+		VarInt::writeUnsignedInt($out, $this->inventorySlot);
+		CommonTypes::putItemStackWrapper($out, $this->oldItem);
+		CommonTypes::putItemStackWrapper($out, $this->newItem);
+	}
+
+	/**
+	 * @return $this
+	 *
+	 * @throws DataDecodeException
+	 * @throws PacketDecodeException
+	 */
+	public function readTransaction(ByteBufferReader $in) : NetworkInventoryAction{
+		$this->sourceType = VarInt::readUnsignedInt($in);
+
+		if(Byte::readUnsigned($in) !== 1){
+			throw new PacketDecodeException("Inconsistent optional state for windowId");
+		}
+		$this->windowId = CommonTypes::readOptional($in, Byte::readSigned(...));
+
+		if(Byte::readUnsigned($in) !== 1){
+			throw new PacketDecodeException("Inconsistent optional state for sourceFlags");
+		}
+		$this->sourceFlags = CommonTypes::readOptional($in, VarInt::readUnsignedInt(...));
+
 		$this->inventorySlot = VarInt::readUnsignedInt($in);
 		$this->oldItem = CommonTypes::getNetworkItemStackDescriptor($in);
 		$this->newItem = CommonTypes::getNetworkItemStackDescriptor($in);
@@ -87,10 +161,15 @@ class NetworkInventoryAction{
 	/**
 	 * @throws \InvalidArgumentException
 	 */
-	public function write(ByteBufferWriter $out) : void{
+	public function writeTransaction(ByteBufferWriter $out) : void{
 		VarInt::writeUnsignedInt($out, $this->sourceType);
-		CommonTypes::writeOptional($out, $this->windowId, fn(ByteBufferWriter $out, int $windowId) => CommonTypes::writeOptional($out, $windowId, Byte::writeSigned(...)));
-		CommonTypes::writeOptional($out, $this->sourceFlags, fn(ByteBufferWriter $out, int $sourceFlags) => CommonTypes::writeOptional($out, $sourceFlags, VarInt::writeUnsignedInt(...)));
+
+		Byte::writeUnsigned($out, 1);
+		CommonTypes::writeOptional($out, $this->windowId, Byte::writeSigned(...));
+
+		Byte::writeUnsigned($out, 1);
+		CommonTypes::writeOptional($out, $this->sourceFlags, VarInt::writeUnsignedInt(...));
+
 		VarInt::writeUnsignedInt($out, $this->inventorySlot);
 		CommonTypes::putNetworkItemStackDescriptor($out, $this->oldItem);
 		CommonTypes::putNetworkItemStackDescriptor($out, $this->newItem);

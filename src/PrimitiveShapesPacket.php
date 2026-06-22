@@ -17,7 +17,7 @@ namespace pocketmine\network\mcpe\protocol;
 use pmmp\encoding\ByteBufferReader;
 use pmmp\encoding\ByteBufferWriter;
 use pmmp\encoding\VarInt;
-use pocketmine\network\mcpe\protocol\types\PacketShapeData;
+use pocketmine\network\mcpe\protocol\types\shape\PacketShapeData;
 use function count;
 
 class PrimitiveShapesPacket extends DataPacket implements ClientboundPacket{

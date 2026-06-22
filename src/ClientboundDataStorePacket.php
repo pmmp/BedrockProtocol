@@ -17,10 +17,10 @@ namespace pocketmine\network\mcpe\protocol;
 use pmmp\encoding\ByteBufferReader;
 use pmmp\encoding\ByteBufferWriter;
 use pmmp\encoding\VarInt;
-use pocketmine\network\mcpe\protocol\types\ddui\DataStoreOperation;
 use pocketmine\network\mcpe\protocol\types\ddui\DataStoreChange;
-use pocketmine\network\mcpe\protocol\types\ddui\DataStoreRemoval;
+use pocketmine\network\mcpe\protocol\types\ddui\DataStoreOperation;
 use pocketmine\network\mcpe\protocol\types\ddui\DataStoreOperationType;
+use pocketmine\network\mcpe\protocol\types\ddui\DataStoreRemoval;
 use pocketmine\network\mcpe\protocol\types\ddui\DataStoreUpdate;
 use function count;
 

@@ -1,22 +1,13 @@
 <?php
 
 /*
+ * This file is part of BedrockProtocol.
+ * Copyright (C) 2014-2022 PocketMine Team <https://github.com/pmmp/BedrockProtocol>
  *
- *  ____            _        _   __  __ _                  __  __ ____
- * |  _ \ ___   ___| | _____| |_|  \/  (_)_ __   ___      |  \/  |  _ \
- * | |_) / _ \ / __| |/ / _ \ __| |\/| | | '_ \ / _ \_____| |\/| | |_) |
- * |  __/ (_) | (__|   <  __/ |_| |  | | | | | |  __/_____| |  | |  __/
- * |_|   \___/ \___|_|\_\___|\__|_|  |_|_|_| |_|\___|     |_|  |_|_|
- *
- * This program is free software: you can redistribute it and/or modify
+ * BedrockProtocol is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *
- * @author PocketMine Team
- * @link http://www.pocketmine.net/
- *
- *
  */
 
 declare(strict_types=1);
@@ -25,10 +16,11 @@ namespace pocketmine\network\mcpe\protocol\types\cereal;
 
 use pmmp\encoding\ByteBufferReader;
 use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\LE;
 use pmmp\encoding\VarInt;
 use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
-use pocketmine\network\mcpe\protocol\types\cereal\DynamicValue;
 use pocketmine\network\mcpe\protocol\types\GetTypeIdFromConstTrait;
+use function count;
 
 final class DynamicValueMap extends DynamicValue{
 	use GetTypeIdFromConstTrait;
@@ -36,16 +28,16 @@ final class DynamicValueMap extends DynamicValue{
 	public const ID = DynamicValueType::MAP;
 
 	/**
-	 * @param DynamicValue[] $value
-	 * @phpstan-param array<string, DynamicValue> $value
+	 * @param (DynamicValue|null)[] $value
+	 * @phpstan-param array<string, DynamicValue|null> $value
 	 */
 	public function __construct(
 		private array $value
 	){}
 
 	/**
-	 * @return DynamicValue[]
-	 * @phpstan-return array<string, DynamicValue>
+	 * @return (DynamicValue|null)[]
+	 * @phpstan-return array<string, DynamicValue|null>
 	 */
 	public function getValue() : array{ return $this->value; }
 
@@ -55,7 +47,8 @@ final class DynamicValueMap extends DynamicValue{
 		for($i = 0, $count = VarInt::readUnsignedInt($in); $i < $count; $i++){
 			$key = CommonTypes::getString($in);
 			//YIKES! unchecked recursion ?!?!?! thank god this never gets sent by the client...
-			$value[$key] = DynamicValue::read($in);
+			$type = LE::readUnsignedInt($in);
+			$value[$key] = DynamicValue::read($in, $type);
 		}
 
 		return new self($value);
@@ -64,8 +57,9 @@ final class DynamicValueMap extends DynamicValue{
 	protected function writeValue(ByteBufferWriter $out) : void{
 		VarInt::writeUnsignedInt($out, count($this->value));
 		foreach($this->value as $key => $value){
-			CommonTypes::putString($out, $key);
-			$value->write($out);
+			CommonTypes::putString($out, (string) $key); //make sure we don't get any unexpected strings casted to int
+			LE::writeUnsignedInt($out, $value?->getTypeId() ?? DynamicValueType::NULL);
+			$value?->write($out);
 		}
 	}
 }

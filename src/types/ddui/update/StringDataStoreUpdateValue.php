@@ -12,30 +12,29 @@
 
 declare(strict_types=1);
 
-namespace pocketmine\network\mcpe\protocol\types;
+namespace pocketmine\network\mcpe\protocol\types\ddui\update;
 
 use pmmp\encoding\ByteBufferReader;
 use pmmp\encoding\ByteBufferWriter;
-use pmmp\encoding\LE;
+use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
+use pocketmine\network\mcpe\protocol\types\GetTypeIdFromConstTrait;
 
-final class DoubleDataStoreValue extends DataStoreValue{
-	public const ID = DataStoreValueType::DOUBLE;
+final class StringDataStoreUpdateValue extends DataStoreUpdateValue{
+	use GetTypeIdFromConstTrait;
+
+	public const ID = DataStoreUpdateValueType::STRING;
 
 	public function __construct(
-		private readonly float $value
+		private readonly string $value
 	){}
 
-	public function getValue() : float{ return $this->value; }
-
-	public function getTypeId() : int{
-		return self::ID;
-	}
+	public function getValue() : string{ return $this->value; }
 
 	public function write(ByteBufferWriter $out) : void{
-		LE::writeDouble($out, $this->value);
+		CommonTypes::putString($out, $this->value);
 	}
 
 	public static function read(ByteBufferReader $in) : self{
-		return new self(LE::readDouble($in));
+		return new self(CommonTypes::getString($in));
 	}
 }

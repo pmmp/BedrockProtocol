@@ -12,10 +12,16 @@
 
 declare(strict_types=1);
 
-namespace pocketmine\network\mcpe\protocol\types;
+namespace pocketmine\network\mcpe\protocol\types\shape;
 
-final class DataStoreValueType{
-	public const DOUBLE = 0;
-	public const BOOL = 1;
-	public const STRING = 2;
+use pmmp\encoding\ByteBufferWriter;
+
+/**
+ * @see PacketShapeData
+ */
+abstract class PrimitiveShapePayload{
+
+	abstract public function getTypeId() : int;
+
+	abstract public function write(ByteBufferWriter $out) : void;
 }

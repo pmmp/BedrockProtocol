@@ -98,14 +98,9 @@ final class LevelSoundEvent{
 
 CODE);
 
-$prev = 0;
-foreach($list as $id => $name){
+foreach($list as $name){
 	$constantName = strtoupper(str_replace(".", "_", $name));
-	if($id !== $prev + 1){
-		fwrite($output, "\n");
-	}
-	$prev = $id;
-	fwrite($output, "\tpublic const $constantName = $id;\n");
+	fwrite($output, "\tpublic const $constantName = \"$name\";\n");
 }
 fwrite($output, "\n");
 

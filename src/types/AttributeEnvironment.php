@@ -31,7 +31,9 @@ final class AttributeEnvironment{
 		private ?AttributeValue $toAttribute,
 		private int $currentTransitionTicks,
 		private int $totalTransitionTicks,
-		private string $easeType
+		private string $easeType,
+		private int $localTransitionTicks,
+		private bool $noiseTransition
 	){}
 
 	public function getName() : string{ return $this->name; }
@@ -51,6 +53,10 @@ final class AttributeEnvironment{
 	 */
 	public function getEaseType() : string{ return $this->easeType; }
 
+	public function getLocalTransitionTicks() : int{ return $this->localTransitionTicks; }
+
+	public function isNoiseTransition() : bool{ return $this->noiseTransition; }
+
 	public static function read(ByteBufferReader $in) : self{
 		$name = CommonTypes::getString($in);
 		$fromAttribute = CommonTypes::readOptional($in, AttributeValue::read(...));
@@ -59,6 +65,8 @@ final class AttributeEnvironment{
 		$currentTransitionTicks = LE::readUnsignedInt($in);
 		$totalTransitionTicks = LE::readUnsignedInt($in);
 		$easeType = CommonTypes::getString($in);
+		$localTransitionTicks = LE::readUnsignedInt($in);
+		$noiseTransition = CommonTypes::getBool($in);
 
 		return new self(
 			$name,
@@ -67,7 +75,9 @@ final class AttributeEnvironment{
 			$toAttribute,
 			$currentTransitionTicks,
 			$totalTransitionTicks,
-			$easeType
+			$easeType,
+			$localTransitionTicks,
+			$noiseTransition
 		);
 	}
 
@@ -79,5 +89,7 @@ final class AttributeEnvironment{
 		LE::writeUnsignedInt($out, $this->currentTransitionTicks);
 		LE::writeUnsignedInt($out, $this->totalTransitionTicks);
 		CommonTypes::putString($out, $this->easeType);
+		LE::writeUnsignedInt($out, $this->localTransitionTicks);
+		CommonTypes::putBool($out, $this->noiseTransition);
 	}
 }

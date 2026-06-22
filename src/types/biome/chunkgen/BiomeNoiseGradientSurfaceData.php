@@ -24,9 +24,9 @@ use function count;
 final class BiomeNoiseGradientSurfaceData{
 
 	/**
-	 * @param int[]   $nonReplaceableBlocks
-	 * @param int[]   $gradientBlocks
-	 * @param float[] $amplitudes
+	 * @param int[]   					   $nonReplaceableBlocks
+	 * @param BiomeNoiseBlockSpecifier[]   $gradientBlocks
+	 * @param float[] 					   $amplitudes
 	 */
 	public function __construct(
 		private array $nonReplaceableBlocks,
@@ -42,7 +42,7 @@ final class BiomeNoiseGradientSurfaceData{
 	public function getNonReplaceableBlocks() : array{ return $this->nonReplaceableBlocks; }
 
 	/**
-	 * @return int[]
+	 * @return BiomeNoiseBlockSpecifier[]
 	 */
 	public function getGradientBlocks() : array{ return $this->gradientBlocks; }
 
@@ -63,7 +63,7 @@ final class BiomeNoiseGradientSurfaceData{
 
 		$gradientBlocks = [];
 		for($i = 0, $count = VarInt::readUnsignedInt($in); $i < $count; ++$i){
-			$gradientBlocks[] = LE::readUnsignedInt($in);
+			$gradientBlocks[] = BiomeNoiseBlockSpecifier::read($in);
 		}
 
 		$noiseSeed = CommonTypes::getString($in);
@@ -91,7 +91,7 @@ final class BiomeNoiseGradientSurfaceData{
 
 		VarInt::writeUnsignedInt($out, count($this->gradientBlocks));
 		foreach($this->gradientBlocks as $value){
-			LE::writeUnsignedInt($out, $value);
+			$value->write($out);
 		}
 
 		CommonTypes::putString($out, $this->noiseSeed);

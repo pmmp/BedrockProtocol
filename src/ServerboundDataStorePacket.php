@@ -16,7 +16,7 @@ namespace pocketmine\network\mcpe\protocol;
 
 use pmmp\encoding\ByteBufferReader;
 use pmmp\encoding\ByteBufferWriter;
-use pocketmine\network\mcpe\protocol\types\DataStoreUpdate;
+use pocketmine\network\mcpe\protocol\types\ddui\DataStoreUpdate;
 
 class ServerboundDataStorePacket extends DataPacket implements ServerboundPacket{
 	public const NETWORK_ID = ProtocolInfo::SERVERBOUND_DATA_STORE_PACKET;

@@ -55,7 +55,7 @@ class SubChunkPacket extends DataPacket implements ClientboundPacket{
 	protected function decodePayload(ByteBufferReader $in) : void{
 		$cacheEnabled = CommonTypes::getBool($in);
 		$this->dimension = VarInt::readSignedInt($in);
-		$this->baseSubChunkPosition = SubChunkPosition::read($in);
+		$this->baseSubChunkPosition = SubChunkPosition::readVarInts($in);
 
 		$count = LE::readUnsignedInt($in);
 		if($cacheEnabled){
@@ -76,7 +76,7 @@ class SubChunkPacket extends DataPacket implements ClientboundPacket{
 	protected function encodePayload(ByteBufferWriter $out) : void{
 		CommonTypes::putBool($out, $this->entries instanceof ListWithBlobHashes);
 		VarInt::writeSignedInt($out, $this->dimension);
-		$this->baseSubChunkPosition->write($out);
+		$this->baseSubChunkPosition->writeVarInts($out);
 
 		LE::writeUnsignedInt($out, count($this->entries->getEntries()));
 

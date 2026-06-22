@@ -12,13 +12,10 @@
 
 declare(strict_types=1);
 
-namespace pocketmine\network\mcpe\protocol\types;
+namespace pocketmine\network\mcpe\protocol\types\ddui;
 
-use pmmp\encoding\ByteBufferWriter;
-
-abstract class DataStoreValue{
-
-	abstract public function getTypeId() : int;
-
-	abstract public function write(ByteBufferWriter $out) : void;
+final class DataStoreOperationType{
+	public const UPDATE = 0;
+	public const CHANGE = 1;
+	public const REMOVAL = 2;
 }

@@ -12,37 +12,27 @@
 
 declare(strict_types=1);
 
-namespace pocketmine\network\mcpe\protocol\types;
+namespace pocketmine\network\mcpe\protocol\types\cereal;
 
 use pmmp\encoding\ByteBufferReader;
 use pmmp\encoding\ByteBufferWriter;
 use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
+use pocketmine\network\mcpe\protocol\types\GetTypeIdFromConstTrait;
 
-/**
- * @see ClientboundDataStorePacket
- */
-final class DataStoreRemoval extends DataStore{
-	public const ID = DataStoreType::REMOVAL;
+final class DynamicValueString extends DynamicValue{
+	use GetTypeIdFromConstTrait;
+
+	public const ID = DynamicValueType::STRING;
 
 	public function __construct(
-		private string $name,
+		private string $value
 	){}
 
-	public function getTypeId() : int{
-		return self::ID;
+	protected static function readValue(ByteBufferReader $in) : self{
+		return new self(CommonTypes::getString($in));
 	}
 
-	public function getName() : string{ return $this->name; }
-
-	public static function read(ByteBufferReader $in) : self{
-		$name = CommonTypes::getString($in);
-
-		return new self(
-			$name,
-		);
-	}
-
-	public function write(ByteBufferWriter $out) : void{
-		CommonTypes::putString($out, $this->name);
+	protected function writeValue(ByteBufferWriter $out) : void{
+		CommonTypes::putString($out, $this->value);
 	}
 }

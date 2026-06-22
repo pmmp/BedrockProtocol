@@ -12,30 +12,31 @@
 
 declare(strict_types=1);
 
-namespace pocketmine\network\mcpe\protocol\types;
+namespace pocketmine\network\mcpe\protocol\types\ddui;
 
 use pmmp\encoding\ByteBufferReader;
 use pmmp\encoding\ByteBufferWriter;
+use pmmp\encoding\LE;
 use pmmp\encoding\VarInt;
-use pocketmine\network\mcpe\protocol\PacketDecodeException;
 use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
+use pocketmine\network\mcpe\protocol\types\cereal\DynamicValue;
+use pocketmine\network\mcpe\protocol\types\cereal\DynamicValueType;
+use pocketmine\network\mcpe\protocol\types\GetTypeIdFromConstTrait;
 
 /**
  * @see ClientboundDataStorePacket
  */
-final class DataStoreChange extends DataStore {
-	public const ID = DataStoreType::CHANGE;
+final class DataStoreChange implements DataStoreOperation{
+	use GetTypeIdFromConstTrait;
+
+	public const ID = DataStoreOperationType::CHANGE;
 
 	public function __construct(
 		private string $name,
 		private string $property,
 		private int $updateCount,
-		private DataStoreValue $data
+		private ?DynamicValue $data
 	){}
-
-	public function getTypeId() : int{
-		return self::ID;
-	}
 
 	public function getName() : string{ return $this->name; }
 
@@ -43,19 +44,15 @@ final class DataStoreChange extends DataStore {
 
 	public function getUpdateCount() : int{ return $this->updateCount; }
 
-	public function getData() : DataStoreValue{ return $this->data; }
+	public function getData() : ?DynamicValue{ return $this->data; }
 
 	public static function read(ByteBufferReader $in) : self{
 		$name = CommonTypes::getString($in);
 		$property = CommonTypes::getString($in);
 		$updateCount = VarInt::readUnsignedInt($in);
 
-		$data = match(VarInt::readUnsignedInt($in)){
-			DataStoreValueType::DOUBLE => DoubleDataStoreValue::read($in),
-			DataStoreValueType::BOOL => BoolDataStoreValue::read($in),
-			DataStoreValueType::STRING => StringDataStoreValue::read($in),
-			default => throw new PacketDecodeException("Unknown DataStoreValueType"),
-		};
+		$type = LE::readUnsignedInt($in);
+		$data = DynamicValue::read($in, $type);
 
 		return new self(
 			$name,
@@ -69,7 +66,10 @@ final class DataStoreChange extends DataStore {
 		CommonTypes::putString($out, $this->name);
 		CommonTypes::putString($out, $this->property);
 		VarInt::writeUnsignedInt($out, $this->updateCount);
-		VarInt::writeUnsignedInt($out, $this->data->getTypeId());
-		$this->data->write($out);
+
+		//TODO: yucky, we really need to revamp how unions are handled :(
+		$type = $this->data?->getTypeId() ?? DynamicValueType::NULL;
+		LE::writeUnsignedInt($out, $type);
+		$this->data?->write($out);
 	}
 }

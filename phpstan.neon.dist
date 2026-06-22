@@ -9,6 +9,7 @@ parameters:
 	level: 9
 	checkMissingCallableSignature: true
 	treatPhpDocTypesAsCertain: false
+	rememberPossiblyImpureFunctionValues: false
 	paths:
 		- src
 		- tests/phpunit

@@ -81,7 +81,7 @@ class BiomeDefinitionListPacket extends DataPacket implements ClientboundPacket{
 			$entry->getScale(),
 			$entry->getMapWaterColor(),
 			$entry->hasRain(),
-			$entry->getTags() === null ? null : array_map($addString, $entry->getTags()),
+			($v = $entry->getTags()) === null ? null : array_map($addString, $v),
 			$entry->getChunkGenData(),
 		), $definitions);
 

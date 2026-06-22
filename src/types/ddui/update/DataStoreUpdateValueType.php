@@ -12,10 +12,10 @@
 
 declare(strict_types=1);
 
-namespace pocketmine\network\mcpe\protocol\types;
+namespace pocketmine\network\mcpe\protocol\types\ddui\update;
 
-final class DataStoreType{
-	public const UPDATE = 0;
-	public const CHANGE = 1;
-	public const REMOVAL = 2;
+final class DataStoreUpdateValueType{
+	public const DOUBLE = 0;
+	public const BOOL = 1;
+	public const STRING = 2;
 }

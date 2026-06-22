@@ -42,5 +42,6 @@ final class CommandParameterTypes{
 	public const RAWTEXT = 70; // text
 	public const JSON_OBJECT = 74; // json
 	public const BLOCK_STATE_ARRAY = 84; // block states
-	public const CODEBUILDERARGS = 87; // command
+	public const CLOCK_TIMEMARKER_NAME = 86; // timemarker name
+	public const CODEBUILDERARGS = 88; // command
 }

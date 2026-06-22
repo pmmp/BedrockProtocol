@@ -12,30 +12,31 @@
 
 declare(strict_types=1);
 
-namespace pocketmine\network\mcpe\protocol\types;
+namespace pocketmine\network\mcpe\protocol\types\shape;
 
 use pmmp\encoding\ByteBufferReader;
 use pmmp\encoding\ByteBufferWriter;
+use pocketmine\math\Vector3;
 use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
+use pocketmine\network\mcpe\protocol\types\GetTypeIdFromConstTrait;
 
-final class BoolDataStoreValue extends DataStoreValue{
-	public const ID = DataStoreValueType::BOOL;
+final class PrimitiveShapeBoxPayload extends PrimitiveShapePayload{
+	use GetTypeIdFromConstTrait;
+
+	public const ID = PrimitiveShapeType::PAYLOAD_TYPE_BOX;
 
 	public function __construct(
-		private readonly bool $value
+		private Vector3 $boxBound,
 	){}
 
-	public function getValue() : bool{ return $this->value; }
+	public function getBoxBound() : Vector3{ return $this->boxBound; }
 
-	public function getTypeId() : int{
-		return self::ID;
+	public static function read(ByteBufferReader $in) : self{
+		$boxBound = CommonTypes::getVector3($in);
+		return new self($boxBound);
 	}
 
 	public function write(ByteBufferWriter $out) : void{
-		CommonTypes::putBool($out, $this->value);
-	}
-
-	public static function read(ByteBufferReader $in) : self{
-		return new self(CommonTypes::getBool($in));
+		CommonTypes::putVector3($out, $this->boxBound);
 	}
 }

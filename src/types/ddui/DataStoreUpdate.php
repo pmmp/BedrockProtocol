@@ -12,7 +12,7 @@
 
 declare(strict_types=1);
 
-namespace pocketmine\network\mcpe\protocol\types;
+namespace pocketmine\network\mcpe\protocol\types\ddui;
 
 use pmmp\encoding\ByteBufferReader;
 use pmmp\encoding\ByteBufferWriter;
@@ -20,25 +20,30 @@ use pmmp\encoding\LE;
 use pmmp\encoding\VarInt;
 use pocketmine\network\mcpe\protocol\PacketDecodeException;
 use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
+use pocketmine\network\mcpe\protocol\types\ddui\update\BoolDataStoreUpdateValue;
+use pocketmine\network\mcpe\protocol\types\ddui\update\DataStoreUpdateValue;
+use pocketmine\network\mcpe\protocol\types\ddui\update\DataStoreUpdateValueType;
+use pocketmine\network\mcpe\protocol\types\ddui\update\DoubleDataStoreUpdateValue;
+use pocketmine\network\mcpe\protocol\types\ddui\update\StringDataStoreUpdateValue;
+use pocketmine\network\mcpe\protocol\types\GetTypeIdFromConstTrait;
 
 /**
- * @see ServerboundDataStorePacket&ClientboundDataStorePacket
+ * @see ServerboundDataStorePacket
+ * @see ClientboundDataStorePacket
  */
-final class DataStoreUpdate extends DataStore{
-	public const ID = DataStoreType::UPDATE;
+final class DataStoreUpdate implements DataStoreOperation{
+	use GetTypeIdFromConstTrait;
+
+	public const ID = DataStoreOperationType::UPDATE;
 
 	public function __construct(
 		private string $name,
 		private string $property,
 		private string $path,
-		private DataStoreValue $data,
+		private DataStoreUpdateValue $data,
 		private int $updateCount,
 		private int $pathUpdateCount,
 	){}
-
-	public function getTypeId() : int{
-		return self::ID;
-	}
 
 	public function getName() : string{ return $this->name; }
 
@@ -46,7 +51,7 @@ final class DataStoreUpdate extends DataStore{
 
 	public function getPath() : string{ return $this->path; }
 
-	public function getData() : DataStoreValue{ return $this->data; }
+	public function getData() : DataStoreUpdateValue{ return $this->data; }
 
 	public function getUpdateCount() : int{ return $this->updateCount; }
 
@@ -58,9 +63,9 @@ final class DataStoreUpdate extends DataStore{
 		$path = CommonTypes::getString($in);
 
 		$data = match(VarInt::readUnsignedInt($in)){
-			DataStoreValueType::DOUBLE => DoubleDataStoreValue::read($in),
-			DataStoreValueType::BOOL => BoolDataStoreValue::read($in),
-			DataStoreValueType::STRING => StringDataStoreValue::read($in),
+			DataStoreUpdateValueType::DOUBLE => DoubleDataStoreUpdateValue::read($in),
+			DataStoreUpdateValueType::BOOL => BoolDataStoreUpdateValue::read($in),
+			DataStoreUpdateValueType::STRING => StringDataStoreUpdateValue::read($in),
 			default => throw new PacketDecodeException("Unknown DataStoreValueType"),
 		};
 

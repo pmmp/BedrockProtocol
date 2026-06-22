@@ -26,7 +26,7 @@ class LevelSoundEventPacket extends DataPacket implements ClientboundPacket, Ser
 	public const NETWORK_ID = ProtocolInfo::LEVEL_SOUND_EVENT_PACKET;
 
 	/** @see LevelSoundEvent */
-	public int $sound;
+	public string $sound;
 	public Vector3 $position;
 	public int $extraData = -1;
 	public string $entityType = ":"; //???
@@ -39,7 +39,7 @@ class LevelSoundEventPacket extends DataPacket implements ClientboundPacket, Ser
 	 * @generate-create-func
 	 */
 	public static function create(
-		int $sound,
+		string $sound,
 		Vector3 $position,
 		int $extraData,
 		string $entityType,
@@ -60,12 +60,12 @@ class LevelSoundEventPacket extends DataPacket implements ClientboundPacket, Ser
 		return $result;
 	}
 
-	public static function nonActorSound(int $sound, Vector3 $position, bool $disableRelativeVolume, int $extraData = -1) : self{
+	public static function nonActorSound(string $sound, Vector3 $position, bool $disableRelativeVolume, int $extraData = -1) : self{
 		return self::create($sound, $position, $extraData, ":", false, $disableRelativeVolume, -1, null);
 	}
 
 	protected function decodePayload(ByteBufferReader $in) : void{
-		$this->sound = VarInt::readUnsignedInt($in);
+		$this->sound = CommonTypes::getString($in);
 		$this->position = CommonTypes::getVector3($in);
 		$this->extraData = VarInt::readSignedInt($in);
 		$this->entityType = CommonTypes::getString($in);
@@ -76,7 +76,7 @@ class LevelSoundEventPacket extends DataPacket implements ClientboundPacket, Ser
 	}
 
 	protected function encodePayload(ByteBufferWriter $out) : void{
-		VarInt::writeUnsignedInt($out, $this->sound);
+		CommonTypes::putString($out, $this->sound);
 		CommonTypes::putVector3($out, $this->position);
 		VarInt::writeSignedInt($out, $this->extraData);
 		CommonTypes::putString($out, $this->entityType);

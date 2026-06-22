@@ -12,30 +12,30 @@
 
 declare(strict_types=1);
 
-namespace pocketmine\network\mcpe\protocol\types;
+namespace pocketmine\network\mcpe\protocol\types\shape;
 
+use pmmp\encoding\Byte;
 use pmmp\encoding\ByteBufferReader;
 use pmmp\encoding\ByteBufferWriter;
-use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
+use pocketmine\network\mcpe\protocol\types\GetTypeIdFromConstTrait;
 
-final class StringDataStoreValue extends DataStoreValue{
-	public const ID = DataStoreValueType::STRING;
+final class PrimitiveShapeCircleOrSpherePayload extends PrimitiveShapePayload{
+	use GetTypeIdFromConstTrait;
+
+	public const ID = PrimitiveShapeType::PAYLOAD_TYPE_CIRCLE_OR_SPHERE;
 
 	public function __construct(
-		private readonly string $value
+		private int $segments,
 	){}
 
-	public function getValue() : string{ return $this->value; }
+	public function getSegments() : int{ return $this->segments; }
 
-	public function getTypeId() : int{
-		return self::ID;
+	public static function read(ByteBufferReader $in) : self{
+		$segments = Byte::readUnsigned($in);
+		return new self($segments);
 	}
 
 	public function write(ByteBufferWriter $out) : void{
-		CommonTypes::putString($out, $this->value);
-	}
-
-	public static function read(ByteBufferReader $in) : self{
-		return new self(CommonTypes::getString($in));
+		Byte::writeUnsigned($out, $this->segments);
 	}
 }

@@ -12,34 +12,36 @@
 
 declare(strict_types=1);
 
-namespace pocketmine\network\mcpe\protocol\types;
+namespace pocketmine\network\mcpe\protocol\types\ddui;
 
 use pmmp\encoding\ByteBufferReader;
 use pmmp\encoding\ByteBufferWriter;
 use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
+use pocketmine\network\mcpe\protocol\types\GetTypeIdFromConstTrait;
 
 /**
- * @see ServerPresenceInfoPacket
+ * @see ClientboundDataStorePacket
  */
-final class PresenceConfig{
+final class DataStoreRemoval implements DataStoreOperation{
+	use GetTypeIdFromConstTrait;
+
+	public const ID = DataStoreOperationType::REMOVAL;
+
 	public function __construct(
-		private string $experienceName,
-		private string $worldName
+		private string $name,
 	){}
 
-	public function getExperienceName() : string{ return $this->experienceName; }
-
-	public function getWorldName() : string{ return $this->worldName; }
+	public function getName() : string{ return $this->name; }
 
 	public static function read(ByteBufferReader $in) : self{
-		$experienceName = CommonTypes::getString($in);
-		$worldName = CommonTypes::getString($in);
+		$name = CommonTypes::getString($in);
 
-		return new self($experienceName, $worldName);
+		return new self(
+			$name,
+		);
 	}
 
 	public function write(ByteBufferWriter $out) : void{
-		CommonTypes::putString($out, $this->experienceName);
-		CommonTypes::putString($out, $this->worldName);
+		CommonTypes::putString($out, $this->name);
 	}
 }

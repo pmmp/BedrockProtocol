@@ -17,26 +17,26 @@ namespace pocketmine\network\mcpe\protocol;
 use pmmp\encoding\ByteBufferReader;
 use pmmp\encoding\ByteBufferWriter;
 use pmmp\encoding\VarInt;
-use pocketmine\network\mcpe\protocol\types\DataStore;
-use pocketmine\network\mcpe\protocol\types\DataStoreChange;
-use pocketmine\network\mcpe\protocol\types\DataStoreRemoval;
-use pocketmine\network\mcpe\protocol\types\DataStoreType;
-use pocketmine\network\mcpe\protocol\types\DataStoreUpdate;
+use pocketmine\network\mcpe\protocol\types\ddui\DataStoreChange;
+use pocketmine\network\mcpe\protocol\types\ddui\DataStoreOperation;
+use pocketmine\network\mcpe\protocol\types\ddui\DataStoreOperationType;
+use pocketmine\network\mcpe\protocol\types\ddui\DataStoreRemoval;
+use pocketmine\network\mcpe\protocol\types\ddui\DataStoreUpdate;
 use function count;
 
 class ClientboundDataStorePacket extends DataPacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::CLIENTBOUND_DATA_STORE_PACKET;
 
 	/**
-	 * @var DataStore[]
-	 * @phpstan-var list<DataStore>
+	 * @var DataStoreOperation[]
+	 * @phpstan-var list<DataStoreOperation>
 	 */
 	public array $values = [];
 
 	/**
 	 * @generate-create-func
-	 * @param DataStore[] $values
-	 * @phpstan-param list<DataStore> $values
+	 * @param DataStoreOperation[] $values
+	 * @phpstan-param list<DataStoreOperation> $values
 	 */
 	public static function create(array $values) : self{
 		$result = new self;
@@ -48,9 +48,9 @@ class ClientboundDataStorePacket extends DataPacket implements ClientboundPacket
 		$this->values = [];
 		for($i = 0, $len = VarInt::readUnsignedInt($in); $i < $len; ++$i){
 			$this->values[] = match(VarInt::readUnsignedInt($in)){
-				DataStoreType::UPDATE => DataStoreUpdate::read($in),
-				DataStoreType::CHANGE => DataStoreChange::read($in),
-				DataStoreType::REMOVAL => DataStoreRemoval::read($in),
+				DataStoreOperationType::UPDATE => DataStoreUpdate::read($in),
+				DataStoreOperationType::CHANGE => DataStoreChange::read($in),
+				DataStoreOperationType::REMOVAL => DataStoreRemoval::read($in),
 				default => throw new PacketDecodeException("Unknown DataStore type"),
 			};
 		}

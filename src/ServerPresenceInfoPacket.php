@@ -17,30 +17,30 @@ namespace pocketmine\network\mcpe\protocol;
 use pmmp\encoding\ByteBufferReader;
 use pmmp\encoding\ByteBufferWriter;
 use pocketmine\network\mcpe\protocol\serializer\CommonTypes;
-use pocketmine\network\mcpe\protocol\types\PresenceConfig;
+use pocketmine\network\mcpe\protocol\types\PresenceInfo;
 
 class ServerPresenceInfoPacket extends DataPacket implements ClientboundPacket{
 	public const NETWORK_ID = ProtocolInfo::SERVER_PRESENCE_INFO_PACKET;
 
-	private ?PresenceConfig $presenceConfig;
+	private ?PresenceInfo $presenceConfig;
 
 	/**
 	 * @generate-create-func
 	 */
-	public static function create(?PresenceConfig $presenceConfig) : self{
+	public static function create(?PresenceInfo $presenceConfig) : self{
 		$result = new self;
 		$result->presenceConfig = $presenceConfig;
 		return $result;
 	}
 
-	public function getPresenceConfig() : ?PresenceConfig{ return $this->presenceConfig; }
+	public function getPresenceConfig() : ?PresenceInfo{ return $this->presenceConfig; }
 
 	protected function decodePayload(ByteBufferReader $in) : void{
-		$this->presenceConfig = CommonTypes::readOptional($in, PresenceConfig::read(...));
+		$this->presenceConfig = CommonTypes::readOptional($in, PresenceInfo::read(...));
 	}
 
 	protected function encodePayload(ByteBufferWriter $out) : void{
-		CommonTypes::writeOptional($out, $this->presenceConfig, fn(ByteBufferWriter $out, PresenceConfig $v) => $v->write($out));
+		CommonTypes::writeOptional($out, $this->presenceConfig, fn(ByteBufferWriter $out, PresenceInfo $v) => $v->write($out));
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

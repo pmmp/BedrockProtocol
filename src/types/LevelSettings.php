@@ -80,6 +80,8 @@ final class LevelSettings{
 	public ?bool $experimentalGameplayOverride = null;
 	public int $chatRestrictionLevel = ChatRestrictionLevel::NONE;
 	public bool $disablePlayerInteractions = false;
+	public int $serverEditorConnectionPolicy = 0;
+	public bool $allowAnonymousBlockDropsInEditorWorlds = false;
 
 	/**
 	 * @throws DataDecodeException
@@ -146,6 +148,8 @@ final class LevelSettings{
 		$this->experimentalGameplayOverride = CommonTypes::readOptional($in, CommonTypes::getBool(...));
 		$this->chatRestrictionLevel = Byte::readUnsigned($in);
 		$this->disablePlayerInteractions = CommonTypes::getBool($in);
+		$this->serverEditorConnectionPolicy = VarInt::readSignedInt($in);
+		$this->allowAnonymousBlockDropsInEditorWorlds = CommonTypes::getBool($in);
 	}
 
 	public function write(ByteBufferWriter $out) : void{
@@ -197,5 +201,7 @@ final class LevelSettings{
 		CommonTypes::writeOptional($out, $this->experimentalGameplayOverride, CommonTypes::putBool(...));
 		Byte::writeUnsigned($out, $this->chatRestrictionLevel);
 		CommonTypes::putBool($out, $this->disablePlayerInteractions);
+		VarInt::writeSignedInt($out, $this->serverEditorConnectionPolicy);
+		CommonTypes::putBool($out, $this->allowAnonymousBlockDropsInEditorWorlds);
 	}
 }

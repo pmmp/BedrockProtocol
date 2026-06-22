@@ -261,6 +261,9 @@ class PacketPool{
 		$this->registerPacket(new ClientboundAttributeLayerSyncPacket());
 		$this->registerPacket(new ServerStoreInfoPacket());
 		$this->registerPacket(new ServerPresenceInfoPacket());
+		$this->registerPacket(new ClientboundUpdateSoundDataPacket());
+		$this->registerPacket(new SendPartyDestinationCookiePacket());
+		$this->registerPacket(new PartyDestinationCookieResponsePacket());
 	}
 
 	public function registerPacket(Packet $packet) : void{

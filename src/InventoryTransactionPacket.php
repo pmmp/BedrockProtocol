@@ -14,6 +14,7 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
+use pmmp\encoding\Byte;
 use pmmp\encoding\ByteBufferReader;
 use pmmp\encoding\ByteBufferWriter;
 use pmmp\encoding\VarInt;
@@ -41,14 +42,14 @@ class InventoryTransactionPacket extends DataPacket implements ClientboundPacket
 
 	public int $requestId;
 	/** @var InventoryTransactionChangedSlotsHack[] */
-	public array $requestChangedSlots;
+	public ?array $requestChangedSlots;
 	public TransactionData $trData;
 
 	/**
 	 * @generate-create-func
 	 * @param InventoryTransactionChangedSlotsHack[] $requestChangedSlots
 	 */
-	public static function create(int $requestId, array $requestChangedSlots, TransactionData $trData) : self{
+	public static function create(int $requestId, ?array $requestChangedSlots, TransactionData $trData) : self{
 		$result = new self;
 		$result->requestId = $requestId;
 		$result->requestChangedSlots = $requestChangedSlots;
@@ -58,16 +59,23 @@ class InventoryTransactionPacket extends DataPacket implements ClientboundPacket
 
 	protected function decodePayload(ByteBufferReader $in) : void{
 		$this->requestId = CommonTypes::readLegacyItemStackRequestId($in);
-		$this->requestChangedSlots = [];
-		if($this->requestId !== 0){
+
+		$this->requestChangedSlots = CommonTypes::readOptional($in, static function(ByteBufferReader $in) : array{
+			$result = [];
 			for($i = 0, $len = VarInt::readUnsignedInt($in); $i < $len; ++$i){
-				$this->requestChangedSlots[] = InventoryTransactionChangedSlotsHack::read($in);
+				$result[] = InventoryTransactionChangedSlotsHack::read($in);
 			}
+			return $result;
+		});
+
+		if(Byte::readUnsigned($in) !== 1){
+			throw new PacketDecodeException("Dummy optional bool for transactionType should always be 1");
 		}
-
 		$transactionType = VarInt::readUnsignedInt($in);
-
-		$this->trData = match($transactionType){
+		if(Byte::readUnsigned($in) !== 1){
+			throw new PacketDecodeException("Dummy optional bool for trData should always be 1");
+		}
+		$this->trData = match($transactionType) {
 			NormalTransactionData::ID => new NormalTransactionData(),
 			MismatchTransactionData::ID => new MismatchTransactionData(),
 			UseItemTransactionData::ID => new UseItemTransactionData(),
@@ -75,22 +83,23 @@ class InventoryTransactionPacket extends DataPacket implements ClientboundPacket
 			ReleaseItemTransactionData::ID => new ReleaseItemTransactionData(),
 			default => throw new PacketDecodeException("Unknown transaction type $transactionType"),
 		};
-
-		$this->trData->decode($in);
+		$this->trData->decodeTransaction($in);
 	}
 
 	protected function encodePayload(ByteBufferWriter $out) : void{
 		CommonTypes::writeLegacyItemStackRequestId($out, $this->requestId);
-		if($this->requestId !== 0){
-			VarInt::writeUnsignedInt($out, count($this->requestChangedSlots));
-			foreach($this->requestChangedSlots as $changedSlots){
+
+		CommonTypes::writeOptional($out, $this->requestChangedSlots, static function(ByteBufferWriter $out, array $value) : void{
+			VarInt::writeUnsignedInt($out, count($value));
+			foreach($value as $changedSlots){
 				$changedSlots->write($out);
 			}
-		}
+		});
 
+		Byte::writeUnsigned($out, 1);
 		VarInt::writeUnsignedInt($out, $this->trData->getTypeId());
-
-		$this->trData->encode($out);
+		Byte::writeUnsigned($out, 1);
+		$this->trData->encodeTransaction($out);
 	}
 
 	public function handle(PacketHandlerInterface $handler) : bool{

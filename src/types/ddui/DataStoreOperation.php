@@ -12,16 +12,16 @@
 
 declare(strict_types=1);
 
-namespace pocketmine\network\mcpe\protocol\types;
+namespace pocketmine\network\mcpe\protocol\types\ddui;
 
 use pmmp\encoding\ByteBufferWriter;
 
 /**
- * @see ServerboundDataStorePacket&ClientboundDataStorePacket
+ * @see ServerboundDataStorePacket
+ * @see ClientboundDataStorePacket
  */
-abstract class DataStore{
+interface DataStoreOperation{
+	public function getTypeId() : int;
 
-	abstract public function getTypeId() : int;
-
-	abstract public function write(ByteBufferWriter $out) : void;
+	public function write(ByteBufferWriter $out) : void;
 }

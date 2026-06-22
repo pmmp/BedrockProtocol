@@ -918,11 +918,23 @@ trait PacketHandlerDefaultImplTrait{
 		return false;
 	}
 
+	public function handleServerStoreInfo(ServerStoreInfoPacket $packet) : bool{
+		return false;
+	}
+
 	public function handleServerPresenceInfo(ServerPresenceInfoPacket $packet) : bool{
 		return false;
 	}
 
-	public function handleServerStoreInfo(ServerStoreInfoPacket $packet) : bool{
+	public function handleClientboundUpdateSoundData(ClientboundUpdateSoundDataPacket $packet) : bool{
+		return false;
+	}
+
+	public function handleSendPartyDestinationCookie(SendPartyDestinationCookiePacket $packet) : bool{
+		return false;
+	}
+
+	public function handlePartyDestinationCookieResponse(PartyDestinationCookieResponsePacket $packet) : bool{
 		return false;
 	}
 }

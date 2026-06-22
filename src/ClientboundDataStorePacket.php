@@ -35,9 +35,7 @@ class ClientboundDataStorePacket extends DataPacket implements ClientboundPacket
 
 	/**
 	 * @generate-create-func
-	 *
-	 * @param DataStoreOperation[]             $values
-	 *
+	 * @param DataStoreOperation[] $values
 	 * @phpstan-param list<DataStoreOperation> $values
 	 */
 	public static function create(array $values) : self{
